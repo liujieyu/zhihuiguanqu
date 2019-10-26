@@ -1,0 +1,113 @@
+@siteInfoFontSize: 0.8125rem;
+@rowBorderColor: rgb(200, 200, 200);
+
+// 站点信息
+#pane-zhandianxinxi, #pane-tezhengshuiqing, #pane-tezhengyuliang {
+
+  // 栅栏表格化
+  .row {
+    line-height: 1.875rem;
+
+    .ivu-col:nth-child(even) {
+      border: 1px solid @rowBorderColor;
+      border-bottom: 0;
+    }
+
+    .ivu-col:nth-child(odd) {
+      border-top: 1px solid @rowBorderColor;
+
+    }
+
+    .ivu-col:first-child {
+      border-left: 1px solid @rowBorderColor;
+    }
+
+    &:last-child {
+      .ivu-col:nth-child(even) {
+        border: 1px solid @rowBorderColor;
+        border-bottom: 1px solid @rowBorderColor;
+      }
+
+      .ivu-col:nth-child(odd) {
+        border-bottom: 1px solid @rowBorderColor;
+      }
+    }
+  }
+
+  .last_row {
+    border-bottom: 1px solid #c8c8c8;
+
+
+  }
+}
+
+// 时间选择器宽度
+.ivu-date-picker {
+  width: 15.625rem;
+}
+
+.drawer-profile {
+  .outPutButton {
+    position: absolute;
+    right: -10px;
+    top: -45px;
+    z-index: 2;
+  }
+
+  .row_header {
+    text-align: center;
+    font-size: 1.5625rem;
+    font-weight: 700;
+  }
+
+
+}
+
+.ivu-drawer-body {
+  .el-tabs__content {
+    height: 620px
+  }
+}
+
+.table_detail {
+  td {
+    height: 45px;
+    border-top: none;
+    border-color: #EBEEF5;
+  }
+
+  .dt_name {
+    width: 20%;
+    border-left: none;
+  }
+
+  .dt_vale {
+    width: 30%;
+    border-right: none;
+    border-left: none;
+  }
+}
+
+
+.dt_remark {
+  height: 40px;
+  border: 1px solid #EBEEF5;
+  border-left: none;
+  border-right: none;
+  line-height: 40px;
+  padding-left: 10px;
+}
+
+.div_year{
+  display: flex;
+  align-items: center;
+  .wAh{
+    width: 150px !important;
+    .el-input__suffix{
+      display: none;
+    }
+  }
+}
+.div_tenDay{
+  display: flex;
+}
