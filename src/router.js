@@ -206,5 +206,15 @@ export default new Router({
     { path: '/warm-fileupload',component: () => import('./warm/warm-file/file-upload/list.vue') },
     //率定管理-率定结果管理
     { path: '/warm-ldresult',component: () => import('./warm/warm-ldresult/result-manage/list.vue') },
+    //率定管理-率定站点信息
+    { path: '/stage-station',component: () => import('./stage_discharge_relation/stage_station/stagestationlist.vue') },
+    //率定管理-标准断面
+    { path: '/stsection-station',component: () => import('./stage_discharge_relation/cal_parameter/stsectionstation/stsectionstationlist.vue') },
+    //率定管理-率定参数-巴歇尔槽站点参数
+    { path: '/stage-parshall',component: () => import('./stage_discharge_relation/cal_parameter/parshall/parshalllist.vue') },
+    //率定管理-率定参数-标准巴歇尔槽参数
+    { path: '/parshall-flume',component: () => import('./stage_discharge_relation/cal_parameter/parshall/parshalflumelist.vue') },
+    //率定管理-水闸信息
+    { path: '/water-lock',component: () => import('./stage_discharge_relation/cal_parameter/waterlock/lockstationlist.vue') },
   ] 
 })

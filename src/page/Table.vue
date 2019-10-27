@@ -105,6 +105,11 @@
                  <i class="el-icon-menu"></i>
                   <span>率定管理</span>
                 </template>
+                <el-menu-item index="/stage-station"><i class="el-icon-star-on"></i>率定站点信息</el-menu-item>
+                <el-menu-item index="/stsection-station"><i class="el-icon-star-on"></i>标准断面</el-menu-item>
+                <el-menu-item index="/stage-parshall"><i class="el-icon-star-on"></i>巴歇尔槽站点参数</el-menu-item>
+                <el-menu-item index="/parshall-flume"><i class="el-icon-star-on"></i>标准巴歇尔槽参数</el-menu-item>
+                <el-menu-item index="/water-lock"><i class="el-icon-star-on"></i>水闸信息</el-menu-item>
                 <el-menu-item index="/warm-ldresult"><i class="el-icon-star-on"></i>率定结果管理</el-menu-item>
              </el-submenu> 
           </el-menu>
