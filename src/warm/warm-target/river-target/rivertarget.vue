@@ -73,16 +73,7 @@
       return{
         loading:false,
         tableheight:'',
-        data:
-        [
-          {
-            ROWID:'1',
-            STNM:'入库水位站',
-            XHWL:'2713.50',
-            BZWL:'2713.00',
-            AWL:'2712.500',
-          },
-        ], 
+        data:[], 
         form:
         {
           searchmsg:'',
@@ -94,6 +85,7 @@
     },
     methods:{
       exportToExcel() {
+                return;
                 window.location.href='/'+this.$WarmTable+'/excel/exporttarget/2';
       },
     }

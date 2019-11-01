@@ -6,7 +6,7 @@
     </Breadcrumb>
 
 	<Tabs value="stagestation">
-	  <TabPane label="率定站点基础信息" name="stagestation">
+	  <TabPane label="率定站点信息" name="stagestation">
 	    <StageStation></StageStation>
 	  </TabPane>
 	</Tabs>

@@ -16,11 +16,11 @@
     </Col> 
     <Col>
     <!-- 姓名模糊搜索 -->
-        <Input search enter-button suffix="ios-search" placeholder="请输入姓名" style="width: auto;margin-right: 20px;" @on-search="search" v-model="form.searchname" />
+        <Input search enter-button suffix="ios-search" placeholder="请输入姓名" style="width: 180px;margin-right: 20px;" @on-search="search" v-model="form.searchname" />
     </Col>
 
     <Col> 
-        <Button type="primary" style="width: auto;margin-right: 20px;" @click="checkman">确认</Button>
+        <Button type="primary"  @click="checkman">确认</Button>
     </Col>
  </Row>
   <el-table
@@ -115,7 +115,7 @@ import GetDataMethods from "@/assets/commonJS/GetDataMethods";
                 }           
                 this.axios.get('/'+this.$WarmTable+'/alarm/getman',{params:{types:this.info.type,adCd:this.form.xzqh,nm:this.form.searchname}}).then((res)=>{
                     this.loading = false;
-                    this.data = res.data;                   
+                    this.data = res.data;                 
                 });
             },
             //行政区划

@@ -72,16 +72,7 @@
       return{
         loading:false,
         tableheight:'',
-        data:
-        [
-          {
-            ROWID:'1',
-            STNM:'坝前水位站',
-            XHWL:'2524.120',
-            ZCWL:'2520.200',
-            FWL:'2518.200',
-          },
-        ],
+        data:[],
         form:{
           searchmsg:'',
         }
@@ -91,6 +82,7 @@
     },
     methods:{
       exportToExcel() {
+                return;
                 window.location.href='/'+this.$WarmTable+'/excel/exporttarget/3';
       },
     }

@@ -216,5 +216,7 @@ export default new Router({
     { path: '/parshall-flume',component: () => import('./stage_discharge_relation/cal_parameter/parshall/parshalflumelist.vue') },
     //率定管理-水闸信息
     { path: '/water-lock',component: () => import('./stage_discharge_relation/cal_parameter/waterlock/lockstationlist.vue') },
+    //率定管理-率定数据管理
+    { path: '/warm-ldmefile',component: () => import('./warm/warm-ldresult/mefile-manage/list.vue') },
   ] 
 })

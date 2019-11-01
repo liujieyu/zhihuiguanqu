@@ -27,7 +27,6 @@
     }
   }
 </script>
-
 <style lang="less" scope>
 @import "../../warm/common/warmcss.less";
 </style>

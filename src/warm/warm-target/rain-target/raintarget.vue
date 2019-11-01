@@ -80,33 +80,7 @@
       return{
         loading:false,
         tableheight:'',
-        data:
-        [
-          {
-            ROWID:'1',
-            STNM:'预警雨量站',
-            TH_P:'24.1',
-            SH_P:'24.1',
-            TWH_P:'24.1',
-            OD_P:'24.1',
-          },
-          {
-            ROWID:'2',
-            STNM:'坝上雨量站',
-            TH_P:'24.1',
-            SH_P:'24.1',
-            TWH_P:'24.1',
-            OD_P:'24.1',
-          },
-          {
-            ROWID:'3',
-            STNM:'入库雨量站',
-            TH_P:'24.1',
-            SH_P:'24.1',
-            TWH_P:'24.1',
-            OD_P:'24.1',
-          },
-        ],
+        data:[],
         form:{
           searchmsg:'',
         }
@@ -116,6 +90,7 @@
     },
     methods:{
       exportToExcel() {
+              return;
               window.location.href='/'+this.$WarmTable+'/excel/exporttarget/1';
              },
     }

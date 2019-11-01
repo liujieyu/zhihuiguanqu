@@ -17,6 +17,18 @@ var GetDataMethods = {
                             val.title = val.AD_NM;
                             citys.push(val);
                         }
+                        if(val.UP_ADCD=="430100000000"){
+                            val.value = val.AD_CD;
+                            val.label = val.AD_NM;
+                            val.title = val.AD_NM;
+                            citys.push(val);
+                        }
+                        if(val.UP_ADCD=="430700000000"){
+                            val.value = val.AD_CD;
+                            val.label = val.AD_NM;
+                            val.title = val.AD_NM;
+                            citys.push(val);
+                        }
                     })
 
                     var lg = 0

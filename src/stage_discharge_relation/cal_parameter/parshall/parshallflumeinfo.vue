@@ -30,7 +30,7 @@
             min-width="60">
           </el-table-column> 
         </el-table-column>
-        <el-table-column label="测流范围(m3/s)" align="center">
+        <el-table-column label="测流范围(m³/s)" align="center">
           <el-table-column
             label="最小"
             prop="Q_MIN"

@@ -1,7 +1,7 @@
 <template>
   <div>
-    <Content :style="{padding: '24px', background: '#fff'}">
-      <Row type="flex" :gutter="16" align="left">
+    <Content class="searchcon">
+      <Row type="flex" :gutter="16" class="rowtocol">
         <Col align="left" fixed="left">
           人员类型：
           <el-select v-model="value" size="small" placeholder="请选择">
@@ -26,10 +26,10 @@
         </Col>
         <Col>
         <!--姓名模糊查询 -->
-          <Input search enter-button suffix="ios-search" placeholder="请输入姓名" style="width: auto;margin-right: 20px;" @on-search="search" v-model="searchmsg" />
+          <Input search enter-button suffix="ios-search" placeholder="姓名：" style="width: auto;margin-right: 20px;" @on-search="search" v-model="searchmsg" />
         </Col>
         <Col> 
-           <Button type="primary" style="width: auto;margin-right: 20px;" @click="exportToExcel">导出</Button>
+           <Button type="primary" style="width: auto;margin-right: 20px;" @click="err">导出</Button>
         </Col>  
       </Row> 
       <Row class="fgline"></Row>
@@ -65,7 +65,7 @@
           min-width="180">
         </el-table-column>
         <el-table-column
-          prop="POSITION"
+          prop="POSTION"
           label="职务"
           align="center"
           sortable="custom"
@@ -120,6 +120,7 @@ export default {
   {
     return{
       loading:false,
+      theight:window.innerHeight-236,
       options:[{
         value:'1',
         label:'主管领导',
@@ -147,36 +148,8 @@ export default {
       },],
       
      
-      tabledata:[{
-        ROWID:'1',
-        NM:'张晓',
-        UNIT:'乌恰县水利局',
-        POSITION:'党组书记、副局长',
-        OPHONE:'',
-        MOBILE:'18997696458',
-        YR:'2019',
-      },
-      {
-        ROWID:'2',
-        NM:'马国成',
-        UNIT:'乌恰县水利局',
-        POSITION:'副局长',
-        OPHONE:'',
-        MOBILE:'15700991168',
-        YR:'2019',
-      },
-      {
-        ROWID:'3',
-        NM:'沈飞',
-        UNIT:'康苏水库工程管理处',
-        POSITION:'法人代表',
-        OPHONE:'',
-        MOBILE:'18709083988',
-        YR:'2019',
-      },
-      ],
+       tabledata:[],
       searchmsg:'',
-      theight:window.innerWidth>=970?window.innerHeight-236:window.innerHeight-280,
       list_input:{
         total:100,
         pagesize:50,
@@ -231,9 +204,6 @@ export default {
     {
       this.Reload(); 
     },
-    exportToExcel() {
-                window.location.href='/'+this.$WarmTable+'/excel/exportaddr';
-      },
   }
 }
 </script>

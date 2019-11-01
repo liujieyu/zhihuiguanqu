@@ -11,7 +11,7 @@ module.exports = {
               changeOrigin: true
           },
             '':{
-              target: 'http://117.191.63.186:7001/',
+              target: 'http://222.240.238.58:7001/',//http://117.191.63.186:7001
               changeOrigin: true
             }
         }

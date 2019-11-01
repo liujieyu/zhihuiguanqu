@@ -20,7 +20,7 @@
             <Col>
             </Col>
             <Col>
-              <Button type="primary" style="width: auto;margin-right: 10px;" @click="err">导出</Button>
+              <Button type="primary" style="width: auto;margin-right: 10px;" @click="exportExcel">导出</Button>
             </Col>
             <Col>
               <Button type="primary" style="width: auto;margin-right: 20px;" @click="addresult">新增</Button>
@@ -262,7 +262,7 @@ export default {
             axisLine: {
                 onZero: false,
                 lineStyle: {
-                    color: "#006400"
+                    color: "#2f4554"
                 }
             },
             data:this.data2.x1.list,
@@ -281,7 +281,7 @@ export default {
             axisLine: {
                 onZero: false,
                 lineStyle: {
-                    color: "#8B0000"
+                    color: "#c23531"
                 }
             },
             data: this.data2.x2.list,
@@ -314,9 +314,9 @@ export default {
             xAxisIndex: 0,
             itemStyle: {
                         normal: {
-                            color: "#006400",//折线点的颜色
+                            color: "#2f4554",//折线点的颜色
                             lineStyle: {
-                                color: "#006400"//折线的颜色
+                                color: "#2f4554"//折线的颜色
                             }
                         }
                     },
@@ -329,9 +329,9 @@ export default {
             xAxisIndex: 1,
             itemStyle: {
                         normal: {
-                            color: "#8B0000",//折线点的颜色
+                            color: "#c23531",//折线点的颜色
                             lineStyle: {
-                                color: "#8B0000"//折线的颜色
+                                color: "#c23531"//折线的颜色
                             }
                         }
                     },
@@ -341,10 +341,6 @@ export default {
     },
     Yearsearch(){
       this.Reload();
-    },
-    err(){
-    // console.log("showDrawer",this.$showDrawer);
-      this.$Message.warning('该功能还在开发中...');
     },
     Reload() {
       let obj = {
@@ -356,8 +352,8 @@ export default {
       this.axios.get('/'+this.$WarmTable+'/ldresult/eqrllist',{params: obj}).then(res => {
           var newdatalist = res.data.curlist.map(val => {
                 var newobj=new Object();
-                newobj["Z"]=parseFloat(val["Z"]).toFixed(1);
-                newobj["Q"]=parseFloat(val["Q"]).toFixed(1);
+                newobj["Z"]=parseFloat(val["Z"]).toFixed(2);
+                newobj["Q"]=parseFloat(val["Q"]).toFixed(3);
                 newobj["ID"]=val["ID"];
                 return newobj;
             });
@@ -374,10 +370,10 @@ export default {
                         y2: new Object()
                     }
           var curx=FilterMethods.methods.newArrayByObjArray(curlist, "Z", val => { // 过滤
-                        return parseFloat(val).toFixed(1);
+                        return parseFloat(val).toFixed(2);
                     });
           var lastx=FilterMethods.methods.newArrayByObjArray(lastlist, "Z", val => { // 过滤
-                        return parseFloat(val).toFixed(1);
+                        return parseFloat(val).toFixed(2);
                     });
             echartData.x2.list= lastx;       
             echartData.y2.list=this.getY(lastlist);
@@ -457,6 +453,10 @@ export default {
                 }
             });
         return maxq;
+    },
+    exportExcel(){
+      var params="year="+this.form.year+"&stcd="+this.STinfo.STCD+"&stnm="+this.STinfo.STNM+"&metypename="+this.STinfo.TYPE_NM+"&canalname="+this.STinfo.CANAL_NAME+"&maxz="+this.STinfo.MAX_Z;
+       window.location.href='/'+this.$WarmTable+'/excel/exportldresult?'+params;
     }
   },
   created() {

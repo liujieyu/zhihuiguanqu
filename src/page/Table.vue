@@ -111,6 +111,7 @@
                 <el-menu-item index="/parshall-flume"><i class="el-icon-star-on"></i>标准巴歇尔槽参数</el-menu-item>
                 <el-menu-item index="/water-lock"><i class="el-icon-star-on"></i>水闸信息</el-menu-item>
                 <el-menu-item index="/warm-ldresult"><i class="el-icon-star-on"></i>率定结果管理</el-menu-item>
+                <el-menu-item index="/warm-ldmefile"><i class="el-icon-star-on"></i>率定数据管理</el-menu-item>
              </el-submenu> 
           </el-menu>
         </Sider>

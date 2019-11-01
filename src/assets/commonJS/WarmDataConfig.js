@@ -64,6 +64,31 @@ var WarmDataConfig= {
             timearray.push(end);
             return timearray;
         },
+        //开始日期和结束日期获取
+        datearrayFilter(date){
+            if(date==null){
+                return this.$Message.warning("请选择开始时间和结束时间！");
+            }
+            var start, start_Year, start_Month, start_Day;
+            start = date[0];
+            start_Year = start.getFullYear();
+            start_Month = this.addZero((start.getMonth() + 1));
+            start_Day = this.addZero(start.getDate());
+
+            start = `${start_Year}-${start_Month}-${start_Day}`;
+
+            var end, end_Year, end_Month, end_Day;
+            end = date[1];
+            end_Year = end.getFullYear();
+            end_Month = this.addZero(end.getMonth() + 1);
+            end_Day = this.addZero(end.getDate());
+
+            end = `${end_Year}-${end_Month}-${end_Day}`;
+            var timearray=new Array();
+            timearray.push(start);
+            timearray.push(end);
+            return timearray;
+        },
         addZero(item) {
             item = String(item);
             if (item.length == 1) {
