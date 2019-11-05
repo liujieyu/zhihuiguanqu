@@ -22,7 +22,9 @@
   <!--详情和审核界面-->
   <div v-if="dialogTableVisible">
   <el-dialog :title="dailog.title" :visible.sync="dialogTableVisible" v-dialogDrag:{dialogDrag}="true"  v-dialogChange:{dialogChange}="true"   :close-on-click-modal="false" :modal-append-to-body="false" :modal="false"  @close="beforeclose">
+        <div id="showdiv">
         <Warmmedata :info="dailog" v-if="dailog.itype=='medatadetail'" @closedailog="closedailog"></Warmmedata>
+        </div>
    </el-dialog>
 	</div>
     </div>
@@ -49,7 +51,6 @@
       },
       //显示对话框
       showdailog(info){
-        debugger;
         this.dailog=info;
         this.dialogTableVisible=true;
       },

@@ -8,7 +8,6 @@
                         v-model="form.date"
                         type="daterange"
                         format="yyyy年MM月dd日"
-                        value-format="yyyy-MM-dd"
                         range-separator="至"
                         start-placeholder="开始日期"
                         end-placeholder="结束日期"
@@ -233,6 +232,9 @@
                 this.Reload();
             },
             cellclick(row, column, cell, event){
+              if(column.label=="操作"){
+                return;
+              }
               var detailobj=new Object();
               detailobj=row;
               detailobj.title="测量数据详细信息";

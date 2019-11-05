@@ -218,5 +218,7 @@ export default new Router({
     { path: '/water-lock',component: () => import('./stage_discharge_relation/cal_parameter/waterlock/lockstationlist.vue') },
     //率定管理-率定数据管理
     { path: '/warm-ldmefile',component: () => import('./warm/warm-ldresult/mefile-manage/list.vue') },
+    //率定管理-率定计算
+    { path: '/warm-caculate',component: () => import('./warm/warm-caculate/metype-caculate/list.vue') },
   ] 
 })

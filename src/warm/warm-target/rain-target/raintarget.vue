@@ -13,57 +13,157 @@
       <el-table
         :data="data"
         border
-        height="370"
+        height="400"
         v-loading="loading"
         style="width: 100%"
         @cell-click="cellclick"
         @sort-change="sort_change">
-        <el-table-column
+         <el-table-column
           label=" "
           prop="ROWID"
           align="center"
           width="65"
-          fixed="left">
+          fixed>
         </el-table-column>
         <el-table-column
            prop="STNM"
            label="站名"
            align="center"
-           fixed="left"
+           fixed
            sortable="custom"
            min-width="150">
         </el-table-column>
-        <el-table-column
-           prop="TH_P"
-           label="I级(3H降雨)"
-           align="center"
-           fixed="left"
-           sortable="custom"
-           min-width="180">
+        <el-table-column label="III级预警（黄色）" align="center">
+          <el-table-column
+            prop="PTD_P3"
+            label="前72H"
+            align="center"
+            sortable="custom"
+            min-width="90">
+          </el-table-column>
+          <el-table-column
+            prop="OH_P3"
+            label="1H"
+            align="center"
+            sortable="custom"
+            min-width="90">
+          </el-table-column>
+          <el-table-column
+            prop="TH_P3"
+            label="3H"
+            align="center"
+            sortable="custom"
+            min-width="90">
+          </el-table-column>
+          <el-table-column
+            prop="SH_P3"
+            label="6H"
+            align="center"
+            sortable="custom"
+            min-width="90">
+          </el-table-column>
+          <el-table-column
+            prop="TWH_P3"
+            label="12H"
+            align="center"
+            sortable="custom"
+            min-width="90">
+          </el-table-column>
+          <el-table-column
+            prop="OD_P3"
+            label="24H"
+            align="center"
+            sortable="custom"
+            min-width="90">
+          </el-table-column>
         </el-table-column>
-        <el-table-column
-           prop="SH_P"
-           label="II级(6H降雨)"
-           align="center"
-           fixed="left"
-           sortable="custom"
-           min-width="180">
+        <el-table-column label="II级预警（橙色）" align="center">
+          <el-table-column
+            prop="PTD_P2"
+            label="前72H"
+            align="center"
+            sortable="custom"
+            min-width="90">
+          </el-table-column>
+          <el-table-column
+            prop="OH_P2"
+            label="1H"
+            align="center"
+            sortable="custom"
+            min-width="90">
+          </el-table-column>
+          <el-table-column
+            prop="TH_P2"
+            label="3H"
+            align="center"
+            sortable="custom"
+            min-width="90">
+          </el-table-column>
+          <el-table-column
+            prop="SH_P2"
+            label="6H"
+            align="center"
+            sortable="custom"
+            min-width="90">
+          </el-table-column>
+          <el-table-column
+            prop="TWH_P2"
+            label="12H"
+            align="center"
+            sortable="custom"
+            min-width="90">
+          </el-table-column>
+          <el-table-column
+            prop="OD_P2"
+            label="24H"
+            align="center"
+            sortable="custom"
+            min-width="90">
+          </el-table-column>
         </el-table-column>
-        <el-table-column
-           prop="TWH_P"
-           label="III级(12H降雨)"
-           align="center"
-           fixed="left"
-           sortable="custom"
-           min-width="180">
-        </el-table-column>
-        <el-table-column
-           prop="OD_P"
-           label="IV级(24H降雨)"
-           align="center"
-           fixed="left"
-           sortable="custom"
-           min-width="180">
+        <el-table-column label="I级预警（红色）" align="center">
+          <el-table-column
+            prop="PTD_P1"
+            label="前72H"
+            align="center"
+            sortable="custom"
+            min-width="90">
+          </el-table-column>
+          <el-table-column
+            prop="OH_P1"
+            label="1H"
+            align="center"
+            sortable="custom"
+            min-width="90">
+          </el-table-column>
+          <el-table-column
+            prop="TH_P1"
+            label="3H"
+            align="center"
+            sortable="custom"
+            min-width="90">
+          </el-table-column>
+          <el-table-column
+            prop="SH_P1"
+            label="6H"
+            align="center"
+            sortable="custom"
+            min-width="90">
+          </el-table-column>
+          <el-table-column
+            prop="TWH_P1"
+            label="12H"
+            align="center"
+            sortable="custom"
+            min-width="90">
+          </el-table-column>
+          <el-table-column
+            prop="OD_P1"
+            label="24H"
+            align="center"
+            sortable="custom"
+            min-width="90">
+          </el-table-column>
         </el-table-column>
       </el-table>
     </Content>

@@ -146,6 +146,8 @@ Vue.directive('dialogChange', {
     dialogHeaderEl.onmousedown = moveDown;
     //双击头部效果
     dialogHeaderEl.ondblclick = (e) => {
+      debugger;
+      var showdiv=document.getElementById("showdiv");
       if (isFullScreen == false) {
         nowHight = dragDom.clientHeight;
         nowWidth = dragDom.clientWidth;
@@ -154,6 +156,11 @@ Vue.directive('dialogChange', {
         dragDom.style.top = 0;
         dragDom.style.height = "100VH";
         dragDom.style.width = "100VW";
+        if(showdiv){
+          showdiv.style.height=(dragDom.clientHeight-115)+'px';
+          showdiv.style.overflowY='auto';
+          showdiv.style.overflowX='hidden';
+        }
         dragDom.style.marginTop = 0;
         isFullScreen = true;
         dialogHeaderEl.style.cursor = 'initial';
@@ -162,6 +169,11 @@ Vue.directive('dialogChange', {
         dragDom.style.height = "auto";
         dragDom.style.width = nowWidth + 'px';
         dragDom.style.marginTop = nowMarginTop;
+        if(showdiv){
+          showdiv.style.height=(dragDom.clientHeight-115)+'px';
+          showdiv.style.overflowY='auto';
+          showdiv.style.overflowX='hidden';
+        }
         isFullScreen = false;
         dialogHeaderEl.style.cursor = 'move';
         dialogHeaderEl.onmousedown = moveDown;
@@ -184,7 +196,7 @@ Vue.directive('dialogChange', {
     dragDom.style.overflow='hidden';
     //鼠标拉伸弹窗
     resizeEl.onmousedown = (e) => {
-
+      var showdiv=document.getElementById("showdiv");
       // 记录初始x位置
       const clientX = e.clientX;
       // 鼠标按下，计算当前元素距离可视区的距离
@@ -200,6 +212,15 @@ Vue.directive('dialogChange', {
         //比较是否小于最小宽高
         dragDom.style.width = x > minWidth ? `${x}px` : minWidth + 'px';
         dragDom.style.height = y > minHeight ? `${y}px` : minHeight + 'px';
+        if(showdiv){
+          var sheight=y > minHeight ? y : minHeight;
+          sheight=sheight-115;
+          showdiv.style.height=sheight+'px';
+          showdiv.style.overflowY='auto';
+          showdiv.style.overflowX='hidden';
+        }
+        
+
       };
       //拉伸结束
       document.onmouseup = function (e) {

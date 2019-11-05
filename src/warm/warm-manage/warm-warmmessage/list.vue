@@ -16,7 +16,9 @@
   <div v-if="dialogTableVisible">
   <el-dialog :title="dailog.title" :visible.sync="dialogTableVisible" v-dialogDrag:{dialogDrag}="true"  v-dialogChange:{dialogChange}="true"   :close-on-click-modal="false" :modal-append-to-body="false" :modal="false"  @close="beforeclose">
   <!--预警人员详情-->
+        <div id="showdiv"> 
         <WarmSendman :info="dailog" v-if="dailog.itype=='fasongrenyuan'" @closedailog="closedailog"></WarmSendman>
+        </div>
    </el-dialog>
 	</div>
 	</div>
