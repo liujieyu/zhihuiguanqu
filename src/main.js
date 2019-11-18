@@ -24,6 +24,7 @@ Vue.use(iView);
 
 //echarts
 import echarts from 'echarts';
+import 'echarts-gl';
 
 
 Vue.prototype.$echarts = echarts;

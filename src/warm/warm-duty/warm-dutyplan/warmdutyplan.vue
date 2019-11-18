@@ -18,9 +18,11 @@
                         </el-date-picker>
                         </Col>  
                         <Col> 
-                            <Button type="primary" style="width: auto;margin-right: 20px;" @click="exportToExcel">导出</Button>
+                            <Button type="primary" style="width: auto;" @click="exportToExcel">导出</Button>
                         </Col>
-
+                        <Col> 
+                            <Button type="primary" style="width: auto; margin-left:10px;" @click="showchart()">仪表图</Button>
+                        </Col>
                     </Row>
                     <Row class="fgline"></Row>
                     <el-table
@@ -101,7 +103,10 @@
             }, 
             exportToExcel() {
               window.location.href='/'+this.$WarmTable+'/excel/exportdutyplan/'+this.form.date;
-             },                   
+             }, 
+            showchart(){
+              window.open("/dist/index.html#/yixiang-chart","big","fullscreen") 
+            },                  
         },
     }
 </script>

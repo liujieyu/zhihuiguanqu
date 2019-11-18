@@ -146,7 +146,6 @@ Vue.directive('dialogChange', {
     dialogHeaderEl.onmousedown = moveDown;
     //双击头部效果
     dialogHeaderEl.ondblclick = (e) => {
-      debugger;
       var showdiv=document.getElementById("showdiv");
       if (isFullScreen == false) {
         nowHight = dragDom.clientHeight;

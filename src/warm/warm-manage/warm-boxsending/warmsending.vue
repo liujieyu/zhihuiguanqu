@@ -205,6 +205,10 @@
             var start = new Date();
             start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
             this.form.date=[start,end];
+            //短信类型
+            this.Get_SysFieldinfo('YJDXFB20190927',3,data => {
+                this.dxlxlist = data;
+            });
             this.Reload();
         },
         methods:{
@@ -226,11 +230,7 @@
                     this.loading = false;
                     this.data = res.data.rows;
                     this.list_input.total = res.data.total;
-                });
-                //短信类型
-                this.Get_SysFieldinfo('YJDXFB20190927',3,data => {
-                    this.dxlxlist = data;
-                });
+                });              
             },
             // 处理页码切换
             CurrentChange(index) {

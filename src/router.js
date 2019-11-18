@@ -220,5 +220,10 @@ export default new Router({
     { path: '/warm-ldmefile',component: () => import('./warm/warm-ldresult/mefile-manage/list.vue') },
     //率定管理-率定计算
     { path: '/warm-caculate',component: () => import('./warm/warm-caculate/metype-caculate/list.vue') },
+    //配水管理-调度运行信息
+    { path: '/water-dispatching',component: () => import('./water_distribution/dispatching/dispatchinglist.vue') },
+    { path: '/water-plan',component: () => import('./warm/warm-water/water-plan/list.vue') },
+    { path: '/water-distribution',component: () => import('./warm/warm-water/water-distribution/list.vue') },
+    { path: '/yixiang-chart',component: () => import('./warm/yixiang-chart/chart.vue') },
   ] 
 })

@@ -114,6 +114,16 @@
                 <el-menu-item index="/warm-ldmefile"><i class="el-icon-star-on"></i>率定数据管理</el-menu-item>
                 <el-menu-item index="/warm-caculate"><i class="el-icon-star-on"></i>率定计算</el-menu-item>
              </el-submenu> 
+             <el-submenu index="7">
+               <template slot="title">
+                 <i class="el-icon-menu"></i>
+                  <span>配水管理</span>
+                </template>
+                <el-menu-item index="/water-dispatching"><i class="el-icon-s-tools"></i>调度运行信息</el-menu-item>
+                <el-menu-item index="/water-plan"><i class="el-icon-s-tools"></i>需水计划管理</el-menu-item>
+                <el-menu-item index="/water-distribution"><i class="el-icon-s-tools"></i>用水考核指标</el-menu-item>
+             </el-submenu>
+             <el-menu-item index="/yixiang-chart"><i class="el-icon-s-tools"></i>意向图</el-menu-item> 
           </el-menu>
         </Sider>
       </div>

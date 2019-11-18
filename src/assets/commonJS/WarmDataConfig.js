@@ -25,6 +25,18 @@ var WarmDataConfig= {
                         }
                     });
         },
+        //获取管理机构下拉框
+        Get_Gljginfo(types,callback){
+            this.axios.get('/'+this.$WarmTable+'/waterplan/gljginfo/'+types)
+                    .then(res => {
+                        var data = res.data;
+                        
+                        if (typeof callback == "function") {
+
+                            callback(data);
+                        }
+                    });
+        },
         //获取表格选取下拉框
         Get_SysForminfo(fcode,fnum,callback){
             this.axios.get('/'+this.$WarmTable+'/fieldinfo/formcommon/'+fcode+'&'+fnum)
