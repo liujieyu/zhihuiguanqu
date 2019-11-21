@@ -214,13 +214,13 @@ export default {
     data() {
         return {
             imglist:[],
-            theight:window.outerHeight,
-            subheight1:window.outerHeight*0.32,
-            subheight2:window.outerHeight*0.36,
+            theight:window.screen.height,
+            subheight1:window.screen.height*0.32,
+            subheight2:window.screen.height*0.36,
             lwidth:window.outerWidth*0.28125,
             cwidth:window.outerWidth*0.4375,
-            imgwidth:window.outerHeight*1.1865*1.28,
-            imgheight:window.outerHeight*1.28,
+            imgwidth:window.screen.height*1.1865*1.28,
+            imgheight:window.screen.height*1.28,
             allwidth:window.outerWidth,
             leftwidth:window.outerWidth*0.28125*0.36,
             form:{},
@@ -560,7 +560,7 @@ export default {
         myChart.style.display = "flex";
         myChart.style.alignItems = "center";
         myChart.style.justifyContent = "center";
-        myChart.innerHTML = "暂无今天数据";
+        myChart.innerHTML ="<font style='color:#fff;font-weight:bold;'>"+stnm+"暂无今天数据</font>";
       }
     },
     //水量柱状图

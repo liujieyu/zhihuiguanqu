@@ -105,7 +105,7 @@
               window.location.href='/'+this.$WarmTable+'/excel/exportdutyplan/'+this.form.date;
              }, 
             showchart(){
-              window.open("/dist/index.html#/yixiang-chart","big","fullscreen") 
+              window.open("/#/yixiang-chart","big","fullscreen");//dist/index.html
             },                  
         },
     }

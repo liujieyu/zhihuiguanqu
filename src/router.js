@@ -224,6 +224,8 @@ export default new Router({
     { path: '/water-dispatching',component: () => import('./water_distribution/dispatching/dispatchinglist.vue') },
     { path: '/water-plan',component: () => import('./warm/warm-water/water-plan/list.vue') },
     { path: '/water-distribution',component: () => import('./warm/warm-water/water-distribution/list.vue') },
+    //仪表图
     { path: '/yixiang-chart',component: () => import('./warm/yixiang-chart/chart.vue') },
+    { path: '/yixiang-wschart',component: () => import('./warm/yixiang-chart/wschart.vue') },
   ] 
 })
