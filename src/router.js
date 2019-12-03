@@ -222,10 +222,19 @@ export default new Router({
     { path: '/warm-caculate',component: () => import('./warm/warm-caculate/metype-caculate/list.vue') },
     //配水管理-调度运行信息
     { path: '/water-dispatching',component: () => import('./water_distribution/dispatching/dispatchinglist.vue') },
+    //配水管理-需水计划
     { path: '/water-plan',component: () => import('./warm/warm-water/water-plan/list.vue') },
+    //配水管理-用水定额计划
+    { path: '/water-quota',component: () => import('./warm/warm-water/water-quota/list.vue') },
+    //配水管理-用水考核
     { path: '/water-distribution',component: () => import('./warm/warm-water/water-distribution/list.vue') },
+    //配水管理-配水管理
+    { path: '/water-manage',component: () => import('./water_distribution/water_plan/waterplanlist.vue') },
+    //配水管理-配水计划
+    { path: '/water-peizhi',component: () => import('./warm/warm-water/water-peizhi/list.vue') },
     //仪表图
     { path: '/yixiang-chart',component: () => import('./warm/yixiang-chart/chart.vue') },
     { path: '/yixiang-wschart',component: () => import('./warm/yixiang-chart/wschart.vue') },
+    { path: '/yixiang-kschart',component: () => import('./warm/yixiang-chart/kschart.vue') },
   ] 
 })

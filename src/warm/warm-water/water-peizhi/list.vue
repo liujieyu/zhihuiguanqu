@@ -1,19 +1,19 @@
 <template>
-	<div style="overflow:hidden;">
+	<div>
 		<Breadcrumb :style="{margin: '0 0 24px 0'}">
             <BreadcrumbItem>配水管理</BreadcrumbItem>
-            <BreadcrumbItem>用水定额计划管理</BreadcrumbItem>
+            <BreadcrumbItem>配水计划</BreadcrumbItem>
         </Breadcrumb>
 
-		<Tabs value="quotaplan">
-	        <TabPane label="用水定额计划管理" name="quotaplan">
-	        	<QuotaPlan></QuotaPlan>                
+		<Tabs value="waterpeizhi">
+	        <TabPane label="配水计划" name="waterpeizhi">
+	        	<WaterPeizhi></WaterPeizhi>                
 	        </TabPane>
 	    </Tabs>
 	</div>
 </template>
 <script type="text/javascript">
-import QuotaPlan from '@/warm/warm-water/water-quota/quotaplan.vue'
+import WaterPeizhi from '@/warm/warm-water/water-peizhi/peizhi.vue'
 export default {
         data() {
         return { 
@@ -24,7 +24,7 @@ export default {
       methods: { },
       computed: { },
       components: { 
-      QuotaPlan,       
+      WaterPeizhi,       
       }
     }
 </script>

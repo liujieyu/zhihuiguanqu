@@ -55,42 +55,42 @@
           align="center"
           fixed="left"
           sortable="custom"
-          width="130">
+          min-width="130">
         </el-table-column>
         <el-table-column
           prop="UNIT"
           label="部门"
           align="center"
           sortable="custom"
-          width="180">
+          min-width="180">
         </el-table-column>
         <el-table-column
           prop="POSTION"
           label="职务"
           align="center"
           sortable="custom"
-          width="100">
+          min-width="100">
         </el-table-column>
         <el-table-column
           prop="OPHONE"
           label="办公电话"
           align="center"
           sortable="custom"
-          width="150">
+          min-width="150">
         </el-table-column>
         <el-table-column
           prop="MOBILE"
           label="手机号码"
           align="center"
           sortable="custom"
-          width="150">
+          min-width="150">
         </el-table-column>
         <el-table-column
           prop="YR"
           label="年份"
           align="center"
           sortable="custom"
-          width="80">
+          min-width="80">
         </el-table-column>
       </el-table>
 

@@ -121,10 +121,14 @@
                 </template>
                 <el-menu-item index="/water-dispatching"><i class="el-icon-s-tools"></i>调度运行信息</el-menu-item>
                 <el-menu-item index="/water-plan"><i class="el-icon-s-tools"></i>需水计划管理</el-menu-item>
+                <el-menu-item index="/water-quota"><i class="el-icon-s-tools"></i>用水定额计划管理</el-menu-item>
                 <el-menu-item index="/water-distribution"><i class="el-icon-s-tools"></i>用水考核指标</el-menu-item>
+                <el-menu-item index="/water-manage"><i class="el-icon-s-tools"></i>配水管理</el-menu-item>
+                <el-menu-item index="/water-peizhi"><i class="el-icon-s-tools"></i>配水计划</el-menu-item>
              </el-submenu>
              <el-menu-item index="/yixiang-chart"><i class="el-icon-s-tools"></i>黄材仪表图</el-menu-item> 
              <el-menu-item index="/yixiang-wschart"><i class="el-icon-s-tools"></i>枉水仪表图</el-menu-item>
+             <el-menu-item index="/yixiang-kschart"><i class="el-icon-s-tools"></i>康苏仪表图</el-menu-item>
           </el-menu>
         </Sider>
       </div>

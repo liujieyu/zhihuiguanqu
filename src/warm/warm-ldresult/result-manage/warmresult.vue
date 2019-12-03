@@ -79,8 +79,11 @@
         </Col>
         <transition name="el-fade-in-linear">
         <Col :span="span2" v-show="show1">
-          <Row style="margin-top: 30px;margin-left: 20px;">
-            <Col :style="{'height': (theight+90)+'px','overflow-y': 'auto'}">
+        <Row>
+          <Input search enter-button suffix="ios-search" placeholder="请输入站名" style="width: auto;margin-left: 20px;" @on-search="search" v-model="searchmsg" />    
+          </Row>
+          <Row style="margin-top: 10px;margin-left: 20px;">
+            <Col :style="{'height': (theight+83)+'px','overflow-y': 'auto'}">
               <el-tree
                 class="filter-tree"
                 :data="Treedata"
@@ -112,6 +115,7 @@ export default {
       span1:'19',
       span2:'5',
       theight:window.innerHeight-290,
+      searchmsg:'',
       Treedata: [],
       defaultProps: {
           children: 'children',
@@ -457,7 +461,67 @@ export default {
     exportExcel(){
       var params="year="+this.form.year+"&stcd="+this.STinfo.STCD+"&stnm="+this.STinfo.STNM+"&metypename="+this.STinfo.TYPE_NM+"&canalname="+this.STinfo.CANAL_NAME+"&maxz="+this.STinfo.MAX_Z;
        window.location.href='/'+this.$WarmTable+'/excel/exportldresult?'+params;
-    }
+    },
+    //站点查询
+    search(){
+          this.Treedata=new Array();
+            var tt=this.STinfo;
+            this.axios.get('/'+this.$WarmTable+'/ldresult/typesite',{params:{stnm:this.searchmsg}}).then(res => {
+      var root=new Object();
+      root["label"]="类型";root["ZD_SIGN"]=0;root["STCD"]="0";
+      var typelist=new Array();
+      var type1=new Object();
+      type1["label"]="标准断面";type1["ME_TYPE"]=1;type1["ZD_SIGN"]=0;type1["STCD"]="1";typelist.push(type1);
+      var type2=new Object();
+      type2["label"]="巴歇尔槽";type2["ME_TYPE"]=2;type2["ZD_SIGN"]=0;type2["STCD"]="2";typelist.push(type2);
+      var type3=new Object();
+      type3["label"]="水闸";type3["ME_TYPE"]=3;type3["ZD_SIGN"]=0;type3["STCD"]="3";typelist.push(type3);
+      var type4=new Object();
+      type4["label"]="管道";type4["ME_TYPE"]=4;type4["ZD_SIGN"]=0;type4["STCD"]="4";typelist.push(type4);
+      var keyarry=["0"];
+      var datalist=res.data;
+      datalist.map(val=>{
+        val.label=val.STNM;
+      });
+      typelist.map(val => {
+                val.children = getChildrenList(val.ME_TYPE, datalist);
+                return val;
+            });
+      function getChildrenList(me_type, data) {
+                var newList;
+                newList = data.filter((val, index) => {
+                    if (val.ME_TYPE == me_type) {
+                        return true;
+                    }
+                })
+                return newList;
+            }
+      for(var i=typelist.length-1;i>=0;i--){
+          var typeobj=typelist[i];
+          if(typeobj.children==null || typeobj.children.length==0){
+              typelist.splice(i,1);
+          }
+      }
+      keyarry.push(typelist[0].ME_TYPE);
+      keyarry.push(typelist[0].children[0].STCD);
+      root.children=typelist;
+      this.Treedata.push(root);
+      this.keys=keyarry;
+      this.STinfo=typelist[0].children[0];
+      this.axios.get('/'+this.$WarmTable+'/ldresult/maxinfo',{params: {metype:this.STinfo.ME_TYPE,stcd:this.STinfo.STCD}}).then(res => {
+            var maxobj=res.data;
+            this.STinfo.MAX_Z=maxobj.MAX_Z;
+            this.STinfo.MAX_Q=maxobj.MAX_Q;
+            if(this.STinfo.MAX_Z==undefined || this.STinfo.MAX_Z==''){
+              this.STinfo.MAX_Z=0;
+            }
+            if(this.STinfo.MAX_Q==undefined || this.STinfo.MAX_Q==''){
+              this.STinfo.MAX_Q=0;
+            }
+            this.Reload();
+          });
+      });
+     },
   },
   created() {
   },

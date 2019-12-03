@@ -1,22 +1,55 @@
 <template>
   <div id="clickMe" class="backdiv" @dblclick="toggleFullScreen()">
       <div ref="left" :style="{'display':'inline-block','height':theight+'px','width':lwidth+'px','z-index':'3','position':'absolute','top':'0px','left':'0px'}">
-        <div ref="line" :style="{'width':lwidth+'px','height':(subheight1*4)+'px'}" class="subback">
-            <div id="firstchart" :style="{'width':lwidth+'px','height':(subheight1-1)+'px','margin-bottom':'1px'}" class="subback"></div>
+        <div ref="line" :style="{'width':lwidth+'px','height':theight+'px'}">
+            <div ref="firstchart" :style="{'width':lwidth+'px','height':(subheight2-1)+'px','margin-bottom':'1px'}" class="subback"></div>
             <div id="secondchart" :style="{'width':lwidth+'px','height':(subheight1-1)+'px','margin-bottom':'1px'}" class="subback"></div>
-            <div id="threechart" :style="{'width':lwidth+'px','height':(subheight1-1)+'px','margin-bottom':'1px'}" class="subback"></div>
-            <div id="fourchart" :style="{'width':lwidth+'px','height':(subheight1)+'px'}" class="subback"></div>
+            <div id="threechart" :style="{'width':lwidth+'px','height':(subheight1)+'px'}" class="subback"></div>
         </div>
     </div>
     <div ref="center" :style="{'display':'inline-block','height':theight+'px','width':cwidth+'px','z-index':'3'}"></div>
     <div ref="right" :style="{'display':'inline-block','height':theight+'px','width':lwidth+'px','z-index':'3','position':'absolute','top':'0px','right':'0px'}">
-        <div ref="imgsite" :style="{'width':lwidth+'px','height':(theight*0.68)+'px','padding-top':'5px'}" class="subback">
+      <div ref="table" :style="{'width':lwidth+'px','height':(subheight2-1)+'px','margin-top':'1px','text-align':'center'}" class="subback">
+        <h3 style="color:#fff;padding:10px 0;">今日闸门开度流量</h3>
+        <el-table
+                            :data="tabledata"
+                            border
+                            :height="tableheight"
+                            v-loading="loading"
+                            :header-cell-style="{background:'rgba(280,280,280,0)',color:'#fff'}"
+                            @cell-click="cellclick"
+                            style="width:90%;margin-left:5%;">
+                            <el-table-column
+                              prop="STNM"
+                              label="站点名称"
+                              align="center"
+                              min-width="120"
+                              >
+                            </el-table-column>
+                            <el-table-column
+                              prop="OD"
+                              label="闸门开度"
+                              align="center"
+                              min-width="100"
+                              >
+                            </el-table-column>
+                            <el-table-column
+                              prop="Q"
+                              label="流量"
+                              align="center"
+                              min-width="100"
+                              >
+                            </el-table-column>
+                          </el-table> 
+      </div>
+      <div ref="piechart" :style="{'width':lwidth+'px','height':(subheight1-1)+'px','margin-top':'1px'}" class="subback"></div>
+        <div ref="imgsite" :style="{'width':lwidth+'px','height':subheight1+'px','padding-top':'5px'}" class="subback">
             <div :style="{'margin-left':(lwidth*0.0183)+'px','margin-right':(lwidth*0.0183)+'px','width':(lwidth*0.2134)+'px','margin-top':'3px','display':'inline-block','float':'left','text-align':'center'}" v-for="item in imglist">   
                 <img :style="{'width':(theight*0.06445)+'px','height':(theight*0.05445)+'px','cursor':'pointer'}" src="../common/image/video.png" @click="show(item.stcd)"></img>
                 <div :style="{'width':(lwidth*0.2134)+'px','height':(theight*0.02-3)+'px','margin-bottom':'3px','color':'#fff','font-family':'微软雅黑','font-size':'12px','font-weight':'bold'}">{{item.stnm}}</div>            
             </div>
         </div>
-        <div ref="piechart" :style="{'width':lwidth+'px','height':(theight*0.32-1)+'px','margin-top':'1px'}" class="subback"></div>
+        
     </div>
   </div>
 </template>
@@ -30,7 +63,9 @@ export default {
         return {
             imglist:[],
             theight:window.screen.height,
-            subheight1:window.screen.height*0.25,
+            subheight2:window.screen.height*0.334,
+            tableheight:window.screen.height*0.334-80,
+            subheight1:window.screen.height*0.333,
             lwidth:window.outerWidth*0.28125,
             cwidth:window.outerWidth*0.4375,
             imgwidth:window.screen.height*1.1865*1.28,
@@ -40,17 +75,20 @@ export default {
             form:{},
             canallist:[],
             gatelist:[],
+            tabledata:[],
         }
     },
   mixins: [FilterMethods, GetDataMethods],
   mounted() {
-      this.loadRealData();
-      this.loadline();  
+      this.loadRain();
+      this.loadSwkrline();
+      this.loadline(); 
+      this.loadGateData(); 
       this.loadImgdata();
       this.loadPiechart();  
-      setInterval(() => {
-          this.reloadData();
-        }, 1000*60*5);  
+      //setInterval(() => {
+       //   this.reloadData();
+       // }, 1000*60*5);  
   },
   methods: {
     toggleFullScreen(){
@@ -72,78 +110,82 @@ export default {
       this.loadImgdata();
       this.loadPiechart(); 
     },
-    //绘制线性图
+    //绘制雨量柱状图
+    loadRain(){
+      var now=new Date();
+      var emonth=now.getMonth()+1;if(emonth<10){emonth="0"+emonth;}
+      var eday=now.getDay();if(eday<10){eday="0"+eday;}
+      var ehour=now.getHours();if(ehour<10){ehour="0"+ehour;}
+      var endtime=now.getFullYear()+"-"+emonth+"-"+eday+" "+ehour+":00:00";
+      var before=new Date(now.getTime() - 23 * 60 * 60 * 1000);
+      var bmonth=before.getMonth()+1;if(bmonth<10){bmonth="0"+bmonth;}
+      var bday=before.getDay();if(bday<10){bday="0"+bday;}
+      var bhour=before.getHours();if(bhour<10){bhour="0"+bhour;}
+      var begintime=before.getFullYear()+"-"+bmonth+"-"+bday+" "+bhour+":00:00";
+      this.axios.get('/'+this.$WarmTable+'/fieldinfo/raindata',{params:{begintime:'2019-10-03 23:00:00',endtime:'2019-10-04 22:00:00'}}).then(res => {
+            var datalist=res.data;
+            var echartData ={x:new Object(),y1:new Object(),y2:new Object(),y3:new Object()};
+            echartData.x.list=FilterMethods.methods.newArrayByObjArray(datalist, "DT", val => { // 过滤
+                        return val.split(" ")[1];
+                    });
+            echartData.y1.list=FilterMethods.methods.newArrayByObjArray(datalist, "RAIN1", val => { // 过滤
+                        return parseFloat(val).toFixed(1);
+                    });
+            echartData.y2.list=FilterMethods.methods.newArrayByObjArray(datalist, "RAIN2", val => { // 过滤
+                        return parseFloat(val).toFixed(1);
+                    });
+            echartData.y3.list=FilterMethods.methods.newArrayByObjArray(datalist, "RAIN3", val => { // 过滤
+                        return parseFloat(val).toFixed(1);
+                    });
+            this.createBorchart(echartData);
+        });
+    },
+    //绘制水位库容曲线
+    loadSwkrline(){
+      this.axios.get('/'+this.$WarmTable+'/fieldinfo/swkrdata').then(res => {
+            var datalist=res.data;
+            var echartData ={x:new Object(),y:new Object()};
+            echartData.x.list=FilterMethods.methods.newArrayByObjArray(datalist, "STCP", val => { // 过滤
+                        return parseFloat(val).toFixed(3);
+                    });
+            echartData.y.list=FilterMethods.methods.newArrayByObjArray(datalist, "WL", val => { // 过滤
+                        return parseFloat(val).toFixed(3);
+                    });
+            this.createLinechart(echartData);
+        });
+    },
+    //绘制水位流量线性图
     loadline(){
-        var body = {
-        STCD: 'SMB0000002',
-        _page_size: 999999
+      debugger;
+      var body3={
+          STCD: '6530240003',
+          _page_size: 999999
       };
-
-      // 时间参数
       var DTT = this.$FilterData
               .elDatePicker_Filter(this.$App.zeroPointToNowOfTheDay())
               .split(",");
-      body.Time_min = DTT[1];
-      body.Time_max = DTT[2];
-
-      this.$GetData.Survey_History_QDSQ(
-        "historyTable",
-        body,
-        {
-          default: true
-        },
-        data => {
-          this.createChart('firstchart', data.data,'凉水干渠渠首');
-        }
-      );
-      var body2={
-          STCD: 'SMB0000003',
-          _page_size: 999999
-      };
-      body2.Time_min = DTT[1];
-      body2.Time_max = DTT[2];
-      this.$GetData.Survey_History_QDSQ(
-        "historyTable",
-        body2,
-        {
-          default: true
-        },
-        data => {
-          this.createChart('secondchart', data.data,'团岭干渠渠首');
-        }
-      );
-      var body3={
-          STCD: 'SMB0000019',
-          _page_size: 999999
-      };
       body3.Time_min = DTT[1];
       body3.Time_max = DTT[2];
-      this.$GetData.Survey_History_QDSQ(
+      this.$GetData.Survey_History_HDSQ(
         "historyTable",
         body3,
         {
           default: true
         },
         data => {
-          this.createChart('threechart', data.data,'孙家冲平衡站');
+          this.createChart('threechart', data.data,'入库流量站');
         }
       );
-      var body4={
-          STCD: 'SMB0000016',
-          _page_size: 999999
-      };
-      body4.Time_min = DTT[1];
-      body4.Time_max = DTT[2];
-      this.$GetData.Survey_History_QDSQ(
-        "historyTable",
-        body4,
-        {
-          default: true
-        },
-        data => {
-          this.createChart('fourchart', data.data,'石门桥干渠渠首');
-        }
-      );
+    },
+    //查询闸门开度信息
+    loadGateData(){
+      var now=new Date();
+      var month=now.getMonth()+1;if(month<10){month="0"+month;}
+      var day=now.getDay();if(day<10){day="0"+day;}
+      var begintime=now.getFullYear()+"-"+month+"-"+day;
+      this.axios.get('/'+this.$WarmTable+'/fieldinfo/gatedata',{params:{begintime:begintime}}).then(res => {
+            this.tabledata=res.data;
+        });
     },
     //加载渠道和闸阀水情实时数据
     loadRealData(){
@@ -153,7 +195,7 @@ export default {
     //         this.gatelist=obj.typegate;
     //     });
     },
-    //加载图像站数据
+    //加载视频站数据
     loadImgdata(){
       this.imglist=[];
         this.axios.get('/'+this.$WarmTable+'/fieldinfo/videodata').then(res => {
@@ -385,6 +427,225 @@ export default {
         myChart.innerHTML ="<font style='color:#fff;font-weight:bold;'>"+stnm+"暂无今天数据</font>";
       }
     },
+    //水位库容曲线
+    createLinechart(echartData){
+      if (echartData.x.list.length > 0) {
+        myChart = this.$echarts.init(document.getElementById("secondchart"));
+
+        myChart.setOption({
+          title: {
+            text: "康苏水库水位库容曲线",
+             textStyle: {
+              fontSize: 14,
+              fontWeight: 'bolder',
+              color: '#fff'
+            },
+          },
+          backgroundColor:'',
+          tooltip: {
+            trigger: "axis",
+          },
+          color:['#f6ff00'],
+          legend: {
+            show:true,
+            icon : 'roundRect',//icon为圆角矩形          
+            data: ['水位'],
+            x: "right",
+            textStyle:{
+               color:'#fff'
+           }
+          },
+          grid: {  
+                left: '3%',   //图表距边框的距离
+                right: '4%',
+                bottom:'1%',
+                containLabel: true,
+                backgroundColor:'rgba(280,280,280,0.4)',
+                show:true
+            },
+          xAxis: [
+            {
+              type: "category",
+              boundaryGap: false,
+              data: echartData.x.list,
+              splitLine:{show: false},//去除网格线
+              axisLine: {
+                   lineStyle: {
+                       type: 'solid',
+                       color:'#fff',
+                       width:'2'
+                   }
+               },
+              axisTick: {
+                interval: function(index, val) {
+                  var listLength = echartData.x.list.length;
+                  if (listLength >= 4) {
+                    var tick = Math.round(listLength / 4);
+                    if ((index + 1) % tick === 0) {
+                      return true;
+                    } else {
+                      return false;
+                    }
+                  } else {
+                    return true;
+                  }
+                },
+                length: 10
+              },
+              axisLabel: {
+                interval: function(index, val) {
+                  var listLength = echartData.x.list.length;
+                  if (listLength >= 4) {
+                    var tick = Math.round(listLength / 4);
+                    let a = (index + 1) % tick;
+                    if ((index + 1) % tick === 0) {
+                      return true;
+                    } else {
+                      return false;
+                    }
+                  } else {
+                    return true;
+                  }
+                },
+                rotate: 0,
+                margin: 16,
+                textStyle: {
+                       color: '#fff'
+                   }
+              }
+            }
+          ],
+          yAxis: [
+            {
+              name: '水位m',
+              type: "value",             
+              splitLine:{show: false},//去除网格线
+              axisLine: {
+                   lineStyle: {
+                       type: 'solid',
+                       color:'#ebebe3',
+                       width:'2'
+                   }
+               },
+              axisLabel: {
+                formatter: "{value} ",
+                textStyle: {
+                       color: '#fff'
+                   }
+              },
+              scale: true
+            }
+          ],
+          series: [
+            {
+              type: "line",
+              data: echartData.y.list,
+              symbol: 'none',
+              smooth:true,
+              itemStyle : {  
+                                normal : {  
+                                    lineStyle:{  
+                                        color:'#f6ff00',
+                                        width:2,
+                                        opacity:1
+                                    }  
+                                }  
+                            },
+            }
+          ]
+        });
+      } else {
+        var myChart = document.getElementById("secondchart");
+        myChart.style.display = "flex";
+        myChart.style.alignItems = "center";
+        myChart.style.justifyContent = "center";
+        myChart.innerHTML ="<font style='color:#fff;font-weight:bold;'>康苏水库暂无水位库容数据</font>";
+      }
+    },
+    //雨量柱状图
+    createBorchart(edata){
+        var myChart = this.$echarts.init(this.$refs.firstchart);
+        var option = {
+                title: {
+                    text: "24小时降雨柱状图",
+                    textStyle: {
+                    fontSize: 14,
+                    fontWeight: 'bolder',
+                    color: '#fff'
+                    },
+                },
+                color: ['#00FF00', '#FFFF00', '#FF00FF'],
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                grid: {  
+                left: '1%',   //图表距边框的距离
+                right: '1%',
+                bottom:'1%',
+                containLabel: true,
+                show:false
+                },
+                legend: {
+                    data: ['预警雨量站', '坝上雨量水位站', '入库流量站'],
+                    x: "right",
+                      textStyle:{
+                        color:'#fff'
+                    }
+                },
+                calculable: true,
+                xAxis: [
+                    {
+                        type: 'category',
+                        splitLine:{show: false},//去除网格线
+                        axisTick: {show: false},
+                        axisLine: {
+                          lineStyle: {
+                              type: 'solid',
+                              color:'#ebebe3',
+                              width:'2'
+                          }
+                        },
+                        data: edata.x.list
+                    }
+                ],
+                yAxis: [
+                    {
+                        name: '降雨量mm',
+                        type: 'value',
+                        splitLine:{show: false},//去除网格线
+                        axisLine: {
+                            lineStyle: {
+                                type: 'solid',
+                                color:'#ebebe3',
+                                width:'2'
+                            }
+                        },
+                    }
+                ],
+                series: [
+                    {
+                        name: '预警雨量站',
+                        type: 'bar',
+                        barGap: 0,
+                        data: edata.y1.list
+                    },
+                    {
+                        name: '坝上雨量水位站',
+                        type: 'bar',
+                        data: edata.y2.list
+                    },
+                    {
+                        name: '入库流量站',
+                        type: 'bar',
+                        data: edata.y3.list
+                    }
+                ]
+        };
+        myChart.setOption(option);
+    },
     //饼状图
     createPiechart(edata){
     var myChart = this.$echarts.init(this.$refs.piechart);
@@ -543,7 +804,7 @@ background-size: cover;
 z-index: 2;
 }
 .subback{
-  opacity:0.6;
+  opacity:0.9;
   background: linear-gradient(top, #0b25c1, #030d6d);
   background: -ms-linear-gradient(top, #0b25c1, #030d6d);
   background: -webkit-linear-gradient(top, #0b25c1, #030d6d);
@@ -566,4 +827,11 @@ z-index: 2;
   z-index:10;
   opacity: 0;
 }
+.el-table{
+        background-color: rgba(280,280,280,0);
+    }
+.el-table td, .el-table th { color:#fff;}
+.el-table__empty-text {
+color:#fff;
+} 
 </style>

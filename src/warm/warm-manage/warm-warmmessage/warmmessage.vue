@@ -56,7 +56,7 @@
             <div ref="third" style="display:none;">
               <Card class="cardcss">
                 <p slot="title">预警短信信息核对</p>
-                <table style="border: 1px solid #EBEEF5" cellspacing="0" width="100%" class="warm_detail">
+                <table style="border: 1px solid #C7CCD6" cellspacing="0" width="100%" class="warm_detail">
                 <tr>
                   <td align="right" class="dt_name">发送平台：</td>
                   <td align="left" class="dt_vale" style="padding-left:10px;">{{ form.planname || "&nbsp;" }}</td>
@@ -72,25 +72,21 @@
                 <tr>
                   <td align="right" class="dt_name" style="border-bottom:0px;">发送对象：</td>
                   <td align="left" class="dt_vale" style="border-bottom:0px;">
-                  <List  border>
-                    <ListItem v-for="item in form.allinfo" v-if="item.count>0">
-                        <template>
-                            <div class="nav">
-                            <ul>
-                            <li style="width:150px;border-right:#EBEEF5 1px solid;">
-                                <Badge :count="item.count">
+                      <table cellspacing="0" style="width:100%;">
+                          <tr v-for="item in form.allinfo" v-if="item.count>0">
+                              <td style="width:150px;border-top: 1px solid #C7CCD6;border-right: 1px solid #C7CCD6;padding-left:10px;">
+                                  <Badge :count="item.count">
                                     <Avatar shape="square" icon="ios-person" />
                                 </Badge>
+                                <div style="display:block-inline;float:right;">
                                {{item.title}}：
-                            </li>
-                            <li>
-                                 {{item.manname}}
-                            </li>
-                            </ul>
-                            </div>
-                        </template>
-                    </ListItem>
-                 </List>
+                               </div>
+                              </td>
+                              <td style="border-top: 1px solid #C7CCD6;padding:10px 5px 5px 10px;">
+                                  {{item.manname}}
+                              </td>
+                          </tr>
+                      </table>
                   </td>
                 </tr>
               </table>
@@ -328,23 +324,23 @@ text-align:center;
   td {
     height: 45px;
     border-top: none;
-    border-color: #EBEEF5;
+    border-color: #C7CCD6;
   }
 
   .dt_name {
     width: 18px;
-    border-right: #EBEEF5 1px solid;
-    border-bottom: #EBEEF5 1px solid;
+    border-right: #C7CCD6 1px solid;
+    border-bottom: #C7CCD6 1px solid;
   }
 
   .dt_vale {
     width: 82%;
-    border-bottom: #EBEEF5 1px solid;
+    border-bottom: #C7CCD6 1px solid;
   }
 }
 .nav {
     height: 50px;
-    border-top: #EBEEF5 1px solid;
+    border-top: #C7CCD6 1px solid;
 }
  
 .nav ul {

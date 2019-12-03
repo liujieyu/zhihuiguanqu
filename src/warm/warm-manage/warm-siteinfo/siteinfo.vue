@@ -75,21 +75,21 @@
                           align="center"
                           fixed="left"
                           sortable="custom"
-                          width="180">
+                          min-width="120">
                         </el-table-column>
                         <el-table-column
                           prop="TYPENAME"
                           label="监测类型"
                           align="center"
                           sortable="custom"
-                          width="240">
+                          min-width="120">
                         </el-table-column>
                         <el-table-column
                           prop="TMSTR"
                           label="预警时间"
                           align="center"
                           sortable="custom"
-                          width="240"
+                          min-width="160"
                           >
                         </el-table-column>
                         <el-table-column
@@ -97,7 +97,7 @@
                           label="预警等级"
                           align="center"
                           sortable="custom"
-                          width="120"
+                          min-width="120"
                           >
                         </el-table-column>
                         <el-table-column
@@ -106,7 +106,7 @@
                           align="center"
                           show-overflow-tooltip="true" 
                           sortable="custom"
-                          width="360"
+                          min-width="300"
                           >
                         </el-table-column>
                         <el-table-column
@@ -114,7 +114,7 @@
                           label="测量值"
                           align="center"
                           sortable="custom"
-                          width="120"
+                          min-width="120"
                           >
                         </el-table-column>
                         <el-table-column
@@ -122,7 +122,7 @@
                           label="预警指标"
                           sortable="custom"
                           align="center"
-                          width="120"
+                          min-width="120"
                           >
                         </el-table-column>
                         <el-table-column
@@ -130,7 +130,7 @@
                           label="站址"
                           align="center"
                           sortable="custom"
-                          width="300"
+                          min-width="240"
                           >
                         </el-table-column>
                       </el-table>

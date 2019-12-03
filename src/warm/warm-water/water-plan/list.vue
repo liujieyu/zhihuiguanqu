@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div style="overflow:hidden;">
 		<Breadcrumb :style="{margin: '0 0 24px 0'}">
             <BreadcrumbItem>配水管理</BreadcrumbItem>
             <BreadcrumbItem>需水计划管理</BreadcrumbItem>

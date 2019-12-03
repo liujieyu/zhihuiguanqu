@@ -8,12 +8,12 @@
               <p style="color:#464c5b;font-weight:bold;font-size:15px;width:100%;text-align:center;">{{STinfo.STNM}}标准断面水位流量计算</p>
               </Row>
               <Row>
-                  <table style="border: 1px solid #EBEEF5" border cellspacing="0" cellpadding="0" width="100%" class="table_show">
+                  <table style="border: 1px solid #C7CCD6;border-bottom: none;" border cellspacing="0" cellpadding="0" width="100%" class="table_show">
                   <tr>
                       <td class="dt_name">所属渠道：</td><td class="dt_vale borderright">{{STinfo.CANAL_NAME}}</td>
                       <td class="dt_name">渠底宽度：</td><td class="dt_vale borderright">{{Titileinfo.B}}</td>
                       <td class="dt_name">边坡系数：</td><td class="dt_vale borderright">{{Titileinfo.M}}</td>
-                      <td class="dt_name">底坡：</td><td class="dt_vale borderright">{{Titileinfo.I}}</td>
+                      <td class="dt_name">底坡：</td><td class="dt_vale">{{Titileinfo.I}}</td>
                   </tr>
                   <tr>
                       <td class="dt_name">断面类型：</td><td class="dt_vale borderright">{{Titileinfo.TYPENAME}}</td>
@@ -56,7 +56,7 @@
               <p style="color:#464c5b;font-weight:bold;font-size:15px;width:100%;text-align:center;">{{STinfo.STNM}}巴歇尔槽水位流量计算</p>
               </Row>
               <Row>
-                  <table style="border: 1px solid #EBEEF5" border cellspacing="0" cellpadding="0" width="100%" class="table_show">
+                  <table style="border: 1px solid #C7CCD6;border-bottom: none;" border cellspacing="0" cellpadding="0" width="100%" class="table_show">
                   <tr>
                       <td class="dt_name">所属渠道：</td><td class="dt_vale borderright">{{STinfo.CANAL_NAME}}</td>
                       <td class="dt_name" style="width:15%;">巴歇尔槽型号：</td><td class="dt_vale borderright" style="width:10%;">{{Titileinfo.MODEL}}号</td>
@@ -94,7 +94,7 @@
               <p style="color:#464c5b;font-weight:bold;font-size:15px;width:100%;text-align:center;">{{STinfo.STNM}}水闸水位流量计算</p>
               </Row>
               <Row>
-                  <table style="border: 1px solid #EBEEF5" border cellspacing="0" cellpadding="0" width="100%" class="table_show">
+                  <table style="border: 1px solid #C7CCD6;border-bottom: none;" border cellspacing="0" cellpadding="0" width="100%" class="table_show">
                   <tr>
                       <td class="dt_name">所属渠道：</td><td class="dt_vale borderright">{{STinfo.CANAL_NAME}}</td>
                       <td class="dt_name">水闸类型：</td><td class="dt_vale borderright">{{Titileinfo.SLTP}}</td>
@@ -516,10 +516,10 @@ html, body {
 }
 .table_show {
  font-size: 14px;
-  td {
+ td {
     height: 45px;
     border-top: none;
-    border-color: #EBEEF5;
+    border-color: #C7CCD6;
   }
 
   .dt_name {
@@ -535,7 +535,7 @@ html, body {
     text-align: center;
   }
   .dt_vale.borderright{
-        border-right:1px solid #EBEEF5;
+        border-right:1px solid #C7CCD6;
     }
 }
 </style>

@@ -67,6 +67,6 @@
     }
 </script>
 
-<style type="text/css">
-	
+<style lang="less" scope>
+@import "../../common/warmcss.less";
 </style>

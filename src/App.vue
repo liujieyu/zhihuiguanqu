@@ -1765,37 +1765,37 @@ export default {
   computed: {},
   mounted() {
     //加载地图
-    loadModules(["esri/map", "esri/layers/GraphicsLayer", "esri/symbols/TextSymbol"], options)
-      .then(([Map]) => {
-        this.map = new esri.Map("map", {
-          //basemap: "satellite",
-          basemap: "topo",
-          center: [74.966, 39.857],
-          zoom: 13,
-          logo: false,
-          // fadeOnZoom: true,
-          slider: true // 伸缩滑块
-          // maxZoom:4, //最大空间等级
-          // minZoom:5, //最小空间等级
-          // navigationMode: 'css-transforms' // 调整或缩放地图平滑
-        });
+    // loadModules(["esri/map", "esri/layers/GraphicsLayer", "esri/symbols/TextSymbol"], options)
+    //   .then(([Map]) => {
+    //     this.map = new esri.Map("map", {
+    //       //basemap: "satellite",
+    //       basemap: "topo",
+    //       center: [74.966, 39.857],
+    //       zoom: 13,
+    //       logo: false,
+    //       // fadeOnZoom: true,
+    //       slider: true // 伸缩滑块
+    //       // maxZoom:4, //最大空间等级
+    //       // minZoom:5, //最小空间等级
+    //       // navigationMode: 'css-transforms' // 调整或缩放地图平滑
+    //     });
 
-        this.map.on("click", function(ev) {
-            var lat = Math.round(ev.mapPoint.getLatitude() * 1000) / 1000;
-            var lon = Math.round(ev.mapPoint.getLongitude() * 1000) / 1000;
-            console.log("当前坐标："+lat+","+lon);
-        });
+      //   this.map.on("click", function(ev) {
+      //       var lat = Math.round(ev.mapPoint.getLatitude() * 1000) / 1000;
+      //       var lon = Math.round(ev.mapPoint.getLongitude() * 1000) / 1000;
+      //       console.log("当前坐标："+lat+","+lon);
+      //   });
 
-        // 设置地图的鼠标样式
-        this.map.setMapCursor("pointer");
+      //   // 设置地图的鼠标样式
+      //   this.map.setMapCursor("pointer");
 
-        this.addSHPlayerToMap();
-        this.getAll();
-        this.add_GraphicsLayer_Selection_ToMap();
-      })
-      .catch(err => {
-        console.error(err);
-      });
+      //   this.addSHPlayerToMap();
+      //   this.getAll();
+      //   this.add_GraphicsLayer_Selection_ToMap();
+      // })
+      // .catch(err => {
+      //   console.error(err);
+      // });
     Vue.prototype.$App = this;
   }
 };

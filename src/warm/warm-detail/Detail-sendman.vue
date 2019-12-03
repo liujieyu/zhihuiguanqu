@@ -30,6 +30,7 @@
     style="width: 100%;margin-top:10px;"
     @selection-change="changeFun"
     ref="checktable"
+     @row-click="handleRowClick"
    >
    <el-table-column type="selection" width="55"></el-table-column>
    <el-table-column
@@ -134,6 +135,9 @@ import GetDataMethods from "@/assets/commonJS/GetDataMethods";
             checkman(){
                 this.info.list=this.currentinfo;
                 this.$emit('closedailog');
+            },
+            handleRowClick(row, column, event){
+              this.$refs.checktable.toggleRowSelection(row);
             }
    },
 }

@@ -1,17 +1,17 @@
 <template>
   <div v-loading="boxLoading">
-              <table style="border: 1px solid #EBEEF5" border cellspacing="0" width="100%" class="table_detail">
+              <table style="border: 1px solid #C7CCD6;border-bottom: none;" border cellspacing="0" width="100%" class="table_detail">
                 <tr>
                   <td align="right" class="dt_name">上传日期：</td>
-                  <td align="center" class="dt_vale" style="border-right: 1px solid #EBEEF5">{{ mefileInfo.TMSTR || "&nbsp;" }}</td>
+                  <td align="center" class="dt_vale" style="border-right: 1px solid #C7CCD6">{{ mefileInfo.TMSTR || "&nbsp;" }}</td>
                   <td align="right" class="dt_name" >上传人员：</td>
                   <td align="center" class="dt_vale">{{mefileInfo.UP_MAN|| "&nbsp;"}}</td>
                 </tr>
                 <tr>
                   <td align="right" class="dt_name">测量人：</td>
-                  <td align="center" class="dt_vale" style="border-right: 1px solid #EBEEF5">{{ mefileInfo.ME_MAN || "&nbsp;" }}</td>
+                  <td align="center" class="dt_vale" style="border-right: 1px solid #C7CCD6">{{ mefileInfo.ME_MAN || "&nbsp;" }}</td>
                   <td align="right" class="dt_name">审核状态：</td>
-                  <td align="center" class="dt_vale" style="border-right: 1px solid #EBEEF5">{{ mefileInfo.RESULT || "&nbsp;" }}</td>
+                  <td align="center" class="dt_vale">{{ mefileInfo.RESULT || "&nbsp;" }}</td>
                 </tr>
                 <tr>
                   <td align="right" class="dt_name">备注：</td>
@@ -19,7 +19,7 @@
                 </tr>
                 <tr v-if="audin">
                   <td align="right" class="dt_name">审核日期：</td>
-                  <td align="center" class="dt_vale" style="border-right: 1px solid #EBEEF5">
+                  <td align="center" class="dt_vale" style="border-right: 1px solid #C7CCD6">
                       <el-date-picker
                             style="width: 160px"
                             v-model="form.audiTm"
@@ -201,10 +201,23 @@ export default {
 </script>
 
 <style lang="less" scope>
-@import "../../components/Details/common/common.less";
+
 .table_detail {
   td {
     height: 35px;
+    border-top: none;
+    border-color: #C7CCD6;
+  }
+
+  .dt_name {
+    width: 20%;
+    border-left: none;
+  }
+
+  .dt_vale {
+    width: 30%;
+    border-right: none;
+    border-left: none;
   }
 }
 </style>

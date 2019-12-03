@@ -27,8 +27,11 @@
     row-key="ID"
     :height="theight"
     border
+    @row-click="clickTable"
+    @expand-change="expandchange"
+     ref="refTable"
     :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
-    <el-table-column v-for="(column, index) in columns" :prop="column.value" :label="column.text" :min-width="column.minwidth" :fixed="column.fixed" :align="column.algin">
+    <el-table-column v-for="(column, index) in columns" :prop="column.value" :label="column.text" :min-width="column.minwidth" :fixed="column.fixed" :align="column.algin" :key="Math.random()">
     </el-table-column>
   </el-table>
         </Content>
@@ -65,92 +68,80 @@ export default {
         {
           text: "一月",
           value: "ONE",
-          minwidth: 80,
-          fixed:false,
+          minwidth: 80, 
           algin:"center",
         },
         {
           text: "二月",
           value: "TWO",
           minwidth: 80,
-          fixed:false,
           algin:"center",
         },
         {
           text: "三月",
           value: "THREE",
           minwidth: 80,
-          fixed:false,
           algin:"center",
         },
         {
           text: "四月",
           value: "FOUR",
           minwidth: 80,
-          fixed:false,
           algin:"center",
         },
         {
           text: "五月",
           value: "FIVE",
           minwidth: 80,
-          fixed:false,
           algin:"center",
         },
         {
           text: "六月",
           value: "SIX",
           minwidth: 80,
-          fixed:false,
           algin:"center",
         },
         {
           text: "七月",
           value: "SEVEN",
           minwidth: 80,
-          fixed:false,
           algin:"center",
         },
         {
           text: "八月",
           value: "EIGHT",
           minwidth: 80,
-          fixed:false,
           algin:"center",
         },
         {
           text: "九月",
           value: "NINE",
           minwidth: 80,
-          fixed:false,
           algin:"center",
         },
         {
           text: "十月",
           value: "TEN",
           minwidth: 80,
-          fixed:false,
           algin:"center",
         },
         {
           text: "十一月",
           value: "ELEVEN",
           minwidth: 80,
-          fixed:false,
           algin:"center",
         },
         {
           text: "十二月",
           value: "TWELVE",
           minwidth: 80,
-          fixed:false,
           algin:"center",
         },
         {
           text: "年度总计",
           value: "SUMW",
           minwidth: 100,
-          fixed:false,
+          fixed:"right",
           algin:"center",
         },
       ],
@@ -187,6 +178,16 @@ export default {
           },
           Consearch(){
               this.Reload();
+          },
+          clickTable(row,index,e){
+           this.$refs.refTable.toggleRowExpansion(row);
+          },
+          expandchange(data){
+            if(data.ID!=1){
+                setTimeout(()=> {
+                            this.$refs.refTable.doLayout();
+                        },100)
+            }
           },
        },
       components: {   
