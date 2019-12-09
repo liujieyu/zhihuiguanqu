@@ -48,13 +48,14 @@
                               type="index"
                               align="center"
                               width="40"
-                              :index="indexMethod">
+                              :index="indexMethod" :key="Math.random()">
                             </el-table-column>
                             <el-table-column
                               prop="Z"
                               label="水深"
                               align="center"
                               min-width="70"
+                              :key="Math.random()"
                               >
                             </el-table-column>
                             <el-table-column
@@ -62,9 +63,10 @@
                               label="流量"
                               align="center"
                               min-width="70"
+                              :key="Math.random()"
                               >
                             </el-table-column>
-                            <el-table-column label="操作" align="center" min-width="120">
+                            <el-table-column label="操作" align="center" min-width="120" :key="Math.random()">
                               <template slot-scope="scope">
                                 <el-button @click="updateClick(scope.row)" type="primary" size="small">修改</el-button>
                                 <el-button @click="deleteClick(scope.row)" type="primary" size="small">删除</el-button>
@@ -363,6 +365,9 @@ export default {
             });
           this.data1 = newdatalist;
           this.loading = false;
+          setTimeout(()=> {
+                            this.$refs.refTable.doLayout();
+          },100);
           var curlist=res.data.curlist;
           var lastlist=res.data.lastlist;
           var echartData = {

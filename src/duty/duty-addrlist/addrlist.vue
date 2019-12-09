@@ -1,7 +1,7 @@
 <template>
   <div>
-    <Content :style="{padding: '24px', background: '#fff'}">
-      <Row type="flex" :gutter="16" justify="end" align="left">
+    <Content class="searchcon">
+      <Row type="flex" :gutter="16" class="rowtocol">
         <Col align="left" fixed="left">
           人员类型：
           <el-select v-model="value" size="small" placeholder="请选择">
@@ -32,11 +32,11 @@
            <Button type="primary" style="width: auto;margin-right: 20px;" @click="err">导出</Button>
         </Col>  
       </Row> 
-      <Divider/> 
+      <Row class="fgline"></Row> 
       <el-table
         :data="tabledata"
         border
-        height="480"
+        :height="theight"
         v-loading="loading"
         style="width: 100%"
         @cell-click="cellclick"
@@ -94,7 +94,7 @@
         </el-table-column>
       </el-table>
 
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin-top: 10px;margin-right: 10px;overflow: hidden">
         <div style="float: right;">
           <Page 
             :total="list_input.total" 
@@ -120,6 +120,7 @@ export default {
   {
     return{
       loading:false,
+      theight:window.innerHeight-236,
       options:[{
         value:'1',
         label:'主管领导',
@@ -169,7 +170,7 @@ export default {
       {
         ROWID:'3',
         NM:'付旭明',
-        UNIT:'c',
+        UNIT:'宁乡市经开区',
         POSITION:'市长',
         OPHONE:'',
         MOBILE:'13607318218',
@@ -190,7 +191,7 @@ export default {
         UNIT:'武装部',
         POSITION:'市委常委、武装部长',
         OPHONE:'',
-        MOBILE:'13017290341v',
+        MOBILE:'13017290341',
         YR:'2019',
       },
       {

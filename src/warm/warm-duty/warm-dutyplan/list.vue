@@ -61,5 +61,4 @@
 
 <style lang="less" scope>
 @import "../../common/warmcss.less";
-.el-table td, .el-table th { padding: 6px 0;}
 </style>

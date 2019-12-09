@@ -19,6 +19,9 @@
                     <Option v-for="item in gljglist" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
                 </Col>
+                <Col>
+                 <Button type="primary" style="width: auto;margin-right: 20px;" @click="exportData">导出</Button>
+                </Col>
             </Row>
             <Row class="fgline"></Row>
             <el-table
@@ -183,11 +186,13 @@ export default {
            this.$refs.refTable.toggleRowExpansion(row);
           },
           expandchange(data){
-            if(data.ID!=1){
                 setTimeout(()=> {
                             this.$refs.refTable.doLayout();
-                        },100)
-            }
+                        },100);
+          },
+          exportData(){
+                var params='year='+this.form.year+'&organCode='+this.form.gljg;
+                window.location.href='/'+this.$WarmTable+'/excel/exportwaterplan?'+params;
           },
        },
       components: {   

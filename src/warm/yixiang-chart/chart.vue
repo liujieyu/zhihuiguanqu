@@ -12,7 +12,7 @@
         <div ref="borchart" :style="{'width':lwidth+'px','height':(subheight2-1)+'px','margin-top':'1px'}" class="subback"></div>
     </div>
     <div ref="center" :style="{'display':'inline-block','height':theight+'px','width':cwidth+'px','z-index':'3','margin-left':lwidth+'px'}">
-      <div style="color:#fff;text-shadow:5px 2px 6px #000;text-align:center;z-index:10;position:relative;"><h1>黄材灌区量测水管理系统</h1></div>
+      <div style="color:#fff;text-shadow:5px 2px 6px #000;text-align:center;z-index:10;position:relative;top:25px;"><h1>黄材灌区量测水管理系统</h1></div>
       <div class="switch" @click="switchleft" ref="switchleft">
           <i class="el-icon-d-arrow-left" v-if="showleft"></i>
           <i class="el-icon-d-arrow-right" v-if="!showleft"></i>

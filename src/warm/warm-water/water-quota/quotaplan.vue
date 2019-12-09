@@ -202,11 +202,9 @@ export default {
            this.$refs.refTable.toggleRowExpansion(row);
           },
           expandchange(data){
-            if(data.ID!=1){
                 setTimeout(()=> {
                             this.$refs.refTable.doLayout();
-                        },100)
-            }
+                        },100);
           }
        },
       components: {   

@@ -1,18 +1,137 @@
 <template>
   <div id="clickMe" class="backdiv" @dblclick="toggleFullScreen()">
-      <div ref="left" :style="{'display':'inline-block','height':theight+'px','width':lwidth+'px','z-index':'3','position':'absolute','top':'0px','left':'0px'}">
+    <img src="../common/image/wsmapnosite.png" :style="{'width':imgwidth+'px','height':imgheight+'px','position':'absolute','top':-0.085*imgheight+'0px','left':leftwidth+'px'}"></img>
+      <div ref="left" :style="{'display':'inline-block','height':theight+'px','width':lwidth+'px','z-index':'3','position':'absolute','top':'0px','left':'0px'}" v-show="showleft">
         <div ref="line" :style="{'width':lwidth+'px','height':(subheight1*4)+'px'}" class="subback">
-            <div id="firstchart" :style="{'width':lwidth+'px','height':(subheight1-1)+'px','margin-bottom':'1px'}" class="subback"></div>
-            <div id="secondchart" :style="{'width':lwidth+'px','height':(subheight1-1)+'px','margin-bottom':'1px'}" class="subback"></div>
-            <div id="threechart" :style="{'width':lwidth+'px','height':(subheight1-1)+'px','margin-bottom':'1px'}" class="subback"></div>
-            <div id="fourchart" :style="{'width':lwidth+'px','height':(subheight1)+'px'}" class="subback"></div>
+            <div id="firstchart" :style="{'width':lwidth+'px','height':(subheight1-1)+'px','margin-bottom':'1px'}"></div>
+            <div id="secondchart" :style="{'width':lwidth+'px','height':(subheight1-1)+'px','margin-bottom':'1px'}"></div>
+            <div id="threechart" :style="{'width':lwidth+'px','height':(subheight1-1)+'px','margin-bottom':'1px'}"></div>
+            <div id="fourchart" :style="{'width':lwidth+'px','height':(subheight1)+'px'}"></div>
         </div>
     </div>
-    <div ref="center" :style="{'display':'inline-block','height':theight+'px','width':cwidth+'px','z-index':'3'}"></div>
-    <div ref="right" :style="{'display':'inline-block','height':theight+'px','width':lwidth+'px','z-index':'3','position':'absolute','top':'0px','right':'0px'}">
+    <div ref="center" :style="{'display':'inline-block','height':theight+'px','width':cwidth+'px','z-index':'3','margin-left':lwidth+'px'}">
+      <div style="color:#fff;text-shadow:5px 2px 6px #000;text-align:center;z-index:10;position:relative;top:25px;"><h1>枉水灌区量测水管理系统</h1></div>
+      <div class="switch" @click="switchleft" ref="switchleft">
+          <i class="el-icon-d-arrow-left" v-if="showleft"></i>
+          <i class="el-icon-d-arrow-right" v-if="!showleft"></i>
+        </div>
+      <div class="switchright" @click="switchright" ref="switchright">
+          <i class="el-icon-d-arrow-left" v-if="!showright"></i>
+          <i class="el-icon-d-arrow-right" v-if="showright"></i>
+        </div>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>水深：</td><td>{{form.Z}}m</td></tr><tr><td>流量：</td><td>{{form.Q}}m³/s</td></tr></table>
+      <div slot="reference" :style="{'left':(728/2055*imgwidth+leftwidth)+'px','top':(imgheight*(522/1703-0.085))+'px'}" class="qddiv" @mouseover="showcanalinfo('SMB0000014')" id="SMB0000014"></div>
+      </el-popover>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>水深：</td><td>{{form.Z}}m</td></tr><tr><td>流量：</td><td>{{form.Q}}m³/s</td></tr></table>
+      <div slot="reference" :style="{'left':(785/2055*imgwidth+leftwidth)+'px','top':(imgheight*(600/1703-0.085))+'px'}" class="qddiv" @mouseover="showcanalinfo('SMB0000013')" id="SMB0000013"></div>
+      </el-popover>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>水深：</td><td>{{form.Z}}m</td></tr><tr><td>流量：</td><td>{{form.Q}}m³/s</td></tr></table>
+      <div slot="reference" :style="{'left':(565/2055*imgwidth+leftwidth)+'px','top':(imgheight*(705/1703-0.085))+'px'}" class="qddiv" @mouseover="showcanalinfo('SMF0000001')" id="SMF0000001"></div>
+      </el-popover>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>水深：</td><td>{{form.Z}}m</td></tr><tr><td>流量：</td><td>{{form.Q}}m³/s</td></tr></table>
+      <div slot="reference" :style="{'left':(584/2055*imgwidth+leftwidth)+'px','top':(imgheight*(778/1703-0.085))+'px'}" class="qddiv" @mouseover="showcanalinfo('SMB0000006')" id="SMB0000006"></div>
+      </el-popover>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>水深：</td><td>{{form.Z}}m</td></tr><tr><td>流量：</td><td>{{form.Q}}m³/s</td></tr></table>
+      <div slot="reference" :style="{'left':(608/2055*imgwidth+leftwidth)+'px','top':(imgheight*(778/1703-0.085))+'px'}" class="qddiv" @mouseover="showcanalinfo('SMF0000002')" id="SMF0000002"></div>
+      </el-popover>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>水深：</td><td>{{form.Z}}m</td></tr><tr><td>流量：</td><td>{{form.Q}}m³/s</td></tr></table>
+      <div slot="reference" :style="{'left':(776/2055*imgwidth+leftwidth)+'px','top':(imgheight*(677/1703-0.085))+'px'}" class="qddiv" @mouseover="showcanalinfo('SMB0000017')" id="SMB0000017"></div>
+      </el-popover>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>水深：</td><td>{{form.Z}}m</td></tr><tr><td>流量：</td><td>{{form.Q}}m³/s</td></tr></table>
+      <div slot="reference" :style="{'left':(492/2055*imgwidth+leftwidth)+'px','top':(imgheight*(850/1703-0.085))+'px'}" class="qddiv" @mouseover="showcanalinfo('SMB0000007')" id="SMB0000007"></div>
+      </el-popover>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>水深：</td><td>{{form.Z}}m</td></tr><tr><td>流量：</td><td>{{form.Q}}m³/s</td></tr></table>
+      <div slot="reference" :style="{'left':(465/2055*imgwidth+leftwidth)+'px','top':(imgheight*(870/1703-0.085))+'px'}" class="qddiv" @mouseover="showcanalinfo('SMB0000021')" id="SMB0000021"></div>
+      </el-popover>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>水深：</td><td>{{form.Z}}m</td></tr><tr><td>流量：</td><td>{{form.Q}}m³/s</td></tr></table>
+      <div slot="reference" :style="{'left':(500/2055*imgwidth+leftwidth)+'px','top':(imgheight*(946/1703-0.085))+'px'}" class="qddiv" @mouseover="showcanalinfo('SMB0000008')" id="SMB0000008"></div>
+      </el-popover>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>水深：</td><td>{{form.Z}}m</td></tr><tr><td>流量：</td><td>{{form.Q}}m³/s</td></tr></table>
+      <div slot="reference" :style="{'left':(452/2055*imgwidth+leftwidth)+'px','top':(imgheight*(1001/1703-0.085))+'px'}" class="qddiv" @mouseover="showcanalinfo('SMF0000005')" id="SMF0000005"></div>
+      </el-popover>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>水深：</td><td>{{form.Z}}m</td></tr><tr><td>流量：</td><td>{{form.Q}}m³/s</td></tr></table>
+      <div slot="reference" :style="{'left':(415/2055*imgwidth+leftwidth)+'px','top':(imgheight*(1125/1703-0.085))+'px'}" class="qddiv" @mouseover="showcanalinfo('SMB0000011')" id="SMB0000011"></div>
+      </el-popover>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>水深：</td><td>{{form.Z}}m</td></tr><tr><td>流量：</td><td>{{form.Q}}m³/s</td></tr></table>
+      <div slot="reference" :style="{'left':(426/2055*imgwidth+leftwidth)+'px','top':(imgheight*(1147/1703-0.085))+'px'}" class="qddiv" @mouseover="showcanalinfo('SMB0000010')" id="SMB0000010"></div>
+      </el-popover>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>水深：</td><td>{{form.Z}}m</td></tr><tr><td>流量：</td><td>{{form.Q}}m³/s</td></tr></table>
+      <div slot="reference" :style="{'left':(420/2055*imgwidth+leftwidth)+'px','top':(imgheight*(1170/1703-0.085))+'px'}" class="qddiv" @mouseover="showcanalinfo('SMB0000009')" id="SMB0000009"></div>
+      </el-popover>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>水深：</td><td>{{form.Z}}m</td></tr><tr><td>流量：</td><td>{{form.Q}}m³/s</td></tr></table>
+      <div slot="reference" :style="{'left':(386/2055*imgwidth+leftwidth)+'px','top':(imgheight*(1304/1703-0.085))+'px'}" class="qddiv" @mouseover="showcanalinfo('SMU0000001')" id="SMU0000001"></div>
+      </el-popover>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>水深：</td><td>{{form.Z}}m</td></tr><tr><td>流量：</td><td>{{form.Q}}m³/s</td></tr></table>
+      <div slot="reference" :style="{'left':(669/2055*imgwidth+leftwidth)+'px','top':(imgheight*(1036/1703-0.085))+'px'}" class="qddiv" @mouseover="showcanalinfo('SMB0000012')" id="SMB0000012"></div>
+      </el-popover>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>水深：</td><td>{{form.Z}}m</td></tr><tr><td>流量：</td><td>{{form.Q}}m³/s</td></tr></table>
+      <div slot="reference" :style="{'left':(676/2055*imgwidth+leftwidth)+'px','top':(imgheight*(1139/1703-0.085))+'px'}" class="qddiv" @mouseover="showcanalinfo('SMB0000020')" id="SMB0000020"></div>
+      </el-popover>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>水深：</td><td>{{form.Z}}m</td></tr><tr><td>流量：</td><td>{{form.Q}}m³/s</td></tr></table>
+      <div slot="reference" :style="{'left':(1255/2055*imgwidth+leftwidth)+'px','top':(imgheight*(736/1703-0.085))+'px'}" class="qddiv" @mouseover="showcanalinfo('SMF0000004')" id="SMF0000004"></div>
+      </el-popover>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>水深：</td><td>{{form.Z}}m</td></tr><tr><td>流量：</td><td>{{form.Q}}m³/s</td></tr></table>
+      <div slot="reference" :style="{'left':(1169/2055*imgwidth+leftwidth)+'px','top':(imgheight*(756/1703-0.085))+'px'}" class="qddiv" @mouseover="showcanalinfo('SMF0000003')" id="SMF0000003"></div>
+      </el-popover>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>水深：</td><td>{{form.Z}}m</td></tr><tr><td>流量：</td><td>{{form.Q}}m³/s</td></tr></table>
+      <div slot="reference" :style="{'left':(1076/2055*imgwidth+leftwidth)+'px','top':(imgheight*(836/1703-0.085))+'px'}" class="qddiv" @mouseover="showcanalinfo('SMB0000015')" id="SMB0000015"></div>
+      </el-popover>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>水深：</td><td>{{form.Z}}m</td></tr><tr><td>流量：</td><td>{{form.Q}}m³/s</td></tr></table>
+      <div slot="reference" :style="{'left':(1059/2055*imgwidth+leftwidth)+'px','top':(imgheight*(856/1703-0.085))+'px'}" class="qddiv" @mouseover="showcanalinfo('SMB0000016')" id="SMB0000016"></div>
+      </el-popover>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>水深：</td><td>{{form.Z}}m</td></tr><tr><td>流量：</td><td>{{form.Q}}m³/s</td></tr></table>
+      <div slot="reference" :style="{'left':(934/2055*imgwidth+leftwidth)+'px','top':(imgheight*(877/1703-0.085))+'px'}" class="qddiv" @mouseover="showcanalinfo('SMB0000004')" id="SMB0000004"></div>
+      </el-popover>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>水深：</td><td>{{form.Z}}m</td></tr><tr><td>流量：</td><td>{{form.Q}}m³/s</td></tr></table>
+      <div slot="reference" :style="{'left':(946/2055*imgwidth+leftwidth)+'px','top':(imgheight*(994/1703-0.085))+'px'}" class="qddiv" @mouseover="showcanalinfo('SMB0000005')" id="SMB0000005"></div>
+      </el-popover>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>水深：</td><td>{{form.Z}}m</td></tr><tr><td>流量：</td><td>{{form.Q}}m³/s</td></tr></table>
+      <div slot="reference" :style="{'left':(828/2055*imgwidth+leftwidth)+'px','top':(imgheight*(1118/1703-0.085))+'px'}" class="qddiv" @mouseover="showcanalinfo('SMB0000018')" id="SMB0000018"></div>
+      </el-popover>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>水深：</td><td>{{form.Z}}m</td></tr><tr><td>流量：</td><td>{{form.Q}}m³/s</td></tr></table>
+      <div slot="reference" :style="{'left':(836/2055*imgwidth+leftwidth)+'px','top':(imgheight*(1184/1703-0.085))+'px'}" class="qddiv" @mouseover="showcanalinfo('SMB0000003')" id="SMB0000003"></div>
+      </el-popover>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>水深：</td><td>{{form.Z}}m</td></tr><tr><td>流量：</td><td>{{form.Q}}m³/s</td></tr></table>
+      <div slot="reference" :style="{'left':(800/2055*imgwidth+leftwidth)+'px','top':(imgheight*(1220/1703-0.085))+'px'}" class="qddiv" @mouseover="showcanalinfo('SMB0000019')" id="SMB0000019"></div>
+      </el-popover>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>水深：</td><td>{{form.Z}}m</td></tr><tr><td>流量：</td><td>{{form.Q}}m³/s</td></tr></table>
+      <div slot="reference" :style="{'left':(807/2055*imgwidth+leftwidth)+'px','top':(imgheight*(1260/1703-0.085))+'px'}" class="qddiv" @mouseover="showcanalinfo('SMB0000002')" id="SMB0000002"></div>
+      </el-popover>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>水深：</td><td>{{form.Z}}m</td></tr><tr><td>流量：</td><td>{{form.Q}}m³/s</td></tr></table>
+      <div slot="reference" :style="{'left':(745/2055*imgwidth+leftwidth)+'px','top':(imgheight*(1333/1703-0.085))+'px'}" class="qddiv" @mouseover="showcanalinfo('SMB0000001')" id="SMB0000001"></div>
+      </el-popover>
+    </div>
+    <div ref="right" :style="{'display':'inline-block','height':theight+'px','width':lwidth+'px','z-index':'3','position':'absolute','top':'0px','right':'0px'}" v-show="showright">
         <div ref="imgsite" :style="{'width':lwidth+'px','height':(theight*0.68)+'px','padding-top':'5px'}" class="subback">
             <div :style="{'margin-left':(lwidth*0.0183)+'px','margin-right':(lwidth*0.0183)+'px','width':(lwidth*0.2134)+'px','margin-top':'3px','display':'inline-block','float':'left','text-align':'center'}" v-for="item in imglist">   
-                <img :style="{'width':(theight*0.06445)+'px','height':(theight*0.05445)+'px','cursor':'pointer'}" src="../common/image/video.png" @click="show(item.stcd)"></img>
+                <img :style="{'width':(theight*0.0545)+'px','height':(theight*0.05445)+'px','cursor':'pointer'}" src="../common/image/shipin.png" @click="show(item.stcd)"></img>
                 <div :style="{'width':(lwidth*0.2134)+'px','height':(theight*0.02-3)+'px','margin-bottom':'3px','color':'#fff','font-family':'微软雅黑','font-size':'12px','font-weight':'bold'}">{{item.stnm}}</div>            
             </div>
         </div>
@@ -31,12 +150,14 @@ export default {
             imglist:[],
             theight:window.screen.height,
             subheight1:window.screen.height*0.25,
-            lwidth:window.outerWidth*0.28125,
-            cwidth:window.outerWidth*0.4375,
-            imgwidth:window.screen.height*1.1865*1.28,
-            imgheight:window.screen.height*1.28,
-            allwidth:window.outerWidth,
-            leftwidth:window.outerWidth*0.28125*0.36,
+            lwidth:window.screen.width*0.28125,
+            cwidth:window.screen.width*0.4375,
+            imgwidth:window.screen.height*2055/1703*1.19,
+            imgheight:window.screen.height*1.19,
+            allwidth:window.screen.width,
+            leftwidth:window.screen.width*0.28125*0.7,
+            showleft:true,
+            showright:true,
             form:{},
             canallist:[],
             gatelist:[],
@@ -147,11 +268,20 @@ export default {
     },
     //加载渠道和闸阀水情实时数据
     loadRealData(){
-    //   this.axios.get('/'+this.$WarmTable+'/fieldinfo/getrinfo').then(res => {
-    //         var obj=res.data;
-    //         this.canallist=obj.typecanal;
-    //         this.gatelist=obj.typegate;
-    //     });
+       this.axios.get('/'+this.$WarmTable+'/fieldinfo/getrinfo').then(res => {
+             var obj=res.data;
+             this.canallist=obj.typecanal;
+             for(var i=0;i<this.canallist.length;i++){
+              var canalobj=this.canallist[i];
+              if(canalobj.Z>0){
+                document.getElementById(canalobj.STCD).className = "waterqddiv";
+              }
+              if(canalobj.ALARM==1){
+                document.getElementById(canalobj.STCD).className = "warmqddiv";
+              }
+            }
+             this.gatelist=obj.typegate;
+         });
     },
     //加载图像站数据
     loadImgdata(){
@@ -521,6 +651,22 @@ export default {
         }
       }
   },
+    switchleft(){
+    this.showleft=!this.showleft;
+    if(this.showleft){
+      this.$refs.switchleft.style.left=this.lwidth+'px';
+    }else{
+      this.$refs.switchleft.style.left='0px';
+    }
+  },
+  switchright(){
+    this.showright=!this.showright;
+    if(this.showright){
+      this.$refs.switchright.style.right=this.lwidth+'px';
+    }else{
+      this.$refs.switchright.style.right='0px';
+    }
+  },
  },
 }
 </script>
@@ -535,28 +681,37 @@ background-size: cover;
 overflow: hidden;
 position: relative;
 }
-.mapdiv{
-position:absolute;
-background-image: url(../common/image/map.png);
-background-repeat: no-repeat;
-background-size: cover;
-z-index: 2;
-}
 .subback{
-  opacity:0.6;
-  background: linear-gradient(top, #0b25c1, #030d6d);
-  background: -ms-linear-gradient(top, #0b25c1, #030d6d);
-  background: -webkit-linear-gradient(top, #0b25c1, #030d6d);
-  background: -moz-linear-gradient(top, #0b25c1, #030d6d);
+  opacity:0.9;
+  background: linear-gradient(top, #177DE7, #1768BD);
+  background: -ms-linear-gradient(top, #177DE7, #1768BD);
+  background: -webkit-linear-gradient(top, #177DE7, #1768BD);
+  background: -moz-linear-gradient(top, #177DE7, #1768BD);
   box-shadow: 0 0 1px #fff;
 }
-.sitediv{
-  width:12px;
-  height:12px;
-  background-color:red;
+.qddiv{
+  width:16px;
+  height:16px;
+  background:url(../common/image/qd.png);
   position:absolute;
   z-index:10;
-  opacity: 0;
+  opacity: 1;
+}
+.waterqddiv{
+  width:16px;
+  height:16px;
+  background:url(../common/image/waterqd.png);
+  position:absolute;
+  z-index:10;
+  opacity: 1;
+}
+.warmqddiv{
+  width:16px;
+  height:16px;
+  background:url(../common/image/warmqd.png);
+  position:absolute;
+  z-index:10;
+  opacity: 1;
 }
 .gatediv{
   width:14px;
@@ -565,5 +720,45 @@ z-index: 2;
   position:absolute;
   z-index:10;
   opacity: 0;
+}
+.switch {
+    position: absolute;
+    left: 28.125%;
+    top:50%;
+    width: 15px;
+    height: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #BEDEFF;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border: #1B74D0 2px solid;
+    border-left: 0;
+
+    &:hover {
+      filter: brightness(1.1);
+    }
+  }
+.switchright{
+  position: absolute;
+    right:28.125%;
+    top:50%;
+    width: 15px;
+    height: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #BEDEFF;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border: #1B74D0 2px solid;
+    border-right: 0;
+
+    &:hover {
+      filter: brightness(1.1);
+    }
 }
 </style>

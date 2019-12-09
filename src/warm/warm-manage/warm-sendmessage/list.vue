@@ -2,7 +2,7 @@
 	<div>
 		<Breadcrumb :style="{margin: '0 0 24px 0'}">
             <BreadcrumbItem>预警管理</BreadcrumbItem>
-            <BreadcrumbItem>短信发送</BreadcrumbItem>
+            <BreadcrumbItem>发送短信</BreadcrumbItem>
         </Breadcrumb>
 
 		<Tabs value="sendmessage">
