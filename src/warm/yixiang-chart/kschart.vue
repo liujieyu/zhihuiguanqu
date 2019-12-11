@@ -1,23 +1,69 @@
 <template>
   <div id="clickMe" class="backdiv" @dblclick="toggleFullScreen()">
-      <div ref="left" :style="{'display':'inline-block','height':theight+'px','width':lwidth+'px','z-index':'3','position':'absolute','top':'0px','left':'0px'}">
+    <img src="../common/image/ksmapnosite.png" :style="{'width':imgwidth+'px','height':imgheight+'px','position':'absolute','top':'0px','left':leftwidth+'px'}"></img>
+      <div ref="left" :style="{'display':'inline-block','height':theight+'px','width':lwidth+'px','z-index':'3','position':'absolute','top':'0px','left':'0px'}" v-show="showleft">
         <div ref="line" :style="{'width':lwidth+'px','height':theight+'px'}">
-            <div ref="firstchart" :style="{'width':lwidth+'px','height':(subheight2-1)+'px','margin-bottom':'1px'}" class="subback"></div>
+            <div id="firstchart" :style="{'width':lwidth+'px','height':(subheight2-1)+'px','margin-bottom':'1px'}" class="subback"></div>
             <div id="secondchart" :style="{'width':lwidth+'px','height':(subheight1-1)+'px','margin-bottom':'1px'}" class="subback"></div>
             <div id="threechart" :style="{'width':lwidth+'px','height':(subheight1)+'px'}" class="subback"></div>
         </div>
     </div>
-    <div ref="center" :style="{'display':'inline-block','height':theight+'px','width':cwidth+'px','z-index':'3'}"></div>
-    <div ref="right" :style="{'display':'inline-block','height':theight+'px','width':lwidth+'px','z-index':'3','position':'absolute','top':'0px','right':'0px'}">
+    <div ref="center" :style="{'display':'inline-block','height':theight+'px','width':cwidth+'px','z-index':'3','margin-left':lwidth+'px'}">
+      <div style="color:#fff;text-shadow:5px 2px 6px #000;text-align:center;z-index:10;position:relative;top:25px;"><h1>康苏水情测报系统</h1></div>
+      <div class="switch" @click="switchleft" ref="switchleft">
+          <i class="el-icon-d-arrow-left" v-if="showleft"></i>
+          <i class="el-icon-d-arrow-right" v-if="!showleft"></i>
+        </div>
+      <div class="switchright" @click="switchright" ref="switchright">
+          <i class="el-icon-d-arrow-left" v-if="!showright"></i>
+          <i class="el-icon-d-arrow-right" v-if="showright"></i>
+        </div>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>雨量：</td><td>{{form.P}}mm</td></tr><tr><td colspan="2">{{form.ALARMCONTENT}}</td></tr></table>
+      <div slot="reference" :style="{'left':(782/2000*imgwidth+leftwidth)+'px','top':(imgheight*(584/1362))+'px'}" class="raindiv" @mouseover="showraininfo('6530240001')" id="R6530240001"></div>
+      </el-popover>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>雨量：</td><td>{{form.P}}mm</td></tr><tr><td colspan="2">{{form.ALARMCONTENT}}</td></tr></table>
+      <div slot="reference" :style="{'left':(1114/2000*imgwidth+leftwidth)+'px','top':(imgheight*(856/1362))+'px'}" class="raindiv" @mouseover="showraininfo('6530240003')" id="R6530240003"></div>
+      </el-popover>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>雨量：</td><td>{{form.P}}mm</td></tr><tr><td colspan="2">{{form.ALARMCONTENT}}</td></tr></table>
+      <div slot="reference" :style="{'left':(1333/2000*imgwidth+leftwidth)+'px','top':(imgheight*(1154/1362))+'px'}" class="raindiv" @mouseover="showraininfo('6530240002')" id="R6530240002"></div>
+      </el-popover>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>水位：</td><td>{{form.Z}}m</td></tr><tr><td>距警戒：</td><td>{{form.JL}}m</td></tr></table>
+      <div slot="reference" :style="{'left':(1126/2000*imgwidth+leftwidth)+'px','top':(imgheight*(868/1362))+'px'}" class="hddiv" @mouseover="showhdinfo('6530240003')" id="H6530240003"></div>
+      </el-popover>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>水位：</td><td>{{form.RZ}}m</td></tr><tr><td>距汛限：</td><td>{{form.JL}}m</td></tr></table>
+      <div slot="reference" :style="{'left':(1321/2000*imgwidth+leftwidth)+'px','top':(imgheight*(1174/1362))+'px'}" class="skdiv" @mouseover="showskinfo('6530240002')" id="S6530240002"></div>
+      </el-popover>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>水深：</td><td>{{form.Z}}m</td></tr><tr><td>流量：</td><td>{{form.Q}}m³/s</td></tr></table>
+      <div slot="reference" :style="{'left':(1308/2000*imgwidth+leftwidth)+'px','top':(imgheight*(1197/1362))+'px'}" class="qddiv" @mouseover="showcanalinfo('6530240007')" id="6530240007"></div>
+      </el-popover>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>水深：</td><td>{{form.Z}}m</td></tr><tr><td>流量：</td><td>{{form.Q}}m³/s</td></tr></table>
+      <div slot="reference" :style="{'left':(1308/2000*imgwidth+leftwidth)+'px','top':(imgheight*(1218/1362))+'px'}" class="qddiv" @mouseover="showcanalinfo('6530240004')" id="6530240004"></div>
+      </el-popover>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>水深：</td><td>{{form.Z}}m</td></tr><tr><td>流量：</td><td>{{form.Q}}m³/s</td></tr></table>
+      <div slot="reference" :style="{'left':(1330/2000*imgwidth+leftwidth)+'px','top':(imgheight*(1196/1362))+'px'}" class="qddiv" @mouseover="showcanalinfo('6530240005')" id="6530240005"></div>
+      </el-popover>
+      <el-popover placement="top-start" :title="form.STNM" width="220" trigger="hover">
+      <table><tr><td>时间：</td><td>{{form.TM}}</td></tr><tr><td>水深：</td><td>{{form.Z}}m</td></tr><tr><td>流量：</td><td>{{form.Q}}m³/s</td></tr></table>
+      <div slot="reference" :style="{'left':(1332/2000*imgwidth+leftwidth)+'px','top':(imgheight*(1218/1362))+'px'}" class="qddiv" @mouseover="showcanalinfo('6530240006')" id="6530240006"></div>
+      </el-popover>
+    </div>
+    <div ref="right" :style="{'display':'inline-block','height':theight+'px','width':lwidth+'px','z-index':'3','position':'absolute','top':'0px','right':'0px'}" v-show="showright">
       <div ref="table" :style="{'width':lwidth+'px','height':(subheight2-1)+'px','margin-top':'1px','text-align':'center'}" class="subback">
-        <h3 style="color:#fff;padding:10px 0;">今日闸门开度流量</h3>
+        <div style="color:#fff;font-size:14px;font-weight:bold;padding-top:10px;padding-bottom:10px;">今日闸门开度流量</div>
         <el-table
                             :data="tabledata"
                             border
                             :height="tableheight"
                             v-loading="loading"
-                            :header-cell-style="{background:'rgba(280,280,280,0)',color:'#fff'}"
-                            @cell-click="cellclick"
+                            row-style="height:45px"
                             style="width:90%;margin-left:5%;">
                             <el-table-column
                               prop="STNM"
@@ -28,14 +74,14 @@
                             </el-table-column>
                             <el-table-column
                               prop="OD"
-                              label="闸门开度"
+                              label="闸门开度(m)"
                               align="center"
                               min-width="100"
                               >
                             </el-table-column>
                             <el-table-column
                               prop="Q"
-                              label="流量"
+                              label="流量(m³/s)"
                               align="center"
                               min-width="100"
                               >
@@ -44,8 +90,8 @@
       </div>
       <div ref="piechart" :style="{'width':lwidth+'px','height':(subheight1-1)+'px','margin-top':'1px'}" class="subback"></div>
         <div ref="imgsite" :style="{'width':lwidth+'px','height':subheight1+'px','padding-top':'5px'}" class="subback">
-            <div :style="{'margin-left':(lwidth*0.0183)+'px','margin-right':(lwidth*0.0183)+'px','width':(lwidth*0.2134)+'px','margin-top':'3px','display':'inline-block','float':'left','text-align':'center'}" v-for="item in imglist">   
-                <img :style="{'width':(theight*0.06445)+'px','height':(theight*0.05445)+'px','cursor':'pointer'}" src="../common/image/video.png" @click="show(item.stcd)"></img>
+            <div :style="{'margin-left':(lwidth*0.0183)+'px','margin-right':(lwidth*0.0183)+'px','width':(lwidth*0.2134)+'px','margin-top':'8px','display':'inline-block','float':'left','text-align':'center'}" v-for="item in imglist">   
+                <img :style="{'width':(theight*0.072)+'px','height':(theight*0.07)+'px','cursor':'pointer'}" src="../common/image/shipin.png" @click="show(item.stcd)"></img>
                 <div :style="{'width':(lwidth*0.2134)+'px','height':(theight*0.02-3)+'px','margin-bottom':'3px','color':'#fff','font-family':'微软雅黑','font-size':'12px','font-weight':'bold'}">{{item.stnm}}</div>            
             </div>
         </div>
@@ -66,29 +112,34 @@ export default {
             subheight2:window.screen.height*0.334,
             tableheight:window.screen.height*0.334-80,
             subheight1:window.screen.height*0.333,
-            lwidth:window.outerWidth*0.28125,
-            cwidth:window.outerWidth*0.4375,
-            imgwidth:window.screen.height*1.1865*1.28,
-            imgheight:window.screen.height*1.28,
-            allwidth:window.outerWidth,
-            leftwidth:window.outerWidth*0.28125*0.36,
+            lwidth:window.screen.width*0.28125,
+            cwidth:window.screen.width*0.4375,
+            imgwidth:window.screen.height*2000/1362,
+            imgheight:window.screen.height,
+            allwidth:window.screen.width,
+            leftwidth:window.screen.width*0.28125*0.4,
+            showleft:true,
+            showright:true,
             form:{},
             canallist:[],
-            gatelist:[],
+            rainlist:[],
+            hdlist:[],
+            sklist:[],
             tabledata:[],
         }
     },
   mixins: [FilterMethods, GetDataMethods],
   mounted() {
+      this.loadRealData();
       this.loadRain();
       this.loadSwkrline();
       this.loadline(); 
       this.loadGateData(); 
       this.loadImgdata();
       this.loadPiechart();  
-      //setInterval(() => {
-       //   this.reloadData();
-       // }, 1000*60*5);  
+      setInterval(() => {
+          this.reloadData();
+        }, 1000*60*5);  
   },
   methods: {
     toggleFullScreen(){
@@ -106,9 +157,12 @@ export default {
     //重新加载数据
     reloadData(){
       this.loadRealData();
-      this.loadline();  
+      this.loadRain();
+      this.loadSwkrline();
+      this.loadline(); 
+      this.loadGateData(); 
       this.loadImgdata();
-      this.loadPiechart(); 
+      this.loadPiechart();
     },
     //绘制雨量柱状图
     loadRain(){
@@ -122,21 +176,28 @@ export default {
       var bday=before.getDay();if(bday<10){bday="0"+bday;}
       var bhour=before.getHours();if(bhour<10){bhour="0"+bhour;}
       var begintime=before.getFullYear()+"-"+bmonth+"-"+bday+" "+bhour+":00:00";
-      this.axios.get('/'+this.$WarmTable+'/fieldinfo/raindata',{params:{begintime:'2019-10-03 23:00:00',endtime:'2019-10-04 22:00:00'}}).then(res => {
+      this.axios.get('/'+this.$WarmTable+'/fieldinfo/raindata',{params:{begintime:begintime,endtime:endtime}}).then(res => {
             var datalist=res.data;
-            var echartData ={x:new Object(),y1:new Object(),y2:new Object(),y3:new Object()};
+            var echartData ={x:new Object(),y1:new Object(),y2:new Object(),y3:new Object(),data:0};
             echartData.x.list=FilterMethods.methods.newArrayByObjArray(datalist, "DT", val => { // 过滤
                         return val.split(" ")[1];
                     });
+            var num=0;
             echartData.y1.list=FilterMethods.methods.newArrayByObjArray(datalist, "RAIN1", val => { // 过滤
+                        num+=val;
                         return parseFloat(val).toFixed(1);
                     });
             echartData.y2.list=FilterMethods.methods.newArrayByObjArray(datalist, "RAIN2", val => { // 过滤
+                        num+=val;
                         return parseFloat(val).toFixed(1);
                     });
             echartData.y3.list=FilterMethods.methods.newArrayByObjArray(datalist, "RAIN3", val => { // 过滤
+                        num+=val;
                         return parseFloat(val).toFixed(1);
                     });
+            if(num>0){
+              echartData.data=1;
+            }
             this.createBorchart(echartData);
         });
     },
@@ -146,17 +207,16 @@ export default {
             var datalist=res.data;
             var echartData ={x:new Object(),y:new Object()};
             echartData.x.list=FilterMethods.methods.newArrayByObjArray(datalist, "STCP", val => { // 过滤
-                        return parseFloat(val).toFixed(3);
+                        return parseFloat(val).toFixed(2);
                     });
             echartData.y.list=FilterMethods.methods.newArrayByObjArray(datalist, "WL", val => { // 过滤
-                        return parseFloat(val).toFixed(3);
+                        return parseFloat(val).toFixed(2);
                     });
             this.createLinechart(echartData);
         });
     },
     //绘制水位流量线性图
     loadline(){
-      debugger;
       var body3={
           STCD: '6530240003',
           _page_size: 999999
@@ -189,11 +249,55 @@ export default {
     },
     //加载渠道和闸阀水情实时数据
     loadRealData(){
-    //   this.axios.get('/'+this.$WarmTable+'/fieldinfo/getrinfo').then(res => {
-    //         var obj=res.data;
-    //         this.canallist=obj.typecanal;
-    //         this.gatelist=obj.typegate;
-    //     });
+       this.axios.get('/'+this.$WarmTable+'/fieldinfo/getksrinfo').then(res => {
+             var obj=res.data;
+             this.canallist=obj.typecanal;
+             for(var i=0;i<this.canallist.length;i++){
+              var canalobj=this.canallist[i];
+              if(canalobj.Z>0){
+                document.getElementById(canalobj.STCD).className = "waterqddiv";
+              }
+              if(canalobj.ALARM==1){
+                document.getElementById(canalobj.STCD).className = "warmqddiv";
+              }
+            }
+             this.rainlist=obj.typerain;
+             for(var i=0;i<this.rainlist.length;i++){
+               var rainobj=this.rainlist[i];
+               if(rainobj.P>0){
+                 document.getElementById("R"+rainobj.STCD).className = "waterraindiv";
+               }
+               if(rainobj.ALARMLEVEL==3){
+                 document.getElementById("R"+rainobj.STCD).className = "threeraindiv";
+               }
+               if(rainobj.ALARMLEVEL==2){
+                 document.getElementById("R"+rainobj.STCD).className = "tworaindiv";
+               }
+               if(rainobj.ALARMLEVEL==1){
+                 document.getElementById("R"+rainobj.STCD).className = "warmraindiv";
+               }
+             }
+             this.hdlist=obj.typehd;
+             for(var i=0;i<this.hdlist.length;i++){
+               var hdobj=this.hdlist[i];
+               if(hdobj.Z>0){
+                 document.getElementById("H"+hdobj.STCD).className = "waterhddiv";
+               }
+               if(hdobj.ALARM==1){
+                 document.getElementById("H"+hdobj.STCD).className = "warmhddiv";
+               }
+             }
+             this.sklist=obj.typesk;
+             for(var i=0;i<this.sklist.length;i++){
+               var skobj=this.sklist[i];
+               if(skobj.RZ>0){
+                 document.getElementById("S"+skobj.STCD).className = "waterskdiv";
+               }
+               if(skobj.ALARM==1){
+                 document.getElementById("S"+skobj.STCD).className = "warmskdiv";
+               }
+             }
+         });
     },
     //加载视频站数据
     loadImgdata(){
@@ -283,8 +387,8 @@ export default {
            }
           },
           grid: {  
-                left: '3%',   //图表距边框的距离
-                right: '4%',
+                left: '2%',   //图表距边框的距离
+                right: '2%',
                 bottom:'1%',
                 containLabel: true,
                 backgroundColor:'rgba(280,280,280,0.4)',
@@ -300,7 +404,7 @@ export default {
               axisLine: {
                    lineStyle: {
                        type: 'solid',
-                       color:'#ebebe3',
+                       color:'#fff',
                        width:'2'
                    }
                },
@@ -335,7 +439,7 @@ export default {
                     return true;
                   }
                 },
-                rotate: 0,
+                rotate: 1,
                 margin: 16,
                 textStyle: {
                        color: '#fff'
@@ -351,7 +455,7 @@ export default {
               axisLine: {
                    lineStyle: {
                        type: 'solid',
-                       color:'#ebebe3',
+                       color:'#fff',
                        width:'2'
                    }
                },
@@ -370,7 +474,7 @@ export default {
               axisLine: {
                    lineStyle: {
                        type: 'solid',
-                       color:'#ebebe3',
+                       color:'#fff',
                        width:'2'
                    }
                },
@@ -431,7 +535,6 @@ export default {
     createLinechart(echartData){
       if (echartData.x.list.length > 0) {
         myChart = this.$echarts.init(document.getElementById("secondchart"));
-
         myChart.setOption({
           title: {
             text: "康苏水库水位库容曲线",
@@ -441,13 +544,7 @@ export default {
               color: '#fff'
             },
           },
-          backgroundColor:'',
-          tooltip: {
-            trigger: "axis",
-          },
-          color:['#f6ff00'],
           legend: {
-            show:true,
             icon : 'roundRect',//icon为圆角矩形          
             data: ['水位'],
             x: "right",
@@ -455,13 +552,18 @@ export default {
                color:'#fff'
            }
           },
+          backgroundColor:'',
+          tooltip: {
+            trigger: "axis",
+          },
+          color:['#f6ff00'],
           grid: {  
-                left: '3%',   //图表距边框的距离
-                right: '4%',
+                left: '1%',   //图表距边框的距离
+                right: '2%',
                 bottom:'1%',
-                containLabel: true,
                 backgroundColor:'rgba(280,280,280,0.4)',
-                show:true
+                show:true,
+                containLabel: true,
             },
           xAxis: [
             {
@@ -490,7 +592,6 @@ export default {
                     return true;
                   }
                 },
-                length: 10
               },
               axisLabel: {
                 interval: function(index, val) {
@@ -507,7 +608,7 @@ export default {
                     return true;
                   }
                 },
-                rotate: 0,
+                rotate: 1,
                 margin: 16,
                 textStyle: {
                        color: '#fff'
@@ -517,13 +618,13 @@ export default {
           ],
           yAxis: [
             {
-              name: '水位m',
-              type: "value",             
+              name:'水位m',
+              type:'value',             
               splitLine:{show: false},//去除网格线
               axisLine: {
                    lineStyle: {
                        type: 'solid',
-                       color:'#ebebe3',
+                       color:'#fff',
                        width:'2'
                    }
                },
@@ -538,7 +639,8 @@ export default {
           ],
           series: [
             {
-              type: "line",
+              name:'水位',
+              type: 'line',
               data: echartData.y.list,
               symbol: 'none',
               smooth:true,
@@ -564,17 +666,18 @@ export default {
     },
     //雨量柱状图
     createBorchart(edata){
-        var myChart = this.$echarts.init(this.$refs.firstchart);
+        if(edata.data==1){
+        var myChart = this.$echarts.init(document.getElementById("firstchart"));
         var option = {
                 title: {
-                    text: "24小时降雨柱状图",
+                    text:"24小时降雨柱状图",
                     textStyle: {
                     fontSize: 14,
                     fontWeight: 'bolder',
                     color: '#fff'
                     },
                 },
-                color: ['#00FF00', '#FFFF00', '#FF00FF'],
+                color: ['#00f6ff', '#06F806', '#f6ff00'],
                 tooltip: {
                     trigger: 'axis',
                     axisPointer: {
@@ -582,7 +685,7 @@ export default {
                     }
                 },
                 grid: {  
-                left: '1%',   //图表距边框的距离
+                left: '2%',   //图表距边框的距离
                 right: '1%',
                 bottom:'1%',
                 containLabel: true,
@@ -604,7 +707,7 @@ export default {
                         axisLine: {
                           lineStyle: {
                               type: 'solid',
-                              color:'#ebebe3',
+                              color:'#fff',
                               width:'2'
                           }
                         },
@@ -619,7 +722,7 @@ export default {
                         axisLine: {
                             lineStyle: {
                                 type: 'solid',
-                                color:'#ebebe3',
+                                color:'#fff',
                                 width:'2'
                             }
                         },
@@ -645,6 +748,13 @@ export default {
                 ]
         };
         myChart.setOption(option);
+        }else{
+          var myChart = document.getElementById("firstchart");
+          myChart.style.display = "flex";
+          myChart.style.alignItems = "center";
+          myChart.style.justifyContent = "center";
+          myChart.innerHTML ="<font style='color:#fff;font-weight:bold;'>暂无24小时降雨数据</font>";
+        }
     },
     //饼状图
     createPiechart(edata){
@@ -771,16 +881,54 @@ export default {
         }
       }
   },
-  //显示闸阀信息
-  showgateinfo(stcd){
+  //显示雨量信息
+  showraininfo(stcd){
     this.form=new Object();
-      for(var i=0;i<this.gatelist.length;i++){
-        var gateobj=this.gatelist[i];
-        if(gateobj.STCD==stcd){
-          this.form=gateobj;
+      for(var i=0;i<this.rainlist.length;i++){
+        var rainobj=this.rainlist[i];
+        if(rainobj.STCD==stcd){
+          this.form=rainobj;
           break;
         }
       }
+  },
+  //显示河道信息
+  showhdinfo(stcd){
+    this.form=new Object();
+      for(var i=0;i<this.hdlist.length;i++){
+        var hdobj=this.hdlist[i];
+        if(hdobj.STCD==stcd){
+          this.form=hdobj;
+          break;
+        }
+      }
+  },
+  //显示水库信息
+  showskinfo(stcd){
+    this.form=new Object();
+      for(var i=0;i<this.sklist.length;i++){
+        var skobj=this.sklist[i];
+        if(skobj.STCD==stcd){
+          this.form=skobj;
+          break;
+        }
+      }
+  },
+    switchleft(){
+    this.showleft=!this.showleft;
+    if(this.showleft){
+      this.$refs.switchleft.style.left=this.lwidth+'px';
+    }else{
+      this.$refs.switchleft.style.left='0px';
+    }
+  },
+  switchright(){
+    this.showright=!this.showright;
+    if(this.showright){
+      this.$refs.switchright.style.right=this.lwidth+'px';
+    }else{
+      this.$refs.switchright.style.right='0px';
+    }
   },
  },
 }
@@ -805,32 +953,169 @@ z-index: 2;
 }
 .subback{
   opacity:0.9;
-  background: linear-gradient(top, #0b25c1, #030d6d);
-  background: -ms-linear-gradient(top, #0b25c1, #030d6d);
-  background: -webkit-linear-gradient(top, #0b25c1, #030d6d);
-  background: -moz-linear-gradient(top, #0b25c1, #030d6d);
+  background: linear-gradient(top, #177DE7, #1768BD);
+  background: -ms-linear-gradient(top, #177DE7, #1768BD);
+  background: -webkit-linear-gradient(top, #177DE7, #1768BD);
+  background: -moz-linear-gradient(top, #177DE7, #1768BD);
   box-shadow: 0 0 1px #fff;
 }
-.sitediv{
-  width:12px;
-  height:12px;
-  background-color:red;
+.raindiv{
+  width:16px;
+  height:16px;
+  background:url(../common/image/rain.png);
   position:absolute;
   z-index:10;
-  opacity: 0;
+  opacity: 1;
 }
-.gatediv{
-  width:14px;
-  height:14px;
-  background-color:yellow;
+.waterraindiv{
+  width:16px;
+  height:16px;
+  background:url(../common/image/waterrain.png);
   position:absolute;
   z-index:10;
-  opacity: 0;
+  opacity: 1;
+}
+.warmraindiv{
+  width:16px;
+  height:16px;
+  background:url(../common/image/warmrain.png);
+  position:absolute;
+  z-index:10;
+  opacity: 1;
+}
+.tworaindiv{
+  width:16px;
+  height:16px;
+  background:url(../common/image/tworain.png);
+  position:absolute;
+  z-index:10;
+  opacity: 1;
+}
+.threeraindiv{
+  width:16px;
+  height:16px;
+  background:url(../common/image/threerain.png);
+  position:absolute;
+  z-index:10;
+  opacity: 1;
+}
+.skdiv{
+  width:16px;
+  height:16px;
+  background:url(../common/image/sk.png);
+  position:absolute;
+  z-index:10;
+  opacity: 1;
+}
+.waterskdiv{
+  width:16px;
+  height:16px;
+  background:url(../common/image/watersk.png);
+  position:absolute;
+  z-index:10;
+  opacity: 1;
+}
+.warmskdiv{
+  width:16px;
+  height:16px;
+  background:url(../common/image/warmsk.png);
+  position:absolute;
+  z-index:10;
+  opacity: 1;
+}
+.hddiv{
+  width:16px;
+  height:16px;
+  background:url(../common/image/hd.png);
+  position:absolute;
+  z-index:10;
+  opacity: 1;
+}
+.waterhddiv{
+  width:16px;
+  height:16px;
+  background:url(../common/image/waterhd.png);
+  position:absolute;
+  z-index:10;
+  opacity: 1;
+}
+.warmhddiv{
+  width:16px;
+  height:16px;
+  background:url(../common/image/warmhd.png);
+  position:absolute;
+  z-index:10;
+  opacity: 1;
+}
+.qddiv{
+  width:16px;
+  height:16px;
+  background:url(../common/image/qd.png);
+  position:absolute;
+  z-index:10;
+  opacity: 1;
+}
+.waterqddiv{
+  width:16px;
+  height:16px;
+  background:url(../common/image/waterqd.png);
+  position:absolute;
+  z-index:10;
+  opacity: 1;
+}
+.warmqddiv{
+  width:16px;
+  height:16px;
+  background:url(../common/image/warmqd.png);
+  position:absolute;
+  z-index:10;
+  opacity: 1;
+}
+.switch {
+    position: absolute;
+    left: 28.125%;
+    top:50%;
+    width: 15px;
+    height: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #BEDEFF;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border: #1B74D0 2px solid;
+    border-left: 0;
+
+    &:hover {
+      filter: brightness(1.1);
+    }
+  }
+.switchright{
+  position: absolute;
+    right:28.125%;
+    top:50%;
+    width: 15px;
+    height: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #BEDEFF;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border: #1B74D0 2px solid;
+    border-right: 0;
+
+    &:hover {
+      filter: brightness(1.1);
+    }
 }
 .el-table{
-        background-color: rgba(280,280,280,0);
+        background-color: #0162DB;opacity: 1;
     }
-.el-table td, .el-table th { color:#fff;}
+.el-table th { color:#fff;background-color: #055CC8;}
+.el-table td { color:#fff;background-color: #0162DB;}
 .el-table__empty-text {
 color:#fff;
 } 

@@ -232,6 +232,8 @@ export default new Router({
     { path: '/water-manage',component: () => import('./water_distribution/water_plan/waterplanlist.vue') },
     //配水管理-配水计划
     { path: '/water-peizhi',component: () => import('./warm/warm-water/water-peizhi/list.vue') },
+    //配水管理-用水统计
+    { path: '/water-usewater',component: () => import('./warm/warm-water/water-use/list.vue') },
     //仪表图
     { path: '/yixiang-chart',component: () => import('./warm/yixiang-chart/chart.vue') },
     { path: '/yixiang-wschart',component: () => import('./warm/yixiang-chart/wschart.vue') },

@@ -174,7 +174,7 @@ export default {
           Reload(){
               this.loading = true;
               this.axios.get('/'+this.$WarmTable+'/waterplan/planinfo',{params:{year:this.form.year,organCode:this.form.gljg}}).then((res)=>{
-                    
+                    debugger;
                     this.data = res.data;
                     this.loading = false;
                 });
