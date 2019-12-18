@@ -39,13 +39,13 @@
               <el-table
               :data="data1"
               border
-              height="139"
+              height="156"
               v-loading="loading"
               style="width: 100%;">
                 <el-table-column v-for="(column, index) in columns" :prop="column.value" :label="column.text" :min-width="column.minwidth" :fixed="column.fixed" :align="column.algin" :key="Math.random()">
                 </el-table-column>
               </el-table>
-            <div ref="achart" :style="{'width': '100%','height': (theight-100)+'px','margin-top':'5px'}"></div> 
+            <div ref="achart" :style="{'width': '100%','height': (theight-120)+'px','margin-top':'5px'}"></div> 
             </Col>
           </Row>
         </Col>
@@ -203,7 +203,6 @@ export default {
             }
             this.form.year=year;
             this.axios.get('/'+this.$WarmTable+'/waterplan/managetree',{params:{canalname:this.searchmsg}}).then(res => {
-              debugger;
               var root=res.data.tree;
               var keyarry=[];
               keyarry.push(root.ID,root.children[0].ID,root.children[0].children[0].ID);
@@ -262,9 +261,9 @@ export default {
                         max2=parseFloat(echartData.y3.list[i]);
                       }
                     }
-                    let maxint = Math.ceil(max1 / 9.5);
+                    let maxint = Math.ceil(max1 / 9.8);
                     echartData.y1.max=maxint * 10;
-                    let maxint2=Math.ceil(max2 / 9.5);
+                    let maxint2=Math.ceil(max2 / 9.8);
                     echartData.y3.max=maxint2*10;
                     this.drawchart(echartData);
                 });
@@ -287,8 +286,9 @@ export default {
               this.Reload();
             });
           },
-          exportData(){
-                
+          exportExcel(){
+               var params='year='+this.form.year+'&organCode='+this.STinfo.CANAL_CODE+'&canalname='+this.STinfo.CANAL_NANME;
+                window.location.href='/'+this.$WarmTable+'/excel/exportusewater?'+params; 
           },
           drawchart(echartData) {
             var achart = this.$echarts.init(this.$refs.achart);
@@ -298,6 +298,7 @@ export default {
     tooltip: {
             trigger: "axis",
           },
+    color:['#FF4000','#2A93FC','#027802'],
     legend: {
         data:['用水定额','实际用水','用水率']
     },
@@ -338,6 +339,7 @@ export default {
         {
             name:'用水定额',
             type:'bar',
+            barGap: 0,
             data:echartData.y1.list
         },
         {

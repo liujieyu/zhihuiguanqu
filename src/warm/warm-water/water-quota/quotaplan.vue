@@ -19,6 +19,9 @@
                     <Option v-for="item in gljglist" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
                 </Col>
+                <Col>
+                 <Button type="primary" style="width: auto;margin-right: 20px;" @click="exportData">导出</Button>
+                </Col>
             </Row>
             <Row class="fgline"></Row>
             <el-table
@@ -205,7 +208,22 @@ export default {
                 setTimeout(()=> {
                             this.$refs.refTable.doLayout();
                         },100);
-          }
+          },
+          exportData(){
+               var gljg=this.form.gljg;
+              if(gljg!=''){
+                  for(var i=0;i<this.gljglist.length;i++){
+                  if(this.form.gljg==this.gljglist[i].value){
+                    if(this.gljglist[i].type==1){
+                      gljg='';
+                      break;
+                    }
+                  }
+                }
+              }
+                var params='year='+this.form.year+'&organCode='+gljg;
+                window.location.href='/'+this.$WarmTable+'/excel/exportwaterquota?'+params;
+          },
        },
       components: {   
       }

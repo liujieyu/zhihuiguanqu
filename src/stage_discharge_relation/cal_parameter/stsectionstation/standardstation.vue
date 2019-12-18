@@ -2,12 +2,22 @@
   <div>
     <Content class="searchcon">
       <Row type="flex" :gutter="16" class="rowtocol">
-        <Col align="left" fixed="left">
-          <Input search enter-button suffix="ios-search" placeholder="请输入站名：" style="width: auto;margin-right: 20px;" @on-search="search" v-model="form.searchmsg" />
+        <Col>
+         年份:
+         <Select v-model="form.year" @on-change="YEARsearch" style="width:100px;">
+            <Option v-for="item in yearlist" :value="item.value" :key="item.value">{{ item.label }}</Option>
+         </Select>
+        </Col>
+        <Col>
+          <Input search enter-button suffix="ios-search" placeholder="请输入站名" style="width: auto;" @on-search="search" v-model="form.searchmsg" />
+        </Col>
+        <Col> 
+          <Button type="primary" style="width: auto;margin-right: 20px;" @click="exportData">导出</Button>
         </Col>
       </Row>
       <Row class="fgline"></Row>
       <el-table
+        ref="refTable"
         :data="tabledata"
         border
         :height="theight"
@@ -27,72 +37,81 @@
           prop="STNM"
           align="center"
           min-width="120"
-          fixed="left">
+          fixed="left"
+          sortable="custom">
         </el-table-column>
         <el-table-column
           label="渠道"
-          prop="CANAL_CODE"
+          prop="CANAL_NAME"
           align="center"
           min-width="120"
-          fixed="left">
+          fixed="left"
+          sortable="custom">
         </el-table-column>
         <el-table-column
           label="断面类型"
-          prop="TYPES"
+          prop="TYPENAME"
           align="center"
           min-width="120"
-          fixed="left">
-        </el-table-column>
-        <el-table-column
-          label="年 份"
-          prop="YR"
-          align="center"
-          min-width="80"
-          fixed="left">
+          sortable="custom">
         </el-table-column>
         <el-table-column
           label="渠底宽度"
           prop="B"
           align="center"
           min-width="100"
-          fixed="left">
+          sortable="custom">
         </el-table-column>
         <el-table-column
           label="边坡系数"
           prop="M"
           align="center"
           min-width="100"
-          fixed="left">          
+          sortable="custom">          
         </el-table-column>
         <el-table-column
           label="糙率"
           prop="N"
           align="center"
           min-width="80"
-          fixed="left">
+          sortable="custom">
         </el-table-column>
         <el-table-column
           label="底坡"
           prop="I"
           align="center"
           min-width="80"
-          fixed="left">
+          sortable="custom">
         </el-table-column>
         <el-table-column
           label="最大水深"
           prop="MAX_Z"
           align="center"
           min-width="120"
-          fixed="left">
+          sortable="custom">
         </el-table-column>
         <el-table-column
           label="最大流量"
           prop="MAX_Q"
           align="center"
           min-width="120"
-          fixed="left">
+          sortable="custom">
         </el-table-column>
       </el-table>
+      <div style="margin: 10px 0px 0px 10px;overflow: hidden">
+                        <div style="float: right;">
+                            <Page 
+                            :total="list_input.total" 
+                            :current="list_input.current" show-sizer 
+                            :page-size="list_input.pagesize" :page-size-opts="list_input.pagesizeopts"
+                            @on-change="CurrentChange"
+                            @on-page-size-change="PagesizeChange"
+                            size="small"
+                            show-total
+                            show-elevator
+                            ></Page>
+                        </div>
+                    </div>
     </Content>
   </div>
 </template>
@@ -106,306 +125,84 @@
     {
       return{
         loading:false,
-        theight:window.innerHeight-202,
-        tabledata:
-        [          
-          {
-            ROWID:'1',
-            STNM:'凉水渠首站',
-            CANAL_CODE:'凉水干渠',
-            TYPES:'矩形',
-            YR:'2019',
-            B:'0.0',
-            M:'0.0',
-            N:'',
-            I:'',
-            MAX_Z:'',
-            MAX_Q:'',
-          },
-          {
-            ROWID:'2',
-            STNM:'团岭渠首站',
-            CANAL_CODE:'团岭干渠',
-            TYPES:'矩形',
-            YR:'2019',
-            B:'0.0',
-            M:'0.0',
-            N:'',
-            I:'',
-            MAX_Z:'',
-            MAX_Q:'',
-          },
-          {
-            ROWID:'3',
-            STNM:'东干渠首站',
-            CANAL_CODE:'东干渠首',
-            TYPES:'矩形',
-            YR:'2019',
-            B:'0.0',
-            M:'0.0',
-            N:'',
-            I:'',
-            MAX_Z:'',
-            MAX_Q:'',
-          },
-          {
-            ROWID:'4',
-            STNM:'金耳冲渠首站',
-            CANAL_CODE:'金耳冲支渠',
-            TYPES:'矩形',
-            YR:'2019',
-            B:'0.0',
-            M:'0.0',
-            N:'',
-            I:'',
-            MAX_Z:'',
-            MAX_Q:'',
-          },
-          {
-            ROWID:'5',
-            STNM:'红日渠首站',
-            CANAL_CODE:'红日支渠',
-            TYPES:'矩形',
-            YR:'2019',
-            B:'0.0',
-            M:'0.0',
-            N:'',
-            I:'',
-            MAX_Z:'',
-            MAX_Q:'',
-          },
-          {
-            ROWID:'6',
-            STNM:'沙溪坪渠首站',
-            CANAL_CODE:'沙溪坪支渠',
-            TYPES:'矩形',
-            YR:'2019',
-            B:'0.0',
-            M:'0.0',
-            N:'',
-            I:'',
-            MAX_Z:'',
-            MAX_Q:'',
-          },
-          {
-            ROWID:'7',
-            STNM:'火田坪渠首站',
-            CANAL_CODE:'火田坪支渠',
-            TYPES:'矩形',
-            YR:'2019',
-            B:'0.0',
-            M:'0.0',
-            N:'',
-            I:'',
-            MAX_Z:'',
-            MAX_Q:'',
-          },
-          {
-            ROWID:'8',
-            STNM:'金刚河渠首站',
-            CANAL_CODE:'金刚河支渠',
-            TYPES:'矩形',
-            YR:'2019',
-            B:'0.0',
-            M:'0.0',
-            N:'',
-            I:'',
-            MAX_Z:'',
-            MAX_Q:'',
-          },
-          {
-            ROWID:'9',
-            STNM:'凉水平衡站',
-            CANAL_CODE:'凉水干渠',
-            TYPES:'矩形',
-            YR:'2019',
-            B:'0.0',
-            M:'0.0',
-            N:'',
-            I:'',
-            MAX_Z:'',
-            MAX_Q:'',
-          },
-          {
-            ROWID:'10',
-            STNM:'唐家铺渠首站',
-            CANAL_CODE:'唐家铺支渠',
-            TYPES:'梯形',
-            YR:'2019',
-            B:'',
-            M:'',
-            N:'',
-            I:'',
-            MAX_Z:'',
-            MAX_Q:'',
-          },
-          {
-            ROWID:'11',
-            STNM:'草坪渠首站',
-            CANAL_CODE:'草坪支渠',
-            TYPES:'梯形',
-            YR:'2019',
-            B:'',
-            M:'',
-            N:'',
-            I:'',
-            MAX_Z:'',
-            MAX_Q:'',
-          },
-          
-          {
-            ROWID:'12',
-            STNM:'南阳渠首站',
-            CANAL_CODE:'南阳支渠',
-            TYPES:'梯形',
-            YR:'2019',
-            B:'',
-            M:'',
-            N:'',
-            I:'',
-            MAX_Z:'',
-            MAX_Q:'',
-          },
-          {
-            ROWID:'13',
-            STNM:'羊耳岗渠首站',
-            CANAL_CODE:'羊耳岗支渠渠首',
-            TYPES:'梯形',
-            YR:'2019',
-            B:'',
-            M:'',
-            N:'',
-            I:'',
-            MAX_Z:'',
-            MAX_Q:'',
-          },
-          
-          {
-            ROWID:'14',
-            STNM:'新安冲渠首站',
-            CANAL_CODE:'新安冲支渠',
-            TYPES:'梯形',
-            YR:'2019',
-            B:'',
-            M:'',
-            N:'',
-            I:'',
-            MAX_Z:'',
-            MAX_Q:'',
-          },
-          
-          {
-            ROWID:'15',
-            STNM:'西干渠首站',
-            CANAL_CODE:'西干支渠',
-            TYPES:'梯形',
-            YR:'2019',
-            B:'',
-            M:'',
-            N:'',
-            I:'',
-            MAX_Z:'',
-            MAX_Q:'',
-          },                              
-          {
-            ROWID:'16',
-            STNM:'谢家铺渠首站',
-            CANAL_CODE:'谢家铺干渠',
-            TYPES:'梯形',
-            YR:'2019',
-            B:'',
-            M:'',
-            N:'',
-            I:'',
-            MAX_Z:'',
-            MAX_Q:'',
-          },
-          {
-            ROWID:'17',
-            STNM:'石门桥渠首站',
-            CANAL_CODE:'石门桥干渠',
-            TYPES:'梯形',
-            YR:'2019',
-            B:'',
-            M:'',
-            N:'',
-            I:'',
-            MAX_Z:'',
-            MAX_Q:'',
-          },
-          {
-            ROWID:'18',
-            STNM:'陡山河坝渠首站',
-            CANAL_CODE:'陡山河坝支渠',
-            TYPES:'梯形',
-            YR:'2019',
-            B:'',
-            M:'',
-            N:'',
-            I:'',
-            MAX_Z:'',
-            MAX_Q:'',
-          },          
-          {
-            ROWID:'19',
-            STNM:'孙家冲平衡站',
-            CANAL_CODE:'孙家冲干渠',
-            TYPES:'梯形',
-            YR:'2019',
-            B:'',
-            M:'',
-            N:'',
-            I:'',
-            MAX_Z:'',
-            MAX_Q:'',
-          },
-          {
-            ROWID:'20',
-            STNM:'党家庵平衡站',
-            CANAL_CODE:'党家庵支渠',
-            TYPES:'梯形',
-            YR:'2019',
-            B:'',
-            M:'',
-            N:'',
-            I:'',
-            MAX_Z:'',
-            MAX_Q:'',
-          },          
-          {
-            ROWID:'21',
-            STNM:'肖家坪渡槽站',
-            CANAL_CODE:'超美干渠',
-            TYPES:'U 型',
-            YR:'2019',
-            B:'',
-            M:'',
-            N:'',
-            I:'',
-            MAX_Z:'',
-            MAX_Q:'',
-          }, 
-          {
-            ROWID:'22',
-            STNM:'钱家坪站',
-            CANAL_CODE:'钱家坪支渠',
-            TYPES:'U 型',
-            YR:'2019',
-            B:'',
-            M:'',
-            N:'',
-            I:'',
-            MAX_Z:'',
-            MAX_Q:'',
-          },         
-        ],
+        theight:window.innerHeight-236,
+        tabledata:[],
+        yearlist:[],
         form:{
           searchmsg:'',
-        }
+          year:'',
+          orderby:'stcd',
+          sequence:'asc',
+        },
+        list_input:{
+                    total:100,
+                    pagesize:50,
+                    pagesizeopts:[10,20,50,75,100,200],
+                    current:1,
+                },
       }
     }, 
     mounted(){
+      var now=new Date();
+      var nowyear=now.getFullYear();
+      for(var i=0;i<10;i++){
+        var obj=new Object();
+        obj.label=(nowyear-i)+"年";
+        obj.value=nowyear-i;
+        this.yearlist.push(obj);
+      }
+      this.form.year=2019;
+      this.Reload();
     },
+    methods:{
+      YEARsearch(){
+              this.list_input.current=1;
+              this.Reload();
+            },
+      Reload(){
+        this.loading = true;
+        var _currentPage = this.list_input.current;
+        var _pageSizes = this.list_input.pagesize;
+        var _bgincount=(_currentPage - 1) * _pageSizes+1;
+        var _endcount=_currentPage * _pageSizes;
+        this.axios.get('/'+this.$WarmTable+'/ldparamter/bzdmlist',{params:{begincount:_bgincount,endcount:_endcount,year:this.form.year,stnm:this.form.searchmsg,orderBy:this.form.orderby,sequence:this.form.sequence}}).then((res)=>{
+                    this.loading = false;
+                    this.tabledata = res.data.rows;
+                    this.list_input.total = res.data.total;
+                    setTimeout(()=> {
+                            this.$refs.refTable.doLayout();
+                        },100);
+                });
+      },
+      search(){
+              this.list_input.current=1;
+                this.Reload(); 
+            },
+      // 处理页码切换
+      CurrentChange(index) {
+        this.list_input.current = index;
+        this.Reload();
+      },
+      // 处理每页显示条数切换
+      PagesizeChange(pagesize) {
+        this.list_input.pagesize = pagesize;
+        this.list_input.current=1;
+        this.Reload();
+      },
+      sort_change(item){
+        if(item.order==null){
+            return;
+        }
+        if(item.order=="ascending"){
+            this.form.sequence="asc";
+        }else{
+            this.form.sequence="desc";
+        }
+        this.form.orderby=item.prop;
+        this.list_input.current=1;
+        this.Reload();
+    },
+   },
   }
 </script>
 

@@ -91,7 +91,7 @@
       <div ref="piechart" :style="{'width':lwidth+'px','height':(subheight1-1)+'px','margin-top':'1px'}" class="subback"></div>
         <div ref="imgsite" :style="{'width':lwidth+'px','height':subheight1+'px','padding-top':'5px'}" class="subback">
             <div :style="{'margin-left':(lwidth*0.0183)+'px','margin-right':(lwidth*0.0183)+'px','width':(lwidth*0.2134)+'px','margin-top':'8px','display':'inline-block','float':'left','text-align':'center'}" v-for="item in imglist">   
-                <img :style="{'width':(theight*0.072)+'px','height':(theight*0.07)+'px','cursor':'pointer'}" src="../common/image/shipin.png" @click="show(item.stcd)"></img>
+                <img :style="{'width':(theight*0.072)+'px','height':(theight*0.07)+'px','cursor':'pointer'}" src="../common/image/shipin.png" @click="showvideo(item.path)"></img>
                 <div :style="{'width':(lwidth*0.2134)+'px','height':(theight*0.02-3)+'px','margin-bottom':'3px','color':'#fff','font-family':'微软雅黑','font-size':'12px','font-weight':'bold'}">{{item.stnm}}</div>            
             </div>
         </div>
@@ -308,6 +308,7 @@ export default {
                     var img_obj=new Object();
                     img_obj.stnm=list[i].STNM;
                     img_obj.stcd=list[i].STCD;
+                    img_obj.path=list[i].WWWPath;
                     this.imglist.push(img_obj);
             }
         });
@@ -913,6 +914,10 @@ export default {
           break;
         }
       }
+  },
+  //显示视频链接
+  showvideo(path){
+    window.open(path,'newwindow','width='+(window.screen.availWidth-10)+',height='+(window.screen.availHeight-30)+ ',top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
   },
     switchleft(){
     this.showleft=!this.showleft;

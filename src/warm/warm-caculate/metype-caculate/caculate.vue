@@ -30,8 +30,10 @@
                             style="width: 200px;"
                             v-model="formb.tm"
                             format="yyyy年"
+                            value-format="yyyy"
                             type="year"
                             size="small"
+                            @change="timechange"
                             :clearable="false"></el-date-picker>
                     </el-form-item>
                     <el-form-item label="糙率：">
@@ -73,6 +75,7 @@
                             v-model="formx.tm"
                             type="year"
                             format="yyyy年"
+                            value-format="yyyy"
                             size="small"
                             :clearable="false"></el-date-picker>
                     </el-form-item>
@@ -115,6 +118,7 @@
                         <el-date-picker
                             style="width: 200px;"
                             v-model="forms.tm"
+                            value-format="yyyy"
                             type="year"
                             format="yyyy年"
                             size="small"
@@ -236,7 +240,7 @@ export default {
       this.keys=keyarry;
       this.STinfo=typelist[0].children[0];
       var infoobj=this.STinfo;
-      this.axios.get('/'+this.$WarmTable+'/ldresult/maxinfo',{params: {metype:this.STinfo.ME_TYPE,stcd:this.STinfo.STCD}}).then(res1 => {
+      this.axios.get('/'+this.$WarmTable+'/ldresult/maxinfo',{params: {metype:this.STinfo.ME_TYPE,stcd:this.STinfo.STCD,year:this.formb.tm}}).then(res1 => {
             var maxobj=res1.data;
             this.loadTData(maxobj);
           });
@@ -300,7 +304,7 @@ export default {
       this.Treedata.push(root);
       this.keys=keyarry;
       this.STinfo=typelist[0].children[0];
-      this.axios.get('/'+this.$WarmTable+'/ldresult/maxinfo',{params: {metype:this.STinfo.ME_TYPE,stcd:this.STinfo.STCD}}).then(res => {
+      this.axios.get('/'+this.$WarmTable+'/ldresult/maxinfo',{params: {metype:this.STinfo.ME_TYPE,stcd:this.STinfo.STCD,year:this.formb.tm}}).then(res => {
             var maxobj=res.data;
             this.loadTData(maxobj); 
             if(this.STinfo.ME_TYPE==1){
@@ -325,7 +329,7 @@ export default {
       if (data.ZD_SIGN == 1) {
         this.STinfo = data;
         if(data.ME_TYPE==1 || data.ME_TYPE==2 || data.ME_TYPE==3){
-          this.axios.get('/'+this.$WarmTable+'/ldresult/maxinfo',{params: {metype:data.ME_TYPE,stcd:data.STCD}}).then(res => {
+          this.axios.get('/'+this.$WarmTable+'/ldresult/maxinfo',{params: {metype:data.ME_TYPE,stcd:data.STCD,year:this.formb.tm}}).then(res => {
             var maxobj=res.data;
             this.loadTData(maxobj);
             if(this.STinfo.ME_TYPE==1){
@@ -453,14 +457,24 @@ export default {
         this.forms.q='';
       }
     },
+    //根据年份修改标准断面参数信息
+    timechange(date){
+      this.axios.get('/'+this.$WarmTable+'/ldresult/maxinfo',{params: {metype:this.STinfo.ME_TYPE,stcd:this.STinfo.STCD,year:date}}).then(res => {
+            var maxobj=res.data;
+            this.loadTData(maxobj);
+          });
+      },
     //修改糙率
     onUpdateCl(){
       var u_obj=new Object();
       u_obj.stcd=this.STinfo.STCD;
       u_obj.n=this.Titileinfo.N;
+      u_obj.year=this.formb.tm;
       this.axios.get('/'+this.$WarmTable+'/ldresult/modifycl',{params: u_obj}).then(res => {
           if(res.data=="ok"){
             this.$message({message:'糙率修改成功！',type:'success'});
+          }else{
+            this.$message({message:this.formb.tm+'年无糙率数据！',type:'warm'});
           }
       });
     },

@@ -7,7 +7,10 @@
 
 	<Tabs value="dispatching">
 	  <TabPane label="调度运行管理" name="dispatching">
+      预留接口
+      <!--
 	    <DispatchingInfo></DispatchingInfo>
+      -->
 	  </TabPane>
 	</Tabs>
   </div>

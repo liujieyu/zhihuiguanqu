@@ -4,18 +4,17 @@
       <Row type="flex" :gutter="16" class="rowtocol">
         <Col align="left" fixed="left">
           巴歇尔槽型号：
-          <el-select v-model="value" size="small" placeholder="请选择">
-            <el-option
-              v-for="item in metype"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
+          <Select v-model="form.model" placeholder="请选择" clearable style="width:100px;" @on-change="Modelsearch">
+            <Option
+              v-for="item in metype"  :key="item.value"  :value="item.value">{{ item.label }}</Option>
+          </Select>
         </Col>
         <Col>
-          <Input search enter-button suffix="ios-search" placeholder="请输入站名：" style="width: auto;margin-right: 20px;" @on-search="search" v-model="form.searchmsg" />
+          <Input search enter-button suffix="ios-search" placeholder="请输入站名" style="width: auto;" @on-search="search" v-model="form.searchmsg" />
         </col>
+        <Col> 
+          <Button type="primary" style="width: auto;" @click="exportData">导出</Button>
+        </Col>
         <Col>
           <Button type="primary" style="width: auto;margin-right: 20px;" @click="err">详细信息</Button>
         </col>
@@ -41,43 +40,52 @@
           prop="STNM"
           align="center"
           min-width="120"
-          fixed="left">
+          fixed="left"
+          sortable="custom">
         </el-table-column>
         <el-table-column
           label="渠道"
-          prop="CANAL_CODE"
+          prop="CANAL_NAME"
           align="center"
           min-width="120"
-         >
+         sortable="custom">
         </el-table-column>
         <el-table-column
           label="巴歇尔槽型号"
-          prop="MODEL"
+          prop="MODELNAME"
           align="center"
           min-width="160"
-         >
+         sortable="custom">
         </el-table-column>
         <el-table-column
           label="最大水深(m)"
           prop="Z_MAX"
           align="center"
           min-width="150"
-         >
+         sortable="custom">
         </el-table-column>
         <el-table-column
           label="最大流量(m³/s)"
           prop="Q_MAX"
           align="center"
           min-width="150"
-          >
+          sortable="custom">
         </el-table-column>
-        <el-table-column
-          label="备注"
-          prop="MEMO"
-          align="center"          
-          min-width="160">
-        </el-table-column>
-      </el-table>     
+      </el-table>
+      <div style="margin: 10px 0px 0px 10px;overflow: hidden">
+                        <div style="float: right;">
+                            <Page 
+                            :total="list_input.total" 
+                            :current="list_input.current" show-sizer 
+                            :page-size="list_input.pagesize" :page-size-opts="list_input.pagesizeopts"
+                            @on-change="CurrentChange"
+                            @on-page-size-change="PagesizeChange"
+                            size="small"
+                            show-total
+                            show-elevator
+                            ></Page>
+                        </div>
+                    </div>     
     </Content>
   </div>
 </template>
@@ -85,174 +93,86 @@
 <script type="text/javascript">
   import FilterMethods from "@/assets/commonJS/FilterMethods";
   import GetDataMethods from "@/assets/commonJS/GetDataMethods";
+  import WarmDataConfig from "@/assets/commonJS/WarmDataConfig";
   export default 
   {
     data()
     {
       return{
         loading:false,
-        theight:window.innerHeight-202,
-        metype:
-        [
-          {
-            value:'0',
-            label:'所有类型',
-          },
-          {
-            value:'1',
-            label:'1号',
-          },
-          {
-            value:'2',
-            label:'2号', 
-          },
-          {
-            value:'3',
-            label:'3号', 
-          },
-          {
-            value:'4',
-            label:'4号', 
-          },
-          {
-            value:'5',
-            label:'5号',
-          },
-          {
-            value:'6',
-            label:'6号', 
-          },
-          {
-            value:'7',
-            label:'7号', 
-          },
-          {
-            value:'8',
-            label:'8号', 
-          },
-          {
-            value:'9',
-            label:'9号', 
-          },
-          {
-            value:'10',
-            label:'10号', 
-          },
-          {
-            value:'11',
-            label:'11号',
-          },
-          {
-            value:'12',
-            label:'12号', 
-          },
-          {
-            value:'13',
-            label:'13号', 
-          },
-          {
-            value:'14',
-            label:'14号', 
-          },
-          {
-            value:'15',
-            label:'15号',
-          },
-          {
-            value:'16',
-            label:'16号', 
-          },
-          {
-            value:'17',
-            label:'17号', 
-          },
-          {
-            value:'18',
-            label:'18号', 
-          },
-          {
-            value:'19',
-            label:'19号', 
-          },
-          {
-            value:'20',
-            label:'20号', 
-          },
-          {
-            value:'21',
-            label:'21号',
-          },
-          {
-            value:'22',
-            label:'22号', 
-          },
-          {
-            value:'23',
-            label:'23号', 
-          },
-          {
-            value:'24',
-            label:'24号', 
-          },
-          {
-            value:'25',
-            label:'25号',
-          },
-        ],
-        tabledata:
-        [
-          {
-            ROWID:'1',
-            STNM:'英雄渠首站',
-            CANAL_CODE:'英雄支渠',
-            MODEL:'9号',
-            Z_MAX:'0.75',
-            Q_MAX:'0.85',
-            MEMO:'',
-          },
-          {
-            ROWID:'2',
-            STNM:'姥姥窝渠首站',
-            CANAL_CODE:'姥姥窝支渠',
-            MODEL:'9号',
-            Z_MAX:'0.75',
-            Q_MAX:'0.85',
-            MEMO:'',
-          },
-          {
-            ROWID:'3',
-            STNM:'大坪渠首站',
-            CANAL_CODE:'大坪支渠',
-            MODEL:'9号',
-            Z_MAX:'0.75',
-            Q_MAX:'0.85',
-            MEMO:'',
-          },
-          {
-            ROWID:'4',
-            STNM:'阮家冲渠首站',
-            CANAL_CODE:'阮家冲支渠',
-            MODEL:'9号',
-            Z_MAX:'0.75',
-            Q_MAX:'0.85',
-            MEMO:'',
-          },
-          {
-            ROWID:'5',
-            STNM:'徐家冲站',
-            CANAL_CODE:'徐家冲支渠',
-            MODEL:'9号',
-            Z_MAX:'0.75',
-            Q_MAX:'0.85',
-            MEMO:'',
-          },
-        ],
+        theight:window.innerHeight-236,
+        metype:[],
+        tabledata:[],
         form:{
+          model:'',
           searchmsg:'',
-        }
+          orderby:'stcd',
+          sequence:'asc',
+        },
+        list_input:{
+                    total:100,
+                    pagesize:50,
+                    pagesizeopts:[10,20,50,75,100,200],
+                    current:1,
+                },
       }
     }, 
-    mounted(){
+    // 引入过滤方法到此组件
+    mixins: [FilterMethods,GetDataMethods,WarmDataConfig],
+    components: {
     },
+    mounted(){
+      //巴歇尔槽型号
+      this.Get_WrpFieldinfo('ST_PAR_STATION','MODEL',data => {
+          this.metype = data;
+      });
+      this.Reload();
+    },
+    methods:{
+      Modelsearch(){
+              this.list_input.current=1;
+              this.Reload();
+            },
+    Reload(){
+        this.loading = true;
+        var _currentPage = this.list_input.current;
+        var _pageSizes = this.list_input.pagesize;
+        var _bgincount=(_currentPage - 1) * _pageSizes+1;
+        var _endcount=_currentPage * _pageSizes;
+        this.axios.get('/'+this.$WarmTable+'/ldparamter/parslist',{params:{begincount:_bgincount,endcount:_endcount,model:this.form.model,stnm:this.form.searchmsg,orderBy:this.form.orderby,sequence:this.form.sequence}}).then((res)=>{
+                    this.loading = false;
+                    this.tabledata = res.data.rows;
+                    this.list_input.total = res.data.total;
+                });
+      },
+      search(){
+              this.list_input.current=1;
+                this.Reload(); 
+            },
+      // 处理页码切换
+      CurrentChange(index) {
+        this.list_input.current = index;
+        this.Reload();
+      },
+      // 处理每页显示条数切换
+      PagesizeChange(pagesize) {
+        this.list_input.pagesize = pagesize;
+        this.list_input.current=1;
+        this.Reload();
+      },
+      sort_change(item){
+        if(item.order==null){
+            return;
+        }
+        if(item.order=="ascending"){
+            this.form.sequence="asc";
+        }else{
+            this.form.sequence="desc";
+        }
+        this.form.orderby=item.prop;
+        this.list_input.current=1;
+        this.Reload();
+    },
+   },
   }
 </script>

@@ -225,6 +225,7 @@
         methods:{
             timechange(date){
                 this.form.date = date;
+                this.list_input.current=1;
                 this.Reload();
             },
             Reload(){
