@@ -1,7 +1,14 @@
 <template>
   <div>
     <Content class="searchcon">
+      <Row type="flex" :gutter="16" class="rowtocol">
+        <Col> 
+          <Button type="primary" style="width: auto;margin-right: 20px;" @click="exportData">导出</Button>
+        </Col>
+      </Row>
+      <Row class="fgline"></Row>
       <el-table
+        ref="refTable"
         :data="tabledata"
         border
         :height="theight"
@@ -10,24 +17,34 @@
         @cell-click="cellclick"
         @sort-change="sort_change">
         <el-table-column
+          label=""
+          prop="ROWID"
+          align="center"
+          width="55"
+          fixed="left">
+        </el-table-column>
+        <el-table-column
           label="型号"
           prop="MODEL"
           align="center"
-          min-width="60"
-          fixed="left">
+          min-width="75"
+          fixed="left"
+          sortable="custom">
         </el-table-column>
         <el-table-column label="水深范围(m)" align="center"> 
           <el-table-column
             label="最小"
             prop="Z_MIN"
             align="center"
-            min-width="60">
+            min-width="75"
+            sortable="custom">
           </el-table-column> 
           <el-table-column
             label="最大"
             prop="Z_MAX"
             align="center"
-            min-width="60">
+            min-width="75"
+            sortable="custom">
           </el-table-column> 
         </el-table-column>
         <el-table-column label="测流范围(m³/s)" align="center">
@@ -35,102 +52,131 @@
             label="最小"
             prop="Q_MIN"
             align="center"
-            min-width="60">
+            min-width="75"
+            sortable="custom">
           </el-table-column> 
           <el-table-column
             label="最大"
             prop="Q_MAX"
             align="center"
-            min-width="60">
+            min-width="75"
+            sortable="custom">
           </el-table-column> 
         </el-table-column>
         <el-table-column
           label="规格尺寸(m)"
           prop="SIZE"
           align="center"
-          min-width="110">
+          min-width="120"
+          sortable="custom">
         </el-table-column>
         <el-table-column label="收缩部" align="center">
           <el-table-column
-            label="B1"
+            label="宽度"
             prop="B1"
             align="center"
-            min-width="60">
+            min-width="75"
+            sortable="custom">
           </el-table-column> 
           <el-table-column
-            label="L1"
+            label="长度"
             prop="L1"
             align="center"
-            min-width="60">
+            min-width="75"
+            sortable="custom">
           </el-table-column> 
           <el-table-column
-            label="LA"
+            label="高度"
             prop="LA"
             align="center"
-            min-width="60">
+            min-width="75"
+            sortable="custom">
           </el-table-column>
         </el-table-column>
         <el-table-column label="喉部" align="center">
           <el-table-column
-            label="B"
+            label="宽度"
             prop="B"
             align="center"
-            min-width="60">
+            min-width="75"
+            sortable="custom">
           </el-table-column> 
           <el-table-column
-            label="L"
+            label="长度"
             prop="L"
             align="center"
-            min-width="60">
+            min-width="75"
+            sortable="custom">
           </el-table-column> 
           <el-table-column
-            label="N"
+            label="高度"
             prop="N"
             align="center"
-            min-width="60">
+            min-width="75"
+            sortable="custom">
           </el-table-column>
         </el-table-column>
         <el-table-column label="扩散段" align="center">
           <el-table-column
-            label="B2"
+            label="宽度"
             prop="B2"
             align="center"
-            min-width="60">
+            min-width="75"
+            sortable="custom">
           </el-table-column> 
           <el-table-column
-            label="L2"
+            label="长度"
             prop="L2"
             align="center"
-            min-width="60">
+            min-width="75"
+            sortable="custom">
           </el-table-column> 
           <el-table-column
-            label="N"
+            label="高度"
             prop="K"
             align="center"
-            min-width="60">
+            min-width="75"
+            sortable="custom">
           </el-table-column>
         </el-table-column>
         <el-table-column
           label="淹没度(%)"
           prop="YMD"
           align="center"
-          min-width="80">
+          min-width="110"
+          sortable="custom">
         </el-table-column>
         <el-table-column label="流量系数" align="center">
           <el-table-column
-            label="C"
+            label="系数1"
             prop="C"
             align="center"
-            min-width="60">
+            min-width="80"
+            sortable="custom">
           </el-table-column> 
           <el-table-column
-            label="N1"
+            label="系数2"
             prop="N1"
             align="center"
-            min-width="60">
+            min-width="80"
+            sortable="custom">
           </el-table-column> 
         </el-table-column>
-      </el-table>  
+      </el-table> 
+      <div style="margin: 10px 0px 0px 10px;overflow: hidden">
+                        <div style="float: right;">
+                            <Page 
+                            :total="list_input.total" 
+                            :current="list_input.current" show-sizer 
+                            :page-size="list_input.pagesize" :page-size-opts="list_input.pagesizeopts"
+                            @on-change="CurrentChange"
+                            @on-page-size-change="PagesizeChange"
+                            size="small"
+                            show-total
+                            show-elevator
+                            ></Page>
+                        </div>
+                    </div> 
     </Content>
   </div>
 </template> 
@@ -144,528 +190,69 @@
     {
       return{
         loading:false,
-        theight:window.innerHeight-140,
-        tabledata:
-        [
-          {
-            MODEL:'1',
-            Z_MIN:'0.015',
-            Z_MAX:'0.21',
-            Q_MIN:'0.00009',
-            Q_MAX:'0.0054',
-            SIZE:'0.835*0.267*0.265',
-            B1:'0.167',
-            L1:'0.356',
-            LA:'0.237',
-            B:'0.025',
-            L:'0.076',
-            N:'0.029',
-            B2:'0.093',
-            L2:'0.203',
-            K:'0.019',
-            YMD:'0.5',
-            C:'0.0604',
-            N1:'1.55',
-          },
-          {
-            MODEL:'2',
-            Z_MIN:'0.015',
-            Z_MAX:'0.24',
-            Q_MIN:'0.00018',
-            Q_MAX:'0.0132',
-            SIZE:'0.773*0.314*0.305',
-            B1:'0.214',
-            L1:'0.406',
-            LA:'0.276',
-            B:'0.051',
-            L:'0.114',
-            N:'0.043',
-            B2:'0.135',
-            L2:'0.254',
-            K:'0.022',
-            YMD:'0.5',
-            C:'0.1207',
-            N1:'1.55',
-          },
-          {
-            MODEL:'3',
-            Z_MIN:'0.03',
-            Z_MAX:'0.33',
-            Q_MIN:'0.00077',
-            Q_MAX:'0.0321',
-            SIZE:'0.914*0.359*0.51',
-            B1:'0.259',
-            L1:'0.457',
-            LA:'0.311',
-            B:'0.076',
-            L:'0.152',
-            N:'0.057',
-            B2:'0.18',
-            L2:'0.305',
-            K:'0.025',
-            YMD:'0.5',
-            C:'0.1771',
-            N1:'1.55',
-          },
-          {
-            MODEL:'4',
-            Z_MIN:'0.03',
-            Z_MAX:'0.45',
-            Q_MIN:'0.0015',
-            Q_MAX:'0.111',
-            SIZE:'1.525*0.5*0.73',
-            B1:'0.4',
-            L1:'0.61',
-            LA:'0.415',
-            B:'0.152',
-            L:'0.305',
-            N:'0.114',
-            B2:'0.394',
-            L2:'0.61',
-            K:'0.076',
-            YMD:'0.6',
-            C:'0.3812',
-            N1:'1.54',
-          },
-          {
-            MODEL:'5',
-            Z_MIN:'0.03',
-            Z_MAX:'0.6',
-            Q_MIN:'0.0025',
-            Q_MAX:'0.251',
-            SIZE:'1.63*0.675*0.89',
-            B1:'0.575',
-            L1:'0.864',
-            LA:'0.587',
-            B:'0.228',
-            L:'0.305',
-            N:'0.114',
-            B2:'0.381',
-            L2:'0.457',
-            K:'0.076',
-            YMD:'0.6',
-            C:'0.5354',
-            N1:'1.53',
-          },
-          {
-            MODEL:'6',
-            Z_MIN:'0.03',
-            Z_MAX:'0.6',
-            Q_MIN:'0.003',
-            Q_MAX:'0.25',
-            SIZE:'2.845*0.98*1.06',
-            B1:'0.78',
-            L1:'1.325',
-            LA:'0.9',
-            B:'0.25',
-            L:'0.6',
-            N:'0.23',
-            B2:'0.55',
-            L2:'0.92',
-            K:'0.08',
-            YMD:'0.6',
-            C:'0.561',
-            N1:'1.513',
-          },
-          {
-            MODEL:'7',
-            Z_MIN:'0.03',
-            Z_MAX:'0.75',
-            Q_MIN:'0.0035',
-            Q_MAX:'0.25',
-            SIZE:'2.87*0.94*1.2',
-            B1:'0.84',
-            L1:'1.35',
-            LA:'0.92',
-            B:'0.3',
-            L:'0.6',
-            N:'0.23',
-            B2:'0.6',
-            L2:'0.92',
-            K:'0.08',
-            YMD:'0.6',
-            C:'0.679',
-            N1:'1.521',
-          },
-          {
-            MODEL:'8',
-            Z_MIN:'0.03',
-            Z_MAX:'0.75',
-            Q_MIN:'0.0045',
-            Q_MAX:'0.63',
-            SIZE:'2.945*1.12*1.2',
-            B1:'1.02',
-            L1:'1.425',
-            LA:'0.967',
-            B:'0.45',
-            L:'0.6',
-            N:'0.23',
-            B2:'0.75',
-            L2:'0.92',
-            K:'0.08',
-            YMD:'0.6',
-            C:'1.038',
-            N1:'1.537',
-          },
-          {
-            MODEL:'9',
-            Z_MIN:'0.75',
-            Z_MAX:'0.05',
-            Q_MIN:'0.0125',
-            Q_MAX:'0.85',
-            SIZE:'3.02*1.3*1.2',
-            B1:'1.2',
-            L1:'1.5',
-            LA:'1.02',
-            B:'0.6',
-            L:'0.6',
-            N:'0.23',
-            B2:'0.9',
-            L2:'0.92',
-            K:'0.08',
-            YMD:'0.6',
-            C:'1.403',
-            N1:'1.548',
-          },
-          {
-            MODEL:'10',
-            Z_MIN:'0.06',
-            Z_MAX:'0.75',
-            Q_MIN:'0.025',
-            Q_MAX:'1.1',
-            SIZE:'3.095*1.48*1.2',
-            B1:'1.38',
-            L1:'1.575',
-            LA:'1.074',
-            B:'0.75',
-            L:'0.6',
-            N:'0.23',
-            B2:'1.05',
-            L2:'0.92',
-            K:'0.08',
-            YMD:'0.6',
-            C:'1.772',
-            N1:'1.557',
-          },
-          {
-            MODEL:'11',
-            Z_MIN:'0.06',
-            Z_MAX:'0.75',
-            Q_MIN:'0.03',
-            Q_MAX:'1.25',
-            SIZE:'3.17*1.66*1.2',
-            B1:'1.56',
-            L1:'1.65',
-            LA:'1.121',
-            B:'0.9',
-            L:'0.6',
-            N:'0.23',
-            B2:'1.2',
-            L2:'0.92',
-            K:'0.08',
-            YMD:'0.6',
-            C:'2.147',
-            N1:'1.565',
-          },
-          {
-            MODEL:'12',
-            Z_MIN:'0.06',
-            Z_MAX:'0.8',
-            Q_MIN:'0.03',
-            Q_MAX:'1.5',
-            SIZE:'3.2*1.78*1.25',
-            B1:'1.68',
-            L1:'1.705',
-            LA:'1.161',
-            B:'1.0',
-            L:'0.6',
-            N:'0.23',
-            B2:'1.3',
-            L2:'0.92',
-            K:'0.08',
-            YMD:'0.7',
-            C:'2.397',
-            N1:'1.569',
-          },
-          {
-            MODEL:'13',
-            Z_MIN:'0.06',
-            Z_MAX:'0.8',
-            Q_MIN:'0.035',
-            Q_MAX:'2.0',
-            SIZE:'3.32*2.02*1.25',
-            B1:'1.92',
-            L1:'1.8',
-            LA:'1.227',
-            B:'1.2',
-            L:'0.6',
-            N:'0.23',
-            B2:'1.5',
-            L2:'0.92',
-            K:'0.08',
-            YMD:'0.7',
-            C:'2.904',
-            N1:'1.577',
-          },
-          {
-            MODEL:'14',
-            Z_MIN:'0.06',
-            Z_MAX:'0.8',
-            Q_MIN:'0.045',
-            Q_MAX:'2.5',
-            SIZE:'3.47*2.38*1.25',
-            B1:'2.28',
-            L1:'1.95',
-            LA:'1.329',
-            B:'1.5',
-            L:'0.6',
-            N:'0.23',
-            B2:'1.8',
-            L2:'0.92',
-            K:'0.08',
-            YMD:'0.7',
-            C:'3.668',
-            N1:'1.586',
-          },
-          {
-            MODEL:'15',
-            Z_MIN:'0.08',
-            Z_MAX:'0.8',
-            Q_MIN:'0.08',
-            Q_MAX:'3',
-            SIZE:'3.62*2.74*1.25',
-            B1:'2.64',
-            L1:'2.1',
-            LA:'1.427',
-            B:'1.8',
-            L:'0.6',
-            N:'0.23',
-            B2:'2.1',
-            L2:'0.92',
-            K:'0.08',
-            YMD:'0.7',
-            C:'4.44',
-            N1:'1.593',
-          },
-          {
-            MODEL:'16',
-            Z_MIN:'0.08',
-            Z_MAX:'0.8',
-            Q_MIN:'0.95',
-            Q_MAX:'3.6',
-            SIZE:'',
-            B1:'3',
-            L1:'2.25',
-            LA:'1.534',
-            B:'2.1',
-            L:'0.6',
-            N:'0.23',
-            B2:'2.4',
-            L2:'0.92',
-            K:'0.08',
-            YMD:'0.7',
-            C:'5.222',
-            N1:'1.599',
-          },
-          {
-            MODEL:'17',
-            Z_MIN:'0.08',
-            Z_MAX:'0.8',
-            Q_MIN:'0.1',
-            Q_MAX:'4.0',
-            SIZE:'',
-            B1:'3.36',
-            L1:'2.4',
-            LA:'1.636',
-            B:'2.4',
-            L:'0.6',
-            N:'0.23',
-            B2:'2.7',
-            L2:'0.92',
-            K:'0.08',
-            YMD:'0.7',
-            C:'6.004',
-            N1:'1.605',
-          },
-          {
-            MODEL:'18',
-            Z_MIN:'0.09',
-            Z_MAX:'1.07',
-            Q_MIN:'0.16',
-            Q_MAX:'8.28',
-            SIZE:'',
-            B1:'4.76',
-            L1:'4.27',
-            LA:'1.83',
-            B:'3.05',
-            L:'0.91',
-            N:'0.343',
-            B2:'3.68',
-            L2:'1.83',
-            K:'0.152',
-            YMD:'0.8',
-            C:'7.463',
-            N1:'1.6',
-          },
-          {
-            MODEL:'19',
-            Z_MIN:'0.09',
-            Z_MAX:'1.37',
-            Q_MIN:'0.19',
-            Q_MAX:'14.68',
-            SIZE:'',
-            B1:'5.61',
-            L1:'4.88',
-            LA:'2.03',
-            B:'3.66',
-            L:'0.91',
-            N:'0.343',
-            B2:'4.47',
-            L2:'2.44',
-            K:'0.152',
-            YMD:'0.8',
-            C:'8.859',
-            N1:'1.6',
-          },
-          {
-            MODEL:'20',
-            Z_MIN:'0.09',
-            Z_MAX:'1.67',
-            Q_MIN:'0.23',
-            Q_MAX:'25.04',
-            SIZE:'',
-            B1:'7.62',
-            L1:'7.62',
-            LA:'2.34',
-            B:'4.57',
-            L:'1.22',
-            N:'0.457',
-            B2:'5.59',
-            L2:'3.05',
-            K:'0.229',
-            YMD:'0.8',
-            C:'10.96',
-            N1:'1.6',
-          },
-          {
-            MODEL:'21',
-            Z_MIN:'0.09',
-            Z_MAX:'1.83',
-            Q_MIN:'0.31',
-            Q_MAX:'37.97',
-            SIZE:'',
-            B1:'9.14',
-            L1:'7.62',
-            LA:'2.84',
-            B:'6.1',
-            L:'1.83',
-            N:'0.686',
-            B2:'7.32',
-            L2:'3.66',
-            K:'0.305',
-            YMD:'0.8',
-            C:'11.45',
-            N1:'1.6',
-          },
-          {
-            MODEL:'22',
-            Z_MIN:'0.09',
-            Z_MAX:'1.83',
-            Q_MIN:'0.38',
-            Q_MAX:'47.16',
-            SIZE:'',
-            B1:'10.67',
-            L1:'0.62',
-            LA:'3.45',
-            B:'7.62',
-            L:'1.83',
-            N:'0.686',
-            B2:'8.94',
-            L2:'3.96',
-            K:'0.305',
-            YMD:'0.8',
-            C:'17.94',
-            N1:'1.6',
-          },
-          {
-            MODEL:'23',
-            Z_MIN:'0.09',
-            Z_MAX:'1.83',
-            Q_MIN:'0.46',
-            Q_MAX:'56.33',
-            SIZE:'',
-            B1:'12.31',
-            L1:'7.93',
-            LA:'3.86',
-            B:'9.14',
-            L:'1.83',
-            N:'0.686',
-            B2:'10.57',
-            L2:'4.27',
-            K:'0.305',
-            YMD:'0.8',
-            C:'21.44',
-            N1:'1.6',
-          },
-          {
-            MODEL:'24',
-            Z_MIN:'0.09',
-            Z_MAX:'1.83',
-            Q_MIN:'0.6',
-            Q_MAX:'74.7',
-            SIZE:'',
-            B1:'15.48',
-            L1:'8.23',
-            LA:'4.88',
-            B:'12.19',
-            L:'1.83',
-            N:'0.686',
-            B2:'13.82',
-            L2:'4.88',
-            K:'0.305',
-            YMD:'0.8',
-            C:'28.43',
-            N1:'1.6',
-          },
-          {
-            MODEL:'25',
-            Z_MIN:'0.09',
-            Z_MAX:'1.83',
-            Q_MIN:'0.75',
-            Q_MAX:'93.4',
-            SIZE:'',
-            B1:'18.53',
-            L1:'8.23',
-            LA:'5.89',
-            B:'15.24',
-            L:'1.83',
-            N:'0.686',
-            B2:'17.27',
-            L2:'6.1',
-            K:'0.305',
-            YMD:'0.8',
-            C:'35.41',
-            N1:'1.6',
-          },
-        ],
+        theight:window.innerHeight-236,
+        tabledata:[],
         form:{
           searchmsg:'',
-        }
+          orderby:'model',
+          sequence:'asc',
+        },
+        list_input:{
+                    total:100,
+                    pagesize:50,
+                    pagesizeopts:[10,20,50,75,100,200],
+                    current:1,
+                },
       }
     }, 
     mounted(){
+      this.Reload();
+    },
+    methods:{
+      Reload(){
+        this.loading = true;
+        var _currentPage = this.list_input.current;
+        var _pageSizes = this.list_input.pagesize;
+        var _bgincount=(_currentPage - 1) * _pageSizes+1;
+        var _endcount=_currentPage * _pageSizes;
+        this.axios.get('/'+this.$WarmTable+'/ldparamter/Parshalllist',{params:{begincount:_bgincount,endcount:_endcount,orderBy:this.form.orderby,sequence:this.form.sequence}}).then((res)=>{
+                    this.loading = false;
+                    this.tabledata = res.data.rows;
+                    this.list_input.total = res.data.total;
+                    setTimeout(()=> {
+                            this.$refs.refTable.doLayout();
+                        },100);
+                });
+      },
+      // 处理页码切换
+      CurrentChange(index) {
+        this.list_input.current = index;
+        this.Reload();
+      },
+      // 处理每页显示条数切换
+      PagesizeChange(pagesize) {
+        this.list_input.pagesize = pagesize;
+        this.list_input.current=1;
+        this.Reload();
+      },
+      sort_change(item){
+        if(item.order==null){
+            return;
+        }
+        if(item.order=="ascending"){
+            this.form.sequence="asc";
+        }else{
+            this.form.sequence="desc";
+        }
+        this.form.orderby=item.prop;
+        this.list_input.current=1;
+        this.Reload();
+    },
+    exportData(){
+      var params='begincount=1&endcount=99999&orderBy='+this.form.orderby+'&sequence='+this.form.sequence;
+      window.location.href='/'+this.$WarmTable+'/excel/exportparshall?'+params;
+    },
     },
   }
 </script>
 
-<style type="text/css">
-  .ivu-divider-horizontal, .ivu-row 
-  {
-    margin-bottom: 12px;
-  }
-  .el-table th {  background-color: #f8f8f9;color:#515a6e;} 
-  .el-table td, .el-table th { padding: 3px 0;}
-  .el-table .el-table__row td {padding: 6px 0;}
-  .searchcon {padding-left:24px;padding-right:24px;padding-top:12px;padding-bottom:24px;background: #fff;}
-  .rowtocol .ivu-col {margin-top:12px;}
-</style>

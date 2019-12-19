@@ -41,7 +41,7 @@
           sortable="custom">
         </el-table-column>
         <el-table-column
-          label="渠道"
+          label="所在渠道"
           prop="CANAL_NAME"
           align="center"
           min-width="120"
@@ -84,14 +84,14 @@
           sortable="custom">
         </el-table-column>
         <el-table-column
-          label="最大水深"
+          label="最大水深(m)"
           prop="MAX_Z"
           align="center"
           min-width="120"
           sortable="custom">
         </el-table-column>
         <el-table-column
-          label="最大流量"
+          label="最大流量(m³/s)"
           prop="MAX_Q"
           align="center"
           min-width="120"
@@ -201,6 +201,10 @@
         this.form.orderby=item.prop;
         this.list_input.current=1;
         this.Reload();
+    },
+    exportData(){
+      var params='year='+this.form.year+'&stnm='+this.form.searchmsg+'&begincount=1&endcount=99999&orderBy='+this.form.orderby+'&sequence='+this.form.sequence;
+      window.location.href='/'+this.$WarmTable+'/excel/exportstsection?'+params;
     },
    },
   }

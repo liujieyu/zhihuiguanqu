@@ -15,9 +15,11 @@
         <Col> 
           <Button type="primary" style="width: auto;" @click="exportData">导出</Button>
         </Col>
+        <!--
         <Col>
           <Button type="primary" style="width: auto;margin-right: 20px;" @click="err">详细信息</Button>
         </col>
+        -->
       </Row>
       <Row class="fgline"></Row>
       <el-table
@@ -44,7 +46,7 @@
           sortable="custom">
         </el-table-column>
         <el-table-column
-          label="渠道"
+          label="所在渠道"
           prop="CANAL_NAME"
           align="center"
           min-width="120"
@@ -172,6 +174,10 @@
         this.form.orderby=item.prop;
         this.list_input.current=1;
         this.Reload();
+    },
+    exportData(){
+      var params='model='+this.form.model+'&stnm='+this.form.searchmsg+'&begincount=1&endcount=99999&orderBy='+this.form.orderby+'&sequence='+this.form.sequence;
+      window.location.href='/'+this.$WarmTable+'/excel/exportpars?'+params;
     },
    },
   }
