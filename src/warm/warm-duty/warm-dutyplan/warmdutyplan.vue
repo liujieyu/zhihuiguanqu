@@ -105,8 +105,8 @@
               window.location.href='/'+this.$WarmTable+'/excel/exportdutyplan/'+this.form.date;
              }, 
             showchart(){
-              window.open("/dist/index.html#/yixiang-chart",'newwindow','width='+(window.screen.availWidth-10)+',height='+(window.screen.availHeight-30)+ ',top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
-              //window.open("/dist/index.html#/yixiang-wschart",'newwindow','width='+(window.screen.availWidth-10)+',height='+(window.screen.availHeight-30)+ ',top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
+              //window.open("/dist/index.html#/yixiang-chart",'newwindow','width='+(window.screen.availWidth-10)+',height='+(window.screen.availHeight-30)+ ',top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
+              window.open("/dist/index.html#/yixiang-wschart",'newwindow','width='+(window.screen.availWidth-10)+',height='+(window.screen.availHeight-30)+ ',top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
               //window.open("/dist/index.html#/yixiang-kschart",'newwindow','width='+(window.screen.availWidth-10)+',height='+(window.screen.availHeight-30)+ ',top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
             },                  
         },

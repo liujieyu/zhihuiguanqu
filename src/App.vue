@@ -14,7 +14,7 @@
         mode="horizontal"
       >
         <el-menu-item index="1" :disabled="true" style="opacity: 1;">
-          <span style="font-size: 20px; color: #fff;font-weight: 200;">康苏水情测报系统</span>
+          <span style="font-size: 20px; color: #fff;font-weight: 200;"></span>
         </el-menu-item>
         <el-menu-item index="1" :disabled="true" style="opacity: 1;">
           <el-switch

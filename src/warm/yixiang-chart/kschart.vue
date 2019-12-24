@@ -958,7 +958,7 @@ z-index: 2;
 }
 .subback{
   opacity:0.9;
-  background: linear-gradient(top, #177DE7, #1768BD);
+  background: linear-gradient(to bottom, #177DE7, #1768BD);
   background: -ms-linear-gradient(top, #177DE7, #1768BD);
   background: -webkit-linear-gradient(top, #177DE7, #1768BD);
   background: -moz-linear-gradient(top, #177DE7, #1768BD);

@@ -2,15 +2,15 @@
   <div id="clickMe" class="backdiv" @dblclick="toggleFullScreen()">
     <img src="../common/image/wsmapnosite.png" :style="{'width':imgwidth+'px','height':imgheight+'px','position':'absolute','top':-0.085*imgheight+'0px','left':leftwidth+'px'}"></img>
       <div ref="left" :style="{'display':'inline-block','height':theight+'px','width':lwidth+'px','z-index':'3','position':'absolute','top':'0px','left':'0px'}" v-show="showleft">
-        <div ref="line" :style="{'width':lwidth+'px','height':(subheight1*4)+'px'}" class="subback">
-            <div id="firstchart" :style="{'width':lwidth+'px','height':(subheight1-1)+'px','margin-bottom':'1px'}"></div>
-            <div id="secondchart" :style="{'width':lwidth+'px','height':(subheight1-1)+'px','margin-bottom':'1px'}"></div>
-            <div id="threechart" :style="{'width':lwidth+'px','height':(subheight1-1)+'px','margin-bottom':'1px'}"></div>
-            <div id="fourchart" :style="{'width':lwidth+'px','height':(subheight1)+'px'}"></div>
+        <div ref="line" :style="{'width':lwidth+'px','height':(subheight1*4)+'px'}">
+            <div id="firstchart" :style="{'width':lwidth+'px','height':(subheight1-1)+'px','margin-bottom':'1px'}" class="subback"></div>
+            <div id="secondchart" :style="{'width':lwidth+'px','height':(subheight1-1)+'px','margin-bottom':'1px'}" class="subback"></div>
+            <div id="threechart" :style="{'width':lwidth+'px','height':(subheight1-1)+'px','margin-bottom':'1px'}" class="subback"></div>
+            <div id="fourchart" :style="{'width':lwidth+'px','height':(subheight1)+'px'}" class="subback"></div>
         </div>
     </div>
     <div ref="center" :style="{'display':'inline-block','height':theight+'px','width':cwidth+'px','z-index':'3','margin-left':lwidth+'px'}">
-      <div style="color:#fff;text-shadow:5px 2px 6px #000;text-align:center;z-index:10;position:relative;top:25px;"><h1>枉水灌区量测水管理系统</h1></div>
+      <div style="color:#fff;text-shadow:5px 2px 6px #000;text-align:center;z-index:21;position:relative;top:25px;"><h1>枉水灌区量测水管理系统</h1></div>
       <div class="switch" @click="switchleft" ref="switchleft">
           <i class="el-icon-d-arrow-left" v-if="showleft"></i>
           <i class="el-icon-d-arrow-right" v-if="!showleft"></i>
@@ -131,11 +131,17 @@
     <div ref="right" :style="{'display':'inline-block','height':theight+'px','width':lwidth+'px','z-index':'3','position':'absolute','top':'0px','right':'0px'}" v-show="showright">
         <div ref="imgsite" :style="{'width':lwidth+'px','height':(theight*0.68)+'px','padding-top':'5px'}" class="subback">
             <div :style="{'margin-left':(lwidth*0.0183)+'px','margin-right':(lwidth*0.0183)+'px','width':(lwidth*0.2134)+'px','margin-top':'3px','display':'inline-block','float':'left','text-align':'center'}" v-for="item in imglist">   
-                <img :style="{'width':(theight*0.0545)+'px','height':(theight*0.05445)+'px','cursor':'pointer'}" src="../common/image/shipin.png" @click="show(item.stcd)"></img>
+                <img :style="{'width':(theight*0.0545)+'px','height':(theight*0.05445)+'px','cursor':'pointer'}" src="../common/image/shipin.png" @click="showvideo(item.puid)"></img>
                 <div :style="{'width':(lwidth*0.2134)+'px','height':(theight*0.02-3)+'px','margin-bottom':'3px','color':'#fff','font-family':'微软雅黑','font-size':'12px','font-weight':'bold'}">{{item.stnm}}</div>            
             </div>
         </div>
         <div ref="piechart" :style="{'width':lwidth+'px','height':(theight*0.32-1)+'px','margin-top':'1px'}" class="subback"></div>
+    </div>
+    <div id="videodiv" class="videodiv" v-show="videosign">
+      <img src="../common/image/close.png" style="float:right;cursor:pointer;width:32px;height:32px;" @click="hidediv()"></img>
+      <iframe :style="{'width':'900px','height':'680px','overflow':'hidden','margin-top':videotop+'px','margin-left':videoleft+'px'}" :src="videosrc"  frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no">
+
+      </iframe>
     </div>
   </div>
 </template>
@@ -158,6 +164,10 @@ export default {
             leftwidth:window.screen.width*0.28125*0.7,
             showleft:true,
             showright:true,
+            videosign:false,
+            videotop:(window.screen.height-680)/2,
+            videoleft:(window.screen.width-900)/2,
+            videosrc:'',
             form:{},
             canallist:[],
             gatelist:[],
@@ -292,6 +302,7 @@ export default {
                     var img_obj=new Object();
                     img_obj.stnm=list[i].STNM;
                     img_obj.stcd=list[i].STCD;
+                    img_obj.puid=list[i].PUID;
                     this.imglist.push(img_obj);
             }
         });
@@ -595,39 +606,29 @@ export default {
     // 使用刚指定的配置项和数据显示图表。
     myChart.setOption(option);       
     },
-    show(stcd){
-      let overdiv=this.$refs.over;
-      let imgEl=document.createElement("img");
-      imgEl.style.position='fixed';
-      imgEl.style.cursor="pointer";
-      imgEl.style.height=(this.theight*0.64)+'px';
-      imgEl.style.width=this.lwidth+'px';
-      for(var i=0;i<this.imglist.length;i++){
-         var imgobj=this.imglist[i];
-         if(imgobj.stcd==stcd){
-           imgEl.src=imgobj.path;
-           break;
-         }
-      }
-      overdiv.appendChild(imgEl);
-      this.coverLayer(1);
-      imgEl.onclick = (e) => {
-        this.coverLayer(0);
-      }
-    },
-    coverLayer(tag){
-      var overdiv=this.$refs.over;
-      if(tag==1){
-          overdiv.style.display="block";
-          overdiv.style.opacity=1;
-          overdiv.style.zIndex='100';
-          overdiv.style.backgroundColor="#FFFFFF";
-          overdiv.style.backgroundColor="rgba(0,0,0,0.7)";
+    showvideo(puid){
+      if (!!window.ActiveXObject || "ActiveXObject" in window){
+         try
+          {
+            var obj = new ActiveXObject("DPSDK_OCX.DPSDK_OCXCtrl.1");
+          }
+          catch(e)
+          {
+            this.$message({message:'控件未注册，请先注册控件！',type:'warning'});
+            var url ='/'+this.$WarmTable+ '/file/downloadocx';
+            window.location.href = url;
+            return;
+          }
       }else{
-         overdiv.innerHTML='';
-         overdiv.style.zIndex='0';
-          overdiv.style.display="none";
+        this.$message({message:'请确保在IE浏览器下使用视频监控功能！',type:'warning'});
+        return;
       }
+      this.videosign=true;
+      this.videosrc="webdemo/index.html?"+puid;
+      
+    },
+    hidediv(){
+      this.videosign=false;
     },
     //显示渠道信息
   showcanalinfo(stcd){
@@ -681,9 +682,20 @@ background-size: cover;
 overflow: hidden;
 position: relative;
 }
+.videodiv{
+width:100%;
+height: 100vh;
+top: 0;
+left: 0;
+background: #166CC7;
+position:absolute;
+z-index:20;
+opacity:0.85;
+}
 .subback{
   opacity:0.9;
-  background: linear-gradient(top, #177DE7, #1768BD);
+  //background: #1B74D0;
+  background: linear-gradient(to bottom, #177DE7, #1768BD);
   background: -ms-linear-gradient(top, #177DE7, #1768BD);
   background: -webkit-linear-gradient(top, #177DE7, #1768BD);
   background: -moz-linear-gradient(top, #177DE7, #1768BD);
