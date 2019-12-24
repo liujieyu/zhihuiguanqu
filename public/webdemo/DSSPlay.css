@@ -1,0 +1,108 @@
+/*common css*/
+body{margin:0;padding:0;font-size:12px;color:#fff;font-family:Arial,"ËÎÌå"}
+ul li{list-style: none;margin:0;padding:0;}
+
+
+
+
+/*DSSPlay css*/
+.mbt{width:60px;height:25px;margin:5px 0 0 0 ;padding:4px 0 0 0;}
+#mbody{width:100%;height:100%;margin:0 0 0 0;background:#166CC7;}
+#mainbg{width:100%;height:501px;margin:0 0 0 0;}
+	#main{width:100%;height:790px;position: relative;}
+	#mviewl{width:100%;height:600px; background:url(img/box_img1.jpg); }
+		#obj{width:100%;height:600px;display:block;margin:auto;}
+	#mviewr{height:200px;float:right;}
+	.box_bottom{width:386px;height:90px;margin:0px;background:url(img/box_bottom1.jpg);float:left;}
+	.box_top{width:642px;height:7px;margin:0px;background:url(img/box_top1.jpg);margin:auto;display:none;}
+	.box_bottom_btn{width:642px;margin:auto;margin-top:8px;}
+	.box_bottom ul li:first-child{margin-left:0;}
+	.box_bottom ul li{ float:left;margin-left:80px; display: inline;}
+	.box_bottom_a{  float: left; left: 200px; position: relative;top: 32px;z-index: 10000;}
+	.box_bottom_a a{color:#fff;}
+	#back_btn_li{_margin-left:0px;}
+	a.back_btn,a.play_btn,a.stop_btn,a.go_btn,a.photo_btn,a.back_btnClick,a.play_btnClick,a.stop_btnClick,a.go_btnClick,a.photo_btnClick{background:url(img/btn.jpg);width:27px; height:27px; display: inline-block;}
+	a.back_btn{ background-position:  -1px -2px; }
+	a:hover.back_btn{ background-position:  -33px -2px; }
+	a.back_btnClick{background-position:  -66px -2px;}
+
+	a.play_btn{ background-position:  -1px -34px; }
+	a:hover.play_btn{ background-position:  -33px -34px; }
+	a.play_btnClick{ background-position:  -66px -34px; }
+
+	a.stop_btn{ background-position:  -1px -66px; }
+	a:hover.stop_btn{ background-position:  -33px -66px; }
+	a.stop_btnClick{ background-position:  -66px -66px; }
+
+	a.go_btn{ background-position:  -1px -97px; }
+	a:hover.go_btn{ background-position:  -33px -97px; }
+ 	a.go_btnClick{ background-position:  -66px -97px; }
+
+	a.photo_btn{ background-position:  -1px -129px; }
+	a:hover.photo_btn{ background-position:  -33px -129px; }
+	a.photo_btnClick{ background-position:  -66px -129px; }
+	.rightDiv{ 
+		/*float: right;*/
+		height: 600px;
+		margin: 0 auto;
+		/*position: absolute;*/
+		/*right: 0;*/
+		/*top: 590px;*/
+		/*left:650px;*/
+		width: 600px;
+	}
+	#tab{
+		height: 35px;
+		/*width: 666.5px;*/
+		/*margin-left: 40px;*/
+		/*display: flex;*/
+		/*flex-wrap: wrap;*/
+		/*float: left;*/
+		/*padding: 0;*/
+		/*margin: 0 auto;*/
+		border: 1px solid #AACBEE;
+		overflow: visible;
+		zoom:1;
+	}
+	#tab_con{
+		margin: 0 auto;
+		padding: 0;
+	}
+	#tab li{
+		float: left;
+		margin: 5px;
+	    width: 70px;
+		height: 25px;
+		line-height: 25px;
+		text-align: center;
+		background: #CCCCCC;
+		cursor: pointer;
+	}
+	#tab li.on{
+		float: left;
+	    width: 70px;
+		height: 25px;
+		border: 1px solid #AACBEE;
+		border-bottom: none;
+		color: #00f;
+		background: #E8F2F7;
+		/*position: relative; */
+		top: 1px;
+	}
+	 input[type="text"]{
+	 background: #dbdce0;
+	 border:1px solid #818596;
+	 height:23px;
+	}
+
+	 input[type="submit"], input[type="button"]{
+
+	 background: #4E47FD;
+	 border:1px solid #1009B6;
+	 color: #FFF;
+	 padding: 8px 13px 8px 13px;
+	 border-radius:5px;
+	}
+
+	
+
