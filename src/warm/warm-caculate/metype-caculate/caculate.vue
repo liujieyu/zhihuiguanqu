@@ -8,7 +8,7 @@
               <p style="color:#464c5b;font-weight:bold;font-size:15px;width:100%;text-align:center;">{{STinfo.STNM}}标准断面水位流量计算</p>
               </Row>
               <Row>
-                  <table style="border: 1px solid #C7CCD6;border-bottom: none;" border cellspacing="0" cellpadding="0" width="100%" class="table_show">
+                  <table  cellspacing="0" cellpadding="0" width="100%" class="table_show">
                   <tr>
                       <td class="dt_name">所属渠道：</td><td class="dt_vale borderright">{{STinfo.CANAL_NAME}}</td>
                       <td class="dt_name">渠底宽度：</td><td class="dt_vale borderright">{{Titileinfo.B}}</td>
@@ -58,7 +58,7 @@
               <p style="color:#464c5b;font-weight:bold;font-size:15px;width:100%;text-align:center;">{{STinfo.STNM}}巴歇尔槽水位流量计算</p>
               </Row>
               <Row>
-                  <table style="border: 1px solid #C7CCD6;border-bottom: none;" border cellspacing="0" cellpadding="0" width="100%" class="table_show">
+                  <table  cellspacing="0" cellpadding="0" width="100%" class="table_show">
                   <tr>
                       <td class="dt_name">所属渠道：</td><td class="dt_vale borderright">{{STinfo.CANAL_NAME}}</td>
                       <td class="dt_name" style="width:15%;">巴歇尔槽型号：</td><td class="dt_vale borderright" style="width:10%;">{{Titileinfo.MODEL}}号</td>
@@ -97,7 +97,7 @@
               <p style="color:#464c5b;font-weight:bold;font-size:15px;width:100%;text-align:center;">{{STinfo.STNM}}水闸水位流量计算</p>
               </Row>
               <Row>
-                  <table style="border: 1px solid #C7CCD6;border-bottom: none;" border cellspacing="0" cellpadding="0" width="100%" class="table_show">
+                  <table cellspacing="0" cellpadding="0" width="100%" class="table_show">
                   <tr>
                       <td class="dt_name">所属渠道：</td><td class="dt_vale borderright">{{STinfo.CANAL_NAME}}</td>
                       <td class="dt_name">水闸类型：</td><td class="dt_vale borderright">{{Titileinfo.SLTP}}</td>
@@ -386,6 +386,10 @@ export default {
             p_obj.i=this.Titileinfo.I;
             p_obj.z=this.formb.z;
             p_obj.types=this.Titileinfo.TYPES;
+            if(this.Titileinfo==""){
+              this.$message({message:this.STinfo.STNM+this.formb.tm+'年标准断面参数不存在！',type:'warning'});
+              return;
+            }
         }else if(meType==2){
             if(this.formx.z==''){
                this.$message({message:'请输入水深！',type:'warning'});
@@ -530,26 +534,22 @@ html, body {
 }
 .table_show {
  font-size: 14px;
+ border:1px solid #C7CCD6;
+ border-collapse:collapse; 
  td {
     height: 45px;
     border-top: none;
-    border-color: #C7CCD6;
+    border:1px solid #C7CCD6;
   }
 
   .dt_name {
     width: 10%;
-    border-left: none;
     text-align: right;
   }
 
   .dt_vale {
     width: 15%;
-    border-right: none;
-    border-left: none;
     text-align: center;
   }
-  .dt_vale.borderright{
-        border-right:1px solid #C7CCD6;
-    }
 }
 </style>

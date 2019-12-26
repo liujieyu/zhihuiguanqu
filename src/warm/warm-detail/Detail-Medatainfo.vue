@@ -1,6 +1,6 @@
 <template>
   <div v-loading="boxLoading">
-              <table style="border: 1px solid #C7CCD6;border-bottom: none;" border cellspacing="0" width="100%" class="table_detail">
+              <table cellspacing="0" width="100%" class="table_detail">
                 <tr>
                   <td align="right" class="dt_name">上传日期：</td>
                   <td align="center" class="dt_vale" style="border-right: 1px solid #C7CCD6">{{ mefileInfo.TMSTR || "&nbsp;" }}</td>
@@ -203,21 +203,20 @@ export default {
 <style lang="less" scope>
 
 .table_detail {
+ border:1px solid #C7CCD6;
+ border-collapse:collapse; 
   td {
     height: 35px;
     border-top: none;
-    border-color: #C7CCD6;
+    border:1px solid #C7CCD6;
   }
 
   .dt_name {
     width: 20%;
-    border-left: none;
   }
 
   .dt_vale {
     width: 30%;
-    border-right: none;
-    border-left: none;
   }
 }
 </style>

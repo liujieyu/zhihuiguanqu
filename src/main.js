@@ -28,7 +28,7 @@ import 'echarts-gl';
 
 
 Vue.prototype.$echarts = echarts;
-
+ import 'babel-polyfill'
 
 new Vue({
   router,

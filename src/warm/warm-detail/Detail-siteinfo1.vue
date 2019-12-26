@@ -1,6 +1,6 @@
 <template>
   <div v-loading="boxLoading">
-    <table style="border: 1px solid #EBEEF5" border cellspacing="0" width="100%" class="table_detail">
+    <table cellspacing="0" width="100%" class="table_detail">
                 <tr>
                   <td align="right" class="dt_name">测站名称：</td>
                   <td align="center" class="dt_vale" style="border-right: 1px solid #EBEEF5">{{ siteInfo.STNM || "&nbsp;" }}</td>

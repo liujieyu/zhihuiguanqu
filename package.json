@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "babel-polyfill": "^6.26.0",
     "core-js": "^2.6.5",
     "dojo": "^1.15.0",
     "echarts": "^4.2.1",
