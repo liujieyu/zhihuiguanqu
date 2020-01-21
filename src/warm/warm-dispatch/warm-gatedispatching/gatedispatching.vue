@@ -47,28 +47,32 @@
           min-width="80"
           fixed="left">
         </el-table-column>
-        <el-table-column label="导流洞">
+        <el-table-column label="导流洞" align="center">
           <el-table-column
             prop="DLKDNAME"
             label="闸门开启高度"
-            min-width="120">
+            min-width="120"
+            align="center">
           </el-table-column>
           <el-table-column
             prop="DL_Q"
             label="泄流量"
-            min-width="120">
+            min-width="120"
+            align="center">
           </el-table-column>
         </el-table-column>
-        <el-table-column label="溢洪洞">
+        <el-table-column label="溢洪洞" align="center">
           <el-table-column
             prop="XHKDNAME"
             label="闸门开启高度"
-            min-width="120">
+            min-width="120"
+            align="center">
           </el-table-column>
           <el-table-column
             prop="XH_Q"
             label="泄流量"
-            min-width="120">
+            min-width="120"
+            align="center">
           </el-table-column>
         </el-table-column>
         <el-table-column

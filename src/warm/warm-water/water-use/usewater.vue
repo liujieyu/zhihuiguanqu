@@ -203,12 +203,17 @@ export default {
             }
             this.form.year=year;
             this.axios.get('/'+this.$WarmTable+'/waterplan/managetree',{params:{canalname:this.searchmsg}}).then(res => {
+              debugger;
               var root=res.data.tree;
               var keyarry=[];
+              if(root.children.length>0){
               keyarry.push(root.ID,root.children[0].ID,root.children[0].children[0].ID);
+              }
               this.Treedata.push(root);
               this.keys=keyarry;
+              if(root.children.length>0){
               this.STinfo=root.children[0].children[0];
+              }
               this.Reload();
             });
       },

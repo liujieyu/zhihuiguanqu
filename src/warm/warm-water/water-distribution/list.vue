@@ -7,11 +7,11 @@
 
 		<Tabs value="waterdistribution">
 	        <TabPane label="用水考核指标" name="waterdistribution">
-                预留接口
-                <!--
                 <div :style="{'height':theight+'px','overflow':'auto'}">
 	        	<Distribution></Distribution> 
                 </div> 
+                <!--
+                预留接口
                 -->              
 	        </TabPane>
 	    </Tabs>

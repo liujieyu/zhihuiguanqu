@@ -1124,4 +1124,7 @@ z-index: 2;
 .el-table__empty-text {
 color:#fff;
 } 
+.el-table tbody tr:hover>td {
+    background-color: #0162DB!important;
+    }
 </style>

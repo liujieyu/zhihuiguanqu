@@ -220,6 +220,14 @@
             var start = new Date();
             start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
             this.form.date=[start,end];
+            //行政区划
+            this.getTableData_WRP_AD_B(data => {
+                this.form.adressList = data;
+            });
+            //预警等级
+            this.Get_WrpFieldinfo('ST_AlarmInfo','Alarm',data => {
+                this.yjdjlist = data;
+            });
             this.Reload();        
         },
         methods:{
@@ -259,14 +267,6 @@
                     this.loading = false;
                     this.data = res.data.rows;
                     this.list_input.total = res.data.total;
-                });
-                //行政区划
-                this.getTableData_WRP_AD_B(data => {
-                    this.form.adressList = data;
-                });
-                //预警等级
-                this.Get_WrpFieldinfo('ST_AlarmInfo','Alarm',data => {
-                    this.yjdjlist = data;
                 });
             },
             // 处理页码切换

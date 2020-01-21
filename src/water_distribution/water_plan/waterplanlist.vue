@@ -9,7 +9,7 @@
 	  <TabPane label="配水管理" name="waterplaninfo">
       预留接口
       <!--
-	    <WaterPlanInfo></WaterPlanInfo>
+        <WaterPlanInfo></WaterPlanInfo>	    
       -->
 	  </TabPane>
 	</Tabs>

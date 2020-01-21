@@ -28,7 +28,6 @@ export default {
     }
   },
   mounted(){
-      debugger;
       if(this.info.sign=="update"){
           this.form.z=this.info.z;
           this.form.q=this.info.q;

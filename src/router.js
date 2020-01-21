@@ -194,8 +194,12 @@ export default new Router({
     { path: '/warm-rsvtarget',component: () => import('./warm/warm-target/rsv-target/rsvtargetlist.vue') },
     //值班管理-值班安排
     { path: '/warm-dutyplan',component: () => import('./warm/warm-duty/warm-dutyplan/list.vue') },
+    //值班管理-值班安排维护
+    { path: '/plan-manage',component: () => import('./warm/warm-duty/dutyplan-manage/list.vue') },
     //值班管理-值班通讯录
-    { path: '/duty-addrlist',component: () => import('./duty/duty-addrlist/list.vue') },
+    { path: '/duty-addrlist',component: () => import('./warm/warm-duty/duty-addrlist/list.vue') },
+    //值班管理-值班通讯录维护
+    { path: '/duty-infomanage',component: () => import('./warm/warm-duty/addrlist-manage/list.vue') },
     //基础信息-河流水系
     { path: '/warm-riversystem',component: () => import('./warm/warm-river/warm-riversystem/list.vue') },
     //基础信息-水文气象

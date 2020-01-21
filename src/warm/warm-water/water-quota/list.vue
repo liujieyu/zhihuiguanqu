@@ -7,9 +7,9 @@
 
 		<Tabs value="quotaplan">
 	        <TabPane label="用水定额计划管理" name="quotaplan">
-                预留接口
+                <QuotaPlan></QuotaPlan>
                 <!--
-	        	<QuotaPlan></QuotaPlan>   
+                预留接口   
                 -->             
 	        </TabPane>
 	    </Tabs>

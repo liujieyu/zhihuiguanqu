@@ -13,7 +13,7 @@
       <el-table
         :data="data"
         border
-        :height="tableheight"
+        height="370"
         v-loading="loading"
         style="width: 100%"
         @cell-click="cellclick"
@@ -72,17 +72,8 @@
     {
       return{
         loading:false,
-        tableheight:window.innerHeight-202,
-        data:
-        [
-          {
-            ROWID:'1',
-            STNM:'入库流量站',
-            XHWL:'2713.50',
-            BZWL:'2713.00',
-            AWL:'2712.500',
-          },
-        ], 
+        tableheight:'',
+        data:[], 
         form:
         {
           searchmsg:'',
@@ -94,6 +85,7 @@
     },
     methods:{
       exportToExcel() {
+                return;
                 window.location.href='/'+this.$WarmTable+'/excel/exporttarget/2';
       },
     }

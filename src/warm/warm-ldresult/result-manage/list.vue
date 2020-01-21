@@ -38,7 +38,6 @@
       methods: { 
           //显示对话框
       showdailog(info){
-        debugger;
         this.dailog=info;
         this.dialogTableVisible=true;
       },

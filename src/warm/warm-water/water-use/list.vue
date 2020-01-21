@@ -7,9 +7,9 @@
 
 		<Tabs value="usewater">
 	        <TabPane label="用水统计" name="usewater">
-                预留接口
+                <Usewater></Usewater>
                 <!--
-	        	<Usewater></Usewater> 
+                预留接口 
                 -->               
 	        </TabPane>
 	    </Tabs>
