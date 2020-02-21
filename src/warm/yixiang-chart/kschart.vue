@@ -915,9 +915,18 @@ export default {
         }
       }
   },
+  s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+               .toString(16)
+               .substring(1);
+ },
+  JsGuid() {
+    return this.s4() + this.s4() + '-' + this.s4() + '-' + this.s4() + '-' +
+           this.s4() + '-' + this.s4() + this.s4() + this.s4();
+  },
   //显示视频链接
   showvideo(path){
-    window.open(path,'newwindow','width='+(window.screen.availWidth-10)+',height='+(window.screen.availHeight-30)+ ',top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
+    window.open(path,'newwindow'+this.JsGuid(),'width='+(window.screen.availWidth-10)+',height='+(window.screen.availHeight-30)+ ',top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
   },
     switchleft(){
     this.showleft=!this.showleft;

@@ -36,7 +36,7 @@
                             <td style="vertical-align:top;">
                                 <ul>
                                     <li class="choose">
-                                        <Button  type="info"  @click="showManinfo(0,0)" style="margin-left:5px;margin-bottom:5px;">选择值班通讯录主管领导</Button>
+                                        <Button  type="info"  @click="showManinfo(0,0)" style="margin-left:5px;margin-bottom:5px;">选择主管领导</Button>
                                     </li>
                                     <li class="showdada"  v-for="(item, itemIndex) in maninfos[0][0]">
                                         <Input v-model="item.name" :value="item.name" placeholder="请输入姓名" clearable style="width:110px;"/>
@@ -53,7 +53,7 @@
                             <td style="vertical-align:top;">
                                 <ul>
                                     <li class="choose">
-                                        <Button  type="info"  @click="showManinfo(0,1)" style="margin-left:5px;margin-bottom:5px;">选择值班通讯录值班领导</Button>
+                                        <Button  type="info"  @click="showManinfo(0,1)" style="margin-left:5px;margin-bottom:5px;">选择值班领导</Button>
                                     </li>
                                     <li   v-for="(item, itemIndex) in maninfos[0][1]">
                                         <Input v-model="item.name" :value="item.name" placeholder="请输入姓名" clearable style="width:110px;"/>
@@ -69,7 +69,7 @@
                             <td style="vertical-align:top;">
                                 <ul>
                                     <li class="choose">
-                                        <Button  type="info"  @click="showManinfo(0,2)" style="margin-left:5px;margin-bottom:5px;">选择值班通讯录值班人员</Button>
+                                        <Button  type="info"  @click="showManinfo(0,2)" style="margin-left:5px;margin-bottom:5px;">选择值班人员</Button>
                                     </li>
                                     <li   v-for="(item, itemIndex) in maninfos[0][2]">
                                         <Input v-model="item.name" :value="item.name" placeholder="请输入姓名" clearable style="width:110px;"/>
@@ -88,7 +88,7 @@
                             <td style="vertical-align:top;">
                                 <ul>
                                     <li class="choose">
-                                        <Button  type="info"  @click="showManinfo(1,0)" style="margin-left:5px;margin-bottom:5px;">选择值班通讯录主管领导</Button>
+                                        <Button  type="info"  @click="showManinfo(1,0)" style="margin-left:5px;margin-bottom:5px;">选择主管领导</Button>
                                     </li>
                                     <li class="showdada"  v-for="(item, itemIndex) in maninfos[1][0]">
                                         <Input v-model="item.name" :value="item.name" placeholder="请输入姓名" clearable style="width:110px;"/>
@@ -105,7 +105,7 @@
                             <td style="vertical-align:top;">
                                 <ul>
                                     <li class="choose">
-                                        <Button  type="info"  @click="showManinfo(1,1)" style="margin-left:5px;margin-bottom:5px;">选择值班通讯录值班领导</Button>
+                                        <Button  type="info"  @click="showManinfo(1,1)" style="margin-left:5px;margin-bottom:5px;">选择值班领导</Button>
                                     </li>
                                     <li   v-for="(item, itemIndex) in maninfos[1][1]">
                                         <Input v-model="item.name" :value="item.name" placeholder="请输入姓名" clearable style="width:110px;"/>
@@ -121,7 +121,7 @@
                             <td style="vertical-align:top;">
                                 <ul>
                                     <li class="choose">
-                                        <Button  type="info"  @click="showManinfo(1,2)" style="margin-left:5px;margin-bottom:5px;">选择值班通讯录值班人员</Button>
+                                        <Button  type="info"  @click="showManinfo(1,2)" style="margin-left:5px;margin-bottom:5px;">选择值班人员</Button>
                                     </li>
                                     <li   v-for="(item, itemIndex) in maninfos[1][2]">
                                         <Input v-model="item.name" :value="item.name" placeholder="请输入姓名" clearable style="width:110px;"/>
@@ -139,13 +139,13 @@
                             <td style="vertical-align:top;">
                                 <ul>
                                     <li class="choose">
-                                        <Button  type="info"  @click="showManinfo(2,0)" style="margin-left:5px;margin-bottom:5px;">选择值班通讯录主管领导</Button>
+                                        <Button  type="info"  @click="showManinfo(2,0)" style="margin-left:5px;margin-bottom:5px;">选择主管领导</Button>
                                     </li>
                                     <li class="showdada"  v-for="(item, itemIndex) in maninfos[2][0]">
                                         <Input v-model="item.name" :value="item.name" placeholder="请输入姓名" clearable style="width:110px;"/>
                                         -
                                         <Input v-model="item.phone" :value="item.phone" placeholder="请输入手机号码" clearable style="width:110px;"/>
-                                        <Button  type="primary" v-if="maninfos[2][0].length>1"  @click="deleteItem(0,0,itemIndex)" style="margin-left:5px;">-</Button>
+                                        <Button  type="primary" v-if="maninfos[2][0].length>1"  @click="deleteItem(2,0,itemIndex)" style="margin-left:5px;">-</Button>
                                     </li>
                                     <li style="margin-bottom:5px;">
                                         <Button  type="primary"  @click="addItem(2,0)">+</Button>
@@ -156,7 +156,7 @@
                             <td style="vertical-align:top;">
                                 <ul>
                                     <li class="choose">
-                                        <Button  type="info"  @click="showManinfo(2,1)" style="margin-left:5px;margin-bottom:5px;">选择值班通讯录值班领导</Button>
+                                        <Button  type="info"  @click="showManinfo(2,1)" style="margin-left:5px;margin-bottom:5px;">选择值班领导</Button>
                                     </li>
                                     <li   v-for="(item, itemIndex) in maninfos[2][1]">
                                         <Input v-model="item.name" :value="item.name" placeholder="请输入姓名" clearable style="width:110px;"/>
@@ -172,7 +172,7 @@
                             <td style="vertical-align:top;">
                                 <ul>
                                     <li class="choose">
-                                        <Button  type="info"  @click="showManinfo(2,2)" style="margin-left:5px;margin-bottom:5px;">选择值班通讯录值班人员</Button>
+                                        <Button  type="info"  @click="showManinfo(2,2)" style="margin-left:5px;margin-bottom:5px;">选择值班人员</Button>
                                     </li>
                                     <li   v-for="(item, itemIndex) in maninfos[2][2]">
                                         <Input v-model="item.name" :value="item.name" placeholder="请输入姓名" clearable style="width:110px;"/>
@@ -192,7 +192,7 @@
                             <td style="vertical-align:top;">
                                 <ul>
                                     <li class="choose">
-                                        <Button  type="info"  @click="showManinfo(3,0)" style="margin-left:5px;margin-bottom:5px;">选择值班通讯录主管领导</Button>
+                                        <Button  type="info"  @click="showManinfo(3,0)" style="margin-left:5px;margin-bottom:5px;">选择主管领导</Button>
                                     </li>
                                     <li class="showdada"  v-for="(item, itemIndex) in maninfos[3][0]">
                                         <Input v-model="item.name" :value="item.name" placeholder="请输入姓名" clearable style="width:110px;"/>
@@ -209,7 +209,7 @@
                             <td style="vertical-align:top;">
                                 <ul>
                                     <li class="choose">
-                                        <Button  type="info"  @click="showManinfo(3,1)" style="margin-left:5px;margin-bottom:5px;">选择值班通讯录值班领导</Button>
+                                        <Button  type="info"  @click="showManinfo(3,1)" style="margin-left:5px;margin-bottom:5px;">选择值班领导</Button>
                                     </li>
                                     <li   v-for="(item, itemIndex) in maninfos[3][1]">
                                         <Input v-model="item.name" :value="item.name" placeholder="请输入姓名" clearable style="width:110px;"/>
@@ -225,7 +225,7 @@
                             <td style="vertical-align:top;">
                                 <ul>
                                     <li class="choose">
-                                        <Button  type="info"  @click="showManinfo(3,2)" style="margin-left:5px;margin-bottom:5px;">选择值班通讯录值班人员</Button>
+                                        <Button  type="info"  @click="showManinfo(3,2)" style="margin-left:5px;margin-bottom:5px;">选择值班人员</Button>
                                     </li>
                                     <li   v-for="(item, itemIndex) in maninfos[3][2]">
                                         <Input v-model="item.name" :value="item.name" placeholder="请输入姓名" clearable style="width:110px;"/>
@@ -244,7 +244,7 @@
                             <td style="vertical-align:top;">
                                 <ul>
                                     <li class="choose">
-                                        <Button  type="info"  @click="showManinfo(4,0)" style="margin-left:5px;margin-bottom:5px;">选择值班通讯录主管领导</Button>
+                                        <Button  type="info"  @click="showManinfo(4,0)" style="margin-left:5px;margin-bottom:5px;">选择主管领导</Button>
                                     </li>
                                     <li class="showdada"  v-for="(item, itemIndex) in maninfos[4][0]">
                                         <Input v-model="item.name" :value="item.name" placeholder="请输入姓名" clearable style="width:110px;"/>
@@ -261,7 +261,7 @@
                             <td style="vertical-align:top;">
                                 <ul>
                                     <li class="choose">
-                                        <Button  type="info"  @click="showManinfo(4,1)" style="margin-left:5px;margin-bottom:5px;">选择值班通讯录值班领导</Button>
+                                        <Button  type="info"  @click="showManinfo(4,1)" style="margin-left:5px;margin-bottom:5px;">选择值班领导</Button>
                                     </li>
                                     <li   v-for="(item, itemIndex) in maninfos[4][1]">
                                         <Input v-model="item.name" :value="item.name" placeholder="请输入姓名" clearable style="width:110px;"/>
@@ -277,7 +277,7 @@
                             <td style="vertical-align:top;">
                                 <ul>
                                     <li class="choose">
-                                        <Button  type="info"  @click="showManinfo(4,2)" style="margin-left:5px;margin-bottom:5px;">选择值班通讯录值班人员</Button>
+                                        <Button  type="info"  @click="showManinfo(4,2)" style="margin-left:5px;margin-bottom:5px;">选择值班人员</Button>
                                     </li>
                                     <li   v-for="(item, itemIndex) in maninfos[4][2]">
                                         <Input v-model="item.name" :value="item.name" placeholder="请输入姓名" clearable style="width:110px;"/>
@@ -296,7 +296,7 @@
                             <td style="vertical-align:top;">
                                 <ul>
                                     <li class="choose">
-                                        <Button  type="info"  @click="showManinfo(5,0)" style="margin-left:5px;margin-bottom:5px;">选择值班通讯录主管领导</Button>
+                                        <Button  type="info"  @click="showManinfo(5,0)" style="margin-left:5px;margin-bottom:5px;">选择主管领导</Button>
                                     </li>
                                     <li class="showdada"  v-for="(item, itemIndex) in maninfos[5][0]">
                                         <Input v-model="item.name" :value="item.name" placeholder="请输入姓名" clearable style="width:110px;"/>
@@ -313,7 +313,7 @@
                             <td style="vertical-align:top;">
                                 <ul>
                                     <li class="choose">
-                                        <Button  type="info"  @click="showManinfo(5,1)" style="margin-left:5px;margin-bottom:5px;">选择值班通讯录值班领导</Button>
+                                        <Button  type="info"  @click="showManinfo(5,1)" style="margin-left:5px;margin-bottom:5px;">选择值班领导</Button>
                                     </li>
                                     <li   v-for="(item, itemIndex) in maninfos[5][1]">
                                         <Input v-model="item.name" :value="item.name" placeholder="请输入姓名" clearable style="width:110px;"/>
@@ -329,7 +329,7 @@
                             <td style="vertical-align:top;">
                                 <ul>
                                     <li class="choose">
-                                        <Button  type="info"  @click="showManinfo(5,2)" style="margin-left:5px;margin-bottom:5px;">选择值班通讯录值班人员</Button>
+                                        <Button  type="info"  @click="showManinfo(5,2)" style="margin-left:5px;margin-bottom:5px;">选择值班人员</Button>
                                     </li>
                                     <li   v-for="(item, itemIndex) in maninfos[5][2]">
                                         <Input v-model="item.name" :value="item.name" placeholder="请输入姓名" clearable style="width:110px;"/>
@@ -348,7 +348,7 @@
                             <td style="vertical-align:top;">
                                 <ul>
                                     <li class="choose">
-                                        <Button  type="info"  @click="showManinfo(6,0)" style="margin-left:5px;margin-bottom:5px;">选择值班通讯录主管领导</Button>
+                                        <Button  type="info"  @click="showManinfo(6,0)" style="margin-left:5px;margin-bottom:5px;">选择主管领导</Button>
                                     </li>
                                     <li class="showdada"  v-for="(item, itemIndex) in maninfos[6][0]">
                                         <Input v-model="item.name" :value="item.name" placeholder="请输入姓名" clearable style="width:110px;"/>
@@ -365,7 +365,7 @@
                             <td style="vertical-align:top;">
                                 <ul>
                                     <li class="choose">
-                                        <Button  type="info"  @click="showManinfo(6,1)" style="margin-left:5px;margin-bottom:5px;">选择值班通讯录值班领导</Button>
+                                        <Button  type="info"  @click="showManinfo(6,1)" style="margin-left:5px;margin-bottom:5px;">选择值班领导</Button>
                                     </li>
                                     <li   v-for="(item, itemIndex) in maninfos[6][1]">
                                         <Input v-model="item.name" :value="item.name" placeholder="请输入姓名" clearable style="width:110px;"/>
@@ -381,7 +381,7 @@
                             <td style="vertical-align:top;">
                                 <ul>
                                     <li class="choose">
-                                        <Button  type="info"  @click="showManinfo(6,2)" style="margin-left:5px;margin-bottom:5px;">选择值班通讯录值班人员</Button>
+                                        <Button  type="info"  @click="showManinfo(6,2)" style="margin-left:5px;margin-bottom:5px;">选择值班人员</Button>
                                     </li>
                                     <li   v-for="(item, itemIndex) in maninfos[6][2]">
                                         <Input v-model="item.name" :value="item.name" placeholder="请输入姓名" clearable style="width:110px;"/>
@@ -535,7 +535,6 @@ export default {
         this.Reload();
     },
     onSave(){
-        debugger;
         var postData=new Array();
         for(var i=0;i<7;i++){
             for(var j=0;j<3;j++){
@@ -573,6 +572,7 @@ export default {
             this.$message({message:'请输入人员值班安排信息！',type:'warning'});
             return;
         }
+        this.loading = true;
         var postParam=new Object();
         postParam["list"]=postData;
         postParam["delsign"]=this.delsign;
@@ -580,6 +580,10 @@ export default {
         postParam["endtime"]=this.datearray[6];
         this.axios.post('/'+this.$WarmTable+'/alarm/adddutyplan',postParam).then((res)=>{
                                 if(res.data=="ok"){
+                                    this.loading = false;
+                                    if(this.delsign==0){
+                                        this.delsign=1;
+                                    }
                                     this.$message({message:'人员值班安排信息保存成功！',type:'success'});
                                 }                   
                             });

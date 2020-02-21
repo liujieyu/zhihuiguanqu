@@ -17,7 +17,7 @@
         </Col>
         <Col>
         <!--姓名模糊查询-->
-          <Input search enter-button suffix="ios-search" placeholder="请输入姓名" style="width: auto;margin-left: 5px;" @on-search="search" v-model="form.searchmsg" />
+          <Input search enter-button suffix="ios-search" placeholder="请输入姓名/部门/职务/电话号码" style="width: 260px;margin-left: 5px;" @on-search="search" v-model="form.searchmsg" />
         </Col>
         <Col> 
            <Button type="primary" style="width: auto;margin-left: 5px;" @click="insertAddrlist">新增</Button>
@@ -102,7 +102,7 @@
           label="排序"
           align="center"
           sortable="custom"
-          min-width="55">
+          min-width="65">
         </el-table-column>
         <el-table-column label="操作" align="center" min-width="120" :key="Math.random()">
             <template slot-scope="scope">
@@ -133,7 +133,7 @@
         width="400px">
         <div>
           将
-          <Select v-model="form.yr" @on-change="search" style="width:90px;">
+          <Select v-model="form.yr" style="width:90px;">
            <Option v-for="item in years" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
           通讯录导入到
@@ -294,11 +294,16 @@ export default {
     },
     showaddrlist(){
       this.modal1 = true;
-      this.form.yr=this.years[0].value;
+      if(this.years.length>0){
+        this.form.yr=this.years[0].value;
+      }     
       this.form.toyr=new Date().getFullYear().toString();
     },
     //通讯录导入
     exportAddrlist(){
+      if(this.years.length==0){
+        return;
+      }
       if(this.form.yr==this.form.toyr){
         this.$message({message:this.form.toyr+'年通讯录无须导入,请输入其他年份！',type:'info'});
       }else{
