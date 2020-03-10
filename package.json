@@ -11,7 +11,7 @@
     "axios": "^0.18.0",
     "babel-polyfill": "^6.26.0",
     "core-js": "^2.6.5",
-    "dojo": "^1.15.0",
+    "dojo": "^1.16.2",
     "echarts": "^4.2.1",
     "echarts-gl": "^1.1.1",
     "element-ui": "^2.9.1",
