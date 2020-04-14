@@ -116,7 +116,10 @@ import GetDataMethods from "@/assets/commonJS/GetDataMethods";
                 }           
                 this.axios.get('/'+this.$WarmTable+'/alarm/getman',{params:{types:this.info.type,adCd:this.form.xzqh,nm:this.form.searchname}}).then((res)=>{
                     this.loading = false;
-                    this.data = res.data;                 
+                    this.data = res.data; 
+                    let that=this;                  
+                    setTimeout(function(){that.$emit('setHeight');}, 50);
+                                  
                 });
             },
             //行政区划

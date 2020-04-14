@@ -17,7 +17,7 @@
   <el-dialog :title="dailog.title" :visible.sync="dialogTableVisible" v-dialogDrag:{dialogDrag}="true"  v-dialogChange:{dialogChange}="true"   :close-on-click-modal="false" :modal-append-to-body="false" :modal="false"  @close="beforeclose">
   <!--短信发送人员详情-->
         <div id="showdiv">
-        <WarmSendman :info="dailog" v-if="dailog.itype=='fasongrenyuan'" @closedailog="closedailog"></WarmSendman>
+        <WarmSendman :info="dailog" v-if="dailog.itype=='fasongrenyuan'" @closedailog="closedailog" @setHeight="setHeight"></WarmSendman>
         </div>
    </el-dialog>
 	</div>
@@ -57,6 +57,13 @@
         this.$refs['warmsend'].showphone(this.dailog);
         this.dialogTableVisible=false;
         this.beforeclose();
+      },
+      //设置对话框高度
+      setHeight(){
+        let obj=document.getElementsByClassName("el-dialog")[0];
+        if(obj.clientHeight>document.documentElement.clientHeight){
+          obj.style.height = (document.documentElement.clientHeight*0.7)+"px";
+        }      
       }
       },
       computed: { },

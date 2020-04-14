@@ -249,7 +249,16 @@ export default {
           axisPointer: {
           type: 'cross',
           animation: false,
-          }
+          },
+          formatter: function (params) {
+            var tip="";
+            if(params !=null && params.length>0){
+              for(var i=0;i<params.length;i++){
+                tip+=params[i].seriesName+'<br/>'+params[i].marker+'水深：'+params[i].name+'&nbsp;&nbsp;流量：'+params[i].value+'<br/>';
+              }
+            }
+            return tip;
+          },
         },
         toolbox: {
           show: true,
@@ -397,7 +406,8 @@ export default {
           if(this.STinfo.MAX_Q<maxq){
             this.STinfo.MAX_Q=maxq;
           }
-          echartData.y1.max=parseFloat(this.STinfo.MAX_Q)+0.5;
+          echartData.y1.max=(parseFloat(this.STinfo.MAX_Q)+0.1).toFixed(2);
+
           this.data2=echartData;
            this.drawchart();
         });

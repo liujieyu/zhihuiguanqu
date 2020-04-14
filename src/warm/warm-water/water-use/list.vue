@@ -7,10 +7,10 @@
 
 		<Tabs value="usewater">
 	        <TabPane label="用水统计" name="usewater">
-                <Usewater></Usewater>
                 <!--
-                预留接口 
-                -->               
+                <Usewater></Usewater>
+                --> 
+                预留接口             
 	        </TabPane>
 	    </Tabs>
 	</div>

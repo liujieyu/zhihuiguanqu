@@ -65,9 +65,8 @@
           prop="TYPENAME"
           label="人员类型"
           align="center"
-          fixed="left"
           sortable="custom"
-          min-width="100">
+          min-width="120">
         </el-table-column>
         <el-table-column
           prop="UNIT"
@@ -102,9 +101,9 @@
           label="排序"
           align="center"
           sortable="custom"
-          min-width="65">
+          min-width="80">
         </el-table-column>
-        <el-table-column label="操作" align="center" min-width="120" :key="Math.random()">
+        <el-table-column label="操作" align="center" min-width="150" :key="Math.random()">
             <template slot-scope="scope">
             <el-button @click="updateClick(scope.row)" type="primary" size="small">修改</el-button>
             <el-button @click="deleteClick(scope.row)" type="primary" size="small">删除</el-button>
