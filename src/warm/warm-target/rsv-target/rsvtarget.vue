@@ -11,9 +11,9 @@
       </Row>
       <Row class="fgline"></Row>
       <el-table
-        :data="data"
+        :data="tabledata"
         border
-        height="370"
+        :height="theight"
         v-loading="loading"
         style="width: 100%"
         @cell-click="cellclick"
@@ -35,29 +35,67 @@
         </el-table-column>
         <el-table-column
            prop="XHWL"
-           label="I级(校核洪水位)"
+           label="校核洪水位"
            align="center"
            fixed="left"
            sortable="custom"
-           min-width="180">
+           min-width="120">
         </el-table-column>
         <el-table-column
            prop="ZCWL"
-           label="II级(正常蓄水位)"
+           label="正常蓄水位"
            align="center"
            fixed="left"
            sortable="custom"
-           min-width="180">
+           min-width="120">
         </el-table-column>
         <el-table-column
            prop="FWL"
-           label="III级(汛限水位)"
+           label="4-6月汛限水位"
            align="center"
            fixed="left"
            sortable="custom"
-           min-width="180">
+           min-width="140">
+        </el-table-column>
+        <el-table-column
+           prop="FWL79"
+           label="7-9月汛限水位"
+           align="center"
+           fixed="left"
+           sortable="custom"
+           min-width="140">
+        </el-table-column>
+        <el-table-column
+           prop="SWL"
+           label="死水位"
+           align="center"
+           fixed="left"
+           sortable="custom"
+           min-width="120">
+        </el-table-column>
+        <el-table-column
+           prop="SJWL"
+           label="设计洪水位"
+           align="center"
+           fixed="left"
+           sortable="custom"
+           min-width="120">
         </el-table-column>
       </el-table>
+      <div style="margin:10px 10px 0px 10px;overflow: hidden">
+        <div style="float: right;">
+          <Page 
+            :total="list_input.total" 
+            :current="list_input.current" show-sizer 
+            :page-size="list_input.pagesize" :page-size-opts="list_input.pagesizeopts"
+            @on-change="CurrentChange"
+            @on-page-size-change="PagesizeChange"
+            size="small"
+            show-total
+            show-elevator>
+          </Page>
+        </div>
+      </div>
     </Content>
   </div>
 </template>
@@ -71,20 +109,73 @@
     {
       return{
         loading:false,
-        tableheight:'',
-        data:[],
+        theight:window.innerHeight-236,
+        tabledata:[],
         form:{
           searchmsg:'',
-        }
+          orderby:'STCD',
+          sequence:'asc',
+        },
+        list_input:{
+        total:100,
+        pagesize:50,
+        pagesizeopts:[10,20,50,75,100,200],
+        current:1,
+      },
       }
     }, 
     mounted(){
+      this.Reload();
     },
     methods:{
+      Reload()
+    {
+      this.loading = true;
+      var _currentPage = this.list_input.current;
+      var _pageSizes = this.list_input.pagesize;
+      var _bgincount=(_currentPage - 1) * _pageSizes+1;
+      var _endcount=_currentPage * _pageSizes;
+      //调用后台函数，传递参数
+      this.axios.get('/'+this.$WarmTable+'/alarm/getrsvalarm',{params:{begincount:_bgincount,endcount:_endcount,stnm:this.form.searchmsg,orderBy:this.form.orderby,sequence:this.form.sequence}}).then((res)=>{
+                    this.loading = false;
+                    this.tabledata = res.data.rows;
+                    this.list_input.total = res.data.total;
+                });
+    },
       exportToExcel() {
-                return;
-                window.location.href='/'+this.$WarmTable+'/excel/exporttarget/3';
+                var params='&stnm='+this.form.searchmsg+'&begincount=1&endcount=99999&orderBy='+this.form.orderby+'&sequence='+this.form.sequence;
+              window.location.href='/'+this.$WarmTable+'/excel/exportrsvalarm?'+params;
       },
+      sort_change(item){
+        if(item.order==null){
+            return;
+        }
+        if(item.order=="ascending"){
+            this.form.sequence="asc";
+        }else{
+            this.form.sequence="desc";
+        }
+        this.form.orderby=item.prop;
+        this.list_input.current=1;
+        this.Reload();
+    },
+    search(){
+      this.list_input.current=1;
+      this.Reload();
+    },
+    // 处理页码切换
+    CurrentChange(index) 
+    {
+      this.list_input.current = index;
+      this.Reload();
+    },
+    // 处理每页显示条数切换
+    PagesizeChange(pagesize) 
+    {
+      this.list_input.pagesize = pagesize;
+      this.list_input.current=1;
+      this.Reload();
+    },
     }
   }
 </script>

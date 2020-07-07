@@ -7,10 +7,11 @@
 
 	<Tabs value="waterplaninfo">
 	  <TabPane label="配水管理" name="waterplaninfo">
-      预留接口
       <!--
-        <WaterPlanInfo></WaterPlanInfo>	    
+      预留接口
       -->
+        <WaterPlanInfo></WaterPlanInfo>	    
+      
 	  </TabPane>
 	</Tabs>
   </div>

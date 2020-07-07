@@ -2,8 +2,15 @@
   <div>
 	<Content class="searchcon">
       <Row type="flex" :gutter="16" class="rowtocol">
+        <Col align="left" fixed="left">
+          预警等级：
+          <Select v-model="form.type" placeholder="请选择" clearable style="width:150px;" @on-change="Typesearch">
+            <Option
+              v-for="item in types"  :key="item.value"  :value="item.value">{{ item.label }}</Option>
+          </Select>
+        </Col>
         <Col>
-          <Input search enter-button suffix="ios-search" placeholder="请输入站名：" style="width: auto;margin-right: 20px;" @on-search="search" v-model="form.searchmsg" />
+          <Input search enter-button suffix="ios-search" placeholder="请输入站名：" style="width: auto;margin-right: 20px;" @on-search="Typesearch" v-model="form.searchmsg" />
         </Col>
         <Col>
           <Button type="primary" style="width: auto;margin-right: 20px;" @click="exportToExcel">导出</Button>
@@ -11,9 +18,9 @@
       </Row>
       <Row class="fgline"></Row>
       <el-table
-        :data="data"
+        :data="tabledata"
         border
-        height="400"
+        :height="theight"
         v-loading="loading"
         style="width: 100%"
         @cell-click="cellclick"
@@ -33,139 +40,71 @@
            sortable="custom"
            min-width="150">
         </el-table-column>
-        <el-table-column label="III级预警（黄色）" align="center">
-          <el-table-column
-            prop="PTD_P3"
-            label="前72H"
-            align="center"
-            sortable="custom"
-            min-width="90">
-          </el-table-column>
-          <el-table-column
-            prop="OH_P3"
-            label="1H"
-            align="center"
-            sortable="custom"
-            min-width="90">
-          </el-table-column>
-          <el-table-column
-            prop="TH_P3"
-            label="3H"
-            align="center"
-            sortable="custom"
-            min-width="90">
-          </el-table-column>
-          <el-table-column
-            prop="SH_P3"
-            label="6H"
-            align="center"
-            sortable="custom"
-            min-width="90">
-          </el-table-column>
-          <el-table-column
-            prop="TWH_P3"
-            label="12H"
-            align="center"
-            sortable="custom"
-            min-width="90">
-          </el-table-column>
-          <el-table-column
-            prop="OD_P3"
-            label="24H"
-            align="center"
-            sortable="custom"
-            min-width="90">
-          </el-table-column>
+        <el-table-column 
+           prop="EWLNAME"
+           label="预警等级" 
+           sortable="custom"
+           min-width="150"
+           align="center">  
         </el-table-column>
-        <el-table-column label="II级预警（橙色）" align="center">
-          <el-table-column
-            prop="PTD_P2"
-            label="前72H"
+        <el-table-column
+            prop="PTD_P"
+            label="前72H降雨"
             align="center"
             sortable="custom"
             min-width="90">
           </el-table-column>
           <el-table-column
-            prop="OH_P2"
-            label="1H"
+            prop="OH_P"
+            label="1H降雨"
             align="center"
             sortable="custom"
             min-width="90">
           </el-table-column>
           <el-table-column
-            prop="TH_P2"
-            label="3H"
+            prop="TH_P"
+            label="3H降雨"
             align="center"
             sortable="custom"
             min-width="90">
           </el-table-column>
           <el-table-column
-            prop="SH_P2"
-            label="6H"
+            prop="SH_P"
+            label="6H降雨"
             align="center"
             sortable="custom"
             min-width="90">
           </el-table-column>
           <el-table-column
-            prop="TWH_P2"
-            label="12H"
+            prop="TWH_P"
+            label="12H降雨"
             align="center"
             sortable="custom"
             min-width="90">
           </el-table-column>
           <el-table-column
-            prop="OD_P2"
-            label="24H"
+            prop="OD_P"
+            label="24H降雨"
             align="center"
             sortable="custom"
             min-width="90">
           </el-table-column>
-        </el-table-column>
-        <el-table-column label="I级预警（红色）" align="center">
-          <el-table-column
-            prop="PTD_P1"
-            label="前72H"
-            align="center"
-            sortable="custom"
-            min-width="90">
-          </el-table-column>
-          <el-table-column
-            prop="OH_P1"
-            label="1H"
-            align="center"
-            sortable="custom"
-            min-width="90">
-          </el-table-column>
-          <el-table-column
-            prop="TH_P1"
-            label="3H"
-            align="center"
-            sortable="custom"
-            min-width="90">
-          </el-table-column>
-          <el-table-column
-            prop="SH_P1"
-            label="6H"
-            align="center"
-            sortable="custom"
-            min-width="90">
-          </el-table-column>
-          <el-table-column
-            prop="TWH_P1"
-            label="12H"
-            align="center"
-            sortable="custom"
-            min-width="90">
-          </el-table-column>
-          <el-table-column
-            prop="OD_P1"
-            label="24H"
-            align="center"
-            sortable="custom"
-            min-width="90">
-          </el-table-column>
-        </el-table-column>
       </el-table>
+
+      <div style="margin:10px 10px 0px 10px;overflow: hidden">
+        <div style="float: right;">
+          <Page 
+            :total="list_input.total" 
+            :current="list_input.current" show-sizer 
+            :page-size="list_input.pagesize" :page-size-opts="list_input.pagesizeopts"
+            @on-change="CurrentChange"
+            @on-page-size-change="PagesizeChange"
+            size="small"
+            show-total
+            show-elevator>
+          </Page>
+        </div>
+      </div>
     </Content>
   </div>
 </template>
@@ -173,26 +112,88 @@
 <script type="text/javascript">
   import FilterMethods from "@/assets/commonJS/FilterMethods";
   import GetDataMethods from "@/assets/commonJS/GetDataMethods";
+  import WarmDataConfig from "@/assets/commonJS/WarmDataConfig";
   export default 
   {
     data()
     {
       return{
         loading:false,
-        tableheight:'',
-        data:[],
+        theight:window.innerHeight-236,
+        tabledata:[],
+        types:[],
         form:{
           searchmsg:'',
-        }
+          type:'',
+          orderby:'STCD',
+          sequence:'asc',
+        },
+        list_input:{
+        total:100,
+        pagesize:50,
+        pagesizeopts:[10,20,50,75,100,200],
+        current:1,
+      },
       }
     }, 
+    // 引入过滤方法到此组件
+    mixins: [FilterMethods,GetDataMethods,WarmDataConfig],
     mounted(){
+      //预警等级
+      this.Get_WrpFieldinfo('ST_PP_Alarm','EWL',data => {
+          this.types = data;
+      });
+      this.Reload();
     },
     methods:{
+    Reload()
+    {
+      this.loading = true;
+      var _currentPage = this.list_input.current;
+      var _pageSizes = this.list_input.pagesize;
+      var _bgincount=(_currentPage - 1) * _pageSizes+1;
+      var _endcount=_currentPage * _pageSizes;
+      //调用后台函数，传递参数
+      this.axios.get('/'+this.$WarmTable+'/alarm/getppalarm',{params:{begincount:_bgincount,endcount:_endcount,types:this.form.type,stnm:this.form.searchmsg,orderBy:this.form.orderby,sequence:this.form.sequence}}).then((res)=>{
+                    this.loading = false;
+                    this.tabledata = res.data.rows;
+                    this.list_input.total = res.data.total;
+                });
+    },
       exportToExcel() {
-              return;
-              window.location.href='/'+this.$WarmTable+'/excel/exporttarget/1';
+              var params='types='+this.form.type+'&stnm='+this.form.searchmsg+'&begincount=1&endcount=99999&orderBy='+this.form.orderby+'&sequence='+this.form.sequence;
+              window.location.href='/'+this.$WarmTable+'/excel/exportrainalarm?'+params;
              },
+    sort_change(item){
+        if(item.order==null){
+            return;
+        }
+        if(item.order=="ascending"){
+            this.form.sequence="asc";
+        }else{
+            this.form.sequence="desc";
+        }
+        this.form.orderby=item.prop;
+        this.list_input.current=1;
+        this.Reload();
+    },
+    Typesearch(){
+      this.list_input.current=1;
+      this.Reload();
+    },
+      // 处理页码切换
+    CurrentChange(index) 
+    {
+      this.list_input.current = index;
+      this.Reload();
+    },
+    // 处理每页显示条数切换
+    PagesizeChange(pagesize) 
+    {
+      this.list_input.pagesize = pagesize;
+      this.list_input.current=1;
+      this.Reload();
+    },
     }
   }
 </script>
