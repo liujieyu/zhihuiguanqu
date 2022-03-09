@@ -1,0 +1,775 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>CreMedia7.0 WebClient Demo</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="js/jquery/jquery-1.9.1.js" type="text/javascript"></script> 
+	<script src="js/jquery/lib/snippet/jquery.snippet.js" type="text/javascript"></script>
+	<script src="js/jquery/lib/jquery.json-2.4.js" type="text/javascript"></script> 
+    <script src="js/NPPInterface.js" type="text/javascript"></script> 
+    <script src="js/NPPInterlayer.js" type="text/javascript"></script> 
+	<link rel="stylesheet" type="text/css" href="../images/pages.css" />	
+	<link rel="stylesheet" type="text/css" href="../../js/jquery/lib/snippet/jquery.snippet.css" /> 
+	<style>
+		*{margin: 0;padding: 0;}
+		table,td,tr{
+			border:1px grey solid;
+		}
+		td{
+			width:250px;
+		}
+		.td_b{
+			color:blue;
+		}
+		input,button{ width:80px;margin-bottom:3px; height:22px;}
+	</style>
+</head>
+<body style="overflow:-Scroll;overflow-y:hidden;">
+    <div class="content cc" style="height: 100%;width: 100%;">
+		<div style="overflow:auto;width:100%;">
+			<!-- <div><input type="button" value="获取资源" onClick="javascript:WebClient.FetchResource();"/></div>
+			<div style="float:left;"><div id="resourceTree" class="resourceTree" ></div></div> -->
+			<div>
+				<div id="windowbox" style="width:100%;height:550px;"></div>
+				<div id="windowtitle" style="line-height:20px;height:20px;"></div>
+				<!-- <div style="border-bottom:1px grey solid;border-left:1px grey solid;border-right:1px grey solid;width:352px;line-height:20px;height:20px;margin-left:10px;text-overflow:ellipsis;overflow:hidden;">
+				<div id="loginMsg" style="float:left"></div>
+				</div> -->
+			</div>
+			
+			<div style="display: flex;justify-content:space-around;">
+				<div><input type="button" value="开启" onclick="WebClient.UrlSearch();"/></div>
+				<div><input type="button" value="关闭" onclick="WebClient.ButtonsOperation('stopvideo');"/></div>
+                <div><input type="button" value="向上" onmousedown="WebClient.ButtonsOperation('ptzcontrol', NPPIF.Enum.PTZDirection.turnup);" onmouseup="WebClient.ButtonsOperation('ptzcontrol', NPPIF.Enum.PTZDirection.stopturn);"/></div>
+                <div><input type="button" value="向下" onmousedown="WebClient.ButtonsOperation('ptzcontrol', NPPIF.Enum.PTZDirection.turndown);" onmouseup="WebClient.ButtonsOperation('ptzcontrol', NPPIF.Enum.PTZDirection.stopturn);"/></div>
+                <div><input type="button" value="向左" onmousedown="WebClient.ButtonsOperation('ptzcontrol', NPPIF.Enum.PTZDirection.turnleft);" onmouseup="WebClient.ButtonsOperation('ptzcontrol', NPPIF.Enum.PTZDirection.stopturn);"/></div>
+                <div><input type="button" value="向右" onmousedown="WebClient.ButtonsOperation('ptzcontrol', NPPIF.Enum.PTZDirection.turnright);" onmouseup="WebClient.ButtonsOperation('ptzcontrol', NPPIF.Enum.PTZDirection.stopturn);"/></div>			
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+<script>
+
+// 是否打开调试输出
+var enable_debug = true; 
+
+// 调试输出函数
+var logger = function (fnStr, logStr) {
+	try {
+		if (!enable_debug) return false;
+
+		var fnStr = fnStr || 'debug output';
+		
+		if (typeof console != 'undefined') {
+			console.log('[' + fnStr + ']' + (logStr || 'no log string...'));
+		}
+	}
+	catch (e) {
+	}
+};
+
+	// NPPILY.ForkResource('61.187.248.226:8866');
+	// console.log(NPPILY.ForkResource('61.187.248.226:8866'));
+
+var WebClient = {
+	connectId : null,
+	resource : new NPPUtils.Hash(),
+	Load:function(){
+		try {		
+			// 首先初始化NPPILY，加载插件
+			var operator = NPPILY.Init(new NPPILY.Struct.InitParamStruct(false, null, null));
+			if (operator.rv != 0) {
+				// 初始化不成功
+				alert(NrcapError.Detail(operator.rv));
+			}
+			
+			// 存储窗口容器信息
+			if ($("#windowbox")[0]) {
+				// 存放窗口容器信息，只有一个窗口
+				NPPILY.WindowContainers.set(
+					"windowbox",
+					new NPPILY.Struct.WindowContainerStruct(
+						$("#windowbox")[0],
+						NPPILY.Enum.WindowType.VIDEO, // 实时视频
+						true, // 只要一个窗口默认是激活的
+						null, // 视频窗口对象开始为空
+						null
+					)
+				);
+			}
+			
+			// 建立连接
+			WebClient.Connect();
+		}
+		catch (e) {
+			alert("excep error -> " + e.name + "::" + e.message);
+			return false;
+		}
+	},
+
+	//获取参数
+	UrlSearch:function(){
+		var str = location.href;
+		var num = str.indexOf("?");
+		str = str.substr(num + 1);
+		var arr = str.split(",");
+		for (var i = 0; i < arr.length; i++) {
+			// console.log(arr[i]);
+		}
+		// console.log(WebClient);
+		WebClient.PlayVideo(arr[1],arr[2]);
+	},
+
+	// - 创建连接，连接信息记录在NPPILY.Connections全局变量中
+	Connect: function() {
+		var path =  "61.187.248.226:8866";
+		var username =  "admin";
+		var password =  "";
+		var epId =  "system"; //登陆参数：企业id
+		var bfix =  1;
+		
+		// 调用建立连接函数
+		var operator = NPPILY.Connect
+		(
+			new NPPILY.Struct.ConnParamStruct
+			(
+				path,
+				username,
+				epId,
+				password,
+				bfix
+			)　
+		);
+		if (operator.rv == 0) {
+			// 此即是当前连接ID，记录下来
+			WebClient.connectId = operator.response;
+			
+			
+			// 注册绑定NC事件回调，平台事件回调通知
+			NPPILY.NCNotifyManager.Add(
+				NPPILY.Enum.NCObjectNotify.event_notify,
+				function (notify) {
+					logger('WebClient.Connect', jQuery.toJSON(notify));
+
+					WebClient.EventNotify(notify);
+				}
+			);
+			
+			// 所有的视频状态、喊话对讲、音频状态等信息都是通过流状态回调通知
+			NPPILY.NCNotifyManager.Add(
+				NPPILY.Enum.NCObjectNotify.stream_status_notify,
+				function (notify) {
+					
+					logger('WebClient.Connect', jQuery.toJSON(notify));
+				
+					// 更新视频状态回调，等有视频播放的时候就会有调用
+					WebClient.UpdateVideoStatus(notify);
+				}
+			);
+		}
+		else {
+			if ($("#loginMsg").get(0)) {
+				$("#loginMsg").html(NrcapError.Detail(operator.rv) + "<br />");
+			}
+		}
+	},
+	
+	// 事件通知回调
+	EventNotify: function (notify) {
+		try {
+			if (notify.errorCode == 0) {
+				var kd = notify.keyData || {};
+					
+				if (kd.event) {
+					switch (kd.event.id) {
+					case 'EVT_PU_Offline':
+						// 设备下线处理
+						var puid = kd.event.src_id;
+						
+						// 判断是否在播放视频
+						NPPILY.WindowContainers.each(function (item) {
+							var node = item.value;
+							
+							if (node.window) {
+								var ivparams = node.window.params;
+								if (ivparams.puid == puid) {
+									// 视频断流重连处理
+									WebClient.StreamBreakRestore.Register({
+										type: 'VIDEO',
+										winkey: item.key || 'windowbox',
+										puid: ivparams.puid,
+										ivIndex: ivparams.idx,
+										streamType: ivparams.streamType,
+										customParams: node.window.customParams
+									});
+									
+									// alert('正在播放的视频设备下线了');
+									
+									return true;
+								}
+							}
+						});
+						
+						break;
+					}
+				}
+			}
+			else {
+				alert('已断开同平台的连接，请刷新页面重新连接');
+			} 
+		}
+		catch (e) {
+			return false;
+		}
+	},
+
+	/*
+		创建窗口以及播放：
+		connectId(string) 连接ID 
+        containerOrId(dom element | dom id) 窗口插件容器或ID
+		windowType(NPPILY.Enum.WindowType) 窗口类型
+		windowAttachEvent(NPPILY.Struct.WindowEventStruct) 绑定窗口事件
+		customParams(object) 自定义参数
+		wnd 窗口对象
+		puid (string) 设备ID 
+		idx (string)  资源索引
+		streamType (string)	流类型
+	*/
+	PlayVideo: function (puid, idx, name) {
+		try {
+			if (!puid || typeof idx == "undefined") return false;
+			
+			// 只含有一个窗口信息
+			var node = NPPILY.WindowContainers.get("windowbox");
+			if (node) {
+				
+ 				// 是否存在相同的视频在播放中，可以播放不同的视频流，同一流类型只允许播
+				if (node.window && node.window.status.playvideoing) {
+					if (node.window.params.puid == puid && node.window.params.idx == idx && node.window.params.streamType == NPPILY.Enum.NrcapStreamType.REALTIME) {
+						alert("请注意该视频已经在播放中...");
+						return false;
+					}
+				}
+				
+				// 播放视频
+				var create = true;
+				if (node.window) {
+					create = false;
+					if (node.window.status.playvideoing) {
+						// 原先有播放的就先停止播放
+						WebClient.StopVideo();
+					}
+				}
+				
+				if (create) {
+					var winevt = new NPPILY.Struct.WindowEventStruct();
+					// 单击事件
+					winevt.lbtn_click.status = true;
+					winevt.lbtn_click.callback = function () {
+						WebClient.ResponseOperation("ActiveWindow");
+					};
+					// 视频窗口（退出）全屏回调
+					winevt.fsw_show.callback = winevt.fsw_hide.callback = function () {
+						WebClient.ResponseOperation("BackFullScreen");
+					};
+					// 窗口内云台控制允许
+					winevt.ptz_control.status = true;
+					// 右键菜单
+					winevt.menu_command.status = true;
+					winevt.menu_command.menu = [{
+						key: "stopvideo", text: "停止视频"							
+					}, {
+						key: "playaudio", text: "播放音频"
+					},{
+						key: "fullscreen", text: "全屏"		
+					}];
+					winevt.menu_command.callback = function (menukey) {
+						WebClient.ResponseOperation("menu_command", menukey);
+					};
+					
+					// - 创建窗口
+					var win_operator = NPPILY.CreateWindow
+					(
+						WebClient.connectId,
+						node.container,
+						NPPILY.Enum.WindowType.VIDEO,
+						winevt
+					);
+					if (win_operator.rv == 0) {
+						node.window = win_operator.response;
+					}
+					else {
+						alert("创建窗口失败 -> " + NrcapError.Detail(win_operator.rv));
+					}
+				} // end create
+				
+				// 播放视频
+				var operator = NPPILY.PlayVideo
+				(
+					WebClient.connectId,
+					node.window,
+					puid,
+					idx,
+					NPPILY.Enum.NrcapStreamType.REALTIME // 这里默认播放实时流
+				);
+				if (operator.rv != 0) {
+					// alert("播放视频失败 -> " + NrcapError.Detail(operator.rv));
+				}
+				else {
+					// 视频名称
+					node.window.customParams.ivName = name;
+					
+					// 把视频插件宽高置为100%自适应窗口容器
+					NPPILY.ResizeWindowDimension(node.window, "100%", "100%");
+					
+					// 如果播放成功，就停止此窗口下面可能存在的视频断流重连
+					WebClient.StreamBreakRestore.UnRegister('windowbox');
+					
+				}
+			}
+		}
+		catch (e) {
+			alert("excep error = " + e.name + "::" + e.message);
+			return false;
+		}
+	},
+	 
+	// 响应窗口回调
+	ResponseOperation: function (action) {
+		try {
+			switch (action) {
+				case "ActiveWindow":
+					$("#loginMsg").html("鼠标单击窗口回调");
+					break;
+				case "BackFullScreen":
+					// （退出）全屏回调
+					$("#loginMsg").html("视频窗口（退出）全屏回调");
+					WebClient.BackFullScreen();
+					break;
+				case "menu_command":
+						
+					$("#loginMsg").html("点击窗口右键菜单项回调");
+							
+					// 右键菜单项回调
+					var menuKey = arguments[1];
+					switch (menuKey) {
+						case "stopvideo": // 停止视频
+							WebClient.StopVideo();
+							break;
+						case "playaudio": // 播放/停止音频
+							WebClient.PlayAudio();
+							break;
+						case "fullscreen": // （退出）全屏
+							WebClient.FullScreen();
+							break;
+					};
+					break;
+			};
+		}
+		catch (e) {
+			alert("excep error = " + e.name + "::" + e.message);
+			return false;
+		}
+	},
+	// 响应（退出）全屏事件
+	BackFullScreen: function () {
+		try {
+			var node = NPPILY.WindowContainers.get("windowbox");
+			if (node && node.window) {
+				var customMenus = [];
+				if (node.window.status.isfullscreening) {
+					customMenus.push({key: "fullscreen", text: "退出全屏"});
+				}
+				else {
+					customMenus.push({key: "fullscreen", text: "全屏"});
+				}
+				// 更新菜单项
+				NPPILY.WindowAttachEvent.UpdateMenuCommand(node.window, customMenus);
+			}
+		}
+		catch (e) {
+			alert("excep error = " + e.name + "::" + e.message);
+			return false;
+		}
+	},
+	
+	// 停止视频
+	StopVideo: function () {
+		try {
+			var node = NPPILY.WindowContainers.get("windowbox");
+			if (node && node.window) {
+				var puid = node.window.params.puid;
+				
+				// 把设备的喊话对讲先给停止了
+				// NPPILY.CallTalkControl.Stop(WebClient.connectId, puid, 0);
+				// 更新喊话对讲按钮状态
+				// WebClient.UpdateCallTalkButtonStatus();
+				
+				// 然后停止视频
+				NPPILY.StopVideo(node.window);
+				// 把视频插件宽高置为0，注意本身及其所有祖先容器不可设置成隐藏（尤其在非IE浏览器中）
+				NPPILY.ResizeWindowDimension(node.window, 0, 0);
+				
+				$("#windowtitle").html("&nbsp;无视频");
+				$("#loginMsg").html();
+			}
+			
+			//停止此窗口下面可能存在的视频断流重连
+			WebClient.StreamBreakRestore.UnRegister('windowbox');
+		}
+		catch (e) {
+			alert("excep error = " + e.name + "::" + e.message);
+			return false;
+		}
+	},
+	
+	// 播放/关闭音频
+	PlayAudio: function () {
+		try {
+			var fn = "WebClient.PlayAudio";
+			
+			var node = NPPILY.WindowContainers.get("windowbox");
+			if (node && node.window) {
+				NPPILY.PlayAudio(node.window);
+				// 更新菜单项
+				if (node.window.status.playvideoing) {
+					var customMenus = [];
+					if (node.window.status.playaudioing) {
+						customMenus.push({key: "playaudio", text: "停止音频"});
+					}
+					else {
+						customMenus.push({key: "playaudio", text: "播放音频"});
+					}
+					NPPILY.WindowAttachEvent.UpdateMenuCommand(node.window, customMenus);
+				}
+			}
+		}
+		catch (e) {
+		}
+	},
+	
+	// （退出）全屏
+	FullScreen: function (windowKey) {
+		try {
+			var fn = "WebClient.FullScreen";
+			
+			var node = NPPILY.WindowContainers.get("windowbox");
+			if (node && node.window) {
+				
+				if (node.window.status.playvideoing) {
+					if (node.window.status.isfullscreening) {
+						NPPILY.ExitFullScreen(node.window); // 退出全屏
+					}
+					else {
+						NPPILY.FullScreen(node.window); // 全屏
+					}
+				}
+			}
+		}
+		catch (e) {
+			alert("excep error = " + e.name + "::" + e.message);
+			return false;
+		}
+	},
+	// 更新显示视频状态信息
+	UpdateVideoStatus: function (notify) {
+		try {
+			if (notify && notify._HANDLE) {
+				
+				/*if (notify.status == -1) {
+					if (typeof console != 'undefined') console.log(NPPILY.WindowContainers.inf());
+				}*/
+			
+				NPPILY.WindowContainers.each(function (item) {
+					var node = item.value;
+					if (node.window && node.window.status.playvideoing) {
+						
+					/*i	if (notify.status == -1) {
+							try {
+								if (typeof console != 'undefined') console.log(node.window);
+							}
+							catch (e) {
+							}
+						}*/
+					
+						// 根据句柄匹配
+						if (node.window.params.ivStreamHandle == notify._HANDLE) {
+							if (notify.errorCode == 0) {
+								var html = [];
+								// 视频名称
+								html.push(node.window.customParams.ivName);
+								if (typeof notify.statusDesc != "undefined" && notify.statusDesc != "") {
+									html.push("&nbsp;");
+									html.push(notify.statusDesc);
+								}
+								html.push(",帧率=" + (notify.keyData.frame_rate || 0));
+								html.push(",码率=" + ((notify.keyData.bit_rate || 0)/1000).toFixed(0) + "kb");
+								
+								if (node.window.status.playaudioing) {
+									html.push(",正在播放声音");
+								}
+								if (node.window.status.recording) {
+									html.push(",正在录像");
+								}
+								// 是否有喊话对讲
+								var oaStatus_operator = NPPILY.CallTalkControl.GetStatus(WebClient.connectId, node.window.params.puid, 0);
+								if (oaStatus_operator.rv == 0) {
+									var oaStatus = oaStatus_operator.response;
+									if (oaStatus && oaStatus.oaStreamHandle) {
+										html.push(",正在" + (oaStatus.call ? "喊话" : "对讲"));
+									}
+								}
+								
+								$("#windowtitle")
+									.html(html.join(""))
+									.attr("title", html.join("").replace(/(\&nbsp;)/gm, ""));
+
+								
+							} // end errorCode
+							
+							// 流断开，需要断线重连播放视频处理
+							if (notify.status == -1) {
+								
+								var ivparams = node.window.params;
+								
+								WebClient.StreamBreakRestore.Register({
+									type: 'VIDEO',
+									winkey: 'windowbox',
+									puid: ivparams.puid,
+									ivIndex: ivparams.idx,
+									streamType: ivparams.streamType,
+									customParams: node.window.customParams
+								});
+							}
+							
+						}
+					}
+				});
+			}
+		}
+		catch (e) {
+			return false;
+		}
+	},
+	
+	// 流断线重连处理
+	StreamBreakRestore: {
+		store: null,
+		
+		interval: 3000,
+		
+		Run: function () {
+			try {
+				// 启动定时器
+				NPPUtils.Timer.Start();
+				NPPUtils.Timer.Set('websdk', {
+					name: 'stream-break-restore',
+					fu: function () {
+						WebClient.StreamBreakRestore.Call();
+					},
+					interval: this.interval
+				});
+			}
+			catch (e) {
+				return false;
+			}
+		},
+		
+		Register: function (options) {
+			try {
+				if (this.store == null) {
+					this.store = new NPPUtils.Hash();
+				}
+				
+				if (options.winkey) {
+					this.store.set(options.winkey, {
+						type: options.type,
+						params: options,
+						time: parseInt(new Date().getTime()/1000)
+					});
+				}
+				
+				this.Run();
+			}
+			catch (e) {
+				return false;
+			}
+		},
+		
+		UnRegister: function (key) {
+			try {
+				this.store.unset(key);
+			}
+			catch (e) {
+				return false;
+			}
+		},
+		
+		Call: function () {
+			try {
+				var SELF = WebClient.StreamBreakRestore;
+				
+				SELF.store.each(function (item) {
+					var isRestored = false;
+					switch (item.value.type) {
+					case 'VIDEO':
+						isRestored = SELF.RestoreVideo(item.value.params);
+						break;
+					default:
+						break;
+					}
+					if (isRestored) {
+						SELF.UnRegister(item.key);
+					}
+				}); 
+			}
+			catch (e) {
+				return false;
+			}
+		},
+		
+		// 尝试恢复视频播放
+		RestoreVideo: function (params) {
+			try {
+				// 获取视频窗口对象
+				var node = NPPILY.WindowContainers.get(params.winkey);
+				if (node.window) {
+					// 此窗口有正在播放的要停止掉
+					if (node.window.status.playvideoing) {
+						// 把设备的喊话对讲先给停止了
+						// NPPILY.CallTalkControl.Stop(WebClient.connectId, params.puid, 0);
+						// 更新喊话对讲按钮状态
+						// WebClient.UpdateCallTalkButtonStatus();
+						
+						// 然后停止视频
+						NPPILY.StopVideo(node.window);
+					}
+					
+					var cp = params.customParams || {};
+					var tip = cp.ivName + ' 流已断开，正在尝试恢复播放中...'
+					jQuery('#windowtitle').html(tip);
+					
+					// 尝试播放
+					var operator = NPPILY.PlayVideo
+					(
+						WebClient.connectId,
+						node.window,
+						params.puid,
+						params.ivIndex,
+						params.streamType
+					);
+					
+					// 播放成功
+					if (operator.rv == 0) {
+
+						if (typeof console != 'undefined') {
+							console.log(jQuery.toJSON(node));
+						}
+					
+						// 把视频插件宽高置为100%自适应窗口容器
+						NPPILY.ResizeWindowDimension(node.window, "100%", "100%");
+						
+						return true;
+					}
+				}
+
+				return false;
+			}
+			catch (e) {
+				return false;
+			}
+		},
+		
+		end: true
+	},
+	
+	/*
+	---
+	desc: 视频窗口区域右侧按钮操作
+	remark:
+		<div><input type="button" value="关闭" onclick="WebClient.ButtonsOperation('stopvideo');"/></div>
+		<div><input type="button" value="向上" onmousedown="WebClient.ButtonsOperation('ptzcontrol', NPPIF.Enum.PTZDirection.turnup);" onmouseup="WebClient.ButtonsOperation('ptzcontrol', NPPIF.Enum.PTZDirection.stopturn);"/></div>
+		<div><input type="button" value="向下" onmousedown="WebClient.ButtonsOperation('ptzcontrol', NPPIF.Enum.PTZDirection.turndown);" onmouseup="WebClient.ButtonsOperation('ptzcontrol', NPPIF.Enum.PTZDirection.stopturn);"/></div>
+		<div><input type="button" value="向左" onmousedown="WebClient.ButtonsOperation('ptzcontrol', NPPIF.Enum.PTZDirection.turnleft);" onmouseup="WebClient.ButtonsOperation('ptzcontrol', NPPIF.Enum.PTZDirection.stopturn);"/></div>
+		<div><input type="button" value="向右" onmousedown="WebClient.ButtonsOperation('ptzcontrol', NPPIF.Enum.PTZDirection.turnright);" onmouseup="WebClient.ButtonsOperation('ptzcontrol', NPPIF.Enum.PTZDirection.stopturn);"/></div>
+	...
+	*/
+	ButtonsOperation: function (action) {
+		try {
+			var fn = "WebClient.ButtonsOperation";
+				
+			switch (action) {
+				case "stopvideo": // 停止视频
+					WebClient.StopVideo();
+					break;
+				case "playaudio": // 播放/停止音频
+					WebClient.PlayAudio();
+					break;
+				case "ptzcontrol": // 云台控制
+					WebClient.PTZControl(arguments[1]);
+					break;
+
+				case "startCall":
+				case "startTalk":
+					WebClient.CallTalkControl(action);
+					break;
+			};
+		}
+		catch (e) {
+			return false;
+		}
+	},
+	
+	// 云台控制
+	PTZControl: function (mode) {
+		try {
+			var node = NPPILY.WindowContainers.get("windowbox");
+			if (mode && node && node.window && node.window.status.playvideoing) {
+				var puid = node.window.params.puid,
+					ptz_idx = node.window.params.idx; // 云台资源基本上与视频资源一一对应的，这里先不进行判断是否有云台资源
+					
+				var operator = NPPILY.PTZ.Control(WebClient.connectId, puid, ptz_idx, mode);
+				if (operator.rv != 0) {
+					alert("操作云台失败，错误码：" + operator.rv);
+				} 
+			}
+		}
+		catch (e) {
+			return false;
+		}
+	},
+	
+	// - 卸载插件
+	UnLoad:function() {
+		NPPILY.UnLoad();
+	},
+	end:true
+}
+
+// 页面加载
+$(document).ready(function () {
+	WebClient.Load();
+	WebClient.UrlSearch();
+});
+$(window).unload(function () {
+	WebClient.UnLoad();
+});
+if (window.attachEvent) {
+	window.attachEvent(
+		"onbeforeunload",
+		function() {
+			WebClient.UnLoad(); 
+		}
+	);
+}
+else {
+	window.addEventListener (
+        "beforeunload",
+        function() {
+             WebClient.UnLoad();
+        },
+        false
+    );
+}
+</script>
