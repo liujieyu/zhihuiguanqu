@@ -31,6 +31,7 @@ Vue.use(iView);
 import echarts from 'echarts';
 import 'echarts-gl';
 
+import './table/table.css';
 
 Vue.prototype.$echarts = echarts;
 import 'babel-polyfill'

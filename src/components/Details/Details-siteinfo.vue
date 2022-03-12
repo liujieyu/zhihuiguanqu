@@ -2491,11 +2491,11 @@ export default {
                     break;
 
                 case "dayTable":
-                    body._orderby = `dt `;
+                    body._orderby = `tm `;
                     break;
 
                 case "tenDaysTable":
-                    body._orderby = `dt1 `;
+                    body._orderby = `dt `;
                     break;
 
                 case "monthTable":

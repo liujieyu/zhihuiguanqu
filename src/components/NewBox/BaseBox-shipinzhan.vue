@@ -90,8 +90,6 @@ export default {
       // 表单数据
       form: {
         search_str: "",
-        adressList: [],
-        qudaoList: [],
         social: ["site"],
         checkBoxList: [
           {
@@ -163,104 +161,7 @@ export default {
       // 展示抽屉详情框
       this.$App.showDrawer(evt, v);
     },
-    // 展示提示框
-    showTips(item) {
-      // 隐藏之前提示框
-      this.hideTips();
-      // <div class="pd_algin">
-      //       <span class="tip_col_5">监测要素：</span>
-      //        <span class="tip_col_7">
-      //        </span>
-      //   </div>
 
-      //   <div class="pd_algin mg_tp">
-      //       <span class="tip_col_5">关联站点：</span>
-      //       <span class="tip_col_7">
-      //       </span>
-      //   </div>
-      // this.tip.show_tip = true; // 获取提示框组件
-      // this.tip.info_tip = item; // 传递数据给 提示框组件
-
-      console.log('悬浮框');
-      console.log(item);
-      
-      let imgSrc = '';
-      if(item.rowinfo.picPath !== null){
-        imgSrc = item.rowinfo.picPath.replace('r','')
-      }
-      console.log(`/guanqu/pic${imgSrc}`);
-      let content = `<div>
-        <div style="height: 20px"></div>
-        <div class="video">
-          <img src="http://222.240.238.58:7001/pic${imgSrc}"   width="210" height="160"/>
-        </div>
-      </div>`
-      // 延时200毫秒
-      setTimeout(() => {
-        this.map.infoWindow.resize(250, 650); // 提示框大小
-        this.map.infoWindow.setTitle(item.STNM); // 提示题目
-        this.map.infoWindow.setContent(content); // 提示内容
-
-
-                //获取坐标
-                var x=Number(item.LGTD);
-                var y=Number(item.LTTD);
-
-
-                //如果basemap使用ArcGIS的就需要
-                //转换坐标系
-                x = (x / 180.0) * 20037508.34
-                if (y > 85.05112) y = 85.05112;
-                if (y < -85.05112) y = -85.05112;
-                y = (Math.PI / 180.0) * y;
-                var tmp = Math.PI / 4.0 + y / 2.0;
-                y = 20037508.34 * Math.log(Math.tan(tmp)) / Math.PI;
-
-                //位置点对象
-                var zoompoint = {
-                    //spatialReference: {wkid: 4326},
-                    spatialReference: this.map.spatialReference,
-                    x: x,
-                    y: y
-                };
-
-
-        this.map.infoWindow.show(zoompoint); // 提示位置
-        // 如果事件类型不是鼠标经过，则
-        if (item.eventType != "mouse-over") {
-          // 设置中心和缩放 (接受经纬度，和缩放比例)
-          this.setMapCenterandZoom(Number(item.LGTD) + 0.1, item.LTTD);
-        }
-
-        // this.$GetData.Survey_History_TX(
-        //   {
-        //     _page: 1,
-        //     _page_size: 20,
-        //     _orderby: "TM desc",
-        //     STCD: item.rowinfo.STCD
-        //   },
-        //   true,
-        //   data => {
-        //     var imgSrc = data.data[0].Save_Path;
-        //
-        //     var img = document.getElementById(`${item.rowinfo.STCD}_img`);
-        //     img.src = imgSrc;
-        //   }
-        // );
-
-      }, 200);
-    },
-    // 设置中心和缩放 (接受经纬度，和缩放比例)
-    setMapCenterandZoom(LGTD, LTTD, Zoom) {
-      //koen 20190929
-      //暂时不允许点击，防止缩到全球地图的bug
-      //this.map.centerAndZoom([Number(LGTD), Number(LTTD)], Zoom || 1);
-    },
-    // 隐藏提示
-    hideTips() {
-      this.map.infoWindow.hide();
-      this.tip.show_tip = false; // 关闭提示框组件
-    },
     // 表格加载
     tableLoading() {
       this.table.loading = true;
@@ -356,17 +257,16 @@ export default {
 
       return newList;
     },
+    // 设置中心和缩放 (接受经纬度，和缩放比例)
+    setMapCenterandZoom(LGTD, LTTD, Zoom) {
+      //koen 20190929
+      //暂时不允许点击，防止缩到全球地图的bug
+      //this.map.centerAndZoom([Number(LGTD), Number(LTTD)], Zoom || 1);
+    },
     // 过滤table数据
     filterTableData() {
       this.table.Rows_filter = this.table.Rows.map(val => {
         var val_clone = JSON.parse(JSON.stringify(val));
-
-        // // 时间过滤
-        // val_clone.TM = this.dateFilter(val_clone.TM, 2);
-        // // 水位过滤
-        // val_clone.Z = this.Z_Filter(val_clone.Z);
-        // // 流量过滤
-        // val_clone.Q = this.Z_Filter(val_clone.Q);
         return val_clone;
       });
     },
@@ -429,98 +329,9 @@ export default {
       }
       this.TextGraphicsLayers.push(textGraphicsLayer);
     },
-    // 根据多选框添加文字标注图层
-    addTextGraphicsLayerByCheckGroup() {
-      var textTypeList;
-      var indexOfSocial = this.form.social.indexOf("site");
-      // 如果多选框里存在 site站点类型
-      if (indexOfSocial !== -1) {
-        this.featrue.LayerObject.show();
-        this.featrue.LayerObject_yujing.show();
-        textTypeList = this.form.social.filter(val => {
-          if (val != "site") {
-            return true;
-          }
-        });
-      } else {
-        this.featrue.LayerObject.hide();
-        this.featrue.LayerObject_yujing.hide();
-        textTypeList = this.form.social;
-      }
-
-      textTypeList.forEach((textType, index) => {
-        var textGraphicsLayer = new esri.layers.GraphicsLayer(); // 新增一个图形图层
-        textGraphicsLayer.textType = textType;
-        this.featrue.map.addLayer(textGraphicsLayer); // 给地图添加新增的标注文本图层
-        var Rows = this.featrue.Rows;
-        //创建textsymbol文本标注
-        if (Rows.length > 0) {
-          //动态读取json数据源结果集
-          for (var i = 0; i < Rows.length; i++) {
-            var Row = Rows[i];
-            var point = new esri.geometry.Point(
-              Row.geometry.x,
-              Row.geometry.y,
-              this.featrue.map.spatialReference
-            );
-            var value = Row.rowinfo[textType];
-            // 过滤
-            switch (textType) {
-              case "VOL":
-                var value = `${this.Z_Filter(Row.rowinfo[textType])}`;
-                if (value == "") {
-                  value = "";
-                } else {
-                  value += "V";
-                }
-                break;
-              case "CS":
-                var value = `${this.CS_Filter(Row.rowinfo[textType])}`;
-                if (value == "") {
-                  value = "";
-                } else {
-                  value += "";
-                }
-                break;
-            }
-
-            //定义文本symbol
-            var textsymbol = new esri.symbol.TextSymbol(value) //动态设置文本值
-              .setColor(new dojo.Color(value == "不正常"? [255, 0 , 0] : [55, 55, 55])) //setColor设置文本颜色
-              .setFont(
-                new esri.symbol.Font("10pt") //setFont设置文本大小
-                  .setWeight(esri.symbol.Font.WEIGHT_BOLD)
-              ) //setWeight设置文本粗体
-              .setOffset(0, -(25 + index * 15)); //设置偏移方向
-            var graphic = new esri.Graphic(point, textsymbol);
-            textGraphicsLayer.add(graphic);
-          }
-        }
-        this.TextGraphicsLayers.push(textGraphicsLayer);
-      });
-    },
-    // 移除文字标注图层
-    removeTextGraphicsLayer(textType) {
-      // 找到对应的文字标注图层
-      for (let i = 0; i < this.TextGraphicsLayers.length; i++) {
-        var val = this.TextGraphicsLayers[i];
-        if (val.textType == textType) {
-          this.featrue.map.removeLayer(val); // 移除对应的文字标注图层
-          // val.hide();
-          this.TextGraphicsLayers.splice(i, 1); // 从文字标注图层数组里去除对应的文字图层对象
-        }
-      }
-    },
-    // 移除所有文字标注图层
-    removeAllTextGraphicsLayer() {
-      for (let i = 0; i < this.TextGraphicsLayers.length; i++) {
-        var val = this.TextGraphicsLayers[i];
-        this.featrue.map.removeLayer(val); // 移除对应的文字标注图层
-      }
-      this.TextGraphicsLayers = [];
-    },
     // 初始化baseBox
     baseBox_init() {
+      this.table.currentPage = 1;
       // 获取地图对象,从父组件中
       this.getMapFormParent();
       // 获取图层对象,从父组件中
@@ -529,36 +340,6 @@ export default {
       this.loadTableData(this.getTableDataFormParent());
       // 过滤table数据
       this.filterTableData();
-      // 给图层对象添加方法
-      this.addEventToJsonFlayer(this.JsonFlayer);
-
-      // 获取行政区划数据,然后设置地址选择框选项
-      this.getTableData_WRP_AD_B((data) => {
-        this.form.adressList = data;
-        // data.map(val => {
-        //   var newVal = new Object();
-        //   newVal.value = val.AD_CD;
-        //   newVal.label = val.AD_NM;
-        //   return newVal;
-        // })
-      });
-
-      // 获取输排水渠道数据,然后设置渠道选择框选项
-      this.getTableData_WRP_IrrBTCanalSystem(data => {
-        this.form.qudaoList = data;
-        // data.map(val => {
-        //   var newVal = new Object();
-        //   newVal.value = val.Canal_Code;
-        //   newVal.label = val.Canal_Name;
-        //   return newVal;
-        // });
-      });
-      // 多选框标记勾选触发事件
-      // 1.清除所有文本标注图层
-      // 2.根据多选框添加文字标注图层
-      this.checkboxGroup_onChange();
-      // 往featrue对象里添加操作TextGraphicsLayer的对象，里面有移除所有TextGraphicsLayer的方法，和根据多选框添加文字标注图层的方法
-      this.addTextGraphicsLayerControllerToFeatrue();
     },
     // 排序
     sort_change(item) {
@@ -608,9 +389,9 @@ export default {
   created() {
     // 初始化baseBox
     this.baseBox_init();
-    this.search();
+    //this.search();
     this.baseBox_Interval = setInterval(() => {
-      this.search();
+      this.baseBox_init();
     },1000 * 60 * 5)
   },
   destroyed() {

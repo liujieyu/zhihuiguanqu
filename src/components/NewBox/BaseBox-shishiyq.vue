@@ -1,7 +1,7 @@
 <template>
     <div class="baseBoxContent">
         <!-- 折叠面板 -->
-
+       <div style="float:right;font-size:12px;">单位：mm</div>
         <!-- 表格, 用于展示数据 -->
         <div>
             <el-table
@@ -14,7 +14,7 @@
                     v-loading="table.loading"
                     empty-text="暂无站点数据"
                     @header-click="headerClick"
-                    :header-cell-style="{'cursor':'pointer'}"
+                    :header-cell-style="{'cursor':'pointer','padding':'6px 0px'}"
             >
                 <el-table-column
                         v-for="(item,index) in table.columns"
@@ -37,7 +37,7 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column align="center" label="1小时降雨(mm)" :width="80">
+                <el-table-column align="center" label="1小时降雨" :width="80">
                     <template slot-scope="scope">
                         <div>
                         <span
@@ -48,7 +48,7 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column align="center" label="3小时降雨(mm)" :width="80">
+                <el-table-column align="center" label="3小时降雨" :width="80">
                     <template slot-scope="scope">
                         <div>
                         <span
@@ -59,7 +59,7 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column align="center" label="6小时降雨(mm)" :width="80">
+                <el-table-column align="center" label="6小时降雨" :width="80">
                     <template slot-scope="scope">
                         <div>
                         <span
@@ -70,7 +70,7 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column align="center" label="12小时降雨(mm)" :width="90">
+                <el-table-column align="center" label="12小时降雨" :width="90">
                     <template slot-scope="scope">
                         <div>
                         <span
@@ -81,7 +81,7 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column align="center" label="24小时降雨(mm)" :width="90">
+                <el-table-column align="center" label="24小时降雨" :width="90">
                     <template slot-scope="scope">
                         <div>
                         <span
@@ -233,16 +233,19 @@
             headerClick(item){
                 console.log(item);
                 var sign=0,rainattr='RAIN1';
+                if(item.label=="站名" || item.label==" "){
+                    return;
+                }
                 switch(item.label){
-                    case '1小时降雨(mm)':sign=1;rainattr='RAIN1';
+                    case '1小时降雨':sign=1;rainattr='RAIN1';
                     break;
-                    case '3小时降雨(mm)':sign=3;rainattr='RAIN3';
+                    case '3小时降雨':sign=3;rainattr='RAIN3';
                     break;
-                    case '6小时降雨(mm)':sign=6;rainattr='RAIN6';
+                    case '6小时降雨':sign=6;rainattr='RAIN6';
                     break;
-                    case '12小时降雨(mm)':sign=12;rainattr='RAIN12';
+                    case '12小时降雨':sign=12;rainattr='RAIN12';
                     break;
-                    case '24小时降雨(mm)':sign=24;rainattr='RAIN24';
+                    case '24小时降雨':sign=24;rainattr='RAIN24';
                     break;
                 }
                 var num=0;

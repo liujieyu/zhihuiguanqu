@@ -45,7 +45,7 @@
                             <!-- <a class="m-icon" target="_blank" :href="token">
                                 <Icon type="ios-water"/>
                             </a> -->
-                            <p>量测水</p>
+                            <p>监测预警</p>
                         </i-col>
                         <i-col>
                             <a class="m-icon" @click="yuliu">

@@ -690,7 +690,7 @@ export default {
       // 正在开发图层数据集合，其中包含图层对象
       FeatrueLayers: [],
       //正在开发图层对象
-      SiteFeatrueLayer:{itype:'siteinfo',icon:'/static/demo-hunanguanqu/2.png',show:0,swwarmicon:'/static/demo-hunanguanqu/2-alert.png',ylwarmicon:'/static/demo-hunanguanqu/1-alert-new.png',sbwarmicon:'/static/demo-hunanguanqu/9-alert-new.png',checknum:0},
+      SiteFeatrueLayer:{itype:'siteinfo',icon:'/static/demo-hunanguanqu/2.png',show:0,swwarmicon:'/static/demo-hunanguanqu/1-alert.png',ylwarmicon:'/static/demo-hunanguanqu/1-alert-new.png',sbwarmicon:'/static/demo-hunanguanqu/9-alert-xin.png',checknum:0},
       //视频图层
       shipinfeatureLayer:{itype:'shipin',icon:'/static/demo-hunanguanqu/8.png',show:0},
       fList: [],
@@ -2615,7 +2615,7 @@ export default {
           // 移除图层对象里的相应图层
           this.removeFeatureLayer(featureLayerOBJ);
           //移除视频对象图层
-          this.removeFeatureLayer(this.shipinfeatureLayer.LayerObject);
+          this.removeFeatureLayer(this.shipinfeatureLayer);
           // 移除图层对象里的相应预警图层
           this.removeFeatureLayer_yujing(featureLayerOBJ);
           // 设置图层的特征点图标
@@ -2675,6 +2675,7 @@ export default {
 
           this.shipinfeatureLayer.LayerObject=spfeatureLayer;
           this.shipinfeatureLayer.Rows = clone_data.features; 
+          this.shipinfeatureLayer.map = this.map;
           if(!this.testform.checked){
             spfeatureLayer.hide();
           }
@@ -2893,6 +2894,9 @@ hideTableLoading(){
   this.$refs.yqtable.cancelTableLoading();
   this.$refs.gktable.cancelTableLoading();
   this.$refs.ssyqtable.cancelTableLoading();
+  if(this.testform.checked){
+    this.$refs.sptable.cancelTableLoading();
+  }
 },
     //表格取消加载
 

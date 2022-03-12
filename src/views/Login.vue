@@ -21,12 +21,14 @@
                         <el-form-item label="密码">
                             <el-input v-model="form.pwd" type="password" placeholder=""></el-input>
                         </el-form-item>
-                        <el-form-item label="记住账号">
-                            <el-switch v-model="form.remember"></el-switch>
+                        <el-form-item label="验证码">
+                            <div style="display:flex">
+                                <el-input prefix-icon="el-icon-key" v-model="form.validCode" style="width:50%;" type="password" placeholder=""></el-input>
+                                <ValidCode ref="checkcode" @input="createValidCode"></ValidCode>
+                            </div>
                         </el-form-item>
                         <el-form-item>
-                            <el-button type="primary" @click="RouterLink" :loading="loading">登录</el-button>
-                            <el-button>忘记密码</el-button>
+                            <el-button type="primary" icon="el-icon-right" @click="RouterLink" :loading="loading" style="margin-left:60%;width:130px;">登录</el-button>
                         </el-form-item>
                     </el-form>
                 </div>
@@ -41,9 +43,12 @@
 
 
 <script>
-
+import ValidCode from "@/components/VaildCode.vue";
     export default {
-
+        name:"Login",
+        components: {
+            ValidCode
+        },
         props: {
             sys: {},
         },
@@ -56,14 +61,17 @@
                     pwd: '',
                     remember: true,
                 },
-                responseResult:'',
+                 responseResult:'',
+                 validCode:'',
             }
         },
         mounted: function () {
             
-            //ShowLoading();
         },
         methods: {
+            createValidCode(data){
+                this.validCode=data;
+            },
             RouterLink() {
                 if (this.form.acc=='') {
                    this.$message({
@@ -76,9 +84,18 @@
                       message: '密码不能为空，且长度不小于4!',
                       type: 'warning'
                     });
+                }else if(!this.form.validCode){
+                    this.$message({
+                      message: '请填写验证码!',
+                      type: 'warning'
+                    });
+                }else if(this.form.validCode.toLowerCase() !== this.validCode.toLowerCase()) {
+                    this.$message({
+                      message: '验证码错误!',
+                      type: 'error'
+                    });
+                    
                 }else{
-                    // console.log(this.form.pwd.length);
-                    debugger;
                     this.axios.post('/guanqu/ext-web/authenticate',{username:this.form.acc,password:this.form.pwd}).then((res)=>{
                         console.log(res);
                         if (res.data.errcode == 400) {
@@ -86,9 +103,11 @@
                               message: res.data.message,
                               type: 'warning'
                             });
+                            this.$refs.checkcode.createdCode();
+                            this.form.validCode=null;
                         }else{
                             this.Cook.set("username",this.form.acc);
-                            this.$router.push({path: '/view'});
+                            this.$router.push({path: '/home'});
                         }
                         // localStorage.setItem('user_token', res.data.idToken)
                         // this.$router.push({path: '/view'});
