@@ -25,7 +25,7 @@
           :show-overflow-tooltip="true"
         ></el-table-column>
         <!-- 自定义 -->
-        <el-table-column align="center" label="电压(V)" prop="vol" :width="120" sortable="custom">
+        <el-table-column align="center" label="电压(V)" prop="vol" :width="90" sortable="custom">
           <template slot-scope="scope">
             <div>
               <span
@@ -36,7 +36,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="通讯状态" prop="CS" :width="120" sortable="custom">
+        <el-table-column align="center" label="通讯状态" prop="CS" :width="95" sortable="custom">
           <template slot-scope="scope">
             <div>
               <span
@@ -187,7 +187,7 @@ export default {
           {
             title: "站名",
             key: "STNM",
-            width: 120,
+            width: 110,
             align: "center",
             fixed: "left",
             sortable: "custom"
@@ -415,8 +415,6 @@ export default {
       this.loadTableData(this.getTableDataFormParent());
       // 过滤table数据
       this.filterTableData();
-      // 给图层对象添加方法
-      this.addEventToJsonFlayer(this.JsonFlayer);
 
       // 获取行政区划数据,然后设置地址选择框选项
       this.getTableData_WRP_AD_B(data => {

@@ -8,8 +8,8 @@
           <div class="form">
 
           <!-- 选择器, 按钮 -->
-          <Row class="select-group" :gutter="16">
-           <Col span="11">
+          <Row class="select-group" :gutter="24">
+           <Col span="24">
               <!-- 地址级联选择器 -->
                 <el-cascader
                   clearable
@@ -22,8 +22,7 @@
                   change-on-select
                 ></el-cascader>
            </Col>
-            <Col span="11">
-              <!-- 渠道级联选择器 -->
+           <!--  <Col span="11">
                 <el-cascader
                   clearable
                   filterable
@@ -33,8 +32,8 @@
                   v-model="form.model_qudao"
                   @change="search"
                   change-on-select
-                ></el-cascader>
-            </Col>
+                ></el-cascader> 
+            </Col>-->
             <!-- <Col span="6">
               查询按钮
             <Button type="info" size="small" @click="search">查询</Button>
@@ -482,6 +481,7 @@ export default {
     },
     // 添加文字标注图层
     addTextGraphicsLayer(options) {
+      debugger;
       var textGraphicsLayer = new esri.layers.GraphicsLayer(); // 新增一个标注文本图层
       textGraphicsLayer.textType = options.textType;
       this.featrue.map.addLayer(textGraphicsLayer); // 给地图添加新增的标注文本图层
@@ -494,7 +494,7 @@ export default {
           var point = new esri.geometry.Point(
             Row.geometry.x,
             Row.geometry.y,
-            this.featrue.map.spatialReference
+            new esri.SpatialReference({ wkid: 4326 })
           );
           //定义文本symbol
           var textsymbol = new esri.symbol.TextSymbol(

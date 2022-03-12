@@ -7,59 +7,195 @@
           <i class="el-icon-tickets"></i> 站点信息
         </span>
         <div class="drawer-profile">
-          <!-- 导出按钮 -->
+          <!-- 导出按钮 
           <Button size="small" class="outPutButton" type="success" @click="$App.developing_tip">
             <div>导出</div>
           </Button>
+          -->
           <!-- 信息表 -->
           <div>
             <!-- 信息内容 -->
             <div>
-              <!-- table start -->
-              <table style="border: 1px solid #EBEEF5" border cellspacing="0" width="100%" class="table_detail">
+              <!-- table start  table_detail-->
+              <table
+                style="border: 1px solid #EBEEF5"
+                border
+                cellspacing="0"
+                width="100%"
+                class="site_detail"
+              >
+              <tr>
+                <td colspan="4" style="background-color:#DEDFE0;padding:2px;">
+                  <el-tag type="info" effect="dark" size="small">基本信息</el-tag>
+                </td>
+              </tr>
                 <tr>
                   <td align="right" class="dt_name">站名：</td>
-                  <td align="center" class="dt_vale" style="border-right: 1px solid #EBEEF5">{{ siteInfo.STNM || "&nbsp;" }}</td>
-                  <td align="right" class="dt_name" >国家定类：</td>
-                  <td align="center" class="dt_vale">{{ this.STTP_Filter(siteInfo.STTP) || "&nbsp;" }}</td>
+                  <td
+                    align="center"
+                    class="dt_vale"
+                    style="border-right: 1px solid #EBEEF5"
+                  >{{ siteInfo.STNM || "&nbsp;" }}</td>
+                  <td align="right" class="dt_name">国家定类：</td>
+                  <td
+                    align="center"
+                    class="dt_vale"
+                  >{{ this.STTP_Filter(siteInfo.STTP) || "&nbsp;" }}</td>
                 </tr>
                 <tr>
                   <td align="right" class="dt_name">等级：</td>
-                  <td align="center" class="dt_vale" style="border-right: 1px solid #EBEEF5">{{ this.$FilterData.STGR_Filter(siteInfo.STGR) || "&nbsp;" }}</td>
+                  <td
+                    align="center"
+                    class="dt_vale"
+                    style="border-right: 1px solid #EBEEF5"
+                  >{{ this.$FilterData.STGR_Filter(siteInfo.STGR) || "&nbsp;" }}</td>
                   <td align="right" class="dt_name">行政区划：</td>
                   <td align="center" class="dt_vale">{{ siteInfo.AD_NM || "&nbsp;" }}</td>
                 </tr>
                 <tr>
                   <td align="right" class="dt_name">经度：</td>
-                  <td align="center" class="dt_vale" style="border-right: 1px solid #EBEEF5">{{ siteInfo.LGTD || "&nbsp;" }}</td>
+                  <td
+                    align="center"
+                    class="dt_vale"
+                    style="border-right: 1px solid #EBEEF5"
+                  >{{ siteInfo.LGTD || "&nbsp;" }}</td>
                   <td align="right" class="dt_name">纬度：</td>
                   <td align="center" class="dt_vale">{{ siteInfo.LTTD || "&nbsp;" }}</td>
                 </tr>
                 <tr>
                   <td align="right" class="dt_name">站址：</td>
-                  <td align="center" class="dt_vale" style="border-right: 1px solid #EBEEF5">{{ siteInfo.STLC || "&nbsp;" }}</td>
+                  <td
+                    align="center"
+                    class="dt_vale"
+                    style="border-right: 1px solid #EBEEF5"
+                  >{{ siteInfo.STLC || "&nbsp;" }}</td>
                   <td align="right" class="dt_name">水系：</td>
                   <td align="center" class="dt_vale">{{ siteInfo.HNNM || "&nbsp;" }}</td>
                 </tr>
                 <tr>
                   <td align="right" class="dt_name">流域：</td>
-                  <td align="center" class="dt_vale" style="border-right: 1px solid #EBEEF5">{{ siteInfo.CTCD || "&nbsp;" }}</td>
+                  <td
+                    align="center"
+                    class="dt_vale"
+                    style="border-right: 1px solid #EBEEF5"
+                  >{{ siteInfo.CTCD || "&nbsp;" }}</td>
                   <td align="right" class="dt_name">河流：</td>
                   <td align="center" class="dt_vale">{{ siteInfo.RVCD || "&nbsp;" }}</td>
                 </tr>
                 <tr>
                   <td align="right" class="dt_name">建站日期：</td>
-                  <td align="center" class="dt_vale" style="border-right: 1px solid #EBEEF5">{{ siteInfo.ESSTDT || "&nbsp;" }}</td>
+                  <td
+                    align="center"
+                    class="dt_vale"
+                    style="border-right: 1px solid #EBEEF5"
+                  >{{ siteInfo.ESSTDT || "&nbsp;" }}</td>
                   <td align="right" class="dt_name">建设单位：</td>
                   <td align="center" class="dt_vale">{{ siteInfo.DLOG || "&nbsp;" }}</td>
                 </tr>
                 <tr>
                   <td align="right" class="dt_name" style="border-bottom: none">录入时间：</td>
-                  <td align="center" class="dt_vale" style="border-right: 1px solid #EBEEF5;border-bottom: none"></td>
-                  <td align="right" class="dt_name" style="border-bottom: none">图像按钮：</td>
-                  <td align="center" class="dt_vale" style="border-bottom: none"><Button type="info" @click="$App.developing_tip" size="small">查看图片</Button></td>
+                  <td
+                    align="center"
+                    class="dt_vale"
+                    style="border-right: 1px solid #EBEEF5;border-bottom: none"
+                  ></td>
+                  <td align="right" class="dt_name" style="border-bottom: none"></td>
+                  <td align="center" class="dt_vale" style="border-bottom: none">
+                  </td>
                 </tr>
               </table>
+               <table
+                style="border: 1px solid #EBEEF5"
+                border
+                cellspacing="0"
+                width="100%"
+                class="site_detail"
+              >              
+                  <tr>
+                <td colspan="4" style="background-color:#DEDFE0;padding:2px;">
+                  <el-tag type="info" effect="dark" size="small">特征水位</el-tag>
+                </td>
+                  </tr>
+                  <tr>
+                  <td align="right" class="dt_name">4-6月汛限水位：</td>
+                  <td
+                    align="center"
+                    class="dt_vale"
+                    style="border-right: 1px solid #EBEEF5"
+                  >{{ `${$FilterData.Float_Filter(yujingdata.FWL)} m`  || "&nbsp;" }}</td>
+                  <td align="right" class="dt_name">7-9月汛限水位：</td>
+                  <td
+                    align="center"
+                    class="dt_vale"
+                  >{{ `${$FilterData.Float_Filter(yujingdata.FWL79)} m` || "&nbsp;" }}</td>
+                </tr>
+                <tr>
+                  <td align="right" class="dt_name">死水位：</td>
+                  <td
+                    align="center"
+                    class="dt_vale"
+                    style="border-right: 1px solid #EBEEF5"
+                  >{{ `2514.00m` || "&nbsp;" }}</td>
+                  <td align="right" class="dt_name">校核水位：</td>
+                  <td align="center" class="dt_vale">{{ `2524.12m` || "&nbsp;" }}</td>
+                </tr>
+                <tr>
+                  <td align="right" class="dt_name">正常蓄水位：</td>
+                  <td
+                    align="center"
+                    class="dt_vale"
+                    style="border-right: 1px solid #EBEEF5"
+                  >{{ `2520.20m` || "&nbsp;" }}</td>
+                  <td align="right" class="dt_name"></td>
+                  <td align="center" class="dt_vale"></td>
+                </tr>
+               </table>
+                <table
+                style="border: 1px solid #EBEEF5"
+                border
+                cellspacing="0"
+                width="100%"
+                class="site_detail"
+              >
+              <tr>
+                <td colspan="4" style="background-color:#DEDFE0;padding:2px;">
+                  <el-tag  type="info" effect="dark" size="small">实时预警雨量</el-tag>
+                </td>
+                  </tr>
+                <tr>
+                  <td align="right" class="dt_name">预警等级：</td>
+                  <td
+                    align="center"
+                    class="dt_vale"
+                    style="border-right: 1px solid #EBEEF5"
+                  >{{ jiangyu_warm.LEVEL || "&nbsp;" }}</td>
+                  <td align="right" class="dt_name">1小时降雨：</td>
+                  <td
+                    align="center"
+                    class="dt_vale"
+                  >{{ jiangyu_warm.RAIN1 || "&nbsp;" }}</td>
+                </tr>
+                <tr>
+                  <td align="right" class="dt_name">3小时降雨：</td>
+                  <td
+                    align="center"
+                    class="dt_vale"
+                    style="border-right: 1px solid #EBEEF5"
+                  >{{ jiangyu_warm.RAIN3 || "&nbsp;" }}</td>
+                  <td align="right" class="dt_name">6小时降雨：</td>
+                  <td align="center" class="dt_vale">{{ jiangyu_warm.RAIN6 || "&nbsp;" }}</td>
+                </tr>
+                <tr>
+                  <td align="right" class="dt_name">12小时降雨：</td>
+                  <td
+                    align="center"
+                    class="dt_vale"
+                    style="border-right: 1px solid #EBEEF5"
+                  >{{ jiangyu_warm.RAIN12 || "&nbsp;" }}</td>
+                  <td align="right" class="dt_name">24小时降雨：</td>
+                  <td align="center" class="dt_vale">{{ jiangyu_warm.RAIN24 || "&nbsp;" }}</td>
+                </tr>
+               </table>
               <!-- table end -->
 
 
@@ -137,51 +273,6 @@
           <!-- 分割线 -->
           <div class="divider"></div>
           <!-- 关联渠道和闸门 -->
-          <div>
-            <!-- <Row class="relationRow">
-              <Col span="4">关联要素</Col>
-              <Col span="20">
-                <Button
-                  @click="$App.developing_tip"
-                  v-for="item in siteInfo.GUANLIAN"
-                >{{ item.SLNM }}</Button>
-                <div v-if="siteInfo.GUANLIAN && siteInfo.GUANLIAN.length == 0">暂无此站点的关联要素</div>
-              </Col>
-            </Row> -->
-            <el-col style="border: 1px #EBEEF5 solid;border-radius: 2px;padding-left: 10px;padding-bottom: 20px">
-              <Row class="relationRow">
-                <Col span="4">同时监测：</Col>
-                <Col span="20">
-                  <!-- <Button
-                    @click="$App.developing_tip"
-                    v-for="item in siteInfo.GUANLIAN"
-                  >{{ item.SLNM }}</Button> -->
-                  <div ></div>
-                </Col>
-              </Row>
-              <Row class="relationRow">
-                <Col span="4">关联站点：</Col>
-                <Col span="20">
-                  <!-- <Button
-                    @click="$App.developing_tip"
-                    v-for="item in siteInfo.GUANLIAN"
-                  >{{ item.SLNM }}</Button> -->
-                  <div ></div>
-                </Col>
-              </Row>
-              <Row class="relationRow">
-                <Col span="4">关联要素：</Col>
-                <Col span="20">
-                  <!-- <Button
-                    @click="$App.developing_tip"
-                    v-for="item in siteInfo.GUANLIAN"
-                  >{{ item.SLNM }}</Button> -->
-                  <div ></div>
-                </Col>
-              </Row>
-            </el-col>
-
-          </div>
         </div>
       </el-tab-pane>
       <!-- 视频 -->
@@ -262,6 +353,22 @@ export default {
       activeName: "shipin",
       // 站点信息
       siteInfo: {},
+      //预警数据
+      yujingdata: {
+        FWL: null, // 4-6月汛限水位
+        FWL79: null, // 7-9月汛限水位
+        SJWL: null, // 设计洪水位
+        JYWL: null // 经验水位
+      },
+      //降雨预警
+      jiangyu_warm:{
+        LEVEL:null,//降雨预警等级
+        RAIN1:null,
+        RAIN3:null,
+        RAIN6:null,
+        RAIN12:null,
+        RAIN24:null,
+      },
       //   多选框对象
       checkBox: {
         shuiqingList: [
@@ -596,7 +703,6 @@ export default {
       }
     },
   },
-
   mounted() {
     //判断浏览器是否为ie
     var u = navigator.userAgent;
@@ -608,6 +714,39 @@ export default {
           type: 'warning'
       });
     }
+     var level=0;
+    if(level<this.info.rowinfo.SIGN1){
+        level=this.info.rowinfo.SIGN1;
+    }
+    if(level<this.info.rowinfo.SIGN3){
+        level=this.info.rowinfo.SIGN3;
+    }
+    if(level<this.info.rowinfo.SIGN6){
+        level=this.info.rowinfo.SIGN6;
+    }
+    if(level<this.info.rowinfo.SIGN12){
+        level=this.info.rowinfo.SIGN12;
+    }
+    if(level<this.info.rowinfo.SIGN24){
+        level=this.info.rowinfo.SIGN24;
+    }
+    if(level==0){
+      this.jiangyu_warm.LEVEL="无";
+    }
+    if(level==1){
+      this.jiangyu_warm.LEVEL="黄色预警";
+    }
+    if(level==2){
+      this.jiangyu_warm.LEVEL="橙色预警";
+    }
+    if(level==3){
+      this.jiangyu_warm.LEVEL="红色预警";
+    }
+    this.jiangyu_warm.RAIN1=this.info.rowinfo.RAIN1+"mm";
+    this.jiangyu_warm.RAIN3=this.info.rowinfo.RAIN3+"mm";
+    this.jiangyu_warm.RAIN6=this.info.rowinfo.RAIN6+"mm";
+    this.jiangyu_warm.RAIN12=this.info.rowinfo.RAIN12+"mm";
+    this.jiangyu_warm.RAIN24=this.info.rowinfo.RAIN24+"mm";
     // 区域加载中
     this.boxLoading = true;
     // 获取详情数据
@@ -646,7 +785,6 @@ export default {
           // details_data.WWWPath
           video_iframe.src = 'webdemo/index.html?'+details_data.PUID;
         }
-        
         // 取数据的条数
         // var count = 0
         // for (let key in res.data) {
@@ -663,6 +801,24 @@ export default {
 
 <style lang="less" scope>
 @import "./common/common.less";
+.site_detail {
+  td {
+    height: 32px;
+    border-top: none;
+    border-color: #EBEEF5;
+  }
+
+  .dt_name {
+    width: 20%;
+    border-left: none;
+  }
+
+  .dt_vale {
+    width: 30%;
+    border-right: none;
+    border-left: none;
+  }
+}
 .drawer-profile {
   font-size: @siteInfoFontSize;
   position: relative;

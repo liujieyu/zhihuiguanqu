@@ -39,7 +39,11 @@
             </div>
           </template>
         </el-table-column>
-
+        <el-table-column align="center" label="水面面积(㎡)" :width="90">
+          <template slot-scope="scope">
+            {{ scope.row.smj }}
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="距汛限(m)" :width="80">
           <template slot-scope="scope">
               {{scope.row.jxx}}
@@ -169,14 +173,14 @@ export default {
           {
             title: " ",
             key: "index",
-            width: 30,
+            width: 45,
             align: "center",
             fixed: "left"
           },
           {
             title: "站名",
             key: "STNM",
-            width: 100,
+            width: 110,
             align: "center",
             fixed: "left",
             sortable: "custom"
@@ -471,28 +475,10 @@ export default {
       this.getJsonFlayerFormParent();
       // 选取一部分从父组件传来的数据,将其加载为表格数据
       this.loadTableData(
-        // (function() {
-        //   var data = test_data.map(val => {
-        //     return val.rowinfo;
-        //   });
-        //   return data;
-        // })()
         this.getTableDataFormParent()
       );
       // 过滤table数据
       this.filterTableData();
-
-
-      // 获取归属单位数据,然后设置归属单位选择框选项
-      this.getTableData_WPR_FieldInfo({ FieldID: "STGR" }, data => {
-        console.log(data);
-        this.form.guishuList = data;
-      });
-
-      // 获取水库等级数据,然后设置水库等级选择框选项
-      this.getTableData_WPR_FieldInfo_LEVEL({}, data => {
-        this.form.dengjiList = data;
-      });
     },
     // 排序
     sort_change(item) {

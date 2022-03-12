@@ -8,8 +8,8 @@
           <!-- 表单, 用于搜索查询 -->
           <div class="form">
             <!-- 选择器, 按钮 -->
-            <Row class="select-group" :gutter="16">
-              <Col span="8">
+            <Row class="select-group" :gutter="24">
+              <Col span="12">
                 <!-- 地址级联选择器 -->
                 <el-cascader
                   clearable
@@ -38,8 +38,7 @@
                 >{{ item.label }}</Option>
                 </Select>-->
               </Col>
-              <Col span="8">
-                <!-- 渠道级联选择器 -->
+              <!-- <Col span="8">
                 <el-cascader
                   clearable
                   filterable
@@ -50,8 +49,8 @@
                   @change="search"
                   change-on-select
                 ></el-cascader>
-              </Col>
-              <Col span="8">
+              </Col> -->
+              <Col span="12">
                 <!-- 状态类型选择器 -->
                 <el-select
                   @change="search"

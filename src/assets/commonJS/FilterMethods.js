@@ -2454,6 +2454,17 @@ var FilterMethods =
                 return newVal;
             });
             return newArray;
+        },
+        //抽离GIS图层对象数组中每一项对象中某字段组合成新的数组
+        newGisArrayByGisArray(array, attr, callback) {
+            var newArray = array.map(val => {
+                var newVal = val.rowinfo[attr];
+                if (typeof callback == "function") {
+                    newVal = callback(newVal);
+                }
+                return newVal;
+            });
+            return newArray;
         }
     },
 

@@ -7,9 +7,10 @@
           <i class="el-icon-tickets"></i> 站点信息
         </span>
         <div class="drawer-profile">
-          <!-- 导出按钮 -->
+          <!-- 导出按钮 
           <Button size="small" class="outPutButton" type="success" @click="$App.developing_tip">
             <div>导出</div>
+            -->
           </Button>
           <!-- 信息表 -->
           <div>
@@ -93,9 +94,9 @@
                     class="dt_vale"
                     style="border-right: 1px solid #EBEEF5;border-bottom: none"
                   ></td>
-                  <td align="right" class="dt_name" style="border-bottom: none">图像按钮：</td>
+                  <td align="right" class="dt_name" style="border-bottom: none">实时视频</td>
                   <td align="center" class="dt_vale" style="border-bottom: none">
-                    <Button type="info" @click="$App.developing_tip" size="small">查看图片</Button>
+                    <Button type="info" @click="$App.developing_tip(info)" size="small">视频监控</Button>
                   </td>
                 </tr>
               </table>
@@ -226,18 +227,15 @@
           <Icon type="ios-water-outline" style="font-size:20px" />水位数据
         </span>
         <div class="drawer-profile">
-          <!-- 导出按钮 -->
+          <!-- 导出按钮
           <Button size="small" class="outPutButton" type="success" @click="$App.developing_tip">
             <div>导出</div>
           </Button>
+           -->
           <div>
             <!-- 分割线 -->
             <div class="divider"></div>
-            <!-- 选项卡 -->
-            <Tabs type="card">
-              <!-- 表格 -->
-              <TabPane label="表格">
-                <!-- 查询，导出行 -->
+            <!-- 查询，导出行 -->
                 <Row :gutter="16" type="flex" justify="end" align="middle">
                   <Col span="2">
                     <span style="letter-spacing:2px">查询</span>
@@ -267,6 +265,10 @@
                   </Row>
                 <!-- 分割线 -->
                 <div class="divider"></div>
+            <!-- 选项卡 -->
+            <Tabs type="card">
+              <!-- 表格 -->
+              <TabPane label="水情数据">
                 <!-- 表格用于展示数据 -->
                 <div>
                   <Table
@@ -298,16 +300,16 @@
                   <div class="divider"></div>
                 </div>
               </TabPane>
-              <TabPane label="图形">
+              <TabPane label="水情图">
                 <!-- 绘图 -->
                 <div
                   id="shuiqingChart"
                   v-show="table.shuiqing.Rows_filter.length > 0"
-                  :style="{width: '500px', height: '350px',margin: 'auto'}"
+                  :style="{width: '540px', height: '400px',margin: 'auto'}"
                 ></div>
                 <div
                   v-show="table.shuiqing.Rows_filter.length == 0"
-                  :style="{width: '500px', height: '350px',margin: 'auto', display:'flex', alignItems:'center', justifyContent: 'center'}"
+                  :style="{width: '540px', height: '400px',margin: 'auto', display:'flex', alignItems:'center', justifyContent: 'center'}"
                 >暂无数据</div>
               </TabPane>
               <!-- 历史表选择框 -->
@@ -334,49 +336,63 @@
       <!-- 关系曲线 -->
             <el-tab-pane name="guanxiquxian">
                 <span slot="label">
-                <Icon type="md-trending-up" style="font-size:20px"/>关系曲线
+                <Icon type="md-trending-up" style="font-size:20px"/>水位库容
                 </span>
                 <div class="drawer-profile">
-                <!-- 导出按钮 -->
+                <!-- 导出按钮
                 <Button size="small" class="outPutButton" type="success" @click="$App.developing_tip">
                     <div>导出</div>
                 </Button>
+                 -->
                 <!-- 查询&换算 -->
-                    <Row class="row" :gutter="16" type="flex" align="end">
-                        <Col span="14">
-                        <Row :gutter="8">
-                            <Col span="10">
+                     <Row :gutter="19" type="flex" align="middle" style="margin-bottom:10px;">
+                            <Col span="2">
+                            <span></span>
+                            </Col>
+                            <Col span="3">
                             <span>水位：</span>
+                            </Col>
+                            <Col span="6">
                             <Input
                                 v-model="input.huansuan.waterLever"
                                 placeholder="水深 m"
-                                class="huansuanInput"
+                                style="min-width: 90px"
                                 size="small"
                             />
                             </Col>
-                            <Col span="10">
+                            <Col span="3">
+                            <Button type="info" size="small" @click="$App.developing_tip">换算</Button>
+                            </Col>
+                            <Col span="3">
                             <span>库容：</span>
+                            </Col>
+                            <Col span="6">
                             <Input
                                 v-model="input.huansuan.flowLever"
                                 placeholder="库容万m³"
-                                class="huansuanInput"
+                                style="min-width: 90px"
                                 size="small"
                             />
-                            </Col>
-                            <Col span="4">
-                            <Button type="success" size="small" @click="$App.developing_tip">换算</Button>
-                            </Col>
+                            </Col>                           
                         </Row>
+                        <Row :gutter="16" type="flex" justify="end" align="middle">
+                        <Col span="2">
+                            <span style="letter-spacing:2px">查询</span>
                         </Col>
                         <!-- 时间选择 -->
-                        <Col span="10">
+                        <Col span="19">
                         <el-date-picker
-                            style="width:100%"
-                            @change="handleDatePickerChange_guanxiquxian"
                             v-model="table.guanxiquxian.date"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"
+                            @change="handleDatePickerChange_guanxiquxian"
+                            :picker-options="table.guanxiquxian.datePickerOptions"
+                            unlink-panels
+                            type="datetimerange"
+                            value-format="yyyy-MM-dd HH:mm:ss"
                             size="mini"
-                            type="year"
-                            placeholder="请选择年份"
+                            style="min-width: 360px"
                         ></el-date-picker>
                         </Col>
                     </Row>
@@ -385,7 +401,7 @@
                 <Tabs type="card">
                     <TabPane label="关系曲线">
                     <!-- 绘图 -->
-                    <div id="guanxiChart" :style="{width: '550px', height: '400px',margin: 'auto'}"></div>
+                    <div id="guanxiChart" :style="{width: '530px', height: '450px',margin: 'auto'}"></div>
                     </TabPane>
                     <TabPane label="关系数据">
                     <!-- 表格用于展示数据 -->
@@ -444,10 +460,11 @@
             <!-- 分割线 -->
             <div class="divider"></div>
           </div>
-          <!-- 导出按钮 -->
+          <!-- 导出按钮 
           <Button size="small" class="outPutButton" type="success" @click="$App.developing_tip">
             <div>导出</div>
           </Button>
+          -->
           <!-- 查询，导出行 -->
           <Row :gutter="16" type="flex" justify="center" align="middle">
             <Col span="2">
@@ -555,25 +572,25 @@ export default {
             value: "historyTable",
             size: "small",
             // iconType: "logo-facebook",
-            label: "历史表"
+            label: "历史水情"
           },
           {
             value: "hourTable",
             size: "small",
             // iconType: "logo-facebook",
-            label: "小时表"
+            label: "小时水情"
           },
           {
             value: "dayTable",
             size: "small",
             // iconType: "logo-facebook",
-            label: "日表"
+            label: "日水情"
           },
           {
             value: "monthTable",
             size: "small",
             // iconType: "logo-facebook",
-            label: "月表"
+            label: "月水情"
           }
         ],
         // 水位数据历史表绑定值
@@ -975,7 +992,7 @@ export default {
             {
               title: " ",
               type: "index",
-              width: 50,
+              width: 60,
               align: "center",
               // 自定义序号
               indexMethod(item) {
@@ -987,24 +1004,65 @@ export default {
               ellipsis: true
             },
             {
+              // width: 100,
+              title: "时间",
+              key: "TM",
+              align: "center"
+            },
+            {
               title: "水位(m)",
               width: 110,
-              key: "Z",
+              key: "RZ",
               align: "center"
             },
             {
               title: "库容（万m³）",
-              key: "KR",
-              width: 110,
-              align: "center"
-            },
-            {
-              // width: 100,
-              title: "备注",
-              key: "Memo",
+              key: "W",
+              width: 140,
               align: "center"
             }
           ],
+          // 日期时间选择器的选项配置
+          datePickerOptions: {
+            shortcuts: [
+              {
+                text: "最近5年",
+                onClick(picker) {
+                  const end = new Date();
+                  const start = new Date();
+                  start.setTime(start.getTime() - 3600 * 1000 * 24 * 365 * 5);
+                  picker.$emit("pick", [start, end]);
+                }
+              },
+              {
+                text: "最近3年",
+                onClick(picker) {
+                  const end = new Date();
+                  const start = new Date();
+                  start.setTime(start.getTime() - 3600 * 1000 * 24 * 365 * 3);
+                  picker.$emit("pick", [start, end]);
+                }
+              },
+              {
+                text: "最近2年",
+                onClick(picker) {
+                  const end = new Date();
+                  const start = new Date();
+                  start.setTime(start.getTime() - 3600 * 1000 * 24 * 365 * 2);
+                  picker.$emit("pick", [start, end]);
+                }
+              },
+              {
+                text: "最近1年",
+                onClick(picker) {
+                  const end = new Date();
+                  const start = new Date();
+                  start.setTime(start.getTime() - 3600 * 1000 * 24 * 365 * 1);
+                  picker.$emit("pick", [start, end]);
+                }
+              }
+            ]
+          },
           // 表体内容
           Rows: [],
           // 过滤后的表体内容
@@ -1420,6 +1478,31 @@ export default {
           tableType,
           true
         ); // 水库水情历史统计表数据 转 ehart图形用数据 返回一个对象, 对象里分别装 Y1轴对象 Y2轴对象 X轴对象
+        var mintime=echartData.x.list[0].slice(0, 10),maxtime=echartData.x.list[echartData.x.list.length-1].slice(0, 10);
+        var nowDate=new Date();
+        if(mintime.slice(0,4)==maxtime.slice(0,4) && maxtime.slice(0,4)==nowDate.getFullYear()){
+            for(var i=0;i<echartData.x.list.length;i++){
+              var time = echartData.x.list[i].substr(5);
+              echartData.x.list[i]=time;
+            }
+        }
+        switch (echartData.chartName) {
+                case "历史表":
+                    echartData.chartName="历史水情图";
+                    break;
+                case "小时表":
+                    echartData.chartName="小时水情图";
+                    break;
+                case "日表":
+                    echartData.chartName="日水情图";
+                    break;
+                case "月表":
+                    echartData.chartName="月水情图";
+                    break;
+                case "年表":
+                    echartData.chartName="年水情图";
+                    break;
+                }
         console.log(echartData);
         console.log(echartData.x.list);
         if (!this.chart.shuiqing) {
@@ -1428,9 +1511,6 @@ export default {
         this.chart.shuiqing.setOption({
           title: {
             text: echartData.chartName
-          },
-          grid: {
-            x: '20%'
           },
           tooltip: {
             trigger: "axis"
@@ -1444,7 +1524,6 @@ export default {
             feature: {
               mark: { show: true },
               magicType: { show: true, type: ["line", "bar"] },
-              restore: { show: true },
               saveAsImage: { show: true }
             }
           },
@@ -1455,48 +1534,6 @@ export default {
               type: "category",
               boundaryGap: false,
               data: echartData.x.list,
-              axisTick: {
-                interval: function(index, val) {
-                  var listLength = echartData.x.list.length;
-                  if (listLength >= 4) {
-                    var tick = Math.round(listLength / 4);
-                    // console.log((index + 1) % tick === 0);
-                    // console.log('1575listLength',listLength);
-                    // console.log('1576tick',tick);
-                    if ((index + 1) % tick === 0) {
-                      return true;
-                    } else {
-                      return false;
-                    }
-                  } else {
-                    return true;
-                  }
-                },
-                length: 10
-              },
-              axisLabel: {
-                interval: function(index, val) {
-                  var listLength = echartData.x.list.length;
-                  if (listLength >= 4) {
-                    console.log(index);
-                    var tick = Math.round(listLength / 4);
-                    // console.log('1575listLength',listLength);
-                    // console.log('1576tick',tick);
-                    let a = (index + 1) % tick;
-                    console.log(a);
-                    console.log((index + 1) % tick === 0);
-                    if ((index + 1) % tick === 0) {
-                      return true;
-                    } else {
-                      return false;
-                    }
-                  } else {
-                    return true;
-                  }
-                },
-                rotate: 10,
-                margin: 16
-              }
             }
           ],
           yAxis: [
@@ -1506,9 +1543,9 @@ export default {
               axisLabel: {
                 formatter: "{value} "
               },
-              scale: true
-              // max: echartData.y1.max,
-              // min: echartData.y1.min
+              scale: true,
+               max: echartData.y1.max,
+               min: echartData.y1.min
             }
           ],
           series: [
@@ -1973,43 +2010,251 @@ export default {
     },
     // 查询关系曲线表格
     search_guanxiquxian() {
-      this.letTableLoading("guanxiquxian");
+      // this.letTableLoading("guanxiquxian");
 
-      // 传递参数
-      var body = {
-        STCD: this.siteInfo.STCD,
-        _page: this.table["guanxiquxian"].currentPage || 1,
-        _page_size: this.table["guanxiquxian"].pageSizes || 20
-      };
+      // // 传递参数
+      // var body = {
+      //   STCD: this.siteInfo.STCD,
+      //   _page: this.table["guanxiquxian"].currentPage || 1,
+      //   _page_size: this.table["guanxiquxian"].pageSizes || 20
+      // };
+      const end = new Date();
+      const start = zeroPointOfTheDay();
 
-      // 如果有选择日期进行查询，根据表格类型传递参数
-      if (this.table.guanxiquxian.date) {
-        body.YR = this.$FilterData.elDatePicker_Filter(
-          this.table.guanxiquxian.date,
-          "onlyYear"
-        );
+      var timeSlot = [start, end];
+
+      this.setTableDate("guanxiquxian", timeSlot);
+
+      function zeroPointOfTheDay() {
+        var date = new Date();
+        date.setHours(0);
+        date.setMinutes(0);
+        date.setSeconds(0);
+        date.setMilliseconds(0);
+        return date;
       }
+      this.loadkrlineBydate();
+      // 如果有选择日期进行查询，根据表格类型传递参数
+      // if (this.table.guanxiquxian.date) {
+      //   body.YR = this.$FilterData.elDatePicker_Filter(
+      //     this.table.guanxiquxian.date,
+      //     "onlyYear"
+      //   );
+      // }
 
-      this.$GetData.Base_MonitoringSites(
-        "Z_Q_relation",
-        body,
-        {
-          default: true,
-          myFilter: data => {
-            data.map(val => {
-              val.currentPage = body._page;
-              val.pageSizes = body._page_size;
+      // this.$GetData.Base_MonitoringSites(
+      //   "Z_Q_relation",
+      //   body,
+      //   {
+      //     default: true,
+      //     myFilter: data => {
+      //       data.map(val => {
+      //         val.currentPage = body._page;
+      //         val.pageSizes = body._page_size;
+      //         return val;
+      //       });
+      //       return data;
+      //     }
+      //   },
+      //   data => {
+      //     this.setTableTotal("guanxiquxian", data.total);
+      //     this.setTableData("guanxiquxian", data.data);
+      //     this.cancelTableLoading("guanxiquxian");
+      //   }
+      // );
+    },
+    loadkrlineBydate(){
+      var obj={
+        begintime:this.table.guanxiquxian.date[0],
+        endtime:this.table.guanxiquxian.date[1]
+      };
+       this.axios.get('/fieldinfo/swkrdatabydate',{params:obj}).then(res => {
+            var _data = res.data; // 数据深拷贝
+            _data= _data.map(val => {
+              val.currentPage = 1;
+              val.pageSizes = 20;
               return val;
             });
-            return data;
-          }
+            this.setTableData("guanxiquxian", _data);
+            this.setTableTotal("guanxiquxian", _data.length);
+            this.table["guanxiquxian"].currentPage=1;
+            this.table["guanxiquxian"].pageSizes=20;
+            var echartData = {
+                chartName: "",
+                x: new Object(),
+                y1: new Object(),
+                y2: new Object(),
+                y3: new Object(),
+                markdata:[],
+            }
+                    // y1轴
+                    echartData.y1.name = "水位"; // Y1轴名字
+
+                    echartData.y1.list = FilterMethods.methods.newArrayByObjArray(_data, "RZ", val => { // 过滤
+                        if (isNaN(val) || val === "" || val == null) {
+                            return 0;
+                        }
+                        return parseFloat(val).toFixed(2);
+                    });
+                    //设置markLine
+                    var jhsw=new Object();
+                    jhsw.name='校核水位 '+2524.12;
+                    jhsw.yAxis=2524.12;
+                    jhsw.label={
+                           formatter: '{b}',
+                           position: 'middle',
+                           color:'orange'
+                    }
+                    echartData.markdata.push(jhsw);
+                    var zcsw=new Object();
+                    zcsw.name='正常蓄水位 '+2520.2;
+                    zcsw.yAxis=2520.2;
+                    zcsw.label={
+                           formatter: '{b}',
+                           position: 'middle',
+                           color:'orange'
+                    }
+                    echartData.markdata.push(zcsw);
+                    var y1max = 2525,
+                        y1min = Math.floor(FilterMethods.methods.get_echart_min(echartData.y1.list));
+                    if(y1min>2514){
+                      y1min=2514;
+                    }else{
+                      var ssw=new Object();
+                      ssw.name='死水位 '+2514;
+                      ssw.yAxis=2514;
+                      ssw.label={
+                           formatter: '{b}',
+                           position: 'middle',
+                           color:'orange'
+                    }
+                      echartData.markdata.push(ssw);
+                    }
+                    echartData.y1.max = y1max; // y1最大值
+                    echartData.y1.min = y1min; // y1最小值
+
+                    // y2轴
+                    echartData.y2.name = "库容"; // Y2轴名字
+
+                    echartData.y2.list = FilterMethods.methods.newArrayByObjArray(_data, "W", val => { // 过滤
+                        if (isNaN(val) || val === "" || val == null) {
+                            return 0;
+                        }
+                        return parseFloat(val).toFixed(2);
+                    });
+
+                    var y2max = Math.ceil(FilterMethods.methods.get_echart_max(echartData.y2.list)),
+                        y2min = Math.floor(FilterMethods.methods.get_echart_min(echartData.y2.list));
+                    echartData.y2.max = y2max; // y2最大值
+                    echartData.y2.min = y2min < 0 ? 0 : y2min; // y2最小值
+
+                    // x轴
+                    echartData.x.list = _data.map((val, index, array) => {
+                        // var time = `${index}:00 ~ ${index + 1}:00`;
+                        var time = val.TM;
+                        return time;
+                    });
+                    var datalist1=[];
+                    var datalist2=[];
+                    for(var i=0;i<echartData.x.list.length;i++){
+                      var obj_data1=[echartData.x.list[i],echartData.y1.list[i]];
+                      datalist1.push(obj_data1);
+                      var obj_data2=[echartData.x.list[i],echartData.y2.list[i]];
+                      datalist2.push(obj_data2);
+                    }
+                    echartData.y1.list=datalist1;
+                    echartData.y2.list=datalist2;
+            this.createKrchart(echartData);
+        });
+    },
+    //带条件的库容曲线
+    createKrchart(echartData){
+      var myChart = this.$echarts.init(document.getElementById("guanxiChart"));
+      myChart.setOption({
+        title: { text: "" },
+        tooltip: {
+          trigger: "axis",
+          axisPointer: {
+            animation: false
+         }
         },
-        data => {
-          this.setTableTotal("guanxiquxian", data.total);
-          this.setTableData("guanxiquxian", data.data);
-          this.cancelTableLoading("guanxiquxian");
+        legend: {
+          data: [ echartData.y1.name, echartData.y2.name ]
+        },
+        axisPointer: {
+        link: {xAxisIndex: 'all'}
+        },
+        grid: [{
+        left: 38,
+        right: 18,
+        height: '34%'
+        }, {
+        left: 38,
+        right: 18,
+        top: '60%',
+        height: '33.5%'
+       }],
+        xAxis: [
+        {
+            type: 'time',
+            boundaryGap: false,
+            data: echartData.x.list,
+            //axisLabel:{interval:parseInt(echartData.x.list.length/5),rotate:0},
+        },
+        {
+            gridIndex: 1,
+            type: 'time',
+            boundaryGap: false,
+            data: echartData.x.list,
+            position: 'bottom'
         }
-      );
+        ],
+        yAxis: [
+          {
+            name: echartData.y1.name+'(m)',
+            type: "value",
+            minInterval:1, 
+            min:echartData.y1.min,
+            max:echartData.y1.max
+          },
+          {
+            gridIndex: 1,
+            name: echartData.y2.name+'(万m³)',
+            type: "value",
+            minInterval:1, 
+            min:200,
+            max:1000
+          }
+        ],
+        series: [
+          {
+            name: echartData.y1.name,
+            type: "line",
+            yAxisIndex: 0,
+            smooth:true,
+            data:echartData.y1.list,
+            markLine : {
+                symbol:'none',
+                itemStyle : {  
+                                normal : {  
+                                    lineStyle:{  
+                                        color:'orange',
+                                    }  
+                                }  
+                            },
+                data : echartData.markdata,
+            },
+          },
+          {
+            name: echartData.y2.name,
+            type: "line",
+            xAxisIndex: 1,
+            yAxisIndex: 1,
+            smooth:true,
+            data:echartData.y2.list
+          }
+        ]
+      });
     },
   },
   mounted() {

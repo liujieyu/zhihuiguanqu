@@ -27,24 +27,7 @@
               </Col>
 
               <Col span="12">
-                <!-- 渠道级联选择器 -->
-                <el-cascader
-                  filterable
-                  clearable
-                  size="mini"
-                  placeholder="渠道"
-                  :options="form.qudaoList"
-                  v-model="form.model_qudao"
-                  @change="search"
-                  change-on-select
-                ></el-cascader>
-              </Col>
-            </Row>
-            <!-- 分割线 -->
-            <div class="divider"></div>
-            <Row class="select-group" :gutter="16">
-              <Col span="12">
-                <!-- 归属单位选择器 -->
+              <!-- 归属单位选择器 -->
                 <el-select
                   v-model="form.model_guishu"
                   multiple
@@ -61,12 +44,27 @@
                     :value="item.Field"
                   ></el-option>
                 </el-select>
+                <!-- 渠道级联选择器 
+                <el-cascader
+                  filterable
+                  clearable
+                  size="mini"
+                  placeholder="渠道"
+                  :options="form.qudaoList"
+                  v-model="form.model_qudao"
+                  @change="search"
+                  change-on-select
+                ></el-cascader>
+                -->
               </Col>
+            </Row>
+            <!-- 分割线 -->
+            <div class="divider"></div>
+            <Row class="select-group" :gutter="16">             
               <Col span="12">
                 <!-- 水库等级选择器 -->
                 <el-select
                   v-model="form.model_dengji"
-                  multiple
                   collapse-tags
                   clearable
                   size="mini"
@@ -81,11 +79,7 @@
                   ></el-option>
                 </el-select>
               </Col>
-            </Row>
-            <!-- 分割线 -->
-            <div class="divider"></div>
-            <Row>
-              <Col span="4" style="line-height: 24px;">异常界限值:</Col>
+              <Col span="5" style="line-height: 24px;">异常界限值:</Col>
               <Col span="7">
                 <Input
                   @on-enter="search"
@@ -168,6 +162,11 @@
           :sortable="item.sortable"
           :show-overflow-tooltip="true"
         ></el-table-column>
+        <el-table-column align="center" label="库容(m³)" :width="80">
+          <template slot-scope="scope">
+              {{scope.row.w}}
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="水位(m)" :width="80">
           <template slot-scope="scope">
             <div>
@@ -302,13 +301,19 @@ export default {
             value: "RZ",
             size: "small",
             // iconType: "logo-facebook",
-            title: "水位"
-          }
+            title: "水位值"
+          },
+          {
+            value: "w",
+            size: "small",
+            // iconType: "logo-facebook",
+            title: "库容值"
+          },
         ],
         model_adress: null,
         model_qudao: null,
-        model_guishu: ["1", "2", "3", "4", "5", "6", "7", "8"],
-        model_dengji: ["1", "2", "3", "4", "5"]
+        model_guishu: [],
+        model_dengji: []
       },
       // 表格数据
       table: {
@@ -591,7 +596,9 @@ export default {
           "historyTable",
           true
         ); // 渠道水情历史统计表数据 转 ehart图形用数据 返回一个对象, 对象里分别装 Y1轴对象 Y2轴对象 X轴对象
-
+        debugger;
+        console.log(echartData);
+        console.log(echartData.x.list);
         var x_List = echartData.x.list.map((val, index, array) => {
           // 时间过滤
           var time = val.split(" ");
@@ -655,8 +662,8 @@ export default {
                     return true;
                   }
                 },
-                rotate: 10,
-                margin: 16
+               // rotate: 10,
+              //  margin: 16
               }
             }
           ],
@@ -691,8 +698,7 @@ export default {
             {
               name: echartData.y2.name,
               type: "line",
-              data: echartData.y2.list,
-              yAxisIndex: 1
+              data: echartData.y2.list
             }
           ]
         });
@@ -929,16 +935,20 @@ export default {
         textGraphicsLayer.textType = textType;
         this.featrue.map.addLayer(textGraphicsLayer); // 给地图添加新增的标注文本图层
         var Rows = this.featrue.Rows;
+        debugger;
         //创建textsymbol文本标注
         if (Rows.length > 0) {
           //动态读取json数据源结果集
           for (var i = 0; i < Rows.length; i++) {
-            var Row = Rows[i];
-            var point = new esri.geometry.Point(
-              Row.geometry.x,
-              Row.geometry.y,
-              new esri.SpatialReference({ wkid: 4326 })
-            );
+                    var Row = Rows[i];
+                    //获取坐标
+                    var x=Number(Row.geometry.x);
+                    var y=Number(Row.geometry.y);
+                    var point = new esri.geometry.Point(
+                        x,
+                        y,
+                        new esri.SpatialReference({ wkid: 4326 })
+                    );
             var value = Row.rowinfo[textType];
             // 过滤
             switch (textType) {
@@ -956,6 +966,14 @@ export default {
                   value = "";
                 } else {
                   value += "m";
+                }
+                break;
+                case "w":
+                var value = `${this.Z_Filter(Row.rowinfo[textType])}`;
+                if (value == "") {
+                  value = "";
+                } else {
+                  value += "m³";
                 }
                 break;
             }
@@ -1048,7 +1066,12 @@ export default {
 
       // 获取水库等级数据,然后设置水库等级选择框选项
       this.getTableData_WPR_FieldInfo_LEVEL({}, data => {
-        this.form.dengjiList = data;
+        this.form.dengjiList=[];
+        for(var i=0;i<data.length;i++){
+          if(data[i].Field==3 || data[i].Field==4){
+            this.form.dengjiList.push(data[i]);
+          }
+        }
       });
 
       // 多选框标记勾选触发事件

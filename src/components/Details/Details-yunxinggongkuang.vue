@@ -7,10 +7,11 @@
           <i class="el-icon-tickets"></i> 站点信息
         </span>
         <div class="drawer-profile">
-          <!-- 导出按钮 -->
+          <!-- 导出按钮 
           <Button size="small" class="outPutButton" type="success" @click="$App.developing_tip">
             <div>导出</div>
           </Button>
+          -->
           <!-- 信息表 -->
           <div>
             <!-- 信息内容 -->
@@ -56,8 +57,8 @@
                 <tr>
                   <td align="right" class="dt_name" style="border-bottom: none">录入时间：</td>
                   <td align="center" class="dt_vale" style="border-right: 1px solid #EBEEF5;border-bottom: none"></td>
-                  <td align="right" class="dt_name" style="border-bottom: none">图像按钮：</td>
-                  <td align="center" class="dt_vale" style="border-bottom: none"><Button type="info" @click="$App.developing_tip" size="small">查看图片</Button></td>
+                  <td align="right" class="dt_name" style="border-bottom: none">实时视频：</td>
+                  <td align="center" class="dt_vale" style="border-bottom: none"><Button type="info" @click="$App.developing_tip(info)" size="small">视频监控</Button></td>
                 </tr>
               </table>
               <!-- table end -->
@@ -187,20 +188,20 @@
       <!-- 电压数据 -->
       <el-tab-pane name="zhuangtaishuju">
         <span slot="label">
-          <Icon type="ios-flash" style="font-size:20px"/>状态数据
+          <Icon type="ios-flash" style="font-size:20px"/>运行工况
         </span>
         <div class="drawer-profile">
-          <!-- 导出按钮 -->
+          <!-- 导出按钮 
           <Button size="small" class="outPutButton" type="success" @click="developing_tip">
             <div>导出</div>
           </Button>
+          -->
           <div>
-            <!-- 选项卡 -->
-            <Tabs type="card">
-              <!-- 表格 -->
-              <TabPane label="电压数据">
-                <!-- 查询，导出行 -->
-                <Row :gutter="16">
+            <!-- 查询，导出行 -->
+               <Row :gutter="16" type="flex" justify="end" align="middle">
+                  <Col span="2">
+                      <span style="letter-spacing:2px">查询</span>
+                  </Col>
                   <!-- 开始到结束时间选择 -->
                   <Col span="19">
                     <el-date-picker
@@ -220,10 +221,14 @@
                 <!-- 分割线 -->
                 <div class="divider"></div>
                 <Row :gutter="16" type="flex" justify="center" align="middle">
-                  正常电压范围：{{ZCDY.VOLMIN}}-{{ZCDY.VOLMAX}} v
+                  正常电压范围：{{ZCDY.VOLMIN}}v - {{ZCDY.VOLMAX}}v
                 </Row>
                 <!-- 分割线 -->
                 <div class="divider"></div>
+            <!-- 选项卡 -->
+            <Tabs type="card">
+              <!-- 表格 -->
+              <TabPane label="电压数据">
                 <!-- 表格用于展示数据 -->
                 <div>
                   <Table
@@ -258,7 +263,7 @@
                 <!-- 绘图 -->
                 <div
                   id="zhuangtaishujuChart"
-                  :style="{width: '500px', height: '350px',margin: 'auto'}"
+                  :style="{width: '540px', height: '400px',margin: 'auto'}"
                 ></div>
               </TabPane>
             </Tabs>
@@ -589,7 +594,14 @@ export default {
           data,
           tableType
         ); // 渠道水情历史统计表数据 转 ehart图形用数据 返回一个对象, 对象里分别装 Y1轴对象 Y2轴对象 X轴对象
-
+        var mintime=echartData.x.list[0].slice(0, 10),maxtime=echartData.x.list[echartData.x.list.length-1].slice(0, 10);
+        var now=new Date();
+        if(mintime.slice(0,4)==maxtime.slice(0,4) && maxtime.slice(0,4)==now.getFullYear()){
+          for(var i=0;i<echartData.x.list.length;i++){
+              var time=echartData.x.list[i].substr(5);
+              echartData.x.list[i]=time;
+            }
+        }
         if (!this.chart.zhuangtaishuju) {
           this.chart.zhuangtaishuju = this.$echarts.init(ele);
         }
@@ -609,7 +621,6 @@ export default {
             feature: {
               mark: { show: true },
               magicType: { show: true, type: ["line", "bar"] },
-              restore: { show: true },
               saveAsImage: { show: true }
             }
           },

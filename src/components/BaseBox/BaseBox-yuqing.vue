@@ -8,7 +8,7 @@
                 <div slot="content">
                     <div class="form">
                         <!-- 选择器, 按钮 -->
-                        <Row class="select-group" :gutter="16">
+                        <Row class="select-group" :gutter="24">
                             <!-- <Col span="2">
                               <span style="line-height:25px">市:</span>
                             </Col>-->
@@ -27,7 +27,23 @@
                             </Col>
 
                             <Col span="12">
-                                <!-- 渠道级联选择器 -->
+                               <!-- 归属单位选择器 -->
+                                <el-select
+                                        v-model="form.model_guishu"
+                                        multiple
+                                        collapse-tags
+                                        clearable
+                                        size="mini"
+                                        @change="search"
+                                        placeholder="归属单位">
+                                    <el-option
+                                            v-for="item in form.guishuList"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                    </el-option>
+                                </el-select>
+                                <!-- 渠道级联选择器 
                                 <el-cascader
                                         filterable
                                         clearable
@@ -38,6 +54,7 @@
                                         @change="search"
                                         change-on-select
                                 ></el-cascader>
+                                -->
                             </Col>
 
                             <!-- <Col span="8">
@@ -63,28 +80,6 @@
                         <!-- 分割线 -->
                         <div class="divider"></div>
                         <Row>
-                            <Col span="12">
-                                <!-- 归属单位选择器 -->
-                                <el-select
-                                        v-model="form.model_guishu"
-                                        multiple
-                                        collapse-tags
-                                        clearable
-                                        size="mini"
-                                        @change="search"
-                                        placeholder="归属单位">
-                                    <el-option
-                                            v-for="item in form.guishuList"
-                                            :key="item.value"
-                                            :label="item.label"
-                                            :value="item.value">
-                                    </el-option>
-                                </el-select>
-                            </Col>
-                        </Row>
-                        <!-- 分割线 -->
-                        <div class="divider"></div>
-                        <Row>
                             <Col>
                                 <!-- 时间选择器 -->
                                 <!--                <el-date-picker-->
@@ -99,7 +94,7 @@
                                 <!--                  start-placeholder="开始日期"-->
                                 <!--                  end-placeholder="结束日期">-->
                                 <!--                </el-date-picker>-->
-                                开始时间
+                                开始时间：
                                 <el-date-picker
                                         class="date_zw"
                                         v-model="form.model_date[0]"
@@ -110,16 +105,16 @@
                                         value-format="yyyy-MM-dd HH:mm:ss"
                                         placeholder="选择日期时间">
                                 </el-date-picker>
-                                预警预设值
+                                预警预设值：
                                 <Input
-                                        style="width: 140px;"
+                                        style="width: 120px;"
                                         @on-enter="search"
                                         placeholder="预警预设值mm"
                                         size="small"
                                         v-model="form.singular"
                                 >
                                 </Input>
-                                <br>结束时间
+                                <br>结束时间：
                                 <el-date-picker
                                         class="date_zw time_zw"
                                         v-model="form.model_date[1]"
@@ -130,9 +125,9 @@
                                         value-format="yyyy-MM-dd HH:mm:ss"
                                         placeholder="选择日期时间">
                                 </el-date-picker>
-                                异常界限值
+                                异常界限值：
                                 <Input
-                                        style="width: 140px;"
+                                        style="width: 120px;"
                                         @on-enter="search"
                                         placeholder="异常界限值mm"
                                         size="small"
@@ -178,9 +173,8 @@
                         <!--              </Col>-->
                         <!--            </Row>-->
                         <!-- 分割线 -->
-                        <div class="divider"></div>
-                        <Row :gutter="16" style="margin-top: -6px">
-                            <Col span="22">
+                        <Row :gutter="24" style="margin-top: -6px">
+                            <Col span="24">
                                 <Input
                                         search
                                         enter-button
@@ -198,7 +192,7 @@
                         </Row>
                         <!-- 分割线 -->
                         <div class="divider"></div>
-                        <Row :gutter="16" type="flex" justify="center" align="middle">
+                        <Row :gutter="24" type="flex" justify="center" align="middle">
                             <Col span="4" style="text-align:center;">
                                 <span style="letter-spacing:5px">标记:</span>
                             </Col>
@@ -222,24 +216,21 @@
                         </Row>
                         <!-- 分割线 -->
                         <!-- <div class="divider"></div> -->
-                        <Row :gutter="16" type="flex" justify="left" align="middle">
+                        <Row :gutter="24" type="flex" justify="left" align="middle">
                             <span style="letter-spacing:5px;margin-left: 15px;">雨量:</span>
-                        </Row>
-                        <!-- 分割线 -->
-                        <!-- <div class="divider"></div> -->
-                        <Row>
                             <el-radio-group
                                     @on-change="checkboxGroup_onChange"
                                     v-model="form.yuliang"
                                     border
+                                    fill="#B0C3D7"
                                     size="mini">
-                                <el-radio label="全部" style="color:rgb(207,204,207);">全部</el-radio>
-                                <el-radio :label="0" style="color:rgb(41,196,1);">0</el-radio>
-                                <el-radio :label="10" style="color:rgb(16,135,56);">10</el-radio>
-                                <el-radio :label="25" style="color:rgb(90,179,255);">25</el-radio>
-                                <el-radio :label="50" style="color:rgb(1,113,223);">50</el-radio>
-                                <el-radio :label="100" style="color:rgb(255,132,1);">100</el-radio>
-                                <el-radio :label="250" style="color:rgb(255,2,2);">250</el-radio>
+                                <el-radio-button label="全部"><font style="color:rgb(207,204,207);">全部</font></el-radio-button>
+                                <el-radio-button :label="0"><font style="color:rgb(41,196,1);">0</font></el-radio-button>
+                                <el-radio-button :label="10"><font style="color:rgb(16,135,56);">10</font></el-radio-button>
+                                <el-radio-button :label="25"><font style="color:rgb(90,179,255);">25</font></el-radio-button>
+                                <el-radio-button :label="50"><font style="color:rgb(1,113,223);">50</font></el-radio-button>
+                                <el-radio-button :label="100"><font style="color:rgb(255,132,1);">100</font></el-radio-button>
+                                <el-radio-button :label="250"><font style="color:rgb(255,2,2);">250</font></el-radio-button>
                             </el-radio-group>
                         </Row>
                         <!-- 多选框 -->
@@ -354,7 +345,7 @@
                 },
                 // 表单数据
                 form: {
-                    yuliang: '',
+                    yuliang: '全部',
                     YCJXZ: '50',
                     singular: '50',
                     search_str: "",
@@ -429,7 +420,7 @@
                     ],
                     model_adress: null,
                     model_qudao: null,
-                    model_guishu: ['1', '2', '3', '4', '5', '6', '7', '8'],
+                    model_guishu: [],
                     model_date: [],
                 },
                 // 表格数据
@@ -439,7 +430,7 @@
                         {
                             title: " ",
                             key: "index",
-                            width: 45,
+                            width: 50,
                             align: "center",
                             fixed: "left"
                         },
@@ -454,20 +445,14 @@
                         {
                             title: "降雨(mm)",
                             key: "p",
-                            width: 140,
+                            width: 120,
                             align: "center",
                             sortable: "custom"
                         },
                         {
                             title: "行政区划",
                             key: "adnm",
-                            width: 120,
-                            align: "center"
-                        },
-                        {
-                            title: "灌区渠道",
-                            key: "canal_name",
-                            width: 120,
+                            width: 158,
                             align: "center"
                         },
                     ],

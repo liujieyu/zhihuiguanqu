@@ -34,8 +34,8 @@
         <div>{{loginform.name}}</div>
         <div style="cursor: pointer;">退出</div>
         </div>
-        <div style="float: right;line-height: 61px;">
-        <el-input placeholder="请输入水库名称" suffix-icon="el-icon-search" v-model="search_str"></el-input>
+        <div style="float: right;padding-top:13px;">
+        <Input search enter-button="定位" placeholder="请输入水库名称" v-model="search_str" @on-search="locationByName()"/>
         </div>
 
         <el-menu-item v-if="menus_data.weihu" index="/tablexxfw-yxgk" style="float: right;" @click="navchange9()"><img class='img9' :src="imgflag=='weihuguanli'?require('@/assets/image/u520.svg'):require('@/assets/image/u516.svg')">维护管理</el-menu-item>
@@ -175,7 +175,7 @@
         </div>
         <!-- 主体 -->
         <div class="wrapper">
-          <el-checkbox v-model="testform.checked" style="position: absolute;right:10px;top:25px;z-index:100;" @change="showShipin">视频监控</el-checkbox>
+          <el-checkbox v-model="testform.checked" style="position: absolute;right:10px;top:25px;z-index:100;" @change="showShipin"><img src="/static/demo-hunanguanqu/8.png" style="width:16px;height:16px;display:inline;"/>视频监控</el-checkbox>
           <!-- 标签栏与内容 -->
           <Collapse active-key="1">
             <Panel key="1">
@@ -183,80 +183,84 @@
                 <div slot="content">
                     <div class="form">
                         <!-- 选择器, 按钮 -->
-                        <Row class="select-group" :gutter="16">
+                        <Row class="select-group" :gutter="24">
                             <Col span="12">
                                 <!-- 地址级联选择器 -->
-                                <Cascader
-                                        clearable
-                                        multiple
-                                        filterable
-                                        change-on-select
-                                        size="small"
-                                        placeholder="地址"
-                                        :data="testform.adressList"
-                                        v-model="testform.model_adress"
-                                        @on-change="search"
-                                ></Cascader>
+                                <el-cascader
+                                  clearable
+                                  filterable
+                                  size="mini"
+                                  placeholder="地址"
+                                  :options="testform.adressList"
+                                  v-model="testform.model_adress"
+                                  @change="search"
+                                  change-on-select
+                                ></el-cascader>
                             </Col>
                             <Col span="12">
                                 <!-- 归属单位选择器 -->
-                                <Select
-                                        v-model="testform.model_guishu"
-                                        multiple
-                                        clearable
-                                        size="small"
-                                        @on-change="search"
-                                        placeholder="归属单位">
-                                    <Option
-                                            v-for="item in testform.guishuList"
-                                            :key="item.value"
-                                            :value="item.value">
-                                    {{ item.label }}
-                                    </Option>
-                                </Select>
+                                <el-select
+                                  v-model="testform.model_guishu"
+                                  multiple
+                                  collapse-tags
+                                  clearable
+                                  size="mini"
+                                  @change="search"
+                                  placeholder="归属单位"
+                                >
+                                  <el-option
+                                    v-for="item in testform.guishuList"
+                                    :key="item.Field"
+                                    :label="item.FieldName"
+                                    :value="item.Field"
+                                  ></el-option>
+                                </el-select>
                             </Col>
                         </Row>
                         <!-- 分割线 -->
                         <div class="divider"></div>
-                        <Row class="select-group" :gutter="16">
+                        <Row class="select-group" :gutter="24">
                           <Col span="12">
                           <!-- 水库等级选择器 -->
-                          <Select
-                            v-model="testform.model_status"
-                            filterable
+                          <el-select
+                            v-model="testform.model_dengji"
+                            multiple
+                            collapse-tags
                             clearable
-                            size="small"
+                            size="mini"
+                            @change="search"
                             placeholder="水库等级"
-                            @on-change="search"
                           >
-                            <Option key="1"  value="1">小I型水库</Option>
-                            <Option key="2"  value="2">小II型水库</Option>
-                          </Select>
+                            <el-option
+                              v-for="item in testform.dengjiList"
+                              :key="item.value"
+                              :label="item.label"
+                              :value="item.value"
+                            ></el-option>
+                          </el-select>
                         </Col>
                         <Col span="12">
                           <!-- 状态类型选择器 -->
-                          <Select
+                          <el-select
+                            @change="search"
                             clearable
                             filterable
-                            size="small"
+                            class="select-item"
+                            size="mini"
                             v-model="testform.model_status"
                             popper-append-to-body
-                            placeholder="设备运行状态"
-                            @on-change="search"
+                            placeholder="状态"
                           >
-                            <Option
+                            <el-option
                               v-for="item in testform.statusList"
                               :key="item.value"
                               :label="item.label"
                               :value="item.value"
-                            >
-                            {{ item.label }}
-                            </Option>
-                          </Select>
+                            ></el-option>
+                          </el-select>
                         </Col>
                         </Row>
-                        <div class="divider"></div>
-                        <Row class="select-group" :gutter="24">
+                        <Row class="select-group" :gutter="16">
                             <Col span="18">
                                 <Input
                                         search
@@ -277,9 +281,9 @@
                         <div v-show="testform.yuqinginfo">
                           <!-- 分割线 -->
                         <div class="divider"></div>
-                        <Row class="select-group" :gutter="16">
+                        <Row class="select-group" :gutter="24">
                             <Col>
-                                开始时间
+                                开始时间：
                                 <el-date-picker
                                         class="date_zw"
                                         v-model="testform.model_date[0]"
@@ -290,16 +294,16 @@
                                         value-format="yyyy-MM-dd HH:mm:ss"
                                         placeholder="选择日期时间">
                                 </el-date-picker>
-                                预警预设值
+                                预警预设值：
                                 <Input
-                                        style="width: 140px;"
+                                        style="width: 120px;"
                                         @on-enter="search"
                                         placeholder="预警预设值mm"
                                         size="small"
                                         v-model="testform.singular"
                                 >
                                 </Input>
-                                <br>结束时间
+                                <br>结束时间：
                                 <el-date-picker
                                         class="date_zw time_zw"
                                         v-model="testform.model_date[1]"
@@ -310,9 +314,9 @@
                                         value-format="yyyy-MM-dd HH:mm:ss"
                                         placeholder="选择日期时间">
                                 </el-date-picker>
-                                异常界限值
+                                异常界限值：
                                 <Input
-                                        style="width: 140px;"
+                                        style="width: 120px;"
                                         @on-enter="search"
                                         placeholder="异常界限值mm"
                                         size="small"
@@ -324,7 +328,7 @@
                         <!-- 分割线 -->
                         <div class="divider"></div>
                         <Row :gutter="16" type="flex" justify="left" align="middle">
-                            <span style="letter-spacing:5px;margin-left: 15px;">雨量:</span>
+                            <span style="letter-spacing:5px;margin-left: 15px;">雨量：</span>
                             <el-radio-group v-model="radio4" size="mini" fill="#B0C3D7">
                                 <el-radio-button label="全部"><font style="color:rgb(207,204,207);">全部</font></el-radio-button>
                                 <el-radio-button :label="0"><font style="color:rgb(41,196,1);">0</font></el-radio-button>
@@ -353,6 +357,9 @@
                 <el-tab-pane label="运行工况" name="yunxinggongkuang" v-if="featrueLayers_showing().length > 0">
                   <!-- 运行工况 -->
                   <BaseBoxYUNXINGGONGKUANG ref="gktable" :featrue="zuobiaoxi(SiteFeatrueLayer)"></BaseBoxYUNXINGGONGKUANG>
+                </el-tab-pane>
+                <el-tab-pane label="实时雨情" name="shishiyq" v-if="featrueLayers_showing().length > 0">
+                  <BaseBoxSHISHIYQ ref="ssyqtable" :featrue="zuobiaoxi(SiteFeatrueLayer)"></BaseBoxSHISHIYQ>
                 </el-tab-pane>
             </el-tabs>
           </div>
@@ -526,6 +533,17 @@
         </el-badge>
       </div>
     </transition>
+    
+    <el-dialog
+    :title="raincharttitle"
+    :visible.sync="centerDialogVisible"
+    width="520"
+    @open="openDialog()"
+    append-to-body center>
+  <span>
+  <div id="warmrainchart" style="width: 100%;height: 430px;"></div>
+  </span>
+</el-dialog>
   </div>
 </template>
 
@@ -547,6 +565,8 @@ import DetailZHAFASHUIQING from "@/components/Details/Details-zhafashuiqing.vue"
 // 雨情
 import BaseBoxYUQING from "@/components/NewBox/BaseBox-yuqing.vue";
 import DetailYUQING from "@/components/Details/Details-yuqing.vue";
+//实时雨情
+import BaseBoxSHISHIYQ from "@/components/NewBox/BaseBox-shishiyq.vue";
 // 水库水情
 import BaseBoxSHUIKUSHUIQING from "@/components/NewBox/BaseBox-shuikushuiqing.vue";
 import DetailSHUIKUSHUIQING from "@/components/Details/Details-siteinfo.vue";
@@ -591,6 +611,8 @@ export default {
       country_list:[],
       areashow:false,
       countryshow:false,
+      centerDialogVisible:false,
+      raincharttitle:'',
       //当前中心点
       zhong_xin_dian:null,
 
@@ -646,7 +668,7 @@ export default {
       // 正在开发图层数据集合，其中包含图层对象
       FeatrueLayers: [],
       //正在开发图层对象
-      SiteFeatrueLayer:{itype:'siteinfo',icon:'/static/demo-hunanguanqu/2.png',show:0,swwarmicon:'/static/demo-hunanguanqu/2-alert.png',ylwarmicon:'/static/demo-hunanguanqu/1-alert.png',sbwarmicon:'/static/demo-hunanguanqu/9-alert.png',checknum:0},
+      SiteFeatrueLayer:{itype:'siteinfo',icon:'/static/demo-hunanguanqu/2.png',show:0,swwarmicon:'/static/demo-hunanguanqu/2-alert.png',ylwarmicon:'/static/demo-hunanguanqu/1-alert-new.png',sbwarmicon:'/static/demo-hunanguanqu/9-alert-new.png',checknum:0},
       //视频图层
       shipinfeatureLayer:{itype:'shipin',icon:'/static/demo-hunanguanqu/8.png',show:0},
       fList: [],
@@ -709,7 +731,8 @@ export default {
           model_qudao: null,
           model_guishu: "",
           model_date: [],
-          model_dengji: ["1", "2", "3", "4", "5"],
+          model_dengji: [],
+          dengjiList:[{label:'小I型水库',value:3},{label:'小II型水库',value:4}],
           model_status:"",
           yuqinginfo:false,
           checked:false,
@@ -740,38 +763,45 @@ export default {
                   size: "small",
                   title: "站点"
               },
+              
+              {
+                  value: "RZ",
+                  size: "small",
+                  title: "水位"
+              },
+              {
+                  value: "w",
+                  size: "small",
+                  title: "库容"
+              },
+              {
+                  value: "MJ",
+                  size: "small",
+                  title: "水面面积"
+              },
+              
               {
                   value: "STNM",
                   size: "small",
                   title: "站名"
               },
               {
-                  value: "RZ",
-                  size: "small",
-                  title: "水位值"
-              },
-              {
-                  value: "w",
-                  size: "small",
-                  title: "库容值"
-              },
-              {
                   value: "p",
                   size: "small",
-                  title: "雨量值"
+                  title: "雨量"
               },
               {
                   value: "vol",
                   size: "small",
                   span: 6,
-                  title: "电压值"
+                  title: "电压"
               },
               {
                   value: "CS",
                   size: "small",
                   span: 7,
                   title: "通讯状态"
-              }
+              },
           ],
       },
       menus:[],
@@ -799,6 +829,7 @@ export default {
     DetailZHAFASHUIQING,// 闸阀水情
     DetailZHAFAZHUANGTAI,// 闸阀状态
     BaseBoxYUQING, DetailYUQING,// 雨情
+    BaseBoxSHISHIYQ,//实时雨情
     DetailHEDAOSHUIQING,// 河道水情
     BaseBoxSHUIKUSHUIQING, DetailSHUIKUSHUIQING,// 水库水情
     DetailSHIPINZHAN,// 视频站
@@ -861,25 +892,7 @@ export default {
     this.testform.model_date = this.getinittime();
     // 获取行政区划数据,然后设置地址选择框选项
     this.getTableData_WRP_AD_B(data => {
-      debugger;
-        var addresslist=[];
-        var parent={value:data[0].AD_CD,label:data[0].AD_NM,children:[]};
-        for(var i=0;i<data[0].children.length;i++){
-          var childobj=new Object();
-          childobj.value=data[0].children[i].AD_CD;
-          childobj.label=data[0].children[i].AD_NM;
-          childobj.children=[];
-          var subchild=data[0].children[i].children;
-          for(var j=0;j<subchild.length;j++){
-            var subobj=new Object();
-            subobj.value=subchild[j].AD_CD;
-            subobj.label=subchild[j].AD_NM;
-            childobj.children.push(subobj);
-          }
-          parent.children.push(childobj);
-        }
-        addresslist.push(parent);
-        this.testform.adressList = addresslist;
+        this.testform.adressList = data;
         this.testform.model_adress=true;
     });
     //this.$App=this;
@@ -1339,8 +1352,10 @@ export default {
           var equipmentyujingData = this.getAbnormalDataByType(data,3);
           // 创建预警图层（根据图层异常数据）
           var water_yujing = this.createFeatrueLayer(wateryujingData);
-          var rain_yujing = this.createFeatrueLayer(rainyujingData);
-          var equipment_yujing = this.createFeatrueLayer(equipmentyujingData);
+          var rainyjData=this.getWarmDataByRainAndSb(rainyujingData,2);
+          var rain_yujing = this.createFeatrueLayer(rainyjData);
+          var equipmentyjData=this.getWarmDataByRainAndSb(equipmentyujingData,3);
+          var equipment_yujing = this.createFeatrueLayer(equipmentyjData);
 
           //设置图层的特征点图标
           this.setFeatrueLayerSymbol(featureLayer, this.SiteFeatrueLayer.icon, { width: 16, height: 16});
@@ -1364,7 +1379,7 @@ export default {
                 sign:"sb",
                 checkindex:checknum
               },
-              equipment_yujing
+              equipmentyujingData.features
             );
           }
           //雨量提示预警信息
@@ -1376,7 +1391,7 @@ export default {
                 sign:"yl",
                 checkindex:checknum
               },
-              rain_yujing
+              rainyujingData.features
             );
           }
           //水位提示预警信息
@@ -1388,7 +1403,7 @@ export default {
                 sign: "sw",
                 checkindex:checknum
               },
-              water_yujing
+              wateryujingData.features
             );
           }
           
@@ -1498,6 +1513,34 @@ export default {
         });
       }
     },
+    //根据水库名称定位
+    locationByName(){
+      if(this.search_str!=""){
+       var Rows = this.SiteFeatrueLayer.Rows;
+            //创建textsymbol文本标注
+            if (Rows.length > 0) {
+                //动态读取json数据源结果集
+                for (var i = 0; i < Rows.length; i++) {
+                    var Row = Rows[i];
+                    var name=Row.attributes.STNM;
+                    console.log(name.indexOf(this.search_str)+","+name+","+this.search_str);
+                    if(name.indexOf(this.search_str)>-1){
+                        //获取坐标
+                        var x=Number(Row.geometry.x);
+                        var y=Number(Row.geometry.y);
+                        var point = new esri.geometry.Point(
+                            x,
+                            y,
+                            new esri.SpatialReference({ wkid: 4326 })
+                        );
+                        this.map.centerAndZoom(point,12);
+                        break;
+                    }
+                    
+                }
+            }
+      }
+    },
     // 获取系统信息
     getAll() {
       // /static/demo-hunanguanqu/system.json
@@ -1545,6 +1588,11 @@ export default {
               parent.children.push(countryobj);
             }
           });
+        this.getTableData_WPR_FieldInfo({
+                    FieldID: "STGR"
+                }, data => {
+                    this.testform.guishuList = data.reverse();
+                });
       });
     },
     // 多选框标记勾选触发事件
@@ -1562,7 +1610,6 @@ export default {
     },
     // 根据多选框添加文字标注图层
     addTextGraphicsLayerByCheckGroup() {
-      debugger;
         var textTypeList;
         var indexOfSocial = this.testform.social.indexOf("site");
         // 如果多选框里存在 site站点类型
@@ -1706,7 +1753,7 @@ export default {
               +'<td align="center" class="dt_vale" colspan="3" style="border-right:none;">'+item.adnm+'</td>'
                 +'</tr>'
                 +'<tr>'
-                  +'<td align="right" class="dt_name">水情时间：</td>'
+                  +'<td align="right" class="dt_name">时间：</td>'
                   +'<td align="center" class="dt_vale" colspan="3" style="border-right:none;">'+item.tm+'</td>'
                 +'</tr>'
                 +'<tr>'
@@ -1726,13 +1773,9 @@ export default {
                   +'<td align="center" class="dt_vale" style="border-right:none;">'+this.$FilterData.WPTN_Filter(item.RWPTN).symbol+'</td>'
                 +'</tr>'
                 +'<tr>'
-                  +'<td align="right" class="dt_name">雨情时间段：</td>'
-                  +'<td align="center" class="dt_vale" colspan="3" style="border-right:none;">'+yqtime+'</td>'
-                +'</tr>'
-                +'<tr>'
-                  +'<td align="right" class="dt_name">累计雨量：</td>'
+                  +'<td align="right" class="dt_name">今日雨量：</td>'
                   +'<td align="center" class="dt_vale">'+item.p+'mm</td>'
-                  +'<td align="right" class="dt_name">'+yqhour+'时雨量：</td>'
+                  +'<td align="right" class="dt_name">当前小时雨量：</td>'
                   +'<td align="center" class="dt_vale" style="border-right:none;">'+item.hourp+'mm</td>'
                 +'</tr>'
                 +'<tr>'
@@ -1825,9 +1868,9 @@ export default {
         }
       }    
       var show_right = () => {
-        this.details.info_right = graphic.attributes;
-        this.details.info_right.itype = v.itype;
         this.details.drawer_show_right = true;
+        this.details.info_right = graphic.attributes;
+        this.details.info_right.itype = v.itype;       
       };
 
       // 如果左边抽屉组件显示，显示或替换右边抽屉组件
@@ -1855,8 +1898,8 @@ export default {
         this.details.info_left = graphic.attributes;
         // 对应类型
         console.log(v.itype);
-        this.details.info_left.itype = v.itype;
         this.details.drawer_show_left = true;
+        this.details.info_left.itype = v.itype;       
       }
       console.log(evt, v);
     },
@@ -2048,6 +2091,24 @@ export default {
 
       return data;
     },
+    //获取异常显示数据 2雨量  3设备
+    getWarmDataByRainAndSb(graphicsData,warmType) {
+      var data = JSON.parse(JSON.stringify(graphicsData)); // 图层数据深拷贝
+      var AbnormalData = data.features.filter((val, index) => {
+        if(warmType==2){
+          if (val.rowinfo.skstatus == 1) {
+            return true;
+          }
+        }
+        if(warmType==3){
+          if (val.rowinfo.skstatus == 1 && val.rowinfo.status==1) {
+            return true;
+          }
+        }
+      });
+      data.features = AbnormalData;
+      return data;
+    },
     // 获取异常数据
     getAbnormalData(graphicsData) {
       var data = JSON.parse(JSON.stringify(graphicsData)); // 图层数据深拷贝
@@ -2068,7 +2129,7 @@ export default {
     },
     // 通知
     notify_Layer(options, data) {
-      if (data.graphics.length > 0) {
+      if (data.length > 0) {
         this.Message_Window_show(true); // 打开消息窗口
 
         var Voice_Controller = this.Message_Window.Voice_Controller,
@@ -2079,17 +2140,26 @@ export default {
             notify_info_list.length = 0;
             this.SiteFeatrueLayer.checknum=options.checkindex;
           } 
-        data.graphics.forEach((val, index, array) => {
-          var rowinfo = val.attributes.rowinfo;
+        data.forEach((val, index, array) => {
+          var rowinfo = val.rowinfo;
 
           var item = new Object();
           item.icon = options.icon;
           if(options.sign=="sw"){
             item.text = `${rowinfo.STNM}`+"水位超汛限";
-          }else if(options.sign=="雨量"){
-            item.text = `${rowinfo.STNM}`+"雨量预警";
+            item.color="#FF0000";
+          }else if(options.sign=="yl"){
+            var raintext=this.showRainWarm(rowinfo);
+            if(raintext=="无"){
+              item.text = `${rowinfo.STNM}`+"雨量异常";
+            }else{
+              item.text = `${rowinfo.STNM}`+"雨量"+raintext;
+            }
+            
+            item.color="#FFFF00";
           }else{
             item.text = `${rowinfo.STNM}`;
+            item.color="#5500FF";
             if(rowinfo.vol<rowinfo.VOLMIN || rowinfo.vol>rowinfo.VOLMAX){
               item.text+="电压异常";
             }
@@ -2119,6 +2189,39 @@ export default {
         });
       }
     },
+    //雨量预警等级
+    showRainWarm(rowinfo){
+      var text="";
+      var level=0;
+    if(level<rowinfo.SIGN1){
+        level=rowinfo.SIGN1;
+    }
+    if(level<rowinfo.SIGN3){
+        level=rowinfo.SIGN3;
+    }
+    if(level<rowinfo.SIGN6){
+        level=rowinfo.SIGN6;
+    }
+    if(level<rowinfo.SIGN12){
+        level=rowinfo.SIGN12;
+    }
+    if(level<rowinfo.SIGN24){
+        level=rowinfo.SIGN24;
+    }
+    if(level==0){
+      text="无";
+    }
+    if(level==1){
+      text="黄色预警";
+    }
+    if(level==2){
+      text="橙色预警";
+    }
+    if(level==3){
+      text="红色预警";
+    }
+    return text;
+    },
     // 声音列表播放
     voice_list_play(list) {
       var time = 0;
@@ -2147,7 +2250,7 @@ export default {
                     body["STNM"] = `${this.testform.search_str}`;
                 }
                 // 如果地址选择框有内容，添加行政区划过滤字段
-                if (this.testform.model_adress && this.testform.model_adress.length != 0) {
+                if (typeof(this.testform.model_adress.length) != "undefined" && this.testform.model_adress.length>0) {
                     body["ADDVCD"] = `${this.$App.ADDVCD_Array_Filter(
                         this.testform.model_adress
                     )}`;
@@ -2168,7 +2271,6 @@ export default {
                         "Time_max"
                         ] = this.testform.model_date[1];
                 }
-                if(this.testform.yuqinginfo){
                   //如果雨量有异常界限值时
                   //异常界限值
                   if (this.testform.YCJXZ != "") {
@@ -2179,7 +2281,6 @@ export default {
                   if (this.testform.singular != "") {
                       body["max_yujing"] = this.testform.singular;
                   }
-                }
                 
                 // 如果水库等级选择框有内容，添加水库等级过滤字段
                 if (this.testform.model_dengji && this.testform.model_dengji.length != 0) {
@@ -2205,18 +2306,23 @@ export default {
       this.getFeatrueLayer(
         fields,
         res => {
+          debugger;
           var clone_data = JSON.parse(JSON.stringify(res.data));
           // 创建图层（根据图层数据）
-          var featrueLayer = this.createFeatrueLayer(res.data);
+          var featureLayer = this.createFeatrueLayer(res.data);
           var spfeatureLayer=this.createFeatrueLayer(res.data);
           // 获取异常数据 
           var wateryujingData = this.getAbnormalDataByType(res.data,1);
           var rainyujingData = this.getAbnormalDataByType(res.data,2);
           var equipmentyujingData = this.getAbnormalDataByType(res.data,3);
+          //获取预警显示数据
+
           // 创建预警图层（根据图层异常数据）
           var water_yujing = this.createFeatrueLayer(wateryujingData);
-          var rain_yujing = this.createFeatrueLayer(rainyujingData);
-          var equipment_yujing = this.createFeatrueLayer(equipmentyujingData);
+          var rainyjData=this.getWarmDataByRainAndSb(rainyujingData,2);
+          var rain_yujing = this.createFeatrueLayer(rainyjData);
+          var equipmentyjData=this.getWarmDataByRainAndSb(equipmentyujingData,3);
+          var equipment_yujing = this.createFeatrueLayer(equipmentyjData);
           // 移除图层对象里的相应图层
           this.removeFeatureLayer(featureLayerOBJ);
           //移除视频对象图层
@@ -2224,51 +2330,52 @@ export default {
           // 移除图层对象里的相应预警图层
           this.removeFeatureLayer_yujing(featureLayerOBJ);
           // 设置图层的特征点图标
-            this.setFeatrueLayerSymbol(featrueLayer, featureLayerOBJ.icon, {
+            this.setFeatrueLayerSymbol(featureLayer, featureLayerOBJ.icon, {
               width: 16,
               height: 16
             });
-
+           //设置视频图层图标
+           this.setFeatrueLayerSymbol(spfeatureLayer, this.shipinfeatureLayer.icon, { width: 16, height: 16});
           // 设置预警图层的特征点图标
           this.setFeatrueLayerSymbol( water_yujing, "/static/demo-hunanguanqu/yujing.gif", { width: 46, height: 46 } );
           this.setFeatrueLayerSymbol( rain_yujing, "/static/demo-hunanguanqu/jyyujing.gif", { width: 46, height: 46 } );
           this.setFeatrueLayerSymbol( equipment_yujing, "/static/demo-hunanguanqu/sbyujing.gif", { width: 46, height: 46 } );
 
-          // 添加预警图层到地图
-          this.addFeatrueLayerToMap(water_yujing);
-          this.addFeatrueLayerToMap(rain_yujing);
-          this.addFeatrueLayerToMap(equipment_yujing);
-          // 添加图层到地图
-          this.addFeatrueLayerToMap(featrueLayer);
-          this.addFeatrueLayerToMap(spfeatureLayer);
-          //水位提示预警信息
-          if (wateryujingData.features.length > 0) {
+         var checknum=Math.random();
+          //运行工况提示预警信息
+          if (equipmentyujingData.features.length > 0) {
             this.notify_Layer(
               {
-                icon: featureLayerOBJ.swwarmicon,
-                type: "warning"
+                icon: this.SiteFeatrueLayer.sbwarmicon,
+                type: "warning",
+                sign:"sb",
+                checkindex:checknum
               },
-              equipment_yujing
+              equipmentyujingData.features
             );
           }
           //雨量提示预警信息
           if (rainyujingData.features.length > 0) {
             this.notify_Layer(
               {
-                icon: featureLayerOBJ.ylwarmicon,
-                type: "warning"
+                icon: this.SiteFeatrueLayer.ylwarmicon,
+                type: "warning",
+                sign:"yl",
+                checkindex:checknum
               },
-              rain_yujing
+              rainyujingData.features
             );
           }
-          //运行工况提示预警信息
-          if (equipmentyujingData.features.length > 0) {
+          //水位提示预警信息
+          if (wateryujingData.features.length > 0) {
             this.notify_Layer(
               {
-                icon: featureLayerOBJ.sbwarmicon,
-                type: "warning"
+                icon: this.SiteFeatrueLayer.swwarmicon,
+                type: "warning",
+                sign: "sw",
+                checkindex:checknum
               },
-              rain_yujing
+              wateryujingData.features
             );
           }
           // 更新图层对象集合里面 对应图层对象的 图层以及图层数据
@@ -2279,15 +2386,14 @@ export default {
 
           this.shipinfeatureLayer.LayerObject=spfeatureLayer;
           this.shipinfeatureLayer.Rows = clone_data.features; 
-
+          if(!this.testform.checked){
+            spfeatureLayer.hide();
+          }
           // 添加图层模块
           this.addToFeatrueLayer(
             [equipment_yujing,rain_yujing,water_yujing, featureLayer,spfeatureLayer]
           );
           
-          // 给图层里的特征点 添加事件
-          this.addEventToJsonFlayer(featureLayer,'site');
-          this.addEventToJsonFlayer(spfeatureLayer,'shipin');
           // 如果有回调，执行回调
           if (typeof callback == "function") {
             callback(featureLayerOBJ);
@@ -2313,6 +2419,164 @@ export default {
         // errCallback
       );
     },
+//实时降雨柱状图数据获取
+shouDialog(sign,show){
+  this.sign=sign;
+  if(show){
+    this.centerDialogVisible=true;
+  }else{
+    this.centerDialogVisible=false;
+  }
+  
+},
+openDialog(){
+  this.$nextTick(() => {
+        //  执行echarts方法
+          this.loadRainChartData();
+        })
+},
+loadRainChartData(){
+  var echartData ={x:new Object(),y1:new Object(),data:0,sign:this.sign};
+  echartData.x.list=FilterMethods.methods.newGisArrayByGisArray(this.SiteFeatrueLayer.Rows, "STNM", val => { // 过滤
+                        return val;
+                    });
+  var num=0;
+  var maxval=0;
+  var rainattr="RAIN1";
+  switch(this.sign){
+    case 1:
+      rainattr="RAIN1";
+      this.raincharttitle="1小时降雨柱状图";
+      break;
+    case 3:
+      rainattr="RAIN3";
+      this.raincharttitle="3小时降雨柱状图";
+      break;
+    case 6:
+      rainattr="RAIN6";
+      this.raincharttitle="6小时降雨柱状图";
+      break;
+    case 12:
+      rainattr="RAIN12";
+      this.raincharttitle="12小时降雨柱状图";
+      break;
+    case 24:
+      rainattr="RAIN24";
+      this.raincharttitle="24小时降雨柱状图";
+      break;
+  }
+  
+  echartData.y1.list=FilterMethods.methods.newGisArrayByGisArray(this.SiteFeatrueLayer.Rows, rainattr, val => { // 过滤            
+              var rain=parseFloat(val);
+              if(rain>maxval) maxval=rain;
+              return rain.toFixed(1);
+          });
+    echartData.data=1;
+  if(maxval<5){
+    maxval=5;
+  }else{
+    maxval=Math.ceil(maxval);
+  }
+  echartData.y1.max=maxval;
+  echartData.y1.min=0;
+  echartData.y1.name="降雨量";
+  this.createRainChart(echartData);
+},
+//生成实时降雨柱状图
+createRainChart(echartData){
+  var ele=document.getElementById("warmrainchart");
+  var myChart = this.$echarts.init(ele);
+  myChart.setOption({
+                title: {
+                    text: ""
+                },
+                tooltip: {
+                    trigger: "axis"
+                },
+                color:["blue"],
+                legend: {
+                    data: [echartData.y1.name],
+                    y: "bottom"
+                },
+                toolbox: {
+                    show: true,
+                    feature: {
+                        mark: {show: true},
+                        magicType: {show: true, type: ["line", "bar"]},
+                        saveAsImage: {show: true}
+                    }
+                },
+                calculable: true,
+                animation: true,
+                xAxis: [
+                    {
+                        type: "category",
+                        // boundaryGap: false,
+                        data: echartData.x.list,
+                    }
+                ],
+                yAxis: [
+                    {
+                        name: `${echartData.y1.name} mm`,
+                        type: "value",
+                        axisLabel: {
+                            formatter: "{value} "
+                        },
+                        max: echartData.y1.max,
+                        min: echartData.y1.min
+                    },
+                ],
+                series: [
+                    {
+                        name: echartData.y1.name,
+                        type: "bar",
+                        data: echartData.y1.list,
+                        barMaxWidth:30,
+                        itemStyle: {
+                            //通常情况下：
+                            normal: {
+                                //每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
+                                color: function (params) {
+
+                                    switch (echartData.sign) {
+                                        case 1:
+                                            if (params.data >= 30 && params.data < 40) return 'yellow';
+                                            if (params.data >= 40 && params.data < 80) return 'orange';
+                                            if (params.data >= 80) return 'red';
+                                            return 'blue'
+                                            break
+                                        case 3:
+                                            if (params.data >= 50 && params.data < 70) return 'yellow';
+                                            if (params.data >= 70 && params.data < 100) return 'orange';
+                                            if (params.data >= 100) return 'red';
+                                            return 'blue'
+                                            break
+                                        case 6:
+                                            if (params.data >= 70 && params.data < 90) return 'yellow';
+                                            if (params.data >= 90 && params.data < 120) return 'orange';
+                                            if (params.data >= 120) return 'red';
+                                            return 'blue'
+                                            break
+                                        case 12:
+                                            if (params.data >= 80 && params.data < 100) return 'yellow';
+                                            if (params.data >= 100 && params.data < 150) return 'orange';
+                                            if (params.data >= 150) return 'red';
+                                            return 'blue'                                       
+                                        case 24:
+                                            if (params.data >= 100 && params.data < 120) return 'yellow';
+                                            if (params.data >= 120 && params.data < 180) return 'orange';
+                                            if (params.data >= 180) return 'red';
+                                            return 'blue'
+                                            break
+
+                                    }
+                                }
+                            },
+                        }
+                    },
+                ]
+            });
+},
 //表格数据获取
 initTableData(){
   this.$refs.sqtable.baseBox_init();
@@ -2522,8 +2786,26 @@ hideTableLoading(){
       this.graphicsLayer_Selection.LayerObject.clear();
     },
     // 功能开发提示
-    developing_tip() {
-      this.$Message.warning("从功能正在开发中...");
+    developing_tip(info) {
+      if(this.details.info_left.STCD==info.STCD){
+        this.details.drawer_show_left=false;
+        this.details.info_left.itype=null;
+        setTimeout(() => {
+            this.details.info_left.itype="shipin";
+            this.details.drawer_show_left=true;
+          }, 300);
+        
+      }
+      if(this.details.info_right.STCD==info.STCD){
+        this.details.drawer_show_right=false;
+        this.details.info_right.itype=null;
+        this.details.drawer_show_left=false;
+        this.details.info_left.itype=null;
+        setTimeout(() => {
+            this.details.info_right.itype="shipin";
+            this.details.drawer_show_right=true;
+          }, 300);
+      }
     },
     // 添加shp地图到map
     addSHPlayerToMap() {
@@ -2981,12 +3263,12 @@ hideTableLoading(){
   }
 
   .dt_name {
-    width: 20%;
+    width: 22%;
     border-left: none;
   }
 
   .dt_vale {
-    width: 30%;
+    width: 28%;
     border-right: 1px solid #EBEEF5;
     border-left: none;
   }

@@ -13,7 +13,8 @@
                     :height="table.height"
                     v-loading="table.loading"
                     empty-text="暂无站点数据"
-                    @sort-change="sort_change"
+                    @header-click="headerClick"
+                    :header-cell-style="{'cursor':'pointer'}"
             >
                 <el-table-column
                         v-for="(item,index) in table.columns"
@@ -25,19 +26,72 @@
                         :sortable="item.sortable"
                         :show-overflow-tooltip="true"
                 ></el-table-column>
-                <!-- 自定义 -->
-                <!-- <el-table-column align="center" label="水势" :width="80">
-                  <template slot-scope="scope">
-                    <div>
-                      <strong
-                        :style="{
-                      color: scope.row.WPTN.status == 4? 'red' : scope.row.WPTN.status == 5?'blue' : 'black',
-                      fontSize: scope.row.WPTN.status == 6?'12px' : '17px'
-                    }"
-                      >{{ scope.row.WPTN.symbol }}</strong>
-                    </div>
-                  </template>
-                </el-table-column>-->
+                <el-table-column align="center" label="站名" :width="110" fixed="left">
+                    <template slot-scope="scope">
+                        <div>
+                        <span
+                            :style="{
+                        color: scope.row.level == 3?'red' :scope.row.level == 2?'orange' : scope.row.level == 1?'yellow' :'#606266',
+                        }"
+                        >{{ scope.row.STNM }}</span>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column align="center" label="1小时降雨(mm)" :width="80">
+                    <template slot-scope="scope">
+                        <div>
+                        <span
+                            :style="{
+                        color: scope.row.SIGN1 == 3?'red' :scope.row.SIGN1 == 2?'orange' : scope.row.SIGN1 == 1?'yellow' :'#606266',
+                        }"
+                        >{{ scope.row.RAIN1 }}</span>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column align="center" label="3小时降雨(mm)" :width="80">
+                    <template slot-scope="scope">
+                        <div>
+                        <span
+                            :style="{
+                        color: scope.row.SIGN3 == 3?'red' :scope.row.SIGN3 == 2?'orange' : scope.row.SIGN3 == 1?'yellow' :'#606266',
+                        }"
+                        >{{ scope.row.RAIN3 }}</span>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column align="center" label="6小时降雨(mm)" :width="80">
+                    <template slot-scope="scope">
+                        <div>
+                        <span
+                            :style="{
+                        color: scope.row.SIGN6 == 3?'red' :scope.row.SIGN6 == 2?'orange' : scope.row.SIGN6 == 1?'yellow' :'#606266',
+                        }"
+                        >{{ scope.row.RAIN6 }}</span>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column align="center" label="12小时降雨(mm)" :width="90">
+                    <template slot-scope="scope">
+                        <div>
+                        <span
+                            :style="{
+                        color: scope.row.SIGN12 == 3?'red' :scope.row.SIGN12 == 2?'orange' : scope.row.SIGN12 == 1?'yellow' :'#606266',
+                        }"
+                        >{{ scope.row.RAIN12 }}</span>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column align="center" label="24小时降雨(mm)" :width="90">
+                    <template slot-scope="scope">
+                        <div>
+                        <span
+                            :style="{
+                        color: scope.row.SIGN24 == 3?'red' :scope.row.SIGN24 == 2?'orange' : scope.row.SIGN24 == 1?'yellow' :'#606266',
+                        }"
+                        >{{ scope.row.RAIN24 }}</span>
+                        </div>
+                    </template>
+                </el-table-column>
             </el-table>
             <!-- 分割线 -->
             <!-- <Divider/> -->
@@ -57,17 +111,11 @@
                     small
             ></el-pagination>
         </div>
-        <!-- 提示框 -->
-        <div ref="tip" style="display:none;">
-            <!-- 渠道水情 -->
-            <TipsQUDAO @chart="chart" :info="tip.info_tip" v-if="tip.show_tip"></TipsQUDAO>
-        </div>
     </div>
 </template>
 
 
 <script>
-    import TipsQUDAO from "@/components/BaseBox/Tips/Tips-qudaoshuiqing.vue";
     import FilterMethods from "@/assets/commonJS/FilterMethods";
     import GetDataMethods from "@/assets/commonJS/GetDataMethods";
     import {setTimeout} from "timers";
@@ -79,22 +127,9 @@
             }
         },
         components: {
-            TipsQUDAO
         },
         data() {
             return {
-                //雨量颜色参考图
-                // 折叠面板对象
-                collapse: {
-                    activeName: "",
-                    list: []
-                },
-                // 地图对象
-                map: null,
-                // 该图层对象
-                JsonFlayer: null,
-                // 文字标注图层
-                TextGraphicsLayers: [],
                 // 提示 展示
                 tip: {
                     info_tip: null,
@@ -103,82 +138,6 @@
                 // 表单数据
                 form: {
                     yuliang: '',
-                    YCJXZ: '50',
-                    singular: '50',
-                    search_str: "",
-                    adressList: [],
-                    qudaoList: [],
-                    guishuList: [],
-                    social: ["site"],
-
-                    checkBoxList: [
-                        {
-                            value: "site",
-                            size: "small",
-                            // iconType: "logo-facebook",
-                            title: "站点"
-                        },
-                        {
-                            value: "STNM",
-                            size: "small",
-                            // iconType: "logo-facebook",
-                            title: "站名"
-                        },
-                        {
-                            value: "p",
-                            size: "small",
-                            // iconType: "logo-facebook",
-                            title: "雨量值"
-                        }
-                    ],
-                    checkBoxList2: [
-                        {
-                            value: [],
-                            size: 'small',
-                            title: '全部',
-                            color: 'rgb(207,204,207)'
-                        },
-                        {
-                            value: [0, 0],
-                            size: 'small',
-                            title: '0',
-                            color: 'rgb(41,196,1)'
-                        },
-                        {
-                            value: [0, 10],
-                            size: 'small',
-                            title: '10',
-                            color: 'rgb(16,135,56)'
-                        },
-                        {
-                            value: [10, 25],
-                            size: 'small',
-                            title: '25',
-                            color: 'rgb(90,179,255)'
-                        },
-                        {
-                            value: [25, 50],
-                            size: 'small',
-                            title: '50',
-                            color: 'rgb(1,113,223)'
-                        },
-                        {
-                            value: [50, 100],
-                            size: 'small',
-                            title: '100',
-                            color: 'rgb(255,132,1)'
-                        },
-                        {
-                            value: [100, 250],
-                            size: 'small',
-                            title: '250',
-                            color: 'rgb(255,2,2)'
-                        },
-                    ],
-                    model_adress: null,
-                    model_qudao: null,
-                    model_guishu: ['1', '2', '3', '4', '5', '6', '7', '8'],
-                    model_date: [],
                 },
                 // 表格数据
                 table: {
@@ -191,27 +150,45 @@
                             align: "center",
                             fixed: "left"
                         },
-                        {
-                            title: "站名",
-                            key: "STNM",
-                            width: 110,
-                            align: "center",
-                            fixed: "left",
-                            sortable: "custom"
-                        },
-                        {
-                            title: "降雨(mm)",
-                            key: "p",
-                            width: 110,
-                            align: "center",
-                            sortable: "custom"
-                        },
-                        {
-                            title: "行政区划",
-                            key: "adnm",
-                            width: 180,
-                            align: "center"
-                        },
+                        // {
+                        //     title: "站名",
+                        //     key: "STNM",
+                        //     width: 110,
+                        //     align: "center",
+                        //     fixed: "left",
+                        //     sortable: "custom"
+                        // },
+                        // {
+                        //     title: "1小时降雨",
+                        //     key: "RAIN1",
+                        //     width: 80,
+                        //     align: "center",
+                        // },
+                        // {
+                        //     title: "3小时降雨",
+                        //     key: "RAIN3",
+                        //     width: 80,
+                        //     align: "center",
+                        // },
+                        // {
+                        //     title: "6小时降雨",
+                        //     key: "RAIN6",
+                        //     width: 80,
+                        //     align: "center",
+                        // },
+                        // {
+                        //     title: "12小时降雨",
+                        //     key: "RAIN12",
+                        //     width: 90,
+                        //     align: "center",
+                        // },
+                        // {
+                        //     title: "24小时降雨",
+                        //     key: "RAIN24",
+                        //     width: 90,
+                        //     align: "center",
+                        // },
+                        
                     ],
                     // 表体内容
                     Rows: [],
@@ -245,7 +222,7 @@
                 v.itype = "siteinfo";
 
                 // 设置中心缩放
-                this.setMapCenterandZoom(item.LGTD, item.LTTD);
+                //this.setMapCenterandZoom(item.LGTD, item.LTTD);
                 // 取消所有站点的闪烁
                 this.$App.GraphicsLayer_Selection_clear();
                 // 对应站点闪烁
@@ -253,11 +230,33 @@
                 // 展示抽屉详情框
                 this.$App.showDrawer(evt, v);
             },
-            // 设置中心和缩放 (接受经纬度，和缩放比例)
-            setMapCenterandZoom(LGTD, LTTD, Zoom) {
-                //koen 20190929
-                //暂时不允许点击，防止缩到全球地图的bug
-                //this.map.centerAndZoom([Number(LGTD), Number(LTTD)], Zoom || 1);
+            headerClick(item){
+                console.log(item);
+                var sign=0,rainattr='RAIN1';
+                switch(item.label){
+                    case '1小时降雨(mm)':sign=1;rainattr='RAIN1';
+                    break;
+                    case '3小时降雨(mm)':sign=3;rainattr='RAIN3';
+                    break;
+                    case '6小时降雨(mm)':sign=6;rainattr='RAIN6';
+                    break;
+                    case '12小时降雨(mm)':sign=12;rainattr='RAIN12';
+                    break;
+                    case '24小时降雨(mm)':sign=24;rainattr='RAIN24';
+                    break;
+                }
+                var num=0;
+                FilterMethods.methods.newArrayByObjArray(this.table.Rows, rainattr, val => { // 过滤
+                    if(val>0){
+                      num+=1;
+                    }             
+                });
+                if(num>0){
+                    this.$App.shouDialog(sign,true); 
+                }else{
+                    this.$App.shouDialog(sign,false); 
+                }
+                              
             },
             // 制图
             createChart(id, data) {
@@ -399,10 +398,27 @@
                     var val_clone = JSON.parse(JSON.stringify(val));
                     // 序号
                     val_clone.index = index + 1;
-                    // 时间过滤
-                    val_clone.TM = this.$FilterData.dateFilter(val_clone.TM);
-                    // 时段降水量过滤
-                    val_clone.DRP = this.Float_Filter(val_clone.DRP, 1);
+                    val_clone.RAIN1=val_clone.RAIN1;
+                    val_clone.RAIN3=val_clone.RAIN3;
+                    val_clone.RAIN6=val_clone.RAIN6;
+                    val_clone.RAIN12=val_clone.RAIN12;
+                    val_clone.RAIN24=val_clone.RAIN24;
+                    val_clone.level=0;
+                    if(val_clone.level<val_clone.SIGN1){
+                        val_clone.level=val_clone.SIGN1;
+                    }
+                    if(val_clone.level<val_clone.SIGN3){
+                        val_clone.level=val_clone.SIGN3;
+                    }
+                    if(val_clone.level<val_clone.SIGN6){
+                        val_clone.level=val_clone.SIGN6;
+                    }
+                    if(val_clone.level<val_clone.SIGN12){
+                        val_clone.level=val_clone.SIGN12;
+                    }
+                    if(val_clone.level<val_clone.SIGN24){
+                        val_clone.level=val_clone.SIGN24;
+                    }
                     // 流量过滤
                     // val_clone.Q = this.Z_Filter(val_clone.Q, 3);
                     // // 水势过滤
@@ -418,24 +434,12 @@
 
                 return tableData;
             },
-            // 获取图层对象,从父组件中
-            getJsonFlayerFormParent() {
-                this.JsonFlayer = this.featrue.LayerObject;
-            },
-            // 获取地图对象,从父组件中
-            getMapFormParent() {
-                this.map = this.featrue.map;
-            },
             // 多选框标记勾选触发事件
             checkboxGroup_onChange(onCheck_Array) {
             },
             // 初始化baseBox
             baseBox_init() {
                 this.table.currentPage = 1;
-                // 获取地图对象,从父组件中
-                this.getMapFormParent();
-                // 获取图层对象,从父组件中
-                this.getJsonFlayerFormParent();
                 // 选取一部分从父组件传来的数据,将其加载为表格数据
                 this.loadTableData(
                     this.getTableDataFormParent()
@@ -444,50 +448,6 @@
                 this.filterTableData();
 
             },
-            // 排序
-            sort_change(item) {
-                var order = item.order,
-                    key = item.prop;
-
-                this.filterTableData();
-                var newList;
-                if (order) {
-                    switch (order) {
-                        case "descending":
-                            if (key != "TM") {
-                                newList = this.table.Rows_filter.sort((a, b) => {
-                                    return Number(b[key]) - Number(a[key]);
-                                });
-                            } else {
-                                newList = this.table.Rows_filter.sort((a, b) => {
-                                    var aTime = new Date(`20${a.TM}`).getTime(),
-                                        bTime = new Date(`20${b.TM}`).getTime();
-                                    aTime = isNaN(aTime) ? 0 : aTime;
-                                    bTime = isNaN(bTime) ? 0 : bTime;
-                                    return bTime - aTime;
-                                });
-                            }
-                            break;
-
-                        case "ascending":
-                            if (key != "TM") {
-                                newList = this.table.Rows_filter.sort((a, b) => {
-                                    return Number(a[key]) - Number(b[key]);
-                                });
-                            } else {
-                                newList = this.table.Rows_filter.sort((a, b) => {
-                                    var aTime = new Date(`20${a.TM}`).getTime(),
-                                        bTime = new Date(`20${b.TM}`).getTime();
-                                    aTime = isNaN(aTime) ? 0 : aTime;
-                                    bTime = isNaN(bTime) ? 0 : bTime;
-                                    return aTime - bTime;
-                                });
-                            }
-                    }
-                    this.table.Rows_filter = newList;
-                }
-                this.$TableMethods.refreshCurrentChange(this.table, 1);
-            }
         },
         created() {
             // 初始化baseBox

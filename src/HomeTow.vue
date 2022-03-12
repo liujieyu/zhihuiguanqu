@@ -61,8 +61,8 @@
         <div>{{loginform.name}}</div>
         <div style="cursor: pointer;">退出</div>
         </div>
-        <div style="float: right;line-height: 61px;">
-        <el-input placeholder="请输入水库名称" suffix-icon="el-icon-search" v-model="search_str"></el-input>
+        <div style="float: right;padding-top:13px;">
+        <Input search enter-button="定位" placeholder="请输入水库名称" v-model="search_str" @on-search="locationByName()"/>
         </div>
 
         <el-menu-item v-if="menus_data.weihu" index="/tablexxfw-yxgk" style="float: right;" @click="navchange9()"><img class='img9' :src="imgflag=='weihuguanli'?require('@/assets/image/u520.svg'):require('@/assets/image/u516.svg')">维护管理</el-menu-item>
@@ -191,17 +191,17 @@
                   <!-- 闸阀状态 -->
                   <BaseBoxZHAFAZHUANGTAI :featrue="zuobiaoxi(item)" :search_FeatrueLayer="search_FeatrueLayer" v-if="item.itype=='zhafazhuangtai'" ></BaseBoxZHAFAZHUANGTAI>
                   <!-- 雨量站 -->
-                  <BaseBoxYUQING :featrue="zuobiaoxi(item)" :search_FeatrueLayer="search_FeatrueLayer" v-if="item.itype=='yuqing'" ></BaseBoxYUQING>
+                  <BaseBoxYUQING :featrue="item" :search_FeatrueLayer="search_FeatrueLayer" v-if="item.itype=='yuqing'" ></BaseBoxYUQING>
                   <!-- 水库水情 -->
-                  <BaseBoxSHUIKUSHUIQING :featrue="zuobiaoxi(item)" :search_FeatrueLayer="search_FeatrueLayer" v-if="item.itype=='shuikushuiqing'" ></BaseBoxSHUIKUSHUIQING>
+                  <BaseBoxSHUIKUSHUIQING :featrue="item" :search_FeatrueLayer="search_FeatrueLayer" v-if="item.itype=='shuikushuiqing'" ></BaseBoxSHUIKUSHUIQING>
                   <!-- 河道水情 -->
                   <BaseBoxHEDAOSHUIQING :featrue="zuobiaoxi(item)" :search_FeatrueLayer="search_FeatrueLayer" v-if="item.itype=='hedaoshuiqing'" ></BaseBoxHEDAOSHUIQING>
                   <!-- 视频站 -->
-                  <BaseBoxSHIPINZHAN :featrue="zuobiaoxi(item)" :search_FeatrueLayer="search_FeatrueLayer" v-if="item.itype=='shipin'" ></BaseBoxSHIPINZHAN>
+                  <BaseBoxSHIPINZHAN :featrue="item" :search_FeatrueLayer="search_FeatrueLayer" v-if="item.itype=='shipin'" ></BaseBoxSHIPINZHAN>
                   <!-- 图像站 -->
                   <BaseBoxTUXIANGZHAN :featrue="zuobiaoxi(item)" :search_FeatrueLayer="search_FeatrueLayer" v-if="item.itype=='tuxiang'" ></BaseBoxTUXIANGZHAN>
                   <!-- 运行工况 -->
-                  <BaseBoxYUNXINGGONGKUANG :featrue="zuobiaoxi(item)" :search_FeatrueLayer="search_FeatrueLayer" v-if="item.itype=='yunxinggongkuang'" ></BaseBoxYUNXINGGONGKUANG>
+                  <BaseBoxYUNXINGGONGKUANG :featrue="item" :search_FeatrueLayer="search_FeatrueLayer" v-if="item.itype=='yunxinggongkuang'" ></BaseBoxYUNXINGGONGKUANG>
                 </el-tab-pane>
               </template>
             </el-tabs>
@@ -219,7 +219,7 @@
       <Drawer
         :title="details.info_right.STNM"
         v-model="details.drawer_show_right"
-        width="600"
+        :width="details.info_right.itype=='shipin'?'1100':'600'"
         :mask="false"
         placement="right"
         @on-close="closeDrawer('right')"
@@ -803,27 +803,25 @@ export default {
       console.log('处理坐标');
       console.log(item);
 
-      item.Rows.forEach((one, index) => {
-        //获取坐标
-        var x=Number(one.geometry.x);
-        var y=Number(one.geometry.y);
+      // item.Rows.forEach((one, index) => {
+      //   //获取坐标
+      //   var x=Number(one.geometry.x);
+      //   var y=Number(one.geometry.y);
 
-        //如果basemap使用ArcGIS的就需要
-        //转换坐标系
-        x = (x / 180.0) * 20037508.34
-        if (y > 85.05112) y = 85.05112;
-        if (y < -85.05112) y = -85.05112;
-        y = (Math.PI / 180.0) * y;
-        var tmp = Math.PI / 4.0 + y / 2.0;
-        y = 20037508.34 * Math.log(Math.tan(tmp)) / Math.PI;
+      //   //如果basemap使用ArcGIS的就需要
+      //   //转换坐标系
+      //   x = (x / 180.0) * 20037508.34
+      //   if (y > 85.05112) y = 85.05112;
+      //   if (y < -85.05112) y = -85.05112;
+      //   y = (Math.PI / 180.0) * y;
+      //   var tmp = Math.PI / 4.0 + y / 2.0;
+      //   y = 20037508.34 * Math.log(Math.tan(tmp)) / Math.PI;
 
-        item.Rows[index].attributes.LGTD = x;
-        item.Rows[index].attributes.LTTD = y;
-        item.Rows[index].geometry.x = x;
-        item.Rows[index].geometry.y = y;
-      });
-
-
+      //   item.Rows[index].attributes.LGTD = x;
+      //   item.Rows[index].attributes.LTTD = y;
+      //   item.Rows[index].geometry.x = x;
+      //   item.Rows[index].geometry.y = y;
+      // });
       return item;
     },
 
@@ -864,6 +862,7 @@ export default {
     // 当选择的监控图层发生变化
     // 重新显示或隐藏部分图层
     OnLayerChange(item) {
+      this.Message_Window.notify_info.list=[];
       var featrueLayers = this.FeatrueLayers;
       featrueLayers.forEach((v, index) => {
         v.show=0;
@@ -897,10 +896,13 @@ export default {
             this.listWindow_show();
           }
         }
+        if(this.Message_Window.notify_info.list.length==0){
+          this.Message_Window_show(false); 
+        }
       } else {
         // 列表窗隐藏
         this.listWindow_hide();
-      }
+      }      
     },
 
     // 加载底图
@@ -1003,6 +1005,21 @@ export default {
             }
 
             console.log("graphicsSHPlayer", graphicsSHPlayer);
+            if(val.name=="界限"){
+               val.name="乡镇";
+            }
+            if(val.name=="界限2"){
+               val.name="村";
+            }
+            if(val.name=="渠道"){
+               val.name="河流";
+            }
+            if(val.name=="渠道名称"){
+               val.name="水系";
+            }
+            if(val.name=="水库"){
+               val.name="界限";
+            }
             this.tu_ceng_list.push({name:val.name, show:val.show, layer:graphicsSHPlayer,icon:val.icon,icon_active:val.icon_active});
             if (val.show==false) {
               graphicsSHPlayer.hide();
@@ -1013,8 +1030,34 @@ export default {
           this.getAll();
       });
     },
-
-
+    //根据水库名称定位
+    locationByName(){
+      if(this.search_str!=""){
+       var Rows = this.FeatrueLayers[1].Rows;
+            //创建textsymbol文本标注
+            if (Rows.length > 0) {
+                //动态读取json数据源结果集
+                for (var i = 0; i < Rows.length; i++) {
+                    var Row = Rows[i];
+                    var name=Row.attributes.STNM;
+                    console.log(name.indexOf(this.search_str)+","+name+","+this.search_str);
+                    if(name.indexOf(this.search_str)>-1){
+                        //获取坐标
+                        var x=Number(Row.geometry.x);
+                        var y=Number(Row.geometry.y);
+                        var point = new esri.geometry.Point(
+                            x,
+                            y,
+                            new esri.SpatialReference({ wkid: 4326 })
+                        );
+                        this.map.centerAndZoom(point,12);
+                        break;
+                    }
+                    
+                }
+            }
+      }
+    },
     //设置地图初始范围
     setMapExtent(options) {
       var initExtent = new esri.geometry.Extent(options);
@@ -1383,7 +1426,21 @@ export default {
 
           var item = new Object();
           item.icon = options.icon;
-          item.text = `${rowinfo.STNM} 出现异常`;
+          item.text = `${rowinfo.STNM}`+" 站点异常";
+          if(options.sb=="shuikushuiqing"){
+            item.text = `${rowinfo.STNM}`+"水位超汛限";
+          }else if(options.sb=="yuqing"){
+            item.text = `${rowinfo.STNM}`+"雨量预警";
+          }else if(options.sb=="yunxinggongkuang"){
+            item.text = `${rowinfo.STNM}`;
+            if(rowinfo.vol<rowinfo.VOLMIN || rowinfo.vol>rowinfo.VOLMAX){
+              item.text+="电压异常";
+            }
+            if(rowinfo.CS=="异常"){
+              item.text+="通讯异常";
+            }
+          }
+          
           item.voice = this.baiduVoice(item.text);
           item.voice_duration = item.text.length * 300;
           item.id = notify_info_list.length;         
@@ -1470,7 +1527,8 @@ export default {
             this.notify_Layer(
               {
                 icon: featureLayerOBJ.icon_warning,
-                type: "warning"
+                type: "warning",
+                sb:featureLayerOBJ.itype
               },
               AbnormalData.features
             );
@@ -1678,8 +1736,26 @@ export default {
       this.graphicsLayer_Selection.LayerObject.clear();
     },
     // 功能开发提示
-    developing_tip() {
-      this.$Message.warning("从功能正在开发中...");
+    developing_tip(info) {
+      if(this.details.info_left.STCD==info.STCD){
+        this.details.drawer_show_left=false;
+        this.details.info_left.itype=null;
+        setTimeout(() => {
+            this.details.info_left.itype="shipin";
+            this.details.drawer_show_left=true;
+          }, 300);
+        
+      }
+      if(this.details.info_right.STCD==info.STCD){
+        this.details.drawer_show_right=false;
+        this.details.info_right.itype=null;
+        this.details.drawer_show_left=false;
+        this.details.info_left.itype=null;
+        setTimeout(() => {
+            this.details.info_right.itype="shipin";
+            this.details.drawer_show_right=true;
+          }, 300);
+      }
     },
     // 添加shp地图到map
     addSHPlayerToMap() {

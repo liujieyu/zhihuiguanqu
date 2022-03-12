@@ -7,10 +7,11 @@
           <i class="el-icon-tickets"></i> 站点信息
         </span>
                 <div class="drawer-profile">
-                    <!-- 导出按钮 -->
+                    <!-- 导出按钮 
                     <Button size="small" class="outPutButton" type="success" @click="$App.developing_tip">
                         <div>导出</div>
                     </Button>
+                    -->
                     <!-- 信息表 -->
                     <div>
                         <!-- 信息内容 -->
@@ -100,9 +101,9 @@
                                             class="dt_vale"
                                             style="border-right: 1px solid #EBEEF5;border-bottom: none"
                                     ></td>
-                                    <td align="right" class="dt_name" style="border-bottom: none">图像按钮：</td>
+                                    <td align="right" class="dt_name" style="border-bottom: none">实时视频：</td>
                                     <td align="center" class="dt_vale" style="border-bottom: none">
-                                        <Button type="info" @click="$App.developing_tip" size="small">查看图片</Button>
+                                        <Button type="info" @click="$App.developing_tip(info)" size="small">视频监控</Button>
                                     </td>
                                 </tr>
                             </table>
@@ -233,18 +234,15 @@
           <Icon type="ios-water-outline" style="font-size:20px"/>降雨数据
         </span>
                 <div class="drawer-profile">
-                    <!-- 导出按钮 -->
+                    <!-- 导出按钮 
                     <Button size="small" class="outPutButton" type="success" @click="$App.developing_tip">
                         <div>导出</div>
                     </Button>
+                    -->
                     <div>
                         <!-- 分割线 -->
                         <div class="divider"></div>
-                        <!-- 选项卡 -->
-                        <Tabs type="card">
-                            <!-- 表格 -->
-                            <TabPane label="表格">
-                                <!-- 查询，导出行 -->
+                        <!-- 查询，导出行 -->
                                 <Row :gutter="16" type="flex" justify="end" align="middle">
                                     <Col span="2">
                                         <span style="letter-spacing:2px">查询</span>
@@ -326,6 +324,10 @@
                                 </Row>
                                 <!-- 分割线 -->
                                 <div class="divider"></div>
+                        <!-- 选项卡 -->
+                        <Tabs type="card">
+                            <!-- 表格 -->
+                            <TabPane label="雨情数据">
                                 <!-- 表格用于展示数据 -->
                                 <div>
                                     <Table
@@ -357,12 +359,12 @@
                                     <div class="divider"></div>
                                 </div>
                             </TabPane>
-                            <TabPane label="图形">
+                            <TabPane label="雨情图">
                                 <!-- 绘图 -->
-                                <div v-show="table.shuiqing.Rows_filter.length > 0" id="shuiqingChart" :style="{width: '500px', height: '350px',margin: 'auto'}"></div>
+                                <div v-show="table.shuiqing.Rows_filter.length > 0" id="shuiqingChart" :style="{width: '540px', height: '400px',margin: 'auto'}"></div>
                                 <div
                                         v-show="table.shuiqing.Rows_filter.length == 0"
-                                        :style="{width: '500px', height: '350px',margin: 'auto', display:'flex', alignItems:'center', justifyContent: 'center'}"
+                                        :style="{width: '540px', height: '400px',margin: 'auto', display:'flex', alignItems:'center', justifyContent: 'center'}"
                                 >暂无数据
                                 </div>
                             </TabPane>
@@ -423,10 +425,11 @@
                         <!-- 分割线 -->
                         <div class="divider"></div>
                     </div>
-                    <!-- 导出按钮 -->
+                    <!-- 导出按钮 
                     <Button size="small" class="outPutButton" type="success" @click="$App.developing_tip">
                         <div>导出</div>
                     </Button>
+                    -->
                     <!-- 查询，导出行 -->
                     <Row :gutter="16" type="flex" justify="center" align="middle">
                         <Col span="2">
@@ -542,31 +545,31 @@
                             value: "hourTable",
                             size: "small",
                             // iconType: "logo-facebook",
-                            label: "小时表"
+                            label: "小时降雨"
                         },
                         {
                             value: "dayTable",
                             size: "small",
                             // iconType: "logo-facebook",
-                            label: "日表"
+                            label: "日降雨"
                         },
                         {
                             value: "tenDaysTable",
                             size: "small",
                             // iconType: "logo-facebook",
-                            label: "旬表"
+                            label: "旬降雨"
                         },
                         {
                             value: "monthTable",
                             size: "small",
                             // iconType: "logo-facebook",
-                            label: "月表"
+                            label: "月降雨"
                         },
                         {
                             value: "yearTable",
                             size: "small",
                             // iconType: "logo-facebook",
-                            label: "年表"
+                            label: "年降雨"
                         }
                     ],
                     // 降雨数据历史表绑定值
@@ -1477,23 +1480,41 @@
                     // 雨情历史统计表数据 转 ehart图形用数据 返回一个对象, 对象里分别装 Y1轴对象 Y2轴对象 X轴对象
                     var echartData = this.$App.transform_YQ_data_into_ehart_data(data, tableType);
 
-
-                    // x轴
-                    // echartData.x.list = data.map((val, index, array) => {
-                    //   // var time = `${index}:00 ~ ${index + 1}:00`;
-                    //   var time = val.DT;
-                    //   return time;
-                    // });
-                    echartData.x.list = echartData.x.list
+                    echartData.x.list = echartData.x.list;
+                    var showname=echartData.chartName;
+                    var mintime=echartData.x.list[0].slice(0, 13),maxtime=echartData.x.list[echartData.x.list.length-1].slice(0, 13);
+                    var now=new Date();
+                    if(mintime.slice(0,4)==maxtime.slice(0,4) && maxtime.slice(0,4)==now.getFullYear()){
+                    for(var i=0;i<echartData.x.list.length;i++){
+                        var time=echartData.x.list[i].substr(5);
+                        echartData.x.list[i]=time;
+                    }
+                    }
+                    switch (echartData.chartName) {
+                        case "小时表":
+                            if(showname!="今日雨量图"){
+                            showname="小时雨量图";
+                            }                  
+                            break;
+                        case "日表":
+                            showname="日雨量图";
+                            break;
+                        case "月表":
+                            showname="月雨量图";
+                            break;
+                        case "旬表":
+                            showname="旬雨量图";
+                            break;
+                        case "年表":
+                            showname="年雨量图";
+                            break;
+                        }                   
                     if (!this.chart.shuiqing) {
                         this.chart.shuiqing = this.$echarts.init(ele);
                     }
                     this.chart.shuiqing.setOption({
                         title: {
-                            text: echartData.chartName
-                        },
-                        grid: {
-                            x: '20%'
+                            text: showname
                         },
                         tooltip: {
                             trigger: "axis"
@@ -1507,7 +1528,6 @@
                             feature: {
                                 mark: {show: true},
                                 magicType: {show: true, type: ["line", "bar"]},
-                                restore: {show: true},
                                 saveAsImage: {show: true}
                             }
                         },
@@ -1518,53 +1538,6 @@
                                 type: "category",
                                 // boundaryGap: false,
                                 data: echartData.x.list,
-                                axisTick: {
-                                    interval: parseInt(echartData.x.list.length / 4)
-                                    //     function (index, val) {
-                                    //     var listLength = echartData.x.list.length
-                                    //     if (listLength >= 4) {
-                                    //
-                                    //         var tick = Math.round(listLength / 4);
-                                    //         // console.log((index + 1) % tick === 0);
-                                    //         // console.log('1575listLength',listLength);
-                                    //         // console.log('1576tick',tick);
-                                    //         if ((index + 1) % tick === 0) {
-                                    //             return true;
-                                    //         } else {
-                                    //             return false;
-                                    //         }
-                                    //     } else {
-                                    //         return true
-                                    //     }
-                                    // },
-                                    ,
-                                    length: 10
-                                },
-                                axisLabel: {
-                                    interval: parseInt(echartData.x.list.length / 4)
-                                    //     function (index, val) {
-                                    //     var listLength = echartData.x.list.length
-                                    //     if (listLength >= 4) {
-                                    //         console.log(index);
-                                    //         var tick = Math.round(listLength / 4);
-                                    //         // console.log('1575listLength',listLength);
-                                    //         // console.log('1576tick',tick);
-                                    //         let a = (index + 1) % tick
-                                    //         console.log(a);
-                                    //         console.log((index + 1) % tick === 0);
-                                    //         if ((index + 1) % tick === 0) {
-                                    //             return true;
-                                    //         } else {
-                                    //             return false;
-                                    //         }
-                                    //     } else {
-                                    //         return true
-                                    //     }
-                                    // },
-                                    ,
-                                    rotate: 10,
-                                    margin: 16
-                                }
                             }
                         ],
                         yAxis: [
@@ -1574,20 +1547,7 @@
                                 axisLabel: {
                                     formatter: "{value} "
                                 },
-                                // scale: true
-                                // max: echartData.y1.max,
-                                // min: echartData.y1.min
                             },
-                            // {
-                            //   name: `${echartData.y2.name}m`,
-                            //   type: "value",
-                            //   axisLabel: {
-                            //     formatter: "{value} "
-                            //   },
-                            //   scale: true
-                            //   // max: echartData.y2.max,
-                            //   // min: echartData.y2.min
-                            // }
                         ],
                         series: [
                             {

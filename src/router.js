@@ -10,7 +10,7 @@ export default new Router({
         {path: '/login', component: () => import('./views/Login.vue')},
         {path: '/view', component: () => import('./views/View.vue')},
         //仪表图
-        { path: '/yixiang-chart',component: () => import('./warm/yixiang-chart/chart.vue') },
+        { path: '/yixiang-chart',component: () => import('./warm/yixiang-chart/xian-chart.vue') },
         { path: '/yixiang-wschart',component: () => import('./warm/yixiang-chart/wschart.vue') },
         { path: '/yixiang-kschart',component: () => import('./warm/yixiang-chart/kschart.vue') },
         { path: '/hometow', component: () => import('./HomeTow.vue')},
