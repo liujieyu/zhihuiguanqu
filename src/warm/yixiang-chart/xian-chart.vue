@@ -762,28 +762,6 @@ export default {
     return this.s4() + this.s4() + '-' + this.s4() + '-' + this.s4() + '-' +
            this.s4() + '-' + this.s4() + this.s4() + this.s4();
   },
-  //显示视频
-  showvideo(puid){
-      if (!!window.ActiveXObject || "ActiveXObject" in window){
-         try
-          {
-            var obj = new ActiveXObject("DPSDK_OCX.DPSDK_OCXCtrl.1");
-          }
-          catch(e)
-          {
-            this.$message({message:'控件未注册，请先注册控件！',type:'warning'});
-            var url = '/file/downloadocx';
-            window.location.href = url;
-            return;
-          }
-      }else{
-        this.$message({message:'请确保在IE浏览器下使用视频监控功能！',type:'warning'});
-        return;
-      }
-      this.videosign=true;
-      this.videosrc="webdemoks/index.html?"+puid;
-      
-    },
   hidediv(){
       this.videosign=false;
     },
