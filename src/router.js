@@ -328,5 +328,5 @@ export default new Router({
         {path: '/tableqxcd-xxk', component: () => import('./table/table-qxcd/xxk-qxcd.vue')},
         ],   
         },    
-    ]
+    ],
 })

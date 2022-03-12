@@ -301,13 +301,13 @@ export default {
             value: "RZ",
             size: "small",
             // iconType: "logo-facebook",
-            title: "水位值"
+            title: "水位"
           },
           {
             value: "w",
             size: "small",
             // iconType: "logo-facebook",
-            title: "库容值"
+            title: "库容"
           },
         ],
         model_adress: null,
@@ -596,7 +596,6 @@ export default {
           "historyTable",
           true
         ); // 渠道水情历史统计表数据 转 ehart图形用数据 返回一个对象, 对象里分别装 Y1轴对象 Y2轴对象 X轴对象
-        debugger;
         console.log(echartData);
         console.log(echartData.x.list);
         var x_List = echartData.x.list.map((val, index, array) => {
@@ -935,7 +934,6 @@ export default {
         textGraphicsLayer.textType = textType;
         this.featrue.map.addLayer(textGraphicsLayer); // 给地图添加新增的标注文本图层
         var Rows = this.featrue.Rows;
-        debugger;
         //创建textsymbol文本标注
         if (Rows.length > 0) {
           //动态读取json数据源结果集

@@ -304,37 +304,6 @@ export default {
       //
       activeName: "tuxiang",
       siteInfo: {},
-      //   多选框对象
-      checkBox: {
-        shuiqingList: [
-          {
-            value: "historyTable",
-            size: "large",
-            // iconType: "logo-facebook",
-            title: "历史表"
-          },
-          {
-            value: "hourTable",
-            size: "large",
-            // iconType: "logo-facebook",
-            title: "小时表"
-          },
-          {
-            value: "dayTable",
-            size: "large",
-            // iconType: "logo-facebook",
-            title: "日表"
-          },
-          {
-            value: "nightTable",
-            size: "large",
-            // iconType: "logo-facebook",
-            title: "月表"
-          }
-        ],
-        // 水情多选框绑定值
-        shuiqing_social: ["historyTable", "hourTable", "dayTable", "nightTable"]
-      },
       //   选择框对象
       select: {
         searchList: [
@@ -415,18 +384,7 @@ export default {
           // 总条数
           total: true,
           Rows: [
-            // {
-            //   url: `/guanqu/gis/pic_content?id=${info.STCD}`
-            // },
-            // {
-            //   url: `/guanqu/gis/pic_content?id=${info.STCD}`
-            // },
-            // {
-            //   url: `/guanqu/gis/pic_content?id=${info.STCD}`
-            // },
-            // {
-            //   url: `/guanqu/gis/pic_content?id=${info.STCD}`
-            // },
+
           ]
         }
       },

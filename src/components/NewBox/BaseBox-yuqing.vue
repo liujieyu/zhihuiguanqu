@@ -26,18 +26,21 @@
                         :show-overflow-tooltip="true"
                 ></el-table-column>
                 <!-- 自定义 -->
-                <!-- <el-table-column align="center" label="水势" :width="80">
+                <el-table-column align="center" label="降雨(mm)" width="110" sortable="custom">
                   <template slot-scope="scope">
                     <div>
-                      <strong
-                        :style="{
-                      color: scope.row.WPTN.status == 4? 'red' : scope.row.WPTN.status == 5?'blue' : 'black',
-                      fontSize: scope.row.WPTN.status == 6?'12px' : '17px'
-                    }"
-                      >{{ scope.row.WPTN.symbol }}</strong>
+                      <font v-if="colorshow"
+                        :style="{color:scope.row.color}"
+                      >{{ scope.row.p }}</font>
+                      <font v-if="!colorshow" >{{ scope.row.p }}</font>
                     </div>
                   </template>
-                </el-table-column>-->
+                </el-table-column>
+                <el-table-column align="center" label="行政区划" width="179" sortable="custom">
+                  <template slot-scope="scope">
+                    {{ scope.row.adnm }}
+                  </template>
+                </el-table-column>
             </el-table>
             <!-- 分割线 -->
             <!-- <Divider/> -->
@@ -91,6 +94,8 @@
                 },
                 // 地图对象
                 map: null,
+                //雨情颜色显示
+                colorshow:false,
                 // 该图层对象
                 JsonFlayer: null,
                 // 文字标注图层
@@ -187,7 +192,7 @@
                         {
                             title: " ",
                             key: "index",
-                            width: 45,
+                            width: 50,
                             align: "center",
                             fixed: "left"
                         },
@@ -198,19 +203,6 @@
                             align: "center",
                             fixed: "left",
                             sortable: "custom"
-                        },
-                        {
-                            title: "降雨(mm)",
-                            key: "p",
-                            width: 110,
-                            align: "center",
-                            sortable: "custom"
-                        },
-                        {
-                            title: "行政区划",
-                            key: "adnm",
-                            width: 180,
-                            align: "center"
                         },
                     ],
                     // 表体内容
@@ -403,6 +395,25 @@
                     val_clone.TM = this.$FilterData.dateFilter(val_clone.TM);
                     // 时段降水量过滤
                     val_clone.DRP = this.Float_Filter(val_clone.DRP, 1);
+                    //设置雨量颜色
+                    var pval=parseInt(val_clone.p);
+                    if(this.colorshow){
+                                if(pval>=0 && pval<10){
+                                  val_clone.color="#29C401";
+                                }else if(pval>=10 && pval<25){
+                                  val_clone.color="#108738";
+                                }else if(pval>=25 && pval<50){
+                                  val_clone.color="#5AB3FF";
+                                }else if(pval>=50 && pval<100){
+                                  val_clone.color="#0171DF";
+                                }else if(pval>=100 && pval<250){
+                                  val_clone.color="#FF8401";
+                                }else{
+                                  val_clone.color="#FF0202";
+                                }                       
+                    }else{
+                        val_clone.color="#717377";
+                    }
                     // 流量过滤
                     // val_clone.Q = this.Z_Filter(val_clone.Q, 3);
                     // // 水势过滤
@@ -412,6 +423,11 @@
             },
             // 选取一部分从父组件传来的数据作为表格的数据
             getTableDataFormParent() {
+                if(this.featrue.SUMP!=null && typeof(this.featrue.SUMP)!="undefined" && this.featrue.SUMP!="全部"){
+                    this.colorshow=true;
+                }else{
+                    this.colorshow=false;
+                }
                 var tableData = this.featrue.Rows.map(val => {
                     return val.rowinfo;
                 });

@@ -275,7 +275,7 @@ export default {
             size: "small",
             span: 6,
             // iconType: "logo-facebook",
-            title: "电压值"
+            title: "电压"
           },
           {
             value: "CS",

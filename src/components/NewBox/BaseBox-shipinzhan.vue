@@ -1,89 +1,5 @@
 <template>
   <div class="baseBoxContent">
-    <!-- 折叠面板 -->
-    <Collapse active-key="1" style="display:none;">
-      <Panel key="1">
-        查询
-        <div slot="content">
-          <div class="form">
-
-          <!-- 选择器, 按钮 -->
-          <Row class="select-group" :gutter="16">
-           <Col span="11">
-              <!-- 地址级联选择器 -->
-                <el-cascader
-                  clearable
-                  filterable
-                  size="mini"
-                  :options="form.adressList"
-                  v-model="form.model_adress"
-                  placeholder="请选择地址"
-                  @change="search"
-                  change-on-select
-                ></el-cascader>
-           </Col>
-            <Col span="11">
-              <!-- 渠道级联选择器 -->
-                <el-cascader
-                  clearable
-                  filterable
-                  size="mini"
-                  placeholder="请选择渠道"
-                  :options="form.qudaoList"
-                  v-model="form.model_qudao"
-                  @change="search"
-                  change-on-select
-                ></el-cascader>
-            </Col>
-            <!-- <Col span="6">
-              查询按钮
-            <Button type="info" size="small" @click="search">查询</Button>
-            </Col> -->
-          </Row>
-          <!-- 分割线 -->
-          <div class="divider"></div>
-          <Row :gutter="16">
-              <Col span="22">
-                <Input  search enter-button @on-search="search" placeholder="请输入要搜索的站名" size="small" v-model.trim="form.search_str">
-                  <!-- <Icon type="ios-search" slot="suffix"/> -->
-                </Input>
-              </Col>
-              <!-- <Col span="5">
-                查询按钮
-                <Button type="info" size="small" @click="search">查询</Button>
-              </Col> -->
-            </Row>
-            <!-- 分割线 -->
-            <div class="divider"></div>
-
-          <!-- 多选框 -->
-          <Row :gutter="16" type="flex" justify="center" align="middle">
-              <Col span="4" style="text-align:center;">
-                <span style="letter-spacing:5px">标记:</span>
-              </Col>
-              <Col span="20">
-                <CheckboxGroup
-                  @on-change="checkboxGroup_onChange"
-                  v-model="form.social"
-                  class="checkBox-group"
-                  style="height:22px"
-                >
-                  <Checkbox
-                    v-for="item in form.checkBoxList"
-                    :label="item.value"
-                    :size="item.size"
-                    class="checkBoxItem"
-                  >
-                    <span>{{ item.title }}</span>
-                  </Checkbox>
-                </CheckboxGroup>
-              </Col>
-            </Row>
-        </div>
-        </div>
-      </Panel>
-    </Collapse>
-    <!-- 表单, 用于搜索查询 -->
 
     <!-- 表格, 用于展示数据 -->
     <div>
@@ -208,8 +124,8 @@ export default {
           },
           {
             title: "地址",
-            key: "STLC",
-
+            key: "adnm",
+            sortable: "custom",
             align: "center"
           }
         ],
@@ -234,6 +150,7 @@ export default {
       var evt = new Object();
       evt.graphic = new Object();
       evt.graphic.attributes = item;
+      evt.graphic.attributes.rowinfo = JSON.parse(JSON.stringify(item));
       var v = new Object();
       v.itype = "shipin";
 

@@ -287,7 +287,7 @@ var FilterMethods =
             }
             return parseFloat(min);
         },
-        // 按层级截取行政区划码长度
+        // 按层级截取行政区划码长度 县 乡镇 村
         ADDVCD_Array_Filter(ADDVCD_Array) {
             var length = ADDVCD_Array.length;
             var lastADDVCD = ADDVCD_Array[length - 1];
@@ -300,6 +300,21 @@ var FilterMethods =
                     likeADDVCD = lastADDVCD.substring(0, 9);
                     break;
                 case 3:
+                    likeADDVCD = lastADDVCD.substring(0, 12);
+                    break;
+            }
+            return likeADDVCD;
+        },
+        // 按层级截取行政区划码长度   乡镇 村
+        SUB_ADDVCD_Array_Filter(ADDVCD_Array) {
+            var length = ADDVCD_Array.length;
+            var lastADDVCD = ADDVCD_Array[length - 1];
+            var likeADDVCD;
+            switch (length) {
+                case 1:
+                    likeADDVCD = lastADDVCD.substring(0, 9);
+                    break;
+                case 2:
                     likeADDVCD = lastADDVCD.substring(0, 12);
                     break;
             }

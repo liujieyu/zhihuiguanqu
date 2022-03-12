@@ -1,223 +1,7 @@
 <template>
   <div v-loading="boxLoading">
+    <Button type="info" @click="$App.developing_tip(info)" size="small" style="position:absolute;top:25px;right:21px;z-index:10;">视频监控</Button>
     <el-tabs type="border-card" v-model="activeName" @tab-click>
-      <!-- 站点信息 -->
-      <el-tab-pane name="zhandianxinxi">
-        <span slot="label">
-          <i class="el-icon-tickets"></i> 站点信息
-        </span>
-        <div class="drawer-profile">
-          <!-- 导出按钮 
-          <Button size="small" class="outPutButton" type="success" @click="$App.developing_tip">
-            <div>导出</div>
-          </Button>
-          -->
-          <!-- 信息表 -->
-          <div>
-            <!-- 信息内容 -->
-            <div>
-              <!-- table start -->
-              <table
-                style="border: 1px solid #EBEEF5"
-                border
-                cellspacing="0"
-                width="100%"
-                class="site_detail"
-              >
-              <tr>
-                <td colspan="4" style="background-color:#DEDFE0;padding:2px;">
-                  <el-tag type="info" effect="dark" size="small">基本信息</el-tag>
-                </td>
-              </tr>
-                <tr>
-                  <td align="right" class="dt_name">站名：</td>
-                  <td
-                    align="center"
-                    class="dt_vale"
-                    style="border-right: 1px solid #EBEEF5"
-                  >{{ siteInfo.STNM || "&nbsp;" }}</td>
-                  <td align="right" class="dt_name">国家定类：</td>
-                  <td
-                    align="center"
-                    class="dt_vale"
-                  >{{ this.STTP_Filter(siteInfo.STTP) || "&nbsp;" }}</td>
-                </tr>
-                <tr>
-                  <td align="right" class="dt_name">等级：</td>
-                  <td
-                    align="center"
-                    class="dt_vale"
-                    style="border-right: 1px solid #EBEEF5"
-                  >{{ this.$FilterData.STGR_Filter(siteInfo.STGR) || "&nbsp;" }}</td>
-                  <td align="right" class="dt_name">行政区划：</td>
-                  <td align="center" class="dt_vale">{{ siteInfo.AD_NM || "&nbsp;" }}</td>
-                </tr>
-                <tr>
-                  <td align="right" class="dt_name">经度：</td>
-                  <td
-                    align="center"
-                    class="dt_vale"
-                    style="border-right: 1px solid #EBEEF5"
-                  >{{ siteInfo.LGTD || "&nbsp;" }}</td>
-                  <td align="right" class="dt_name">纬度：</td>
-                  <td align="center" class="dt_vale">{{ siteInfo.LTTD || "&nbsp;" }}</td>
-                </tr>
-                <tr>
-                  <td align="right" class="dt_name">站址：</td>
-                  <td
-                    align="center"
-                    class="dt_vale"
-                    style="border-right: 1px solid #EBEEF5"
-                  >{{ siteInfo.STLC || "&nbsp;" }}</td>
-                  <td align="right" class="dt_name">水系：</td>
-                  <td align="center" class="dt_vale">{{ siteInfo.HNNM || "&nbsp;" }}</td>
-                </tr>
-                <tr>
-                  <td align="right" class="dt_name">流域：</td>
-                  <td
-                    align="center"
-                    class="dt_vale"
-                    style="border-right: 1px solid #EBEEF5"
-                  >{{ siteInfo.CTCD || "&nbsp;" }}</td>
-                  <td align="right" class="dt_name">河流：</td>
-                  <td align="center" class="dt_vale">{{ siteInfo.RVCD || "&nbsp;" }}</td>
-                </tr>
-                <tr>
-                  <td align="right" class="dt_name">建站日期：</td>
-                  <td
-                    align="center"
-                    class="dt_vale"
-                    style="border-right: 1px solid #EBEEF5"
-                  >{{ siteInfo.ESSTDT || "&nbsp;" }}</td>
-                  <td align="right" class="dt_name">建设单位：</td>
-                  <td align="center" class="dt_vale">{{ siteInfo.DLOG || "&nbsp;" }}</td>
-                </tr>
-                <tr>
-                  <td align="right" class="dt_name" style="border-bottom: none">录入时间：</td>
-                  <td
-                    align="center"
-                    class="dt_vale"
-                    style="border-right: 1px solid #EBEEF5;border-bottom: none"
-                  ></td>
-                  <td align="right" class="dt_name" style="border-bottom: none">实时视频：</td>
-                  <td align="center" class="dt_vale" style="border-bottom: none">
-                    <Button type="info" @click="$App.developing_tip(info)" size="small">视频监控</Button>
-                  </td>
-                </tr>
-              </table>
-               <table
-                style="border: 1px solid #EBEEF5"
-                border
-                cellspacing="0"
-                width="100%"
-                class="site_detail"
-              >              
-                  <tr>
-                <td colspan="4" style="background-color:#DEDFE0;padding:2px;">
-                  <el-tag type="info" effect="dark" size="small">特征水位</el-tag>
-                </td>
-                  </tr>
-                  <tr>
-                  <td align="right" class="dt_name">4-6月汛限水位：</td>
-                  <td
-                    align="center"
-                    class="dt_vale"
-                    style="border-right: 1px solid #EBEEF5"
-                  >{{ `${$FilterData.Float_Filter(yujingdata.FWL)} m`  || "&nbsp;" }}</td>
-                  <td align="right" class="dt_name">7-9月汛限水位：</td>
-                  <td
-                    align="center"
-                    class="dt_vale"
-                  >{{ `${$FilterData.Float_Filter(yujingdata.FWL79)} m` || "&nbsp;" }}</td>
-                </tr>
-                <tr>
-                  <td align="right" class="dt_name">死水位：</td>
-                  <td
-                    align="center"
-                    class="dt_vale"
-                    style="border-right: 1px solid #EBEEF5"
-                  >{{ `2514.00m` || "&nbsp;" }}</td>
-                  <td align="right" class="dt_name">校核水位：</td>
-                  <td align="center" class="dt_vale">{{ `2524.12m` || "&nbsp;" }}</td>
-                </tr>
-                <tr>
-                  <td align="right" class="dt_name">正常蓄水位：</td>
-                  <td
-                    align="center"
-                    class="dt_vale"
-                    style="border-right: 1px solid #EBEEF5"
-                  >{{ `2520.20m` || "&nbsp;" }}</td>
-                  <td align="right" class="dt_name"></td>
-                  <td align="center" class="dt_vale"></td>
-                </tr>
-               </table>
-               <table
-                style="border: 1px solid #EBEEF5"
-                border
-                cellspacing="0"
-                width="100%"
-                class="site_detail"
-              >
-              <tr>
-                <td colspan="4" style="background-color:#DEDFE0;padding:2px;">
-                  <el-tag  type="info" effect="dark" size="small">实时降雨</el-tag>
-                </td>
-                  </tr>
-                <tr>
-                  <td align="right" class="dt_name">预警等级：</td>
-                  <td
-                    align="center"
-                    class="dt_vale"
-                    style="border-right: 1px solid #EBEEF5"
-                  ><span :style="{'color':jiangyu_warm.COLOR}">{{ jiangyu_warm.LEVEL || "&nbsp;" }}</span></td>
-                  <td align="right" class="dt_name">1小时降雨：</td>
-                  <td
-                    align="center"
-                    class="dt_vale"
-                  ><span :style="{
-                        color: jiangyu_warm.SIGN1 == 3?'red' :jiangyu_warm.SIGN1 == 2?'orange' : jiangyu_warm.SIGN1 == 1?'yellow' :'#606266',
-                        }">{{ jiangyu_warm.RAIN1 || "&nbsp;" }}</span></td>
-                </tr>
-                <tr>
-                  <td align="right" class="dt_name">3小时降雨：</td>
-                  <td
-                    align="center"
-                    class="dt_vale"
-                    style="border-right: 1px solid #EBEEF5"
-                  ><span :style="{
-                        color: jiangyu_warm.SIGN3 == 3?'red' :jiangyu_warm.SIGN3 == 2?'orange' : jiangyu_warm.SIGN3 == 1?'yellow' :'#606266',
-                        }">{{ jiangyu_warm.RAIN3 || "&nbsp;" }}</span></td>
-                  <td align="right" class="dt_name">6小时降雨：</td>
-                  <td align="center" class="dt_vale"><span :style="{
-                        color: jiangyu_warm.SIGN6 == 3?'red' :jiangyu_warm.SIGN6 == 2?'orange' : jiangyu_warm.SIGN6 == 1?'yellow' :'#606266',
-                        }">{{ jiangyu_warm.RAIN6 || "&nbsp;" }}</span></td>
-                </tr>
-                <tr>
-                  <td align="right" class="dt_name">12小时降雨：</td>
-                  <td
-                    align="center"
-                    class="dt_vale"
-                    style="border-right: 1px solid #EBEEF5"
-                  ><span :style="{
-                        color: jiangyu_warm.SIGN12 == 3?'red' :jiangyu_warm.SIGN12 == 2?'orange' : jiangyu_warm.SIGN12 == 1?'yellow' :'#606266',
-                        }">{{ jiangyu_warm.RAIN12 || "&nbsp;" }}</span></td>
-                  <td align="right" class="dt_name">24小时降雨：</td>
-                  <td align="center" class="dt_vale"><span :style="{
-                        color: jiangyu_warm.SIGN24 == 3?'red' :jiangyu_warm.SIGN24 == 2?'orange' : jiangyu_warm.SIGN24 == 1?'yellow' :'#606266',
-                        }">{{ jiangyu_warm.RAIN24 || "&nbsp;" }}</span></td>
-                </tr>
-               </table>
-            </div>
-            <!-- 分割线 -->
-            <div class="divider"></div>
-            <Row>
-              <el-col class="dt_remark">
-                <Col span="24">备注：{{ siteInfo.COMMENTS || "&nbsp;" }}</Col>
-              </el-col>
-            </Row>
-          </div>
-        </div>
-      </el-tab-pane>
       <!-- 水位数据 -->
       <el-tab-pane name="shuiqingshuju">
         <span slot="label">
@@ -665,6 +449,206 @@
                 </Tabs>
                 </div>
             </el-tab-pane>
+            <!-- 站点信息 -->
+      <el-tab-pane name="zhandianxinxi">
+        <span slot="label">
+          <i class="el-icon-tickets"></i> 站点信息
+        </span>
+        <div class="drawer-profile">         
+          <!-- 信息表 -->
+          <div>
+            <!-- 信息内容 -->
+            <div>
+              <!-- table start -->
+              <table
+                style="border: 1px solid #EBEEF5"
+                border
+                cellspacing="0"
+                width="100%"
+                class="site_detail"
+              >
+              <tr>
+                <td colspan="4" style="background-color:#DEDFE0;padding:2px;">
+                  <el-tag type="info" effect="dark" size="small">基本信息</el-tag>
+                </td>
+              </tr>
+                <tr>
+                  <td align="right" class="dt_name">站名：</td>
+                  <td
+                    align="center"
+                    class="dt_vale"
+                    style="border-right: 1px solid #EBEEF5"
+                  >{{ siteInfo.STNM || "&nbsp;" }}</td>
+                  <td align="right" class="dt_name">国家定类：</td>
+                  <td
+                    align="center"
+                    class="dt_vale"
+                  >{{ this.STTP_Filter(siteInfo.STTP) || "&nbsp;" }}</td>
+                </tr>
+                <tr>
+                  <td align="right" class="dt_name">等级：</td>
+                  <td
+                    align="center"
+                    class="dt_vale"
+                    style="border-right: 1px solid #EBEEF5"
+                  >{{ this.$FilterData.STGR_Filter(siteInfo.STGR) || "&nbsp;" }}</td>
+                  <td align="right" class="dt_name">行政区划：</td>
+                  <td align="center" class="dt_vale">{{ siteInfo.AD_NM || "&nbsp;" }}</td>
+                </tr>
+                <tr>
+                  <td align="right" class="dt_name">经度：</td>
+                  <td
+                    align="center"
+                    class="dt_vale"
+                    style="border-right: 1px solid #EBEEF5"
+                  >{{ siteInfo.LGTD || "&nbsp;" }}</td>
+                  <td align="right" class="dt_name">纬度：</td>
+                  <td align="center" class="dt_vale">{{ siteInfo.LTTD || "&nbsp;" }}</td>
+                </tr>
+                <tr>
+                  <td align="right" class="dt_name">站址：</td>
+                  <td
+                    align="center"
+                    class="dt_vale"
+                    style="border-right: 1px solid #EBEEF5"
+                  >{{ siteInfo.STLC || "&nbsp;" }}</td>
+                  <td align="right" class="dt_name">水系：</td>
+                  <td align="center" class="dt_vale">{{ siteInfo.HNNM || "&nbsp;" }}</td>
+                </tr>
+                <tr>
+                  <td align="right" class="dt_name">流域：</td>
+                  <td
+                    align="center"
+                    class="dt_vale"
+                    style="border-right: 1px solid #EBEEF5"
+                  >{{ siteInfo.CTCD || "&nbsp;" }}</td>
+                  <td align="right" class="dt_name">河流：</td>
+                  <td align="center" class="dt_vale">{{ siteInfo.RVCD || "&nbsp;" }}</td>
+                </tr>
+                <tr>
+                  <td align="right" class="dt_name">建站日期：</td>
+                  <td
+                    align="center"
+                    class="dt_vale"
+                    style="border-right: 1px solid #EBEEF5"
+                  >{{ siteInfo.ESSTDT || "&nbsp;" }}</td>
+                  <td align="right" class="dt_name">建设单位：</td>
+                  <td align="center" class="dt_vale">{{ siteInfo.DLOG || "&nbsp;" }}</td>
+                </tr>
+              </table>
+               <table
+                style="border: 1px solid #EBEEF5"
+                border
+                cellspacing="0"
+                width="100%"
+                class="site_detail"
+              >              
+                  <tr>
+                <td colspan="4" style="background-color:#DEDFE0;padding:2px;">
+                  <el-tag type="info" effect="dark" size="small">特征水位</el-tag>
+                </td>
+                  </tr>
+                  <tr>
+                  <td align="right" class="dt_name">4-6月汛限水位：</td>
+                  <td
+                    align="center"
+                    class="dt_vale"
+                    style="border-right: 1px solid #EBEEF5"
+                  >{{ `${$FilterData.Float_Filter(yujingdata.FWL)} m`  || "&nbsp;" }}</td>
+                  <td align="right" class="dt_name">7-9月汛限水位：</td>
+                  <td
+                    align="center"
+                    class="dt_vale"
+                  >{{ `${$FilterData.Float_Filter(yujingdata.FWL79)} m` || "&nbsp;" }}</td>
+                </tr>
+                <tr>
+                  <td align="right" class="dt_name">死水位：</td>
+                  <td
+                    align="center"
+                    class="dt_vale"
+                    style="border-right: 1px solid #EBEEF5"
+                  >{{ `2514.00m` || "&nbsp;" }}</td>
+                  <td align="right" class="dt_name">校核水位：</td>
+                  <td align="center" class="dt_vale">{{ `2524.12m` || "&nbsp;" }}</td>
+                </tr>
+                <tr>
+                  <td align="right" class="dt_name">正常蓄水位：</td>
+                  <td
+                    align="center"
+                    class="dt_vale"
+                    style="border-right: 1px solid #EBEEF5"
+                  >{{ `2520.20m` || "&nbsp;" }}</td>
+                  <td align="right" class="dt_name"></td>
+                  <td align="center" class="dt_vale"></td>
+                </tr>
+               </table>
+               <table
+                style="border: 1px solid #EBEEF5"
+                border
+                cellspacing="0"
+                width="100%"
+                class="site_detail"
+              >
+              <tr>
+                <td colspan="4" style="background-color:#DEDFE0;padding:2px;">
+                  <el-tag  type="info" effect="dark" size="small">实时降雨</el-tag>
+                </td>
+                  </tr>
+                <tr>
+                  <td align="right" class="dt_name">预警等级：</td>
+                  <td
+                    align="center"
+                    class="dt_vale"
+                    style="border-right: 1px solid #EBEEF5"
+                  ><span :style="{'color':jiangyu_warm.COLOR}">{{ jiangyu_warm.LEVEL || "&nbsp;" }}</span></td>
+                  <td align="right" class="dt_name">1小时降雨：</td>
+                  <td
+                    align="center"
+                    class="dt_vale"
+                  ><span :style="{
+                        color: jiangyu_warm.SIGN1 == 3?'red' :jiangyu_warm.SIGN1 == 2?'orange' : jiangyu_warm.SIGN1 == 1?'yellow' :'#606266',
+                        }">{{ jiangyu_warm.RAIN1 || "&nbsp;" }}</span></td>
+                </tr>
+                <tr>
+                  <td align="right" class="dt_name">3小时降雨：</td>
+                  <td
+                    align="center"
+                    class="dt_vale"
+                    style="border-right: 1px solid #EBEEF5"
+                  ><span :style="{
+                        color: jiangyu_warm.SIGN3 == 3?'red' :jiangyu_warm.SIGN3 == 2?'orange' : jiangyu_warm.SIGN3 == 1?'yellow' :'#606266',
+                        }">{{ jiangyu_warm.RAIN3 || "&nbsp;" }}</span></td>
+                  <td align="right" class="dt_name">6小时降雨：</td>
+                  <td align="center" class="dt_vale"><span :style="{
+                        color: jiangyu_warm.SIGN6 == 3?'red' :jiangyu_warm.SIGN6 == 2?'orange' : jiangyu_warm.SIGN6 == 1?'yellow' :'#606266',
+                        }">{{ jiangyu_warm.RAIN6 || "&nbsp;" }}</span></td>
+                </tr>
+                <tr>
+                  <td align="right" class="dt_name">12小时降雨：</td>
+                  <td
+                    align="center"
+                    class="dt_vale"
+                    style="border-right: 1px solid #EBEEF5"
+                  ><span :style="{
+                        color: jiangyu_warm.SIGN12 == 3?'red' :jiangyu_warm.SIGN12 == 2?'orange' : jiangyu_warm.SIGN12 == 1?'yellow' :'#606266',
+                        }">{{ jiangyu_warm.RAIN12 || "&nbsp;" }}</span></td>
+                  <td align="right" class="dt_name">24小时降雨：</td>
+                  <td align="center" class="dt_vale"><span :style="{
+                        color: jiangyu_warm.SIGN24 == 3?'red' :jiangyu_warm.SIGN24 == 2?'orange' : jiangyu_warm.SIGN24 == 1?'yellow' :'#606266',
+                        }">{{ jiangyu_warm.RAIN24 || "&nbsp;" }}</span></td>
+                </tr>
+               </table>
+            </div>
+            <!-- 分割线 -->
+            <div class="divider"></div>
+            <Row>
+              <el-col class="dt_remark">
+                <Col span="24">备注：{{ siteInfo.COMMENTS || "&nbsp;" }}</Col>
+              </el-col>
+            </Row>
+          </div>
+        </div>
+      </el-tab-pane>
     </el-tabs>
 
     <!-- 导出提示对话框 -->
@@ -3611,7 +3595,7 @@ export default {
 @import "./common/common.less";
 .el-tabs{
   .el-tabs__item{
-    padding:0 17px;
+    padding:0 9px;
   }
 }
 .site_detail {

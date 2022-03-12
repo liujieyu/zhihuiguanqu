@@ -2066,7 +2066,8 @@ export default {
     loadkrlineBydate(){
       var obj={
         begintime:this.table.guanxiquxian.date[0],
-        endtime:this.table.guanxiquxian.date[1]
+        endtime:this.table.guanxiquxian.date[1],
+        sitename:this.siteInfo.STCD
       };
        this.axios.get('/fieldinfo/swkrdatabydate',{params:obj}).then(res => {
             var _data = res.data; // 数据深拷贝

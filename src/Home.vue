@@ -16,6 +16,7 @@
         @select="handleSelect"
       >
         <el-menu-item index="1" :disabled="true" style="opacity: 1;">
+          <img src="/static/demo-hunanguanqu/biaozhi.png" style="height: 48px; margin-right: 5px;opacity: 0.85;"/>
           <span style="font-size: 20px; color: #fff;font-weight: 200;">宁乡市小型水库监测预警平台</span>
         </el-menu-item>
         <el-menu-item index="1" :disabled="true" style="opacity: 1;">
@@ -103,6 +104,10 @@
                 <img :src="ditu_types=='topo'?require('@/assets/image/u69.svg'):require('@/assets/image/u65.svg')" style="position: absolute;left: 15.5px;top: 5px;width: 21px;height: 21px;">
                 <span>地形</span>
               </div>
+              
+              <Badge :count="yjcount" overflow-count="999" style="margin-top:3px;margin-left:3px;">
+                <a href="javascript:void(0)" class="demo-badge" @click="showXianyu"><Icon type="md-pulse" size="28"/><br/>情势</a>
+            </Badge>              
         </div>
       </div>
       <!-- 标注 -->
@@ -133,21 +138,30 @@
           <span style="position: absolute;">区域定位(存在小型水库的行政区划)</span>
           <el-button style="position: absolute;right: 10px;" size="mini" round @click="qydw">{{!areashow?'展开':'收起'}}</el-button>
         </div>
-          <div v-show="areashow">
-            <div style="display: flex;flex-wrap:wrap;overflow: hidden;">
-              <div class="jiance-box" :class="{'check-border':item.show}" style="height:20px;width:64px;" v-for="(item, index) in area_list" @click="area_switch(item)">
-                    <span style="width:64px;">{{item.AD_NM}}</span>
-              </div>
-            </div>
-            <div v-show="countryshow">
-              <el-divider><i class="el-icon-more"></i><span style="color:#515A6E;">下辖社区/村</span><i class="el-icon-more"></i></el-divider>
-              <div style="display: flex;flex-wrap:wrap;">
-                <div class="jiance-box" :class="{'country-border':item.show}" :style="{'height':'20px','width':(item.width+8)+'px'}" v-for="(item, index) in country_list" @click="country_switch(item)">
-                      <span :style="{'width':(item.width+8)+'px'}">{{item.AD_NM}}</span>
-                </div>
-              </div>
-            </div>
+          <el-row type="flex" justify>
+          <div v-show="areashow" style="width:50%;height:245px;border:1px solid #E4E7ED; border-radius: 5px 0px 0px 5px;">
+            <el-scrollbar style="height:100%;" wrap-style="overflow-x:hidden;" ref="myScrollbar">
+              <table class="areatable" cellspacing="0">              
+                <tr v-for="(item, index) in area_list">
+                  <td class="letter" align="center"><h v-show="item.showa" :id="item.FIRST+'letter'">{{ item.FIRST }}</h></td>
+                  <td class="areaname" :id="index+'name'" @click="area_switch(item,index)"><span style="float:left;">{{ item.AD_NM }}</span><span style="float:right;"><i class="el-icon-arrow-right"></i></span></td>
+                  <td></td>
+                </tr>
+              </table>
+            </el-scrollbar>
           </div>
+          <div v-show="areashow" style="width:50%;height:245px;border-right:1px solid #E4E7ED;border-top:1px solid #E4E7ED;border-bottom:1px solid #E4E7ED; border-radius: 0px 5px 5px 0px;">
+              <el-scrollbar style="height:100%;" wrap-style="overflow-x:hidden;" ref="myScrollbar">
+              <table class="areatable" cellspacing="0">              
+                <tr v-for="(item, index) in country_list">
+                  <td class="letter" align="center"><h v-show="item.showa">{{ item.FIRST }}</h></td>
+                  <td class="areaname" :id="item.SORT+index"  @click="country_switch(item,index)"><span style="float:left;">{{ item.AD_NM }}</span></td>
+                  <td></td>
+                </tr>
+              </table>
+            </el-scrollbar>
+          </div>
+          </el-row>
       </div>
       <!-- 基础 -->
       <div style="border-bottom: 1px solid rgb(242,242,242);padding:5px;">
@@ -187,8 +201,10 @@
                             <Col span="12">
                                 <!-- 地址级联选择器 -->
                                 <el-cascader
+                                  :props="{ multiple: true }"
                                   clearable
                                   filterable
+                                  collapse-tags
                                   size="mini"
                                   placeholder="地址"
                                   :options="testform.adressList"
@@ -197,7 +213,7 @@
                                   change-on-select
                                 ></el-cascader>
                             </Col>
-                            <Col span="12">
+                              <Col span="12">
                                 <!-- 归属单位选择器 -->
                                 <el-select
                                   v-model="testform.model_guishu"
@@ -278,65 +294,48 @@
                             </Button>
                             </Col>
                         </Row>
-                        <div v-show="testform.yuqinginfo">
-                          <!-- 分割线 -->
+                        <div v-show="testform.yuqinginfo" style="margin-top:3px;">
+                          <!-- 分割线 
                         <div class="divider"></div>
-                        <Row class="select-group" :gutter="24">
+                        -->
+                        <Row class="select-group"  type="flex" justify>
                             <Col>
                                 开始时间：
                                 <el-date-picker
-                                        class="date_zw"
+                                        style="width: 140px;!important;"
                                         v-model="testform.model_date[0]"
                                         type="datetime"
                                         size="mini"
-                                        @change="search"
+                                        @change="search('yq')"
                                         format="yyyy-MM-dd HH"
                                         value-format="yyyy-MM-dd HH:mm:ss"
                                         placeholder="选择日期时间">
                                 </el-date-picker>
-                                预警预设值：
-                                <Input
-                                        style="width: 120px;"
-                                        @on-enter="search"
-                                        placeholder="预警预设值mm"
-                                        size="small"
-                                        v-model="testform.singular"
-                                >
-                                </Input>
-                                <br>结束时间：
+                               <span style="margin-left: 5px;"> 结束时间：</span>
                                 <el-date-picker
-                                        class="date_zw time_zw"
+                                        style="width: 140px "
                                         v-model="testform.model_date[1]"
                                         type="datetime"
                                         size="mini"
-                                        @change="search"
+                                        @change="search('yq')"
                                         format="yyyy-MM-dd HH"
                                         value-format="yyyy-MM-dd HH:mm:ss"
                                         placeholder="选择日期时间">
                                 </el-date-picker>
-                                异常界限值：
-                                <Input
-                                        style="width: 120px;"
-                                        @on-enter="search"
-                                        placeholder="异常界限值mm"
-                                        size="small"
-                                        v-model="testform.YCJXZ"
-                                >
-                                </Input>
                             </Col>
                         </Row>
                         <!-- 分割线 -->
                         <div class="divider"></div>
                         <Row :gutter="16" type="flex" justify="left" align="middle">
                             <span style="letter-spacing:5px;margin-left: 15px;">雨量：</span>
-                            <el-radio-group v-model="radio4" size="mini" fill="#B0C3D7">
+                            <el-radio-group v-model="radio4" size="mini" fill="#B0C3D7" @change="search('yq')">
                                 <el-radio-button label="全部"><font style="color:rgb(207,204,207);">全部</font></el-radio-button>
-                                <el-radio-button :label="0"><font style="color:rgb(41,196,1);">0</font></el-radio-button>
-                                <el-radio-button :label="10"><font style="color:rgb(16,135,56);">10</font></el-radio-button>
-                                <el-radio-button :label="25"><font style="color:rgb(90,179,255);">25</font></el-radio-button>
-                                <el-radio-button :label="50"><font style="color:rgb(1,113,223);">50</font></el-radio-button>
-                                <el-radio-button :label="100"><font style="color:rgb(255,132,1);">100</font></el-radio-button>
-                                <el-radio-button :label="250"><font style="color:rgb(255,2,2);">250</font></el-radio-button>
+                                <el-radio-button label="0"><font style="color:rgb(41,196,1);">0</font></el-radio-button>
+                                <el-radio-button label="10"><font style="color:rgb(16,135,56);">10</font></el-radio-button>
+                                <el-radio-button label="25"><font style="color:rgb(90,179,255);">25</font></el-radio-button>
+                                <el-radio-button label="50"><font style="color:rgb(1,113,223);">50</font></el-radio-button>
+                                <el-radio-button label="100"><font style="color:rgb(255,132,1);">100</font></el-radio-button>
+                                <el-radio-button label="250"><font style="color:rgb(255,2,2);">250</font></el-radio-button>
                             </el-radio-group>
                         </Row>
                         </div>
@@ -360,6 +359,9 @@
                 </el-tab-pane>
                 <el-tab-pane label="实时雨情" name="shishiyq" v-if="featrueLayers_showing().length > 0">
                   <BaseBoxSHISHIYQ ref="ssyqtable" :featrue="zuobiaoxi(SiteFeatrueLayer)"></BaseBoxSHISHIYQ>
+                </el-tab-pane>
+                <el-tab-pane label="视频" name="shipin" v-if="featrueLayers_showing().length > 0 && testform.checked">
+                  <BaseBoxSHIPINZHAN ref="sptable" :featrue="zuobiaoxi(SiteFeatrueLayer)"></BaseBoxSHIPINZHAN>
                 </el-tab-pane>
             </el-tabs>
           </div>
@@ -540,10 +542,19 @@
     width="520"
     @open="openDialog()"
     append-to-body center>
-  <span>
-  <div id="warmrainchart" style="width: 100%;height: 430px;"></div>
-  </span>
-</el-dialog>
+    <span>
+    <div id="warmrainchart" style="width: 100%;height: 430px;"></div>
+    </span>
+  </el-dialog>
+  <el-dialog
+    title="全县站点预警情势分析"
+    :visible.sync="yjsiteVisible"
+    width="650"
+    @close="closeYjDialog()"
+    append-to-body center
+  >
+  <SitesSHISHIYUJING v-show="yjsiteVisible"></SitesSHISHIYUJING>
+  </el-dialog>
   </div>
 </template>
 
@@ -567,6 +578,8 @@ import BaseBoxYUQING from "@/components/NewBox/BaseBox-yuqing.vue";
 import DetailYUQING from "@/components/Details/Details-yuqing.vue";
 //实时雨情
 import BaseBoxSHISHIYQ from "@/components/NewBox/BaseBox-shishiyq.vue";
+//视频
+import BaseBoxSHIPINZHAN from "@/components/NewBox/BaseBox-shipinzhan.vue";
 // 水库水情
 import BaseBoxSHUIKUSHUIQING from "@/components/NewBox/BaseBox-shuikushuiqing.vue";
 import DetailSHUIKUSHUIQING from "@/components/Details/Details-siteinfo.vue";
@@ -584,6 +597,8 @@ import DetailYUNXINGGONGKUANG from "@/components/Details/Details-yunxinggongkuan
 import { debuglog } from "util";
 // 水位库容
 import DetailSHUIWEIKURONG from "@/components/Details/Details-shuiweikurong.vue";
+//情势分析
+import SitesSHISHIYUJING from "@/components/NewBox/Sites-shishiyj.vue";
 
 // 引入公用方法
 import FilterMethods from "@/assets/commonJS/FilterMethods";
@@ -606,12 +621,18 @@ export default {
       //koen 20190911
       tu_ceng_list:[],
       area_list:[],
+      lastclass:null,
+      lastcounrty:null,
+      //首字母列表
+      letter_list:[],
       areaitem:null,
       countryitem:null,
       country_list:[],
       areashow:false,
       countryshow:false,
       centerDialogVisible:false,
+      yjsiteVisible:false,
+      yjcount:0,
       raincharttitle:'',
       //当前中心点
       zhong_xin_dian:null,
@@ -629,7 +650,8 @@ export default {
         show_Controller: false,
         // 列表窗形态切换
         mode: 0,
-        activeName: "shuikushuiqing"
+        activeName: "shuikushuiqing",
+        lastActive:'',
       },
       mapBox_show: 1,
       imgflag:"",
@@ -830,12 +852,14 @@ export default {
     DetailZHAFAZHUANGTAI,// 闸阀状态
     BaseBoxYUQING, DetailYUQING,// 雨情
     BaseBoxSHISHIYQ,//实时雨情
+    BaseBoxSHIPINZHAN,//视频
     DetailHEDAOSHUIQING,// 河道水情
     BaseBoxSHUIKUSHUIQING, DetailSHUIKUSHUIQING,// 水库水情
     DetailSHIPINZHAN,// 视频站
     DetailTUXIANGZHAN,// 图像站
     BaseBoxYUNXINGGONGKUANG, DetailYUNXINGGONGKUANG,// 运行工况
     DetailSHUIWEIKURONG,// 水位库容
+    SitesSHISHIYUJING,//情势分析
     DetailSiteSHUIQING//水雨站点信息
   },
 
@@ -892,7 +916,7 @@ export default {
     this.testform.model_date = this.getinittime();
     // 获取行政区划数据,然后设置地址选择框选项
     this.getTableData_WRP_AD_B(data => {
-        this.testform.adressList = data;
+        this.testform.adressList = data[0].children;
         this.testform.model_adress=true;
     });
     //this.$App=this;
@@ -1078,17 +1102,32 @@ export default {
       this.map.setBasemap(this.ditu_type);
     },
     //乡镇定位
-    area_switch(item){
+    area_switch(item,index){
+      var id=index+"name";
+      if(this.lastclass!=null){
+        document.getElementById(this.lastclass).classList.remove("areaselect");
+      }
+      this.lastclass=id;
+      document.getElementById(id).classList.add("areaselect");
+      if(this.lastcounrty!=null){
+        document.getElementById(this.lastcounrty).classList.remove("areaselect");
+        this.lastcounrty=null;
+      }
       item.show=true;
       if(this.areaitem!=null){
         this.areaitem.show=false;
       }
       this.areaitem=item;
       this.country_list=item.children;
-      this.countryshow=true;
     },
     //村/社区定位
-    country_switch(item){
+    country_switch(item,index){
+      var id=item.SORT+index;
+      if(this.lastcounrty!=null){
+        document.getElementById(this.lastcounrty).classList.remove("areaselect");
+      }
+      this.lastcounrty=id;
+      document.getElementById(id).classList.add("areaselect");
       item.show=true;
       if(this.countryitem!=null){
         this.countryitem.show=false;
@@ -1350,6 +1389,7 @@ export default {
           var wateryujingData = this.getAbnormalDataByType(data,1);
           var rainyujingData = this.getAbnormalDataByType(data,2);
           var equipmentyujingData = this.getAbnormalDataByType(data,3);
+          this.yjcount=this.getYjTongjiCount(data);
           // 创建预警图层（根据图层异常数据）
           var water_yujing = this.createFeatrueLayer(wateryujingData);
           var rainyjData=this.getWarmDataByRainAndSb(rainyujingData,2);
@@ -1428,6 +1468,7 @@ export default {
 
           //添加悬浮事件
           this.addEventToFloatFlayer(featureLayer);
+          this.addShipiEventToFloatFlayer(spfeatureLayer);
       });
     },
     //获取图层数据（没有过滤条件的）
@@ -1578,16 +1619,72 @@ export default {
         var Area_Info=data.WRP_AD_B;
         Area_Info.forEach((val, index) => {
             if(val.AD_LV==5){
-              var areaobj={AD_CD:val.AD_CD,AD_NM:val.AD_NM,AD_LV:val.AD_LV,children:[],show:false};
+              var areaobj={AD_CD:val.AD_CD,AD_NM:val.AD_NM,AD_LV:val.AD_LV,SORT:val.AD_SHNM,FIRST:val.AD_SHNM.charAt(0),children:[],show:false};
               this.area_list.push(areaobj);
             }
             if(val.AD_LV==6){
               var countrywidth=val.AD_NM.length*12;
-              var countryobj={AD_CD:val.AD_CD,AD_NM:val.AD_NM,AD_LV:val.AD_LV,UP_ADCD:val.UP_ADCD,show:false,width:countrywidth};
+              var countryobj={AD_CD:val.AD_CD,AD_NM:val.AD_NM,AD_LV:val.AD_LV,UP_ADCD:val.UP_ADCD,SORT:val.AD_SHNM,FIRST:val.AD_SHNM.charAt(0),show:false,width:countrywidth};
               var parent=this.area_list[this.area_list.length-1];
               parent.children.push(countryobj);
             }
           });
+          for(var s=0;s<this.area_list.length;s++){
+            var sublist=this.area_list[s].children;
+            for(var i=0;i<sublist.length-1;i++){
+                for(var j=0;j<sublist.length-1-i;j++){
+                    if(sublist[j].SORT>sublist[j+1].SORT){
+                       var b=sublist[j];
+                        sublist[j]=sublist[j+1];
+                        sublist[j+1]=b;
+                    }
+                }
+             }
+          }
+          for(var s=0;s<this.area_list.length;s++){
+            var sublist=this.area_list[s].children;
+            this.area_list[s].children[0].showa=true;
+            for(var i=1;i<sublist.length;i++){
+              var fobj=sublist[i-1];
+              var curobj=sublist[i];
+              if(fobj.FIRST==curobj.FIRST){
+                curobj.showa=false;
+              }else{
+                curobj.showa=true;
+              }
+            }
+          }
+          for(var i=0;i<this.area_list.length-1;i++){
+                for(var j=0;j<this.area_list.length-1-i;j++){
+                    if(this.area_list[j].SORT>this.area_list[j+1].SORT){
+                       var b=this.area_list[j];
+                        this.area_list[j]=this.area_list[j+1];
+                        this.area_list[j+1]=b;
+                    }
+                }
+             }
+             var number=1;
+             this.letter_list.push({value:this.area_list[0].FIRST,num:number});
+             this.area_list[0].showa=true;
+            for(var i=1;i<this.area_list.length;i++){
+              var letter=this.area_list[i].FIRST;
+              var lobj=this.letter_list[this.letter_list.length-1];
+              if(letter==lobj.value){
+                number+=1;
+                this.area_list[i].showa=false;
+              }else{
+                lobj.num=number;
+                number=1;
+                this.area_list[i].showa=true;
+                this.letter_list.push({value:letter,num:number});
+              }
+              if(i==this.area_list.length-1){
+                if(number>1){
+                  lobj.num=number;
+                }
+              }
+            }
+            console.log(this.area_list);
         this.getTableData_WPR_FieldInfo({
                     FieldID: "STGR"
                 }, data => {
@@ -1610,20 +1707,28 @@ export default {
     },
     // 根据多选框添加文字标注图层
     addTextGraphicsLayerByCheckGroup() {
+      debugger;
         var textTypeList;
         var indexOfSocial = this.testform.social.indexOf("site");
         // 如果多选框里存在 site站点类型
         if (indexOfSocial !== -1) {
-            this.SiteFeatrueLayer.LayerObject.show();
+          this.SiteFeatrueLayer.LayerObject.show();
+          if(this.radio4!="全部"){
+            var tclist = this.SiteFeatrueLayer.LayerObject_yujing;
+            for(var i=0;i<tclist.length;i++){
+              tclist[i].hide();
+            }
+          }else{           
             var tclist = this.SiteFeatrueLayer.LayerObject_yujing;
             for(var i=0;i<tclist.length;i++){
               tclist[i].show();
-            }
-            textTypeList = this.testform.social.filter(val => {
-                if (val != "site") {
+            }           
+          }
+          textTypeList = this.testform.social.filter(val => {
+                if (val != "site" && val !="MJ") {
                     return true;
                 }
-            });
+            });   
         } else {
             this.SiteFeatrueLayer.LayerObject.hide();
             var tclist = this.SiteFeatrueLayer.LayerObject_yujing;
@@ -1632,14 +1737,13 @@ export default {
             }
             textTypeList = this.testform.social;
         }
-
         textTypeList.forEach((textType, index) => {
             var textGraphicsLayer = new esri.layers.GraphicsLayer(); // 新增一个图形图层
             textGraphicsLayer.textType = textType;
             this.map.addLayer(textGraphicsLayer); // 给地图添加新增的标注文本图层
             var Rows = this.SiteFeatrueLayer.Rows;
             //创建textsymbol文本标注
-            if (Rows.length > 0) {
+            if (Rows.length > 0) {            
                 //动态读取json数据源结果集
                 for (var i = 0; i < Rows.length; i++) {
                     var Row = Rows[i];
@@ -1652,7 +1756,7 @@ export default {
                         new esri.SpatialReference({ wkid: 4326 })
                     );
                     var value = Row.rowinfo[textType];
-                    var color=[55, 55, 55];
+                    var color=[22, 22, 22];
                     // 过滤
                     switch (textType) {
                         case "vol":
@@ -1681,9 +1785,30 @@ export default {
                             if (value == "") {
                                 value = "";
                             } else {
-                                if(Row.rowinfo["status"]==0){
-                                color = [255, 0 , 0];
+                              if(this.radio4!="全部"){
+                                var pval=parseFloat(Row.rowinfo[textType]);
+                                if(pval>=0 && pval<10){
+                                  color=[41,196,1];
+                                }else if(pval>=10 && pval<25){
+                                  color=[16,135,56];
+                                }else if(pval>=25 && pval<50){
+                                  color=[90,179,255];
+                                }else if(pval>=50 && pval<100){
+                                  color=[1,113,223];
+                                }else if(pval>=100 && pval<250){
+                                  color=[255,132,1];
+                                }else{
+                                  color=[255,2,2];
+                                }
+                              }else{
+                                  if(Row.rowinfo["status"]==0){
+                                    var now=this.getinittime()[0];
+                                    if(typeof(this.testform.model_date)=="undefined" || this.testform.model_date[0]>=now){
+                                      color = [255, 0 , 0];
+                                    } 
+                                  }
                               }
+                                
                                 value += "mm";
                             }
                             break;
@@ -1706,7 +1831,45 @@ export default {
                               value += "万m³";
                             }
                             break;
-                    }                   
+                    }
+                    //定义背景框
+                    if(index==0){
+                      var lenth=textTypeList.length;
+                      var maxsize=0;
+                      for(var s=0;s<textTypeList.length;s++){
+                        var text=Row.rowinfo[textTypeList[s]];
+                        switch (textTypeList[s]) {
+                          case "vol":
+                              text += "V";
+                          case "p":
+                              text += "mm";
+                              break;
+                          case "RZ":
+                              text += "m";
+                              break;
+                          case "w":
+                              text += "万m³";
+                              break;
+                         }
+                        var textlen=this.strlen(text);                        
+                        if(maxsize<textlen){
+                          maxsize=textlen;
+                        }
+                      }
+                      var picturesymbol = new esri.symbol.PictureMarkerSymbol(
+                        '/static/demo-hunanguanqu/back.png',
+                        (maxsize*7+5),
+                        lenth*16
+                      ).setOffset(0, -(19+(lenth-1)*8));
+                      var bgGraphic = new esri.Graphic(point, picturesymbol);
+	                    textGraphicsLayer.add(bgGraphic);
+                    }
+                    // var markersymbol=new esri.symbol.SimpleMarkerSymbol(esri.symbol.SimpleMarkerSymbol.STYLE_SQUARE, 16,
+                    //                   null,
+                    //                   new esri.Color([255,255,255,1]));
+                    // markersymbol.setOffset(0, -(20 + index * 15));
+                    // var bgGraphic = new esri.Graphic(point, markersymbol);
+	                  // textGraphicsLayer.add(bgGraphic);
                     //定义文本symbol
                     var textsymbol = new esri.symbol.TextSymbol(value) //动态设置文本值
                         .setColor(new dojo.Color(color)) //setColor设置文本颜色
@@ -1721,6 +1884,86 @@ export default {
             }
             this.TextGraphicsLayers.push(textGraphicsLayer);
         });
+    },
+    strlen(str){
+    var len = 0;
+    for (var i=0; i<str.length; i++) {
+     var c = str.charCodeAt(i);
+    //单字节加1
+     if ((c >= 255)) {
+       len+=2;
+     }
+     else {
+    //汉字加2
+      len+=1;
+     }
+    }
+    return len;
+},
+    //给视频元素添加悬浮事件
+    addShipiEventToFloatFlayer(JsonFlayer){
+        //当鼠标悬停在元素上
+        JsonFlayer.on("mouse-over", evt => {
+            setTimeout(() => {
+                var attributes = evt.graphic.attributes;
+                attributes.eventType = "mouse-over";
+                this.showShipinTips(attributes.rowinfo); // 展示悬浮框
+            }, 100);
+            // 给地图对象添加方法
+            // this.addEventToMap();
+        });
+
+        // 当鼠标离开元素
+        JsonFlayer.on("mouse-out", evt => {
+            setTimeout(() => {
+                this.hideTips(); // 隐藏悬浮框
+            }, 100);
+        });
+    },
+    showShipinTips(item){
+        console.log('悬浮框');
+      console.log(item);
+      
+      let imgSrc = '';
+      // if(item.rowinfo.picPath !== null){
+      //   imgSrc = item.rowinfo.picPath.replace('r','')
+      // }
+      console.log(`/guanqu/pic${imgSrc}`);
+      let content = `<div>
+        <div style="height: 20px"></div>
+        <div class="video">
+          <img src="http://222.240.238.58:7001/pic${imgSrc}"   width="210" height="160"/>
+        </div>
+      </div>`
+          this.map.infoWindow.resize(250, 650); // 提示框大小
+         this.map.infoWindow.setTitle(item.STNM); // 提示题目
+         this.map.infoWindow.setContent(content); // 提示内容
+
+
+                //获取坐标
+                var x=Number(item.LGTD);
+                var y=Number(item.LTTD);
+
+
+                //如果basemap使用ArcGIS的就需要
+                //转换坐标系
+                x = (x / 180.0) * 20037508.34
+                if (y > 85.05112) y = 85.05112;
+                if (y < -85.05112) y = -85.05112;
+                y = (Math.PI / 180.0) * y;
+                var tmp = Math.PI / 4.0 + y / 2.0;
+                y = 20037508.34 * Math.log(Math.tan(tmp)) / Math.PI;
+
+                //位置点对象
+                var zoompoint = {
+                    //spatialReference: {wkid: 4326},
+                    spatialReference: this.map.spatialReference,
+                    x: x,
+                    y: y
+                };
+
+
+        this.map.infoWindow.show(zoompoint); // 提示位置
     },
     //给特征元素添加悬浮事件
     addEventToFloatFlayer(JsonFlayer) {
@@ -1742,19 +1985,25 @@ export default {
             }, 100);
         });
     },
+    showXianyu(){
+      if(this.yjcount>0){
+        this.yjsiteVisible=true;
+      }
+    },
+    closeYjDialog(){
+      debugger;
+      this.yjsiteVisible=false;
+    },
     //悬浮框
     showTips(item){
       var yqtime=this.testform.model_date[0].substring(0, 13)+'－'+this.testform.model_date[1].substring(0,13);
       var yqhour=this.testform.model_date[1].substring(11,13);
+      var month=new Date().getMonth()+1;
       var div='<div>'
               +'<table style="border: 1px solid #EBEEF5" border cellspacing="0" class="table_float">'
               +'<tr>'
               +'<td align="right" class="dt_name">站址：</td>'
               +'<td align="center" class="dt_vale" colspan="3" style="border-right:none;">'+item.adnm+'</td>'
-                +'</tr>'
-                +'<tr>'
-                  +'<td align="right" class="dt_name">时间：</td>'
-                  +'<td align="center" class="dt_vale" colspan="3" style="border-right:none;">'+item.tm+'</td>'
                 +'</tr>'
                 +'<tr>'
                   +'<td align="right" class="dt_name">水位：</td>';
@@ -1763,12 +2012,16 @@ export default {
             }else{
               div+='<td align="center" class="dt_vale">'+item.RZ+'m</td>';
             }
-            div+='<td align="right" class="dt_name">库容：</td>'
-                  +'<td align="center" class="dt_vale" style="border-right:none;">'+item.w+'万m³</td>'
-                +'</tr>'
+            div+='<td align="right" class="dt_name">汛限水位：</td>';
+            if(month>=7 && month<=9){
+                div+='<td align="center" class="dt_vale" style="border-right:none;">'+item.YUJING_FWL79+'m</td>';
+            }else{
+                div+='<td align="center" class="dt_vale" style="border-right:none;">'+item.YUJING_FWL+'m</td>';
+            }                
+                div+='</tr>'
                 +'<tr>'
                   +'<td align="right" class="dt_name">距汛限：</td>'
-                  +'<td align="center" class="dt_vale">'+item.jxx+'</td>'
+                  +'<td align="center" class="dt_vale">'+item.jxx+'m</td>'
                   +'<td align="right" class="dt_name">水势：</td>'
                   +'<td align="center" class="dt_vale" style="border-right:none;">'+this.$FilterData.WPTN_Filter(item.RWPTN).symbol+'</td>'
                 +'</tr>'
@@ -1779,15 +2032,11 @@ export default {
                   +'<td align="center" class="dt_vale" style="border-right:none;">'+item.hourp+'mm</td>'
                 +'</tr>'
                 +'<tr>'
-                  +'<td align="right" class="dt_name">工况时间：</td>'
-                  +'<td align="center" class="dt_vale" colspan="3" style="border-right:none;">'+item.gktm+'</td>'
-                +'</tr>'
-                +'<tr>'
-                  +'<td align="right" class="dt_name">电压：</td>';
+                  +'<td align="right" class="dt_name">电压状态：</td>';
                 if(item.vol>item.VOLMAX || item.vol<item.VOLMIN){
-                  div+='<td align="center" class="dt_vale"><font style="color:red;">'+item.vol+'V</font></td>';
+                  div+='<td align="center" class="dt_vale"><font style="color:red;">异常</font></td>';
                 }else{
-                  div+='<td align="center" class="dt_vale">'+item.vol+'V</td>';
+                  div+='<td align="center" class="dt_vale">正常</td>';
                 }
                 div+='<td align="right" class="dt_name">通讯状态：</td>';
                 if(item.CS=="异常"){
@@ -1799,7 +2048,7 @@ export default {
                 div+='</tr>'
               +'</table></div>';
               this.map.infoWindow.setTitle(item.STNM); 
-              this.map.infoWindow.resize(420, 350); // 提示框大小
+              this.map.infoWindow.resize(400, 350); // 提示框大小
               this.map.infoWindow.setContent(div); // 提示内容
               //获取坐标
                 var x=Number(item.LGTD);
@@ -1830,8 +2079,13 @@ export default {
       //this.testform.checked=!this.testform.checked;
       if(this.testform.checked){
         this.shipinfeatureLayer.LayerObject.show();
+        this.listWindow.lastActive=this.listWindow.activeName;
+        this.listWindow.activeName="shipin";
       }else{
         this.shipinfeatureLayer.LayerObject.hide();
+        if(this.listWindow.activeName=="shipin"){
+          this.listWindow.activeName=this.listWindow.lastActive;
+        }
       }
     },
     // 给特征点元素点添加点击事件
@@ -1856,17 +2110,19 @@ export default {
     showDrawer(evt, v) {
       var graphic = evt.graphic;
       var obj_a=graphic.attributes.rowinfo;
-      if(obj_a._skstatus==1 && obj_a._status==1 && obj_a._gkstatus==1){
-        if(this.listWindow.activeName=="shuikushuiqing"){
-          obj_a.tableType.clicktype='sksq';
-        }
-        if(this.listWindow.activeName=="yuqing"){
-          obj_a.tableType.clicktype='yq';
-        }
-        if(this.listWindow.activeName=="yuxinggongkuang"){
-          obj_a.tableType.clicktype='yxgk';
-        }
-      }    
+      if(v.itype!="shipin"){
+        if(obj_a._skstatus==1 && obj_a._status==1 && obj_a._gkstatus==1){
+          if(this.listWindow.activeName=="shuikushuiqing"){
+            obj_a.tableType.clicktype='sksq';
+          }
+          if(this.listWindow.activeName=="yuqing"){
+            obj_a.tableType.clicktype='yq';
+          }
+          if(this.listWindow.activeName=="yuxinggongkuang"){
+            obj_a.tableType.clicktype='yxgk';
+          }
+        } 
+      }   
       var show_right = () => {
         this.details.drawer_show_right = true;
         this.details.info_right = graphic.attributes;
@@ -2091,6 +2347,16 @@ export default {
 
       return data;
     },
+    //获取预警统计数据
+    getYjTongjiCount(graphicsData){
+      var yunum=0;
+      graphicsData.features.forEach((val, index) => {
+        if (val.rowinfo.skstatus == 0 || val.rowinfo.status ==0 || val.rowinfo.gkstatus==0 ) {
+              yunum++;
+          }
+      });
+      return yunum;
+    },
     //获取异常显示数据 2雨量  3设备
     getWarmDataByRainAndSb(graphicsData,warmType) {
       var data = JSON.parse(JSON.stringify(graphicsData)); // 图层数据深拷贝
@@ -2130,8 +2396,9 @@ export default {
     // 通知
     notify_Layer(options, data) {
       if (data.length > 0) {
-        this.Message_Window_show(true); // 打开消息窗口
-
+         if(this.radio4=="全部"){
+           this.Message_Window_show(true); // 打开消息窗口
+         }       
         var Voice_Controller = this.Message_Window.Voice_Controller,
           notify_info_list = this.Message_Window.notify_info.list;
 
@@ -2243,17 +2510,33 @@ export default {
         list[index].voice = null;
       });
     },
-    search(){
+    //雨情颜色显示
+    showRainColor(){
+      if(this.radio4!="全部"){
+          this.testform.social=['site','p'];
+          this.removeAllTextGraphicsLayer();
+          this.addTextGraphicsLayerByCheckGroup(); 
+      }else{
+          this.removeAllTextGraphicsLayer();
+          this.addTextGraphicsLayerByCheckGroup(); 
+      }
+    },
+    search(opsign){
                 var body = new Object();
                 // 如果输入框有内容，添加站名过滤字段
                 if (this.testform.search_str) {
                     body["STNM"] = `${this.testform.search_str}`;
                 }
+                console.log(this.testform.model_adress);
                 // 如果地址选择框有内容，添加行政区划过滤字段
                 if (typeof(this.testform.model_adress.length) != "undefined" && this.testform.model_adress.length>0) {
-                    body["ADDVCD"] = `${this.$App.ADDVCD_Array_Filter(
-                        this.testform.model_adress
-                    )}`;
+                    var addvdds=[];
+                    for(var i=0;i<this.testform.model_adress.length;i++){
+                        addvdds.push(`${this.$App.SUB_ADDVCD_Array_Filter(
+                          this.testform.model_adress[i]
+                      )}`);
+                    }
+                    body["ADDlist"] = addvdds;                   
                 }
                 // 如果归属单位选择框有内容，添加归属单位过滤字段
                 if (this.testform.model_guishu && this.testform.model_guishu.length != 0) {
@@ -2273,13 +2556,16 @@ export default {
                 }
                   //如果雨量有异常界限值时
                   //异常界限值
-                  if (this.testform.YCJXZ != "") {
-                      body["max_yichang"] = this.testform.YCJXZ;
-                  }
+                  // if (this.testform.YCJXZ != "") {
+                  //     body["max_yichang"] = this.testform.YCJXZ;
+                  // }
 
-                  //异常界限值
-                  if (this.testform.singular != "") {
-                      body["max_yujing"] = this.testform.singular;
+                  // //异常界限值
+                  // if (this.testform.singular != "") {
+                  //     body["max_yujing"] = this.testform.singular;
+                  // }
+                  if(this.radio4!="全部" && this.radio4!="0"){
+                    body["P"]=this.radio4;
                   }
                 
                 // 如果水库等级选择框有内容，添加水库等级过滤字段
@@ -2293,11 +2579,15 @@ export default {
                 if (this.testform.model_status && this.testform.model_status.length != 0) {
                   body["_stat"] = this.testform.model_status;
                 }
+                if(opsign!=null && typeof(opsign)!="undefinded" && opsign=='yq'){
+                      this.listWindow.activeName="yuqing";
+                    }
                 this.showTableLoading();
-                this.search_FeatrueLayer(body,this.SiteFeatrueLayer,newFeatureLayerOBJ => {
+                this.search_FeatrueLayer(body,this.SiteFeatrueLayer,newFeatureLayerOBJ => {     
+                    newFeatureLayerOBJ.SUMP= this.radio4;            
                     this.initTableData();
                     this.hideTableLoading();
-                    this.hideTips();
+                    this.hideTips();                                     
                 });
     },
     // 查询图层 (要查询的图层类型, 过滤字段, 所属图层对象)
@@ -2306,7 +2596,6 @@ export default {
       this.getFeatrueLayer(
         fields,
         res => {
-          debugger;
           var clone_data = JSON.parse(JSON.stringify(res.data));
           // 创建图层（根据图层数据）
           var featureLayer = this.createFeatrueLayer(res.data);
@@ -2411,9 +2700,10 @@ export default {
           );
           //添加悬浮事件
           this.addEventToFloatFlayer(featureLayer);
+          this.addShipiEventToFloatFlayer(spfeatureLayer);
            
           //添加文字标注
-          this.checkboxGroup_onChange();
+          this.showRainColor(); 
 
         }
         // errCallback
@@ -2582,18 +2872,27 @@ initTableData(){
   this.$refs.sqtable.baseBox_init();
   this.$refs.yqtable.baseBox_init();
   this.$refs.gktable.baseBox_init();
+  this.$refs.ssyqtable.baseBox_init();
+  if(this.testform.checked){
+    this.$refs.sptable.baseBox_init();
+  }
 },
 //表格加载
 showTableLoading(){
   this.$refs.sqtable.tableLoading();
   this.$refs.yqtable.tableLoading();
   this.$refs.gktable.tableLoading();
+  this.$refs.ssyqtable.tableLoading();
+  if(this.testform.checked){
+    this.$refs.sptable.tableLoading();
+  }
 },
 //取消加载
 hideTableLoading(){
   this.$refs.sqtable.cancelTableLoading();
   this.$refs.yqtable.cancelTableLoading();
   this.$refs.gktable.cancelTableLoading();
+  this.$refs.ssyqtable.cancelTableLoading();
 },
     //表格取消加载
 
@@ -3039,6 +3338,22 @@ hideTableLoading(){
 .tcbox{
   height: 58px;
 }
+.demo-badge{
+        width: 52px;
+        height: 52px;
+        background: #eee;
+        border-radius: 6px;
+        display: inline-block;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 700;
+        padding-top:2px;
+        color: #DC3409;
+        border: 1px solid #DC3409;
+    }
+.demo-badge:hover{
+  color: #DC3409;
+}
 </style>
       <style lang="less">
 .zZindex {
@@ -3254,7 +3569,7 @@ hideTableLoading(){
 }
 //悬浮框表格样式
 .table_float {
-  width:400px;
+  width:380px;
   td {
     height: 30px;
     border-top: none;
@@ -3263,14 +3578,44 @@ hideTableLoading(){
   }
 
   .dt_name {
-    width: 22%;
+    width: 24%;
     border-left: none;
   }
 
   .dt_vale {
-    width: 28%;
+    width: 26%;
     border-right: 1px solid #EBEEF5;
     border-left: none;
+  }
+}
+.areatable{
+  width:100%;
+  td{
+    height:28px;
+  }
+  .letter{
+    width:21%;
+    font-size: 14px;
+    color: #AEB0B6;
+    font-family: Arial;
+    font-weight: bold;
+  }
+  .areaname{
+    cursor: pointer;
+    width:72%;
+    font-size: 12px;
+    color: #606266;
+  }
+  .areaname:hover{
+    color: #409eff;
+    font-weight: 700;
+  }
+  .areaselect{
+    color: #409eff;
+    font-weight: 700;
+  }
+  tr:hover{
+   background: #F5F7FA;
   }
 }
 svg {
@@ -3577,7 +3922,6 @@ body {
     filter: brightness(1.1);
   }
 }
-
 /* -------------消息窗口和控制器(结束)----------------- */
 
 /* -------------过渡动画(开始)----------------- */
@@ -3601,6 +3945,7 @@ body {
 .el-picker-panel__footer .el-button--text {
   display: none !important;
 }
+
 
 /* -------------过渡动画(结束)----------------- */
 

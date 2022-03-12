@@ -1,17 +1,114 @@
 <template>
   <div v-loading="boxLoading">
     <el-tabs v-model="activeName" type="border-card">
+      <!-- 视频 -->
+      <el-tab-pane name="shipin">
+        <span slot="label">
+          <Icon type="md-videocam" style="font-size:20px"/>视频
+        </span>
+        <div class="drawer-profile">
+          <div>
+            <!-- 视频监控区域 -->
+            <Row :gutter="16">
+              <!-- 视频 -->
+              <Col span="24">
+                <!-- <img src="img/shuizha.9d256eb4.jpg" alt> -->
+                <iframe style="width: 100%;height:600px;border: 0;overflow:scroll hidden;" id="video" scrolling='auto'></iframe>
+              </Col>
+            </Row>
+            <!-- 分割线 -->
+            <div class="divider"></div>
+          </div>
+        </div>
+      </el-tab-pane>
+      <!--图像-->
+      <el-tab-pane name="tuxiang">
+        <span slot="label">
+          <i class="el-icon-picture"></i> 图像
+        </span>
+        <div class="drawer-profile">
+          <!-- 导出按钮
+          <Button size="small" class="outPutButton" type="success" @click="developing_tip">
+            <div>导出</div>
+          </Button>
+           -->
+          <div>
+            <!-- 查询，导出行 -->
+            <Row :gutter="32" type="flex" align="center">
+              <!-- 开始到结束时间选择 -->
+              <Col span="32">
+                <el-date-picker
+                  v-model="table.tuxiang.date"
+                  range-separator="至"
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期"
+                  @change="handleDatePickerChange_tuxiang"
+                  :picker-options="table.tuxiang.datePickerOptions"
+                  unlink-panels
+                  :type="table.tuxiang.datePickerType"
+                  size="mini"
+                  style="min-width: 360px"
+                ></el-date-picker>
+              </Col>
+            </Row>
+            <!-- 分割线 -->
+            <div class="divider"></div>
+
+            <!-- 图片列表 -->
+            <div>
+              <Row
+                :gutter="32"
+                type="flex"
+                align="center"
+                style="height:495px; overflow:auto"
+                v-loading="table.tuxiang.loading"
+              >
+                <Col v-if="table.tuxiang.Rows.length > 0" span="5" v-for="(item, index) in table.tuxiang.Rows" style="position: relative;">
+                  <img
+                    class="Img"
+                    :src="item.url"
+                    @click="$App.enlarge_img(table.tuxiang.Rows, index)"
+                    width="210"
+                    height="160"
+                  />
+                </Col>
+                <Col span="19" v-show="table.tuxiang.Rows.length == 0">
+                <div style="height:100%;display:flex;align-items:center;width:100%;margin:auto 0;">
+                  暂无数据
+                </div>
+                </Col>
+              </Row>
+              <!-- 分割线 -->
+              <div class="divider"></div>
+              <Row :gutter="32" type="flex" align="center">
+              <!-- 开始到结束时间选择 -->
+              <Col span="32">
+              <!-- 分页器 -->
+              <el-pagination
+                background
+                :page-size="table.tuxiang.pageSizes"
+                layout="sizes, total, prev, pager, next, jumper "
+                :page-sizes="[20, 50, 100, 200]"
+                :total="table.tuxiang.total"
+                :pager-count="5"
+                :current-page="table.tuxiang.currentPage"
+                @current-change="handleCurrentChange_tuxiang"
+                @size-change="handleSizeChange_tuxiang"
+                class="pageController"
+                small
+              ></el-pagination>
+              </Col>
+              </Row>
+            </div>
+          </div>
+        </div>
+      </el-tab-pane>
       <!-- 站点信息 -->
       <el-tab-pane name="zhandianxinxi">
         <span slot="label">
           <i class="el-icon-tickets"></i> 站点信息
         </span>
         <div class="drawer-profile">
-          <!-- 导出按钮 
-          <Button size="small" class="outPutButton" type="success" @click="$App.developing_tip">
-            <div>导出</div>
-          </Button>
-          -->
           <!-- 信息表 -->
           <div>
             <!-- 信息内容 -->
@@ -92,17 +189,6 @@
                   <td align="right" class="dt_name">建设单位：</td>
                   <td align="center" class="dt_vale">{{ siteInfo.DLOG || "&nbsp;" }}</td>
                 </tr>
-                <tr>
-                  <td align="right" class="dt_name" style="border-bottom: none">录入时间：</td>
-                  <td
-                    align="center"
-                    class="dt_vale"
-                    style="border-right: 1px solid #EBEEF5;border-bottom: none"
-                  ></td>
-                  <td align="right" class="dt_name" style="border-bottom: none"></td>
-                  <td align="center" class="dt_vale" style="border-bottom: none">
-                  </td>
-                </tr>
               </table>
                <table
                 style="border: 1px solid #EBEEF5"
@@ -159,7 +245,7 @@
               >
               <tr>
                 <td colspan="4" style="background-color:#DEDFE0;padding:2px;">
-                  <el-tag  type="info" effect="dark" size="small">实时预警雨量</el-tag>
+                  <el-tag  type="info" effect="dark" size="small">实时降雨</el-tag>
                 </td>
                   </tr>
                 <tr>
@@ -168,12 +254,14 @@
                     align="center"
                     class="dt_vale"
                     style="border-right: 1px solid #EBEEF5"
-                  >{{ jiangyu_warm.LEVEL || "&nbsp;" }}</td>
+                  ><span :style="{'color':jiangyu_warm.COLOR}">{{ jiangyu_warm.LEVEL || "&nbsp;" }}</span></td>
                   <td align="right" class="dt_name">1小时降雨：</td>
                   <td
                     align="center"
                     class="dt_vale"
-                  >{{ jiangyu_warm.RAIN1 || "&nbsp;" }}</td>
+                  ><span :style="{
+                        color: jiangyu_warm.SIGN1 == 3?'red' :jiangyu_warm.SIGN1 == 2?'orange' : jiangyu_warm.SIGN1 == 1?'yellow' :'#606266',
+                        }">{{ jiangyu_warm.RAIN1 || "&nbsp;" }}</span></td>
                 </tr>
                 <tr>
                   <td align="right" class="dt_name">3小时降雨：</td>
@@ -181,9 +269,13 @@
                     align="center"
                     class="dt_vale"
                     style="border-right: 1px solid #EBEEF5"
-                  >{{ jiangyu_warm.RAIN3 || "&nbsp;" }}</td>
+                  ><span :style="{
+                        color: jiangyu_warm.SIGN3 == 3?'red' :jiangyu_warm.SIGN3 == 2?'orange' : jiangyu_warm.SIGN3 == 1?'yellow' :'#606266',
+                        }">{{ jiangyu_warm.RAIN3 || "&nbsp;" }}</span></td>
                   <td align="right" class="dt_name">6小时降雨：</td>
-                  <td align="center" class="dt_vale">{{ jiangyu_warm.RAIN6 || "&nbsp;" }}</td>
+                  <td align="center" class="dt_vale"><span :style="{
+                        color: jiangyu_warm.SIGN6 == 3?'red' :jiangyu_warm.SIGN6 == 2?'orange' : jiangyu_warm.SIGN6 == 1?'yellow' :'#606266',
+                        }">{{ jiangyu_warm.RAIN6 || "&nbsp;" }}</span></td>
                 </tr>
                 <tr>
                   <td align="right" class="dt_name">12小时降雨：</td>
@@ -191,73 +283,15 @@
                     align="center"
                     class="dt_vale"
                     style="border-right: 1px solid #EBEEF5"
-                  >{{ jiangyu_warm.RAIN12 || "&nbsp;" }}</td>
+                  ><span :style="{
+                        color: jiangyu_warm.SIGN12 == 3?'red' :jiangyu_warm.SIGN12 == 2?'orange' : jiangyu_warm.SIGN12 == 1?'yellow' :'#606266',
+                        }">{{ jiangyu_warm.RAIN12 || "&nbsp;" }}</span></td>
                   <td align="right" class="dt_name">24小时降雨：</td>
-                  <td align="center" class="dt_vale">{{ jiangyu_warm.RAIN24 || "&nbsp;" }}</td>
+                  <td align="center" class="dt_vale"><span :style="{
+                        color: jiangyu_warm.SIGN24 == 3?'red' :jiangyu_warm.SIGN24 == 2?'orange' : jiangyu_warm.SIGN24 == 1?'yellow' :'#606266',
+                        }">{{ jiangyu_warm.RAIN24 || "&nbsp;" }}</span></td>
                 </tr>
                </table>
-              <!-- table end -->
-
-
-
-
-              <!-- <Row class="row">
-                <Col span="5" align="right">站名：</Col>
-                <Col span="7" align="center">{{ siteInfo.STNM || "&nbsp;" }}</Col>
-                <Col span="5" align="right">国家定类：</Col>
-                <Col span="7" align="center">{{ this.STTP_Filter(siteInfo.STTP) || "&nbsp;" }}</Col>
-              </Row>
-              <Row class="row">
-                <Col span="5" align="right">等级：</Col>
-                <Col
-                  span="7"
-                  align="center"
-                >{{ this.$FilterData.STGR_Filter(siteInfo.STGR) || "&nbsp;" }}</Col>
-                <Col span="5" align="right">行政区划：</Col>
-                <Col span="7" align="center">{{ siteInfo.AD_NM || "&nbsp;" }}</Col>
-              </Row>
-              <Row class="row">
-                <Col span="5" align="right">经度：</Col>
-                <Col span="7" align="center">{{ siteInfo.LGTD || "&nbsp;" }}</Col>
-                <Col span="5" align="right">纬度：</Col>
-                <Col span="7" align="center">{{ siteInfo.LTTD || "&nbsp;" }}</Col>
-              </Row>
-              <Row class="row">
-                <Col span="5" align="right">站址：</Col>
-                <Col span="7" align="center">{{ siteInfo.STLC || "&nbsp;" }}</Col>
-                <Col span="5" align="right">水系：</Col>
-                <Col span="7" align="center">{{ siteInfo.HNNM || "&nbsp;" }}</Col>
-              </Row>
-              <Row class="row">
-                <Col span="5" align="right">流域：</Col>
-                <Col span="7" align="center">{{ siteInfo.CTCD || "&nbsp;" }}</Col>
-                <Col span="5" align="right">河流：</Col>
-                <Col span="7" align="center">{{ siteInfo.RVCD || "&nbsp;" }}</Col>
-              </Row>
-              <Row class="row">
-                <Col span="5" align="right">建站日期：</Col>
-                <Col span="7" align="center">{{ siteInfo.ESSTDT || "&nbsp;" }}</Col>
-                <Col span="5" align="right">建设单位：</Col>
-                <Col span="7" align="center">{{ siteInfo.DLOG || "&nbsp;" }}</Col>
-              </Row>
-              <Row class="row">
-                <Col span="5" align="right">隶属单位：</Col>
-                <Col span="7" align="center">{{ siteInfo.ATCUNIT || "&nbsp;" }}</Col>
-                <Col span="5" align="right">管理单位：</Col>
-                <Col span="7" align="center">{{ siteInfo.DLOG || "&nbsp;" }}</Col>
-              </Row>-->
-              <!--              <Row class="row">-->
-              <!--                <Col span="5" align="right">录入时间：</Col>-->
-              <!--                <Col-->
-              <!--                  span="7"-->
-              <!--                  align="center"-->
-              <!--                >{{ this.$FilterData.dateFilter(siteInfo.MODITIME,8) || "&nbsp;" }}</Col>-->
-              <!--                <Col span="5" align="right">图像按钮：</Col>-->
-              <!--                <Col span="12" align="center" style="border-right: 1px solid rgb(200, 200, 200); ">-->
-              <!--                  <Button type="info" @click="$App.developing_tip" size="small">查看图片</Button>-->
-              <!--                </Col>-->
-              <!--              </Row>-->
-
             </div>
             <!-- 分割线 -->
             <div class="divider"></div>
@@ -273,53 +307,6 @@
           <!-- 分割线 -->
           <div class="divider"></div>
           <!-- 关联渠道和闸门 -->
-        </div>
-      </el-tab-pane>
-      <!-- 视频 -->
-      <el-tab-pane name="shipin">
-        <span slot="label">
-          <Icon type="md-videocam" style="font-size:20px"/>视频
-        </span>
-        <div class="drawer-profile">
-          <div>
-            <!-- 视频监控区域 -->
-            <Row :gutter="16">
-              <!-- 视频 -->
-              <Col span="24">
-                <!-- <img src="img/shuizha.9d256eb4.jpg" alt> -->
-                <iframe style="width: 100%;height:600px;border: 0;overflow:scroll hidden;" id="video" scrolling='auto'></iframe>
-              </Col>
-              <!-- 操作区this.siteInfo -->
-              <!-- <Col span="7">
-                <div class="flexBox">
-                  <div class="direction">
-                    <Icon type="md-arrow-back"/>
-                    <Icon type="md-arrow-down"/>
-                    <Icon type="md-arrow-forward"/>
-                    <Icon type="md-arrow-up"/>
-                  </div>
-                </div>
-              </Col> -->
-            </Row>
-            <!-- 分割线 -->
-            <div class="divider"></div>
-            <!-- <div>
-              <Row class="relationRow">
-                <Col span="8">关联的监测要素</Col>
-                <Col span="16">
-                  <span>流量 10m³/s</span>
-                  <span>水位 1.5m</span>
-                  <span>闸门开度 1m</span>
-                </Col>
-              </Row>
-              <Row class="relationRow">
-                <Col span="8">关联的站点</Col>
-                <Col span="16">
-                无
-                </Col>
-              </Row>
-            </div> -->
-          </div>
         </div>
       </el-tab-pane>
     </el-tabs>
@@ -369,238 +356,73 @@ export default {
         RAIN12:null,
         RAIN24:null,
       },
-      //   多选框对象
-      checkBox: {
-        shuiqingList: [
-          {
-            value: "historyTable",
-            size: "large",
-            // iconType: "logo-facebook",
-            title: "历史表"
-          },
-          {
-            value: "hourTable",
-            size: "large",
-            // iconType: "logo-facebook",
-            title: "小时表"
-          },
-          {
-            value: "dayTable",
-            size: "large",
-            // iconType: "logo-facebook",
-            title: "日表"
-          },
-          {
-            value: "nightTable",
-            size: "large",
-            // iconType: "logo-facebook",
-            title: "月表"
-          }
-        ],
-        // 水情多选框绑定值
-        shuiqing_social: ["historyTable", "hourTable", "dayTable", "nightTable"]
-      },
-      //   选择框对象
-      select: {
-        searchList: [
-          {
-            value: "quick",
-            label: "快速查询"
-          },
-          {
-            value: "vague",
-            label: "模糊查询"
-          }
-        ]
-      },
       // 表格数据
       table: {
-        // 水情
-        shuiqing: {
-          // 表头设置
-          columns: [
-            {
-              title: "序号",
-              type: "index",
-              width: 80,
-              align: "center"
-            },
-            {
-              title: "时间",
-              key: "date",
-              // width: 100,
-              align: "center"
-            },
-            {
-              title: "水位(m)",
-              width: 110,
-              key: "waterLever",
-              align: "center"
-            },
-            {
-              width: 120,
-              title: "流量(m³/s)",
-              key: "flowLever",
-              align: "center"
-            }
-          ],
-          // 表体内容
-          Rows: [
-            {
-              index: 1,
-              date: "2019-4-18",
-              waterLever: "10",
-              flowLever: "11"
-            },
-            {
-              index: 1,
-              date: "2019-4-18",
-              waterLever: "10",
-              flowLever: "11"
-            },
-            {
-              index: 1,
-              date: "2019-4-18",
-              waterLever: "10",
-              flowLever: "11"
-            }
-          ],
+        tuxiang: {
+          // 日期时间选择器的选项配置
+          datePickerOptions: {
+            shortcuts: [
+              {
+                text: "最近6小时",
+                onClick(picker) {
+                  const end = new Date();
+                  const start = new Date();
+                  start.setTime(start.getTime() - 3600 * 1000 * 6);
+                  picker.$emit("pick", [start, end]);
+                }
+              },
+              {
+                text: "最近12小时",
+                onClick(picker) {
+                  const end = new Date();
+                  const start = new Date();
+                  start.setTime(start.getTime() - 3600 * 1000 * 12);
+                  picker.$emit("pick", [start, end]);
+                }
+              },
+              {
+                text: "最近24小时",
+                onClick(picker) {
+                  const end = new Date();
+                  const start = new Date();
+                  start.setTime(start.getTime() - 3600 * 1000 * 24);
+                  picker.$emit("pick", [start, end]);
+                }
+              },
+              {
+                text: "最近36小时",
+                onClick(picker) {
+                  const end = new Date();
+                  const start = new Date();
+                  start.setTime(start.getTime() - 3600 * 1000 * 36);
+                  picker.$emit("pick", [start, end]);
+                }
+              },
+              {
+                text: "最近72小时",
+                onClick(picker) {
+                  const end = new Date();
+                  const start = new Date();
+                  start.setTime(start.getTime() - 3600 * 1000 * 72);
+                  picker.$emit("pick", [start, end]);
+                }
+              }
+            ]
+          },
+          // 日期时间选择器类型
+          datePickerType: "datetimerange",
+          // 日期时间选择器值
+          date: null,
           // 表格是否加载中
-          loading: false
-        },
-        // 关系曲线
-        guanxiquxian: {
-          // 表头设置
-          columns: [
-            {
-              title: "序号",
-              key: "index",
-              width: 100,
-              align: "center"
-            },
-            {
-              title: "测站编码",
-              key: "date",
-              // width: 100,
-              align: "center"
-            },
-            {
-              title: "水位",
-              width: 100,
-              key: "waterLever",
-              align: "center"
-            },
-            {
-              title: "流量(m³/s)",
-              key: "flowLever",
-              align: "center"
-            },
-            {
-              width: 100,
-              title: "启用标志",
-              key: "flowLever",
-              align: "center"
-            },
-            {
-              width: 100,
-              title: "备注",
-              key: "flowLever",
-              align: "center"
-            }
-          ],
-          // 表体内容
+          loading: false,
+          // 当前页
+          currentPage: 1,
+          // 每页显示数量
+          pageSizes: 20,
+          // 总条数
+          total: true,
           Rows: [
-            {
-              index: 1,
-              date: "2019-4-18",
-              waterLever: "10",
-              flowLever: "11"
-            },
-            {
-              index: 1,
-              date: "2019-4-18",
-              waterLever: "10",
-              flowLever: "11"
-            },
-            {
-              index: 1,
-              date: "2019-4-18",
-              waterLever: "10",
-              flowLever: "11"
-            }
-          ],
-          // 表格是否加载中
-          loading: false
-        },
-        // 特征水位
-        tezhengshuiqing: {
-          // 表头设置
-          columns: [
-            {
-              title: "序号",
-              key: "index",
-              width: 100,
-              align: "center"
-            },
-            {
-              title: "测站编码",
-              key: "date",
-              // width: 100,
-              align: "center"
-            },
-            {
-              title: "最大流量时间",
-              width: 130,
-              key: "waterLever",
-              align: "center"
-            },
-            {
-              title: "年最大流量(m³/s)",
-              key: "flowLever",
-              align: "center"
-            },
-            {
-              width: 100,
-              title: "水位",
-              key: "flowLever",
-              align: "center"
-            }
-          ],
-          // 表体内容
-          Rows: [
-            {
-              index: 1,
-              date: "2019-4-18",
-              waterLever: "10",
-              flowLever: "11"
-            },
-            {
-              index: 1,
-              date: "2019-4-18",
-              waterLever: "10",
-              flowLever: "11"
-            },
-            {
-              index: 1,
-              date: "2019-4-18",
-              waterLever: "10",
-              flowLever: "11"
-            }
-          ],
-          // 表格是否加载中
-          loading: false
-        }
-      },
-      //   日期数据
-      date: {
-        shuiqing: ""
-      },
-      // 输入框对象
-      input: {
-        // 关系曲线换算的
-        huansuan: {
-          waterLever: "",
-          flowLever: ""
+          ]
         }
       },
       //   列表对象
@@ -652,37 +474,127 @@ export default {
         this.table.loading = false;
       }, 1000);
     },
-    // 绘图
-    createChart(idName) {
-      let myChart = this.$echarts.init(document.getElementById(idName));
+    // 设置水库水情预警信息
+    set_SKSQ_alarmInfo(STCD) {
+      console.warn("set_SKSQ_alarmInfo",STCD)
+      this.$GetData.Survey_History_SKSQ(
+        "alarmTable",
+        {
+          STCD: STCD,
+        },
+        true,
+        data => {
+          var yujingdata = data.data[0];
 
-      myChart.setOption({
-        title: { text: "水位" },
-        tooltip: {},
-        xAxis: {
-          data: ["闸阀前", "闸阀后"]
-        },
-        yAxis: {
-          name: "单位：米"
-        },
-        series: [
-          {
-            name: "水位",
-            type: "bar",
-            data: [5, 10]
-          }
-        ]
-      });
+          this.yujingdata.FWL = yujingdata.FWL;
+          this.yujingdata.FWL79 = yujingdata.FWL79;
+          this.yujingdata.SJWL = yujingdata.SJWL;
+          this.yujingdata.JYWL = yujingdata.JYWL;
+        }
+      );
+    },
+        search() {
+      // 表格加载中
+      this.table.loading = true;
+      setTimeout(() => {
+        // var newList = this.featrue.Rows.map((val, index) => {
+        //   return val.attributes;
+        // });
+
+        // this.table.Rows = newList;
+        // 取消表格加载
+        this.table.loading = false;
+      }, 1000);
     },
     // 加载表格数据
     loadTableData(list, data) {
       this.table[list].Rows = data;
-      console.log('表格',this.table[list].Rows);
     },
     // 加载站点数据
     loadSiteData(data) {
       this.siteInfo = data;
-      console.log('站点',this.siteInfo);
+    },
+    // 根据行政区划编码获取行政区划
+    getCompartmentByADDVCD(callback) {
+      var ADDVCD = this.info.rowinfo.ADDVCD;
+      if (ADDVCD && ADDVCD != "") {
+        this.axios
+          .get(`/guanqu/admin/WRP_AD_B`, {
+            params: {
+              AD_CD: ADDVCD
+            }
+          })
+          .then(res => {
+            var data = res.data.rows;
+            if (typeof callback == "function") {
+              callback(data);
+            }
+          });
+      }
+    },
+    // 查询历史图像数据
+    search_tuxiang() {
+      this.$TableMethods.tableLoading(this.table.tuxiang);
+
+      // 传递站码参数
+      var body = {
+        STCD: this.siteInfo.STCD,
+        _page: this.table.tuxiang.currentPage,
+        _page_size: this.table.tuxiang.pageSizes,
+        _orderby: `TM desc`
+      };
+
+      // 如果有选择日期进行查询，根据表格类型传递参数
+      if (this.table.tuxiang.date) {
+        var DTT = this.$FilterData
+              .elDatePicker_Filter(this.table.tuxiang.date, "include_seconds")
+              .split(",");
+            body.Time_min = DTT[1];
+            body.Time_max = DTT[2];
+      }
+
+      this.$GetData.Survey_History_TX(body, true, data => {
+        this.$TableMethods.setTableTotal(this.table.tuxiang, data.total);
+        this.$TableMethods.setTableData(this.table.tuxiang, data.data);
+        this.$TableMethods.cancelTableLoading(this.table.tuxiang);
+      });
+    },
+    // 处理页码切换_图像
+    handleCurrentChange_tuxiang(index) {
+      this.table["tuxiang"].currentPage = index;
+      this.search_tuxiang();
+    },
+    // 处理每页显示条数切换_水情数据
+    handleSizeChange_tuxiang(pageSizes) {
+      this.table["tuxiang"].pageSizes = pageSizes;
+      this.table["tuxiang"].currentPage = 1;
+      this.search_tuxiang();
+    },
+    // 设置图像历史表默认查询日期
+    setTableDefaultDate_tuxiang() {
+      const end = new Date();
+      const start = zeroPointOfTheDay();
+      var timeSlot = [start, end];
+      this.table.tuxiang.date = timeSlot;
+      // this.setTableDate("tuxiang", timeSlot);
+
+      function zeroPointOfTheDay() {
+        var date = new Date();
+        date.setHours(0);
+        date.setMinutes(0);
+        date.setSeconds(0);
+        date.setMilliseconds(0);
+        return date;
+      }
+    },
+    // 处理日期时间选择器确定事件_图像
+    handleDatePickerChange_tuxiang(item) {
+      this.table.tuxiang.currentPage = 1;
+      this.search_tuxiang();
+    },
+    // 设置 xx表格 时间选择器值
+    setTableDate(tableName, val) {
+      this.table[tableName].date = val;
     },
     // 根据行政区划编码获取行政区划
     getCompartmentByADDVCD(callback) {
@@ -714,7 +626,7 @@ export default {
           type: 'warning'
       });
     }
-     var level=0;
+     var level=0,color="#606266";
     if(level<this.info.rowinfo.SIGN1){
         level=this.info.rowinfo.SIGN1;
     }
@@ -732,16 +644,25 @@ export default {
     }
     if(level==0){
       this.jiangyu_warm.LEVEL="无";
+      this.jiangyu_warm.COLOR="#606266";
     }
     if(level==1){
       this.jiangyu_warm.LEVEL="黄色预警";
+      this.jiangyu_warm.COLOR="yellow";
     }
     if(level==2){
       this.jiangyu_warm.LEVEL="橙色预警";
+      this.jiangyu_warm.COLOR="orange";
     }
     if(level==3){
       this.jiangyu_warm.LEVEL="红色预警";
+      this.jiangyu_warm.COLOR="red";
     }
+    this.jiangyu_warm.SIGN1=this.info.rowinfo.SIGN1;
+    this.jiangyu_warm.SIGN3=this.info.rowinfo.SIGN3;
+    this.jiangyu_warm.SIGN6=this.info.rowinfo.SIGN6;
+    this.jiangyu_warm.SIGN12=this.info.rowinfo.SIGN12;
+    this.jiangyu_warm.SIGN24=this.info.rowinfo.SIGN24;
     this.jiangyu_warm.RAIN1=this.info.rowinfo.RAIN1+"mm";
     this.jiangyu_warm.RAIN3=this.info.rowinfo.RAIN3+"mm";
     this.jiangyu_warm.RAIN6=this.info.rowinfo.RAIN6+"mm";
@@ -770,7 +691,8 @@ export default {
           CTCD: this.info.CTCD
         },true,(data) => {
           this.siteInfo.CTCD = data.data[0].CTNM;
-        })
+        });
+        
         // 加载站点数据
         this.loadSiteData(res.data);
 
@@ -785,12 +707,12 @@ export default {
           // details_data.WWWPath
           video_iframe.src = 'webdemo/index.html?'+details_data.PUID;
         }
-        // 取数据的条数
-        // var count = 0
-        // for (let key in res.data) {
-        //   count++
-        // }
-        // alert(count)
+        // 设置水库水情预警信息
+        this.set_SKSQ_alarmInfo(this.siteInfo.STCD);
+        // 设置图像历史表默认查询日期
+        this.setTableDefaultDate_tuxiang();
+        // 查询图像历史表数据
+        this.search_tuxiang();
         // 加载取消
         this.boxLoading = false;
       });

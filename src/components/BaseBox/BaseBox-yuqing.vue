@@ -371,7 +371,7 @@
                             value: "p",
                             size: "small",
                             // iconType: "logo-facebook",
-                            title: "雨量值"
+                            title: "雨量"
                         }
                     ],
                     checkBoxList2: [
