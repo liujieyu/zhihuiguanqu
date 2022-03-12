@@ -331,6 +331,95 @@
           </div>
         </div>
       </el-tab-pane>
+      <!-- 关系曲线 -->
+            <el-tab-pane name="guanxiquxian">
+                <span slot="label">
+                <Icon type="md-trending-up" style="font-size:20px"/>关系曲线
+                </span>
+                <div class="drawer-profile">
+                <!-- 导出按钮 -->
+                <Button size="small" class="outPutButton" type="success" @click="$App.developing_tip">
+                    <div>导出</div>
+                </Button>
+                <!-- 查询&换算 -->
+                    <Row class="row" :gutter="16" type="flex" align="end">
+                        <Col span="14">
+                        <Row :gutter="8">
+                            <Col span="10">
+                            <span>水位：</span>
+                            <Input
+                                v-model="input.huansuan.waterLever"
+                                placeholder="水深 m"
+                                class="huansuanInput"
+                                size="small"
+                            />
+                            </Col>
+                            <Col span="10">
+                            <span>库容：</span>
+                            <Input
+                                v-model="input.huansuan.flowLever"
+                                placeholder="库容万m³"
+                                class="huansuanInput"
+                                size="small"
+                            />
+                            </Col>
+                            <Col span="4">
+                            <Button type="success" size="small" @click="$App.developing_tip">换算</Button>
+                            </Col>
+                        </Row>
+                        </Col>
+                        <!-- 时间选择 -->
+                        <Col span="10">
+                        <el-date-picker
+                            style="width:100%"
+                            @change="handleDatePickerChange_guanxiquxian"
+                            v-model="table.guanxiquxian.date"
+                            size="mini"
+                            type="year"
+                            placeholder="请选择年份"
+                        ></el-date-picker>
+                        </Col>
+                    </Row>
+                    <!-- 分割线 -->
+                    <div class="divider"></div>
+                <Tabs type="card">
+                    <TabPane label="关系曲线">
+                    <!-- 绘图 -->
+                    <div id="guanxiChart" :style="{width: '550px', height: '400px',margin: 'auto'}"></div>
+                    </TabPane>
+                    <TabPane label="关系数据">
+                    <!-- 表格用于展示数据 -->
+                    <div>
+                        <Table
+                        :columns="table.guanxiquxian.columns"
+                        :data="table.guanxiquxian.Rows_filter"
+                        :loading="table.guanxiquxian.loading"
+                        border
+                        size="small"
+                        :height="table.guanxiquxian.height"
+                        ></Table>
+                        <!-- 分割线 -->
+                        <div class="divider"></div>
+                        <!-- 分页器 -->
+                        <el-pagination
+                        background
+                        :page-size="20"
+                        layout="total, prev, pager, next, jumper"
+                        :total="table.guanxiquxian.total"
+                        :pager-count="5"
+                        :current-page="table.guanxiquxian.currentPage"
+                        @current-change="handleCurrentChange_guanxiquxian"
+                        @size-change="handleSizeChange_guanxiquxian"
+                        class="pageController"
+                        small
+                        ></el-pagination>
+                    </div>
+                    <!-- 分割线 -->
+                    <div class="divider"></div>
+                    </TabPane>
+                </Tabs>
+                </div>
+            </el-tab-pane>
       <!-- 特征水位 -->
       <el-tab-pane label="特征水位" name="tezhengshuiqing">
         <span slot="label">
@@ -878,6 +967,60 @@ export default {
           pageSizes: 20,
           // 表格高度
           height: 430
+        },
+        // 关系曲线
+        guanxiquxian: {
+          // 表头设置
+          columns: [
+            {
+              title: " ",
+              type: "index",
+              width: 50,
+              align: "center",
+              // 自定义序号
+              indexMethod(item) {
+                var index =
+                  item._index + 1 + (item.currentPage - 1) * item.pageSizes;
+
+                return index;
+              },
+              ellipsis: true
+            },
+            {
+              title: "水位(m)",
+              width: 110,
+              key: "Z",
+              align: "center"
+            },
+            {
+              title: "库容（万m³）",
+              key: "KR",
+              width: 110,
+              align: "center"
+            },
+            {
+              // width: 100,
+              title: "备注",
+              key: "Memo",
+              align: "center"
+            }
+          ],
+          // 表体内容
+          Rows: [],
+          // 过滤后的表体内容
+          Rows_filter: [],
+          // 表格是否加载中
+          loading: false,
+          // 日期时间选择器值
+          date: null,
+          // 总条数
+          total: 0,
+          // 表格高度
+          height: 440,
+          // 当前页
+          currentPage: 1,
+          // 每页显示数量
+          pageSizes: 20
         },
         // 特征水位
         tezhengshuiqing: {
@@ -1827,7 +1970,47 @@ export default {
       this.table.shuiqing.sort = item;
 
       this.search_shuiqing(this.shuiqing_select);
-    }
+    },
+    // 查询关系曲线表格
+    search_guanxiquxian() {
+      this.letTableLoading("guanxiquxian");
+
+      // 传递参数
+      var body = {
+        STCD: this.siteInfo.STCD,
+        _page: this.table["guanxiquxian"].currentPage || 1,
+        _page_size: this.table["guanxiquxian"].pageSizes || 20
+      };
+
+      // 如果有选择日期进行查询，根据表格类型传递参数
+      if (this.table.guanxiquxian.date) {
+        body.YR = this.$FilterData.elDatePicker_Filter(
+          this.table.guanxiquxian.date,
+          "onlyYear"
+        );
+      }
+
+      this.$GetData.Base_MonitoringSites(
+        "Z_Q_relation",
+        body,
+        {
+          default: true,
+          myFilter: data => {
+            data.map(val => {
+              val.currentPage = body._page;
+              val.pageSizes = body._page_size;
+              return val;
+            });
+            return data;
+          }
+        },
+        data => {
+          this.setTableTotal("guanxiquxian", data.total);
+          this.setTableData("guanxiquxian", data.data);
+          this.cancelTableLoading("guanxiquxian");
+        }
+      );
+    },
   },
   mounted() {
     // 组件加载中
@@ -1895,6 +2078,8 @@ export default {
         this.search_tezhengshuiqing();
         // 设置水库水情预警信息
         this.set_SKSQ_alarmInfo(this.siteInfo.STCD);
+        // 关系曲线
+        this.search_guanxiquxian();
 
         // this.getTableData_tezhengshuiqing_Alarm(
         //   {

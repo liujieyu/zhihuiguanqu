@@ -1142,7 +1142,6 @@ var FilterMethods =
                         console.log(time)
                         return time;
                     });
-
                     break;
                 case "hourTable":
                     echartData.chartName = "小时表";
@@ -1605,7 +1604,7 @@ var FilterMethods =
                         var time = val.DT //FilterMethods.methods.dateFilter(val.DT, 3);
                         return time;
                     });
-
+                    
                     break;
                 case "dayTable":
                     echartData.chartName = "日表";
@@ -2402,7 +2401,7 @@ var FilterMethods =
         // 运行工况历史统计表数据 转 ehart图形用数据 返回一个对象, 对象里分别装 Y1轴对象 Y2轴对象 X轴对象
         transform_YXGK_data_into_ehart_data(data, tableType) {
             var _data = JSON.parse(JSON.stringify(data)); // 数据深拷贝
-            // _data = _data.reverse(); // 数组倒序
+             _data = _data.reverse(); // 数组倒序
 
             var echartData = {
                 chartName: "",

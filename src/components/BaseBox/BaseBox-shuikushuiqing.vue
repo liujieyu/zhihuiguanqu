@@ -395,25 +395,29 @@ export default {
                   null,
                   0
                 )}</span>
+                <span class="tip_col_5">库容：</span>
+                <span class="tip_col_7">
+                ${item.rowinfo.w}万m³
+                </span>
                 <span class="tip_col_5">水位：</span>
                 <span class="tip_col_7">${
                   this.$FilterData.Float_Filter(item.rowinfo.RZ, 2) == ""
                     ? ""
                     : this.$FilterData.Float_Filter(item.rowinfo.RZ, 2) + " m"
                 }</span>
-                <span class="tip_col_5">水势：</span>
-                <span class="tip_col_7" id="${item.STCD}_shuishi">${
-        this.$FilterData.WPTN_Filter(item.rowinfo.RWPTN).symbol
-      }</span>
               </div>
               <div class="divider"></div>
-              <div class="tip_row">
+              <div class="tip_row">                
                 <span class="tip_col_5" >汛限水位：</span>
                 <span class="tip_col_7" id="${item.STCD}_XXSW">
 
                 </span>
                 <span class="tip_col_5" >距汛限：</span>
                 <span class="tip_col_7" id="${item.STCD}_JXX"></span>
+                <span class="tip_col_5">水势：</span>
+                <span class="tip_col_7" id="${item.STCD}_shuishi">${
+                  this.$FilterData.WPTN_Filter(item.rowinfo.RWPTN).symbol
+                }</span>
               </div>
               <div class="divider"></div>
         <div id="${
@@ -933,7 +937,7 @@ export default {
             var point = new esri.geometry.Point(
               Row.geometry.x,
               Row.geometry.y,
-              this.featrue.map.spatialReference
+              new esri.SpatialReference({ wkid: 4326 })
             );
             var value = Row.rowinfo[textType];
             // 过滤

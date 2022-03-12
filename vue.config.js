@@ -7,6 +7,7 @@ module.exports = {
     	// proxy: 'http://222.240.238.58:7001/',
         proxy: {
             '/':{
+              ws:false,
               target: 'http://localhost:8080/',
               changeOrigin: true
           }

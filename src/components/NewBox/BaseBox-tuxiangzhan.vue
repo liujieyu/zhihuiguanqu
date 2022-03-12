@@ -9,36 +9,36 @@
           <div class="form">
             <!-- 选择器, 按钮 -->
             <Row class="select-group" :gutter="16">
-              <Col span="8">
+              <Col span="11">
                 <!-- 地址级联选择器 -->
                 <el-cascader
                   clearable
                   filterable
                   size="mini"
-                  placeholder="地址"
-                  change-on-select
+                  placeholder="请选择地址"
                   :options="form.adressList"
                   v-model="form.model_adress"
+                  change-on-select
                   @change="search"
                 ></el-cascader>
                 <!-- <Select
-                @on-change="search"
-                clearable
-                filterable
-                v-model="form.model_adress"
-                placeholder="乡镇"
-                class="select-item"
-                :transfer="true"
-                size="small"
-              >
-                <Option
-                  v-for="item in form.adressList"
-                  :value="item.value"
-                  :key="item.value"
-                >{{ item.label }}</Option>
+                  @on-change="search"
+                  clearable
+                  filterable
+                  v-model="form.model_adress"
+                  placeholder="请选择乡镇"
+                  class="select-item"
+                  :transfer="true"
+                  size="small"
+                >
+                  <Option
+                    v-for="item in form.adressList"
+                    :value="item.value"
+                    :key="item.value"
+                  >{{ item.label }}</Option>
                 </Select>-->
               </Col>
-              <Col span="8">
+              <Col span="11">
                 <!-- 渠道级联选择器 -->
                 <el-cascader
                   clearable
@@ -51,29 +51,9 @@
                   change-on-select
                 ></el-cascader>
               </Col>
-              <Col span="8">
-                <!-- 状态类型选择器 -->
-                <el-select
-                  @change="search"
-                  clearable
-                  filterable
-                  class="select-item"
-                  size="mini"
-                  v-model="form.model_status"
-                  popper-append-to-body
-                  placeholder="状态"
-                >
-                  <el-option
-                    v-for="item in form.statusList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  ></el-option>
-                </el-select>
-              </Col>
             </Row>
             <Row :gutter="16">
-              <Col span="24">
+              <Col span="22">
                 <Input
                   search
                   enter-button
@@ -119,8 +99,8 @@
     <!-- 表格, 用于展示数据 -->
     <div>
       <el-table
-        size="small"
         @cell-click="cellClick"
+        size="small"
         :data="pageFilter()"
         border
         style="width: 100%"
@@ -129,6 +109,7 @@
         empty-text="暂无站点数据"
         @sort-change="sort_change"
       >
+        <el-table-column fixed type="index" label=" " width="40" align="center"></el-table-column>
         <el-table-column
           v-for="item in table.columns"
           :prop="item.key"
@@ -139,31 +120,7 @@
           :sortable="item.sortable"
           :show-overflow-tooltip="true"
         ></el-table-column>
-        <!-- 自定义 -->
-        <el-table-column align="center" label="电压(V)" prop="vol" :width="120" sortable="custom">
-          <template slot-scope="scope">
-            <div>
-              <span
-                :style="{
-              color: scope.row.vol < 12 || scope.row.vol > 16 ? 'red' : 'black'
-            }"
-              >{{ scope.row.vol}}</span>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="通讯状态" prop="CS" :width="120" sortable="custom">
-          <template slot-scope="scope">
-            <div>
-              <span
-                :style="{
-              color: scope.row.CS == '异常'? 'red' : 'black'
-            }"
-              >{{ scope.row.CS }}</span>
-            </div>
-          </template>
-        </el-table-column>
       </el-table>
-
       <!-- 分割线 -->
       <!-- <Divider/> -->
       <div class="divider"></div>
@@ -182,19 +139,18 @@
         small
       ></el-pagination>
     </div>
-    <!-- 提示框 -->
-    <!-- <div ref="tip" style="display:none;"> -->
-    <!-- 闸阀状态 -->
-    <!-- <TipsYUNXINGGONGKUANG @chart="chart" :info="tip.info_tip" v-if="tip.show_tip"></TipsYUNXINGGONGKUANG> -->
-    <!-- </div> -->
+    <div ref="tip" style="display:none;">
+      <!-- 图像站提示 -->
+      <TipsTUXIANGZHAN :info="tip.info_tip" v-if="tip.show_tip"></TipsTUXIANGZHAN>
+    </div>
   </div>
 </template>
 
 
 
 <script>
-import TipsYUNXINGGONGKUANG from "@/components/BaseBox/Tips/Tips-yunxinggongkuang.vue";
-import FilterMethods from "@/assets/commonJS/FilterMethods";
+import TipsTUXIANGZHAN from "@/components/BaseBox/Tips/Tips-tuxiangzhan.vue";
+import FilterMethods from "@/assets/commonJS/FilterMethods"; // 过滤方法
 import GetDataMethods from "@/assets/commonJS/GetDataMethods";
 export default {
   props: {
@@ -206,7 +162,7 @@ export default {
     }
   },
   components: {
-    TipsYUNXINGGONGKUANG
+    TipsTUXIANGZHAN
   },
   data() {
     return {
@@ -217,7 +173,6 @@ export default {
       },
       // 地图对象
       map: null,
-
       // 该图层对象
       JsonFlayer: null,
       // 文字标注图层
@@ -229,103 +184,45 @@ export default {
       },
       // 表单数据
       form: {
-        // 搜索框
         search_str: "",
-        // 地址选择列表
         adressList: [],
-        // 渠道选择列表
         qudaoList: [],
         social: ["site"],
-        // 状态选择列表
-        statusList: [
-          {
-            value: 1,
-            label: "正常"
-          },
-          {
-            value: 2,
-            label: "异常"
-          },
-          {
-            value: 3,
-            label: "电压异常"
-          },
-          {
-            value: 4,
-            label: "通讯异常"
-          }
-        ],
-        // 多选框列表
         checkBoxList: [
           {
             value: "site",
             size: "small",
-            span: 5,
             // iconType: "logo-facebook",
             title: "站点"
           },
           {
             value: "STNM",
             size: "small",
-            span: 6,
             // iconType: "logo-facebook",
             title: "站名"
-          },
-          {
-            value: "vol",
-            size: "small",
-            span: 6,
-            // iconType: "logo-facebook",
-            title: "电压值"
-          },
-          {
-            value: "CS",
-            size: "small",
-            span: 7,
-            // iconType: "logo-facebook",
-            title: "通讯状态"
           }
         ],
-        // 地址选择
-        model_adress: "",
-        // 渠道
-        model_qudao: "",
-        // 状态
-        model_status: ""
+        model_adress: null,
+        model_qudao: null
       },
       // 表格数据
       table: {
         // 表头设置
         columns: [
           {
-            title: "",
-            key: "index",
-            width: 45,
-            align: "center",
-            fixed: "left"
-          },
-          {
             title: "站名",
             key: "STNM",
-            width: 120,
+            width: 140,
             align: "center",
-            fixed: "left",
+            fixed: true,
             sortable: "custom"
           },
           {
             title: "时间",
             key: "tm",
-            width: 120,
             align: "center",
             sortable: "custom"
-          },
-          // {
-          //   title: "电压",
-          //   key: "vol",
-          //   width: 100,
-          //   align: "center",
-          //   sortable: "custom"
-          // }
+          }
         ],
         // 表体内容
         Rows: [],
@@ -340,7 +237,7 @@ export default {
       }
     };
   },
-  // 引入过滤方法到此组件
+  // 引入过滤方法, 获取公共数据方法到此组件
   mixins: [FilterMethods, GetDataMethods],
   methods: {
     // 表格每一行点击事件
@@ -350,11 +247,9 @@ export default {
       evt.graphic.attributes = item;
       evt.graphic.attributes.rowinfo = item;
       var v = new Object();
-      v.itype = "yunxinggongkuang";
+      v.itype = "tuxiang";
 
-        console.log(item);
-
-        // 设置中心缩放
+      // 设置中心缩放
       this.setMapCenterandZoom(item.LGTD, item.LTTD);
       // 取消所有站点的闪烁
       this.$App.GraphicsLayer_Selection_clear();
@@ -367,38 +262,41 @@ export default {
     showTips(item) {
       // 隐藏之前提示框
       this.hideTips();
+      console.log(item);
+      // this.tip.show_tip = true; // 获取提示框组件
+      // this.tip.info_tip = item; // 传递数据给 提示框组件
+      let showNode = `<div>
+      <div class="pd_algin">
+                <span class="tip_col_5">时间：</span>
+                <span class="tip_col_7">
+                    20${item.rowinfo.tm}
+                </span>
+      </div>
+<!--      <div class="pd_algin mg_tp">-->
+<!--        <span class="tip_col_5">监测要素：</span>-->
+<!--        <span class="tip_col_7">-->
+<!--        </span>-->
+<!--      </div>-->
+<!--      <div class="pd_algin mg_tp">-->
+<!--        <span class="tip_col_5">关联站点：</span>-->
+<!--        <span class="tip_col_7">-->
+<!--        </span>-->
+<!--      </div>-->
+
+
+       <div style="height: 20px"></div>
+      <div class="imageSite">
+    <div class="box">
+      <img  id="${item.rowinfo.stcd}_img"  width="210" height="160"></img>
+    </div>
+  </div>
+  </div>`;
       // 延时200毫秒
       setTimeout(() => {
-        var div = `<div>
-        <div class="tip_row">
-                <span class="tip_col_5">时间：</span>
-                <span class="tip_col_7">${item.rowinfo.tm}</span>
-                <span class="tip_col_5">通讯状态：</span>
-                <span class="tip_col_7">${
-                  item.rowinfo.CS}</span>
-                <span class="tip_col_5">电压：</span>
-                <span class="tip_col_7">${this.$FilterData.Float_Filter(
-                  item.rowinfo.vol,1
-                )} v</span>
-              </div>
-              <div class="divider"></div>
-              <div class="tip_row">
-                <span class="tip_col_5">电压范围：</span>
-                <span class="tip_col_7" id="${item.STCD}_VOLMAX_VOLMIN">
-                </span>
-                <span class="tip_col_5">站址：</span>
-                <span class="tip_col_7">
-                ${item.rowinfo.STLC}
-                </span>
-              </div>
-              <div class="divider"></div>
-        <div id="${
-          item.STCD
-        }" style="width: 550px;height:290px;margin:auto"></div>
-      </div>`;
-        this.map.infoWindow.resize(570, 650); // 提示框大小
+        var element = this.$refs.tip.cloneNode(true).children[0]; // 克隆元素节点
+        this.map.infoWindow.resize(250, 650); // 提示框大小
         this.map.infoWindow.setTitle(item.STNM); // 提示题目
-        this.map.infoWindow.setContent(div); // 提示内容
+        this.map.infoWindow.setContent(showNode); // 提示内容
 
 
                 //获取坐标
@@ -430,160 +328,24 @@ export default {
           // 设置中心和缩放 (接受经纬度，和缩放比例)
           this.setMapCenterandZoom(Number(item.LGTD) + 0.1, item.LTTD);
         }
-        var body = {
-          STCD: item.STCD,
-          _page_size: 999999
-        };
 
-          body.STCD = item.STCD;
-          delete body.TM;
-          delete body._page_size;
-
-          // 正常电压范围
-          this.$GetData.Survey_Around_YXGK(null,body,false,data => {
-
-              const around = document.getElementById(`${item.STCD}_VOLMAX_VOLMIN`)
-              let dataVol = data.data[0],
-                  volMin = dataVol.VOLMIN,
-                  volMax = dataVol.VOLMAX
-              around.innerHTML = `${volMin}v - ${volMax}v`
-          })
-        let obj = JSON.parse(JSON.stringify(body))
-
-        let setDate = (dateType) => {
-          let oDate = new Date();
-          console.log(oDate);
-          let YY = oDate.getFullYear();
-          let MM = (oDate.getMonth() + 1) < 10? `0${(oDate.getMonth() + 1)}`: (oDate.getMonth() + 1);
-          let DD = oDate.getDate() < 10? `0${oDate.getDate()}` : oDate.getDate();
-          let HH = oDate.getHours() < 10? `0${oDate.getHours()}` : oDate.getHours();
-          let mm = oDate.getMinutes() < 10? `0${oDate.getMinutes()}` : oDate.getHours();
-          let SS = oDate.getSeconds() < 10? `0${oDate.getSeconds()}` : oDate.getSeconds();
-
-          if(dateType === 'now'){
-            return `${YY}-${MM}-${DD} ${HH}:${mm}:${SS}`
-          }else {
-            return `${YY}-${MM}-${DD} 00:00:00`
-          }
-
-        };
-
-        obj.Time_max = setDate('now');
-        obj.Time_min = setDate('0');
-        console.log(obj);
-        setDate(null)
-        this.$GetData.Survey_History_YXGK(
-          "historyTable",
-          obj,
+        this.$GetData.Survey_History_TX(
           {
-            default: true
+            _page: 1,
+            _page_size: 20,
+            _orderby: "TM desc",
+            STCD: item.rowinfo.STCD
           },
+          true,
           data => {
-            this.createChart_zhuangtaishuju(
-              item.STCD,
-              "zhuangtaishuju",
-              data.data
-            );
-            // this.$GetData.Survey_History_YXGK(
-            //   "auxiliaryTable",
-            //   {
-            //     VOLTYPE: data.data[0].VOLTYPE
-            //   },
-            //   {
-            //     default: true
-            //   },
-            //   data => {
-            //     var data = data.data[0];
-            //     if (data) {
-            //       var div = document.getElementById(
-            //         `${item.STCD}_VOLMAX_VOLMIN`
-            //       );
+            var imgSrc = data.data[0].Save_Path;
 
-            //       var VOLMAX_VOLMIN = `${data.VOLMIN} ~ ${data.VOLMAX}`;
-
-            //       div.innerHTML = `<span>${VOLMAX_VOLMIN}</span>`;
-            //     }
-            //   }
-            // );
+            var img = document.getElementById(`${item.rowinfo.stcd}_img`);
+            img.src = imgSrc;
           }
         );
       }, 200);
-
     },
-    // 制图
-    createChart_zhuangtaishuju(id, tableType, data) {
-      var ele = document.getElementById(id);
-
-      if (data.length > 0) {
-        var echartData = this.$App.transform_YXGK_data_into_ehart_data(
-          data,
-          tableType
-        ); // 渠道水情历史统计表数据 转 ehart图形用数据 返回一个对象, 对象里分别装 Y1轴对象 Y2轴对象 X轴对象
-
-        var myChart = this.$echarts.init(ele);
-
-        myChart.setOption({
-          title: {
-            text: echartData.chartName
-          },
-          grid: {
-            x: '20%'
-          },
-          tooltip: {
-            trigger: "axis"
-          },
-          // legend: {
-          //   data: [echartData.y1.name],
-          //   y: "bottom"
-          // },
-          calculable: true,
-          animation: false,
-          xAxis: [
-            {
-              type: "category",
-              boundaryGap: false,
-              data: echartData.x.list,
-              axisLabel: {
-                rotate: 15,
-              },
-            }
-          ],
-          yAxis: [
-            {
-              name: `${echartData.y1.name} V`,
-              type: "value",
-              axisLabel: {
-                formatter: "{value} "
-              },
-              max: echartData.y1.max,
-              min: echartData.y1.min
-            }
-          ],
-            axis: {
-                axisLabel: {
-                    interval: 'auto'
-                },
-                axisTick: {
-                    interval: 'auto'
-                }
-            },
-          series: [
-            {
-              name: echartData.y1.name,
-              type: "line",
-              data: echartData.y1.list
-            }
-          ]
-        });
-      } else {
-        ele.style.display = "flex";
-        ele.style.alignItems = "center";
-        ele.style.justifyContent = "center";
-        ele.innerHTML = "暂无今天数据";
-      }
-    },
-
-
     // 设置中心和缩放 (接受经纬度，和缩放比例)
     setMapCenterandZoom(LGTD, LTTD, Zoom) {
       //koen 20190929
@@ -636,14 +398,9 @@ export default {
         )}`;
       }
 
-      if (this.form.model_status && this.form.model_status.length != 0) {
-        body["_stat"] = this.form.model_status;
-      }
-
       this.tableLoading(); // 表格加载中
       this.search_FeatrueLayer(
-        // 9, // 图层type类型
-        "yunxinggongkuang", // 图层type类型
+        "tuxiang",
         body,
         this.featrue,
         newFeatureLayerOBJ => {
@@ -665,9 +422,11 @@ export default {
         this.addEventToMap();
       });
 
-      //当鼠标悬停在元素上
+      // 当鼠标离开元素
       JsonFlayer.on("mouse-out", evt => {
-        this.hideTips();
+        setTimeout(() => {
+          this.hideTips(); // 隐藏悬浮框
+        }, 100);
       });
     },
     // 给地图对象添加方法
@@ -704,16 +463,15 @@ export default {
     },
     // 过滤table数据
     filterTableData() {
-      this.table.Rows_filter = this.table.Rows.map((val, index) => {
+      this.table.Rows_filter = this.table.Rows.map(val => {
         var val_clone = JSON.parse(JSON.stringify(val));
-        // 序号
-        val_clone.index = index + 1;
+
         // 时间过滤
-        val_clone.TM = this.dateFilter(val_clone.TM);
-        // 测报电压过滤
-        val_clone.vol = this.$FilterData.Float_Filter(val_clone.vol,1 );
-        // 测报通讯状态过滤
-        // val_clone.CS = this.CS_Filter(val_clone.CS);
+        // val_clone.TM = this.$FilterData.dateFilter(val_clone.TM);
+        // // 水位过滤
+        // val_clone.Z = this.Z_Filter(val_clone.Z);
+        // // 流量过滤
+        // val_clone.Q = this.Z_Filter(val_clone.Q);
         return val_clone;
       });
     },
@@ -758,7 +516,7 @@ export default {
           var point = new esri.geometry.Point(
             Row.geometry.x,
             Row.geometry.y,
-            new esri.SpatialReference({ wkid: 4326 })
+            this.featrue.map.spatialReference
           );
           //定义文本symbol
           var textsymbol = new esri.symbol.TextSymbol(
@@ -808,70 +566,39 @@ export default {
             var point = new esri.geometry.Point(
               Row.geometry.x,
               Row.geometry.y,
-              new esri.SpatialReference({ wkid: 4326 })
+              this.featrue.map.spatialReference
             );
-            console.log("textType",textType)
-
             var value = Row.rowinfo[textType];
             // 过滤
             switch (textType) {
-              case "vol":
-                var value = `${this.Z_Filter(Row.rowinfo[textType],1)}`;
+              case "VOL":
+                var value = `${this.Z_Filter(Row.rowinfo[textType])}`;
                 if (value == "") {
                   value = "";
                 } else {
                   value += "V";
                 }
-                var color, vol = Row.rowinfo[textType];     // Row.rowinfo[textType]   [255, 0 , 0] : [55, 55, 55]
-                if (vol >= 12 && vol <= 16) {
-                  color = [55, 55, 55]
-                }else {
-                  color = [255, 0 , 0]
-                }
-
-                //定义文本symbol
-                var textsymbol = new esri.symbol.TextSymbol(value) //动态设置文本值
-                        .setColor(new dojo.Color(color)) //setColor设置文本颜色
-                        .setFont(
-                                new esri.symbol.Font("10pt") //setFont设置文本大小
-                                        .setWeight(esri.symbol.Font.WEIGHT_BOLD)
-                        ) //setWeight设置文本粗体
-                        .setOffset(0, -(25 + index * 15)); //设置偏移方向
-
                 break;
               case "CS":
-                var value = Row.rowinfo[textType];
+                var value = `${this.CS_Filter(Row.rowinfo[textType])}`;
                 if (value == "") {
                   value = "";
+                } else {
+                  value += "";
                 }
-
-                //定义文本symbol
-                var textsymbol = new esri.symbol.TextSymbol(value) //动态设置文本值
-                        .setColor(new dojo.Color(Row.rowinfo.CS == "异常" ? [255, 0 , 0] : [55, 55, 55])) //setColor设置文本颜色
-                        .setFont(
-                                new esri.symbol.Font("10pt") //setFont设置文本大小
-                                        .setWeight(esri.symbol.Font.WEIGHT_BOLD)
-                        ) //setWeight设置文本粗体
-                        .setOffset(0, -(25 + index * 15)); //设置偏移方向
-                break;
-              case "STNM":
-                var value = Row.rowinfo[textType];
-                if (value == "") {
-                  value = "";
-                }
-
-                //定义文本symbol
-                var textsymbol = new esri.symbol.TextSymbol(value) //动态设置文本值
-                        .setColor(new dojo.Color([55, 55, 55])) //setColor设置文本颜色
-                        .setFont(
-                                new esri.symbol.Font("10pt") //setFont设置文本大小
-                                        .setWeight(esri.symbol.Font.WEIGHT_BOLD)
-                        ) //setWeight设置文本粗体
-                        .setOffset(0, -(25 + index * 15)); //设置偏移方向
                 break;
             }
 
-
+            //定义文本symbol
+            var textsymbol = new esri.symbol.TextSymbol(value) //动态设置文本值
+              .setColor(
+                new dojo.Color(value == "不正常" ? [255, 0, 0] : [55, 55, 55])
+              ) //setColor设置文本颜色
+              .setFont(
+                new esri.symbol.Font("10pt") //setFont设置文本大小
+                  .setWeight(esri.symbol.Font.WEIGHT_BOLD)
+              ) //setWeight设置文本粗体
+              .setOffset(0, -(25 + index * 15)); //设置偏移方向
             var graphic = new esri.Graphic(point, textsymbol);
             textGraphicsLayer.add(graphic);
           }
@@ -882,7 +609,6 @@ export default {
     // 移除文字标注图层
     removeTextGraphicsLayer(textType) {
       // 找到对应的文字标注图层
-      console.log(textType);
       for (let i = 0; i < this.TextGraphicsLayers.length; i++) {
         var val = this.TextGraphicsLayers[i];
         if (val.textType == textType) {
@@ -921,7 +647,7 @@ export default {
         //   newVal.value = val.AD_CD;
         //   newVal.label = val.AD_NM;
         //   return newVal;
-        // });
+        // })
       });
 
       // 获取输排水渠道数据,然后设置渠道选择框选项
@@ -934,7 +660,6 @@ export default {
         //   return newVal;
         // });
       });
-
       // 多选框标记勾选触发事件
       // 1.清除所有文本标注图层
       // 2.根据多选框添加文字标注图层
@@ -960,12 +685,6 @@ export default {
                 bTime = isNaN(bTime) ? 0 : bTime;
                 return bTime - aTime;
               });
-            } else if (key == "CS") {
-              newList = this.table.Rows_filter.sort((a, b) => {
-                var a_cs = a["CS"] == "正常" ? 1 : 0,
-                  b_cs = b["CS"] == "正常" ? 1 : 0;
-                return b_cs - a_cs;
-              });
             } else {
               newList = this.table.Rows_filter.sort((a, b) => {
                 return Number(b[key]) - Number(a[key]);
@@ -981,12 +700,6 @@ export default {
                 aTime = isNaN(aTime) ? 0 : aTime;
                 bTime = isNaN(bTime) ? 0 : bTime;
                 return aTime - bTime;
-              });
-            } else if (key == "CS") {
-              newList = this.table.Rows_filter.sort((a, b) => {
-                var a_cs = a["CS"] == "正常" ? 1 : 0,
-                  b_cs = b["CS"] == "正常" ? 1 : 0;
-                return a_cs - b_cs;
               });
             } else {
               newList = this.table.Rows_filter.sort((a, b) => {
@@ -1006,10 +719,10 @@ export default {
     this.search();
     this.baseBox_Interval = setInterval(() => {
       this.search();
-    },1000 * 60 * 5)
+    }, 1000 * 60 * 5);
   },
   destroyed() {
-    clearInterval(this.baseBox_Interval)
+    clearInterval(this.baseBox_Interval);
   }
 };
 </script>

@@ -16,7 +16,7 @@
         @select="handleSelect"
       >
         <el-menu-item index="1" :disabled="true" style="opacity: 1;">
-          <span style="font-size: 20px; color: #fff;font-weight: 200;">宁乡市小型水库监测预警平台</span>
+          <span style="font-size: 20px; color: #fff;font-weight: 200;">黄材灌区量测水系统</span>
         </el-menu-item>
         <el-menu-item index="1" :disabled="true" style="opacity: 1;">
           <el-switch
@@ -29,13 +29,40 @@
             active-color="#468ecb"
           ></el-switch>
         </el-menu-item>
+        <!-- <el-menu-item index="1" :disabled="true" style="opacity: 1;">
+          <el-switch
+            @change="switch2change"
+            inactive-text="三维仿真"
+            :active-value="1"
+            :inactive-value="0"
+            v-model="mapBox3D"
+            active-color="#468ecb"
+          ></el-switch>
+        </el-menu-item> -->
+        <!-- <el-menu-item index="/tablebasedata-gqxx" style="float: left;" @click="navchange1()"><img class='img1'  :src="imgflag=='jichushuju'?require('@/assets/image/u448.svg'):require('@/assets/image/u444.svg')" />基础数据</el-menu-item>
+        <el-menu-item index="/" style="float: left;" @click="navchange2()"><img class='img2' :src="imgflag=='xinxifuwu'?require('@/assets/image/u457.svg'):require('@/assets/image/u453.svg')" >信息服务</el-menu-item>
+        <el-menu-item index="/tablezfkz-zfdd" style="float: left;" @click="navchange3()"><img class='img3' :src="imgflag=='zhafakongzhi'?require('@/assets/image/u466.svg'):require('@/assets/image/u462.svg')" >闸阀控制</el-menu-item>
+        <el-menu-item index="/tabletest-test13" style="float: left;"  @click="navchange4()"><img class='img4' :src="imgflag=='zhibanguanli'?require('@/assets/image/u475.svg'):require('@/assets/image/u471.svg')" >值班管理</el-menu-item>
+        <el-menu-item index="/tablexgpt-qxxx" style="float: left;"  @click="navchange5()"><img class='img5' :src="imgflag=='xiangguanpingtai'?require('@/assets/image/u484.svg'):require('@/assets/image/u480.svg')">相关平台</el-menu-item>
+        <el-menu-item index="/tableyjgl-yjfb" style="float: left;" @click="navchange6()"><img class='img6' :src="imgflag=='yujingguanli'?require('@/assets/image/u493.svg'):require('@/assets/image/u489.svg')">预警管理</el-menu-item>
+        <el-menu-item index="/tableldgl-ldjggl" style="float: left;" @click="navchange7()"><img class='img7' :src="imgflag=='lvdingguanli'?require('@/assets/image/u502.svg'):require('@/assets/image/u498.svg')">率定管理</el-menu-item>
+        <el-menu-item index="/water-plan" style="float: left;" @click="navchange8()"><img class='img8' :src="imgflag=='peishuiguanli'?require('@/assets/image/u511.svg'):require('@/assets/image/u507.svg')">配水管理</el-menu-item>
+        <el-menu-item index="/tablexxfw-yxgk" style="float: left;" @click="navchange9()"><img class='img9' :src="imgflag=='weihuguanli'?require('@/assets/image/u520.svg'):require('@/assets/image/u516.svg')">维护管理</el-menu-item>
+        
+        <el-menu-item style="float: left;">
+          <el-input placeholder suffix-icon="el-icon-search" v-model="search_str"></el-input>
+        </el-menu-item>
+          <div style="line-height: 20px;display: flex;flex-direction: column; margin-top: 10px;color: #fff;padding-left: 10px;">
+          <div>admin</div>
+          <div style="cursor: pointer;">退出</div>
+          </div> -->
 
         <div style="line-height: 20px;display: flex;flex-direction: column; margin-top: 10px;color: #fff;padding-left: 10px;padding-right: 10px;float: right;" @click="close()">
         <div>{{loginform.name}}</div>
         <div style="cursor: pointer;">退出</div>
         </div>
         <div style="float: right;line-height: 61px;">
-        <el-input placeholder="请输入水库名称" suffix-icon="el-icon-search" v-model="search_str"></el-input>
+        <el-input placeholder suffix-icon="el-icon-search" v-model="search_str"></el-input>
         </div>
 
         <el-menu-item v-if="menus_data.weihu" index="/tablexxfw-yxgk" style="float: right;" @click="navchange9()"><img class='img9' :src="imgflag=='weihuguanli'?require('@/assets/image/u520.svg'):require('@/assets/image/u516.svg')">维护管理</el-menu-item>
@@ -46,7 +73,11 @@
         <el-menu-item v-if="menus_data.zhiban" index="/tabletest-test13" style="float: right;"  @click="navchange4()"><img class='img4' :src="imgflag=='zhibanguanli'?require('@/assets/image/u475.svg'):require('@/assets/image/u471.svg')" >值班管理</el-menu-item>
         <el-menu-item v-if="menus_data.zhafa" index="/tablezfkz-zfdd" style="float: right;" @click="navchange3()"><img class='img3' :src="imgflag=='zhafakongzhi'?require('@/assets/image/u466.svg'):require('@/assets/image/u462.svg')" >闸阀控制</el-menu-item>
         <el-menu-item v-if="menus_data.xinxi" index="/" style="float: right;" @click="navchange2()"><img class='img2' :src="imgflag=='xinxifuwu'?require('@/assets/image/u457.svg'):require('@/assets/image/u453.svg')" >信息服务</el-menu-item>
-        <el-menu-item v-if="menus_data.jichu" index="/tablebasedata-gqxx" style="float: right;" @click="navchange1()"><img class='img1'  :src="imgflag=='jichushuju'?require('@/assets/image/u448.svg'):require('@/assets/image/u444.svg')" />基础数据</el-menu-item>       
+        <el-menu-item v-if="menus_data.jichu" index="/tablebasedata-gqxx" style="float: right;" @click="navchange1()"><img class='img1'  :src="imgflag=='jichushuju'?require('@/assets/image/u448.svg'):require('@/assets/image/u444.svg')" />基础数据</el-menu-item>
+
+
+
+        
       </el-menu>
     </div>
 
@@ -59,7 +90,7 @@
 
       <!-- 工具条 -->
       <div class="left-btn">
-        <el-button plain size="mini" style="width: 83px;height: 28px;" @click="tool_box = !tool_box">地图操作</el-button>
+        <el-button plain size="mini" style="width: 83px;height: 28px;" @click="tool_box = !tool_box">一张图</el-button>
         <el-button plain size="mini" style="margin-left: 0px;width: 83px;height: 28px;" @click="restoreMapView">默认大小</el-button>
         <el-button plain size="mini" style="margin-left: 0px;width: 83px;height: 28px;" @click="fangda">放大</el-button>
         <el-button plain size="mini" style="margin-left: 0px;width: 83px;height: 28px;" @click="suoxiao">缩小</el-button>
@@ -67,6 +98,19 @@
 
     <transition name="el-fade-in-linear">
     <div class="new-tool-box2" v-show="tool_box">
+      <!-- 监测 -->
+      <div style="border-bottom: 1px solid rgb(242,242,242);padding:5px;">
+        <div class="box-h">
+          <span style="position: absolute;">监测</span>
+          <el-button style="position: absolute;right: 10px;" size="mini" round @click="jcxs">{{isActive1?'展开':'收起'}}</el-button>
+        </div>
+        <div style="display: flex;flex-wrap:wrap;overflow: hidden;" :class="{jcbox:isActive1}">
+          <div class="jiance-box" :class="{'check-border':item.show=='1'}" v-for="(item,index) in FeatrueLayers" @click="OnLayerChange(item)">
+                <img :src="item.icon" style="position: absolute;left: 15.5px;top: 5px;width: 21px;height: 21px;">
+                <span>{{item.title}}</span>
+              </div>
+        </div>
+      </div>
       <!-- 图层 -->
       <div style="border-bottom: 1px solid rgb(242,242,242);padding:5px;">
         <div class="box-h">
@@ -105,66 +149,152 @@
               </div>
         </div>
       </div>
-      <!-- 标注 -->
-      <div style="border-bottom: 1px solid rgb(242,242,242);padding:5px;display:block;">
+      <!-- 控制 -->
+      <div style="border-bottom: 1px solid rgb(242,242,242);padding:5px;">
         <div class="box-h">
-          <span style="position: absolute;">标注</span>
+          <span style="position: absolute;">控制</span>
+          
         </div>
-        <div style="display: flex;flex-wrap:wrap;overflow: hidden;height:46px;">
-          <CheckboxGroup
-              @on-change="checkboxGroup_onChange"
-              v-model="testform.social"
-              class="checkBox-group"
-          >
-          <Checkbox
-              v-for="item in testform.checkBoxList"
-              :label="item.value"
-              :size="item.size"
-              class="checkBoxItem"
-          >
-          <span>{{ item.title }}</span>
-          </Checkbox>
-         </CheckboxGroup>
-        </div>
-      </div>
-      <!-- 区域定位 -->
-      <div style="border-bottom: 1px solid rgb(242,242,242);padding:5px 0px 5px 0px;">
-        <div class="box-h">
-          <span style="position: absolute;">区域定位(存在小型水库的行政区划)</span>
-          <el-button style="position: absolute;right: 10px;" size="mini" round @click="qydw">{{!areashow?'展开':'收起'}}</el-button>
-        </div>
-          <div v-show="areashow">
-            <div style="display: flex;flex-wrap:wrap;overflow: hidden;">
-              <div class="jiance-box" :class="{'check-border':item.show}" style="height:20px;width:64px;" v-for="(item, index) in area_list" @click="area_switch(item)">
-                    <span style="width:64px;">{{item.AD_NM}}</span>
-              </div>
+        <div>
+          <div class="jiance-box" style="cursor:no-drop;" v-for="(item,index) in FeatrueLayers_control">
+                <img :src="item.iconUrl" style="position: absolute;left: 15.5px;top: 5px;">
+                <span>{{item.title}}</span>
             </div>
-            <div v-show="countryshow">
-              <el-divider><i class="el-icon-more"></i><span style="color:#515A6E;">下辖社区/村</span><i class="el-icon-more"></i></el-divider>
-              <div style="display: flex;flex-wrap:wrap;">
-                <div class="jiance-box" :class="{'country-border':item.show}" :style="{'height':'20px','width':(item.width+8)+'px'}" v-for="(item, index) in country_list" @click="country_switch(item)">
-                      <span :style="{'width':(item.width+8)+'px'}">{{item.AD_NM}}</span>
-                </div>
-              </div>
-            </div>
-          </div>
+        </div>
       </div>
       <!-- 基础 -->
       <div style="border-bottom: 1px solid rgb(242,242,242);padding:5px;">
         <div class="box-h">
-          <span style="position: absolute;">图例</span>         
+          <span style="position: absolute;">基础</span>
+          
         </div>
-        <div style="display: flex;flex-wrap:wrap;font-size:14px;">
-          <img src="/static/demo-hunanguanqu/red.png" style="margin-right:5px;width:16px;height:16px;">
-          <span style="padding:1px;">水位预警</span>
-          <img src="/static/demo-hunanguanqu/yellow.png" style="margin-right:5px;margin-left:5px;width:16px;height:16px;">
-          <span style="padding:1px;">降雨预警</span>
-          <img src="/static/demo-hunanguanqu/purple.png" style="margin-right:5px;margin-left:5px;width:16px;height:16px;">
-          <span style="padding:1px;">设备运行异常</span>
+        <div>
+          
+        </div>
+      </div>
+      <!-- 分析 -->
+      <div style="padding:5px;">
+        <div class="box-h">
+          <span style="position: absolute;">分析</span>
+          
+        </div>
+        <div>
+          
         </div>
       </div>
     </div>
     </transition>
+
+      <!-- 旧的 -->
+      <!-- <div class="tool-box"> -->
+        <!-- 地图视图默认位置还原按钮 -->
+        <!-- <div id="mapViewReductionButton" @click="restoreMapView">
+          <Icon type="ios-home-outline"></Icon>
+        </div> -->
+        <!-- 基础 -->
+        <!--        v-for="(item,index) in FeatrueLayers_base"-->
+        <!-- <el-popover>
+          <template>
+            <div style="margin: 5px;text-align: center; color: #aaaaaa;"> -->
+              <!--              <el-switch-->
+              <!--                disabled-->
+              <!--                v-model="item.show"-->
+              <!--                @change="OnLayerChange(item)"-->
+              <!--                :active-text="item.title"-->
+              <!--                inactive-text-->
+              <!--                active-value="1"-->
+              <!--                inactive-value="0"-->
+              <!--              ></el-switch>-->
+              <!-- 预留接口
+            </div>
+          </template>
+          <el-button slot="reference" type="text" style="margin-left: 20px; margin-right: 20px;">基础</el-button>
+        </el-popover> -->
+        <!-- 监测（正在做。。） -->
+        <!-- <el-popover>
+          <template v-for="(item,index) in FeatrueLayers">
+            <div style="margin: 5px;">
+              <el-switch
+                v-model="item.show"
+                @change="OnLayerChange(item)"
+                :active-text="item.title"
+                inactive-text
+                active-value="1"
+                inactive-value="0"
+              ></el-switch>
+            </div>
+          </template>
+          <template v-if="FeatrueLayers.length > 0" v-for="(item,index) in FeatrueLayers_waiting">
+            <div style="margin: 5px;">
+              <el-switch
+                disabled
+                v-model="item.show"
+                :active-text="item.title"
+                inactive-text
+                active-value="1"
+                inactive-value="0"
+              ></el-switch>
+            </div>
+          </template>
+          <el-button slot="reference" type="text" style="margin-left: 20px;margin-right: 20px;">监测</el-button>
+        </el-popover> -->
+        <!-- 控制 -->
+        <!-- <el-popover>
+          <template v-for="(item,index) in FeatrueLayers_control">
+            <div style="margin: 5px;">
+              <el-switch
+                disabled
+                v-model="item.show"
+                :active-text="item.title"
+                inactive-text
+                active-value="1"
+                inactive-value="0"
+              ></el-switch>
+            </div>
+          </template>
+          <el-button slot="reference" type="text" style="margin-left: 20px; margin-right: 20px;">控制</el-button>
+        </el-popover> -->
+        <!-- 分析 -->
+        <!-- <el-popover>
+          <template>
+            <div style="margin: 5px;text-align: center; color: #aaaaaa;"> -->
+              <!--              <el-switch-->
+              <!--                disabled-->
+              <!--                v-model="item.show"-->
+              <!--                @change="OnLayerChange(item)"-->
+              <!--                :active-text="item.title"-->
+              <!--                inactive-text-->
+              <!--                active-value="1"-->
+              <!--                inactive-value="0"-->
+              <!--              ></el-switch>-->
+              <!-- 预留接口
+            </div>
+          </template>
+          <el-button slot="reference" type="text" style="margin-left: 20px; margin-right: 20px;">分析</el-button>
+        </el-popover> -->
+        <!-- 图层 -->
+        <!-- <el-popover>
+          <template v-for="(item, index) in tu_ceng_list">
+            <div style="margin: 5px;">
+              <el-switch v-model="item.show" :active-text="item.name" @change="tu_ceng_switch(item)"></el-switch>
+            </div>
+          </template>
+          <el-button slot="reference" type="text" style="margin-left: 20px; margin-right: 20px;">图层</el-button>
+        </el-popover> -->
+        <!-- 底图 -->
+        <!-- <el-popover>
+          <div style="margin: 5px;">
+            <el-radio-group v-model="ditu_type" @change="ditu_change()">
+              <el-radio label="-">不显示底图</el-radio>
+              <el-radio label="satellite">卫星影像</el-radio>
+              <el-radio label="hybrid">混合</el-radio>
+              <el-radio label="streets">街道</el-radio>
+              <el-radio label="topo">地形</el-radio>
+            </el-radio-group>
+          </div>
+          <el-button slot="reference" type="text" style="margin-left: 20px; margin-right: 20px;">底图</el-button>
+        </el-popover>
+      </div> -->
 
       <!-- 列表窗 -->
       <div id="listWindow" :class="['listWindow',{'listWindow_on': listWindow.show_Controller}]">
@@ -175,185 +305,31 @@
         </div>
         <!-- 主体 -->
         <div class="wrapper">
-          <el-checkbox v-model="testform.checked" style="position: absolute;right:10px;top:25px;z-index:100;" @change="showShipin">视频监控</el-checkbox>
           <!-- 标签栏与内容 -->
-          <Collapse active-key="1">
-            <Panel key="1">
-                查询  
-                <div slot="content">
-                    <div class="form">
-                        <!-- 选择器, 按钮 -->
-                        <Row class="select-group" :gutter="16">
-                            <Col span="12">
-                                <!-- 地址级联选择器 -->
-                                <Cascader
-                                        clearable
-                                        multiple
-                                        filterable
-                                        change-on-select
-                                        size="small"
-                                        placeholder="地址"
-                                        :data="testform.adressList"
-                                        v-model="testform.model_adress"
-                                        @on-change="search"
-                                ></Cascader>
-                            </Col>
-                            <Col span="12">
-                                <!-- 归属单位选择器 -->
-                                <Select
-                                        v-model="testform.model_guishu"
-                                        multiple
-                                        clearable
-                                        size="small"
-                                        @on-change="search"
-                                        placeholder="归属单位">
-                                    <Option
-                                            v-for="item in testform.guishuList"
-                                            :key="item.value"
-                                            :value="item.value">
-                                    {{ item.label }}
-                                    </Option>
-                                </Select>
-                            </Col>
-                        </Row>
-                        <!-- 分割线 -->
-                        <div class="divider"></div>
-                        <Row class="select-group" :gutter="16">
-                          <Col span="12">
-                          <!-- 水库等级选择器 -->
-                          <Select
-                            v-model="testform.model_status"
-                            filterable
-                            clearable
-                            size="small"
-                            placeholder="水库等级"
-                            @on-change="search"
-                          >
-                            <Option key="1"  value="1">小I型水库</Option>
-                            <Option key="2"  value="2">小II型水库</Option>
-                          </Select>
-                        </Col>
-                        <Col span="12">
-                          <!-- 状态类型选择器 -->
-                          <Select
-                            clearable
-                            filterable
-                            size="small"
-                            v-model="testform.model_status"
-                            popper-append-to-body
-                            placeholder="设备运行状态"
-                            @on-change="search"
-                          >
-                            <Option
-                              v-for="item in testform.statusList"
-                              :key="item.value"
-                              :label="item.label"
-                              :value="item.value"
-                            >
-                            {{ item.label }}
-                            </Option>
-                          </Select>
-                        </Col>
-                        </Row>
-                        <div class="divider"></div>
-                        <Row class="select-group" :gutter="24">
-                            <Col span="18">
-                                <Input
-                                        search
-                                        enter-button
-                                        @on-search="search"
-                                        placeholder="请输入要搜索的站名"
-                                        size="small"
-                                        v-model="testform.search_str"
-                                >
-                                </Input>
-                            </Col>
-                            <Col span="6">
-                            <Button type="info" size="small" @click="showyqinfo">
-                              <span>更多雨情查询</span>
-                            </Button>
-                            </Col>
-                        </Row>
-                        <div v-show="testform.yuqinginfo">
-                          <!-- 分割线 -->
-                        <div class="divider"></div>
-                        <Row class="select-group" :gutter="16">
-                            <Col>
-                                开始时间
-                                <el-date-picker
-                                        class="date_zw"
-                                        v-model="testform.model_date[0]"
-                                        type="datetime"
-                                        size="mini"
-                                        @change="search"
-                                        format="yyyy-MM-dd HH"
-                                        value-format="yyyy-MM-dd HH:mm:ss"
-                                        placeholder="选择日期时间">
-                                </el-date-picker>
-                                预警预设值
-                                <Input
-                                        style="width: 140px;"
-                                        @on-enter="search"
-                                        placeholder="预警预设值mm"
-                                        size="small"
-                                        v-model="testform.singular"
-                                >
-                                </Input>
-                                <br>结束时间
-                                <el-date-picker
-                                        class="date_zw time_zw"
-                                        v-model="testform.model_date[1]"
-                                        type="datetime"
-                                        size="mini"
-                                        @change="search"
-                                        format="yyyy-MM-dd HH"
-                                        value-format="yyyy-MM-dd HH:mm:ss"
-                                        placeholder="选择日期时间">
-                                </el-date-picker>
-                                异常界限值
-                                <Input
-                                        style="width: 140px;"
-                                        @on-enter="search"
-                                        placeholder="异常界限值mm"
-                                        size="small"
-                                        v-model="testform.YCJXZ"
-                                >
-                                </Input>
-                            </Col>
-                        </Row>
-                        <!-- 分割线 -->
-                        <div class="divider"></div>
-                        <Row :gutter="16" type="flex" justify="left" align="middle">
-                            <span style="letter-spacing:5px;margin-left: 15px;">雨量:</span>
-                            <el-radio-group v-model="radio4" size="mini" fill="#B0C3D7">
-                                <el-radio-button label="全部"><font style="color:rgb(207,204,207);">全部</font></el-radio-button>
-                                <el-radio-button :label="0"><font style="color:rgb(41,196,1);">0</font></el-radio-button>
-                                <el-radio-button :label="10"><font style="color:rgb(16,135,56);">10</font></el-radio-button>
-                                <el-radio-button :label="25"><font style="color:rgb(90,179,255);">25</font></el-radio-button>
-                                <el-radio-button :label="50"><font style="color:rgb(1,113,223);">50</font></el-radio-button>
-                                <el-radio-button :label="100"><font style="color:rgb(255,132,1);">100</font></el-radio-button>
-                                <el-radio-button :label="250"><font style="color:rgb(255,2,2);">250</font></el-radio-button>
-                            </el-radio-group>
-                        </Row>
-                        </div>
-                    </div>
-                </div>
-            </Panel>
-        </Collapse>
           <div>
-            <el-tabs type="card" :tabPosition="listWindow_tabPosition(listWindow.mode)" @tab-click="handleTabClick" v-model="listWindow.activeName">
-                <el-tab-pane label="水库水情" name="shuikushuiqing" v-if="featrueLayers_showing().length > 0">
-                  <!-- 水库水情 -->
-                  <BaseBoxSHUIKUSHUIQING ref="sqtable" :featrue="zuobiaoxi(SiteFeatrueLayer)"></BaseBoxSHUIKUSHUIQING>
-                </el-tab-pane>
-                <el-tab-pane label="雨情" name="yuqing" v-if="featrueLayers_showing().length > 0">
+            <el-tabs closable @tab-remove="removeTab" type="card" :tabPosition="listWindow_tabPosition(listWindow.mode)" @tab-click="handleTabClick" v-model="listWindow.activeName">
+              <template v-for="item in FeatrueLayers">
+                <el-tab-pane :label="item.title" :name="item.itype" v-if="item.show=='1'">
+                  <!-- 渠道 -->
+                  <BaseBoxQUDAO :featrue="zuobiaoxi(item)" :search_FeatrueLayer="search_FeatrueLayer" v-if="item.itype=='qudaoshuiqing'" ></BaseBoxQUDAO>
+                  <!-- 闸阀水情 -->
+                  <BaseBoxZHAFASHUIQING :featrue="zuobiaoxi(item)" :search_FeatrueLayer="search_FeatrueLayer" v-if="item.itype=='zhafashuiqing'" ></BaseBoxZHAFASHUIQING>
+                  <!-- 闸阀状态 -->
+                  <BaseBoxZHAFAZHUANGTAI :featrue="zuobiaoxi(item)" :search_FeatrueLayer="search_FeatrueLayer" v-if="item.itype=='zhafazhuangtai'" ></BaseBoxZHAFAZHUANGTAI>
                   <!-- 雨量站 -->
-                  <BaseBoxYUQING ref="yqtable" :featrue="zuobiaoxi(SiteFeatrueLayer)"></BaseBoxYUQING>
-                </el-tab-pane>
-                <el-tab-pane label="运行工况" name="yunxinggongkuang" v-if="featrueLayers_showing().length > 0">
+                  <BaseBoxYUQING :featrue="zuobiaoxi(item)" :search_FeatrueLayer="search_FeatrueLayer" v-if="item.itype=='yuqing'" ></BaseBoxYUQING>
+                  <!-- 水库水情 -->
+                  <BaseBoxSHUIKUSHUIQING :featrue="zuobiaoxi(item)" :search_FeatrueLayer="search_FeatrueLayer" v-if="item.itype=='shuikushuiqing'" ></BaseBoxSHUIKUSHUIQING>
+                  <!-- 河道水情 -->
+                  <BaseBoxHEDAOSHUIQING :featrue="zuobiaoxi(item)" :search_FeatrueLayer="search_FeatrueLayer" v-if="item.itype=='hedaoshuiqing'" ></BaseBoxHEDAOSHUIQING>
+                  <!-- 视频站 -->
+                  <BaseBoxSHIPINZHAN :featrue="zuobiaoxi(item)" :search_FeatrueLayer="search_FeatrueLayer" v-if="item.itype=='shipin'" ></BaseBoxSHIPINZHAN>
+                  <!-- 图像站 -->
+                  <BaseBoxTUXIANGZHAN :featrue="zuobiaoxi(item)" :search_FeatrueLayer="search_FeatrueLayer" v-if="item.itype=='tuxiang'" ></BaseBoxTUXIANGZHAN>
                   <!-- 运行工况 -->
-                  <BaseBoxYUNXINGGONGKUANG ref="gktable" :featrue="zuobiaoxi(SiteFeatrueLayer)"></BaseBoxYUNXINGGONGKUANG>
+                  <BaseBoxYUNXINGGONGKUANG :featrue="zuobiaoxi(item)" :search_FeatrueLayer="search_FeatrueLayer" v-if="item.itype=='yunxinggongkuang'" ></BaseBoxYUNXINGGONGKUANG>
                 </el-tab-pane>
+              </template>
             </el-tabs>
           </div>
           <!-- 图层没有时的提示信息 -->
@@ -378,10 +354,8 @@
         <DetailQUDAO :info="details.info_right" v-if="details.info_right.itype=='qudaoshuiqing'"></DetailQUDAO>
         <!-- 雨情 -->
         <DetailYUQING :info="details.info_right" v-if="details.info_right.itype=='yuqing'"></DetailYUQING>
-        <!--水雨视频站点信息-->
-        <DetailSiteSHUIQING :info="details.info_left" v-if="details.info_left.itype=='siteinfo1'"></DetailSiteSHUIQING>
         <!-- 水库水情 -->
-        <DetailSHUIKUSHUIQING :info="details.info_right" v-if="details.info_right.itype=='siteinfo'"></DetailSHUIKUSHUIQING>
+        <DetailSHUIKUSHUIQING :info="details.info_right" v-if="details.info_right.itype=='shuikushuiqing'"></DetailSHUIKUSHUIQING>
         <!-- 河道水情 -->
         <DetailHEDAOSHUIQING :info="details.info_right" v-if="details.info_right.itype=='hedaoshuiqing'"></DetailHEDAOSHUIQING>
         <!-- 闸阀水情 -->
@@ -411,10 +385,8 @@
         <DetailQUDAO :info="details.info_left" v-if="details.info_left.itype=='qudaoshuiqing'"></DetailQUDAO>
         <!-- 雨情 -->
         <DetailYUQING :info="details.info_left" v-if="details.info_left.itype=='yuqing'"></DetailYUQING>
-        <!--水雨视频站点信息-->
-        <DetailSiteSHUIQING :info="details.info_left" v-if="details.info_left.itype=='siteinfo1'"></DetailSiteSHUIQING>
         <!-- 水库水情 -->
-        <DetailSHUIKUSHUIQING :info="details.info_left" v-if="details.info_left.itype=='siteinfo'"></DetailSHUIKUSHUIQING>
+        <DetailSHUIKUSHUIQING :info="details.info_left" v-if="details.info_left.itype=='shuikushuiqing'"></DetailSHUIKUSHUIQING>
         <!-- 河道水情 -->
         <DetailHEDAOSHUIQING :info="details.info_left" v-if="details.info_left.itype=='hedaoshuiqing'"></DetailHEDAOSHUIQING>
         <!-- 闸阀水情 -->
@@ -441,6 +413,7 @@
     <!-- 图片放大模态框 -->
     <div id="imgModal" class="imgModal" ref="imgModal">
       <!-- 关闭按钮 -->
+      <!-- <span class="close" onclick="document.getElementById('imgModal').style.display='none'">&times;</span> -->
       <span class="close" @click="imgModal_hide">&times;</span>
       <!-- 弹窗内容 -->
       <el-carousel
@@ -463,6 +436,16 @@
         <i class="el-icon-refresh-right" @click="clockwise_rotation"></i>
         <i class="el-icon-refresh-left" @click="counterclockwise_rotation"></i>
         <el-button @click="enlargeModal_carousel.dialogVisible = true">保存原图</el-button>
+        <!-- <a
+                  class="el-button el-button--default"
+                  target="framename"
+                  :src="`${enlargeModal_carousel.Rows[enlargeModal_carousel.initial_index]? enlargeModal_carousel.Rows[enlargeModal_carousel.initial_index].url : ''}`"
+                >
+
+                  <i class="el-icon-download"></i>
+                  <span>保存图片</span>
+        </a>-->
+        <!-- <el-button icon="el-icon-download">保存图片</el-button> -->
       </div>
 
       <el-dialog
@@ -474,6 +457,7 @@
       >
         <span>请右键点击图片，然后选择图片另存为，即可保存原图</span>
         <span slot="footer" class="dialog-footer">
+          <!-- <el-button @click="dialogVisible = false">取 消</el-button> -->
           <el-button type="primary" @click="enlargeModal_carousel.dialogVisible = false">确 定</el-button>
         </span>
       </el-dialog>
@@ -513,6 +497,17 @@
           </el-tab-pane>
           <el-tab-pane label="消息中心">消息中心</el-tab-pane>
         </el-tabs>
+        <!-- <ul class="content">
+                <li>
+                  aaaaaa
+                </li>
+                <li>
+                  bbbbbb
+                </li>
+                <li>
+                  cccccc
+                </li>
+        </ul>-->
       </div>
 
       <div
@@ -522,6 +517,7 @@
         key="Controller"
       >
         <el-badge :value="Message_Window.notify_info.list.length">
+          <!-- <el-button size="small"></el-button> -->
           <div class="text">消息</div>
         </el-badge>
       </div>
@@ -538,28 +534,33 @@ import Vue from "vue";
 
 // 引入页面
 import Table from "./page/Table";
+
 // 渠道水情
+import BaseBoxQUDAO from "@/components/BaseBox/BaseBox-qudaoshuiqing.vue";
 import DetailQUDAO from "@/components/Details/Details-qudaoshuiqing.vue";
 // 闸阀状态
+import BaseBoxZHAFAZHUANGTAI from "@/components/BaseBox/BaseBox-zhafazhuangtai.vue";
 import DetailZHAFAZHUANGTAI from "@/components/Details/Details-zhafazhuangtai.vue";
 // 闸阀水情
+import BaseBoxZHAFASHUIQING from "@/components/BaseBox/BaseBox-zhafashuiqing.vue";
 import DetailZHAFASHUIQING from "@/components/Details/Details-zhafashuiqing.vue";
 // 雨情
-import BaseBoxYUQING from "@/components/NewBox/BaseBox-yuqing.vue";
+import BaseBoxYUQING from "@/components/BaseBox/BaseBox-yuqing.vue";
 import DetailYUQING from "@/components/Details/Details-yuqing.vue";
 // 水库水情
-import BaseBoxSHUIKUSHUIQING from "@/components/NewBox/BaseBox-shuikushuiqing.vue";
-import DetailSHUIKUSHUIQING from "@/components/Details/Details-siteinfo.vue";
-//水雨站点信息
-import DetailSiteSHUIQING from "@/components/Details/Details-shuikushuiqing.vue";
+import BaseBoxSHUIKUSHUIQING from "@/components/BaseBox/BaseBox-shuikushuiqing.vue";
+import DetailSHUIKUSHUIQING from "@/components/Details/Details-shuikushuiqing.vue";
 // 河道水情
+import BaseBoxHEDAOSHUIQING from "@/components/BaseBox/BaseBox-hedaoshuiqing.vue";
 import DetailHEDAOSHUIQING from "@/components/Details/Details-hedaoshuiqing.vue";
 // 视频站
+import BaseBoxSHIPINZHAN from "@/components/BaseBox/BaseBox-shipinzhan.vue";
 import DetailSHIPINZHAN from "@/components/Details/Details-shipinzhan.vue";
-// 图像站
+// 图像站站
+import BaseBoxTUXIANGZHAN from "@/components/BaseBox/BaseBox-tuxiangzhan.vue";
 import DetailTUXIANGZHAN from "@/components/Details/Details-tuxiangzhan.vue";
 // 运行工况
-import BaseBoxYUNXINGGONGKUANG from "@/components/NewBox/BaseBox-yunxinggongkuang.vue";
+import BaseBoxYUNXINGGONGKUANG from "@/components/BaseBox/BaseBox-yunxinggongkuang.vue";
 import DetailYUNXINGGONGKUANG from "@/components/Details/Details-yunxinggongkuang.vue";
 import { debuglog } from "util";
 // 水位库容
@@ -572,7 +573,6 @@ import { parse } from "path";
 import { constants } from "crypto";
 import $ from 'jquery'
 import { debug } from 'console';
-import About from './views/About.vue';
 
 
 const options = { version: "3.28" };
@@ -585,19 +585,13 @@ export default {
       //ditu.json 加载到的各个图层
       //koen 20190911
       tu_ceng_list:[],
-      area_list:[],
-      areaitem:null,
-      countryitem:null,
-      country_list:[],
-      areashow:false,
-      countryshow:false,
+
       //当前中心点
       zhong_xin_dian:null,
 
       //地图类型
       ditu_type: 'topo',
-      // 文字标注图层
-      TextGraphicsLayers: [],
+
 
 
       listWindow_show_Controller: false,
@@ -607,7 +601,7 @@ export default {
         show_Controller: false,
         // 列表窗形态切换
         mode: 0,
-        activeName: "shuikushuiqing"
+        activeName: "qudaoshuiqing"
       },
       mapBox_show: 1,
       imgflag:"",
@@ -645,11 +639,58 @@ export default {
       system_info: null,
       // 正在开发图层数据集合，其中包含图层对象
       FeatrueLayers: [],
-      //正在开发图层对象
-      SiteFeatrueLayer:{itype:'siteinfo',icon:'/static/demo-hunanguanqu/2.png',show:0,swwarmicon:'/static/demo-hunanguanqu/2-alert.png',ylwarmicon:'/static/demo-hunanguanqu/1-alert.png',sbwarmicon:'/static/demo-hunanguanqu/9-alert.png',checknum:0},
-      //视频图层
-      shipinfeatureLayer:{itype:'shipin',icon:'/static/demo-hunanguanqu/8.png',show:0},
       fList: [],
+      // 待开发的图层数据集合，其中包含图层对象
+      FeatrueLayers_waiting: [
+        {
+          title: "墒情",
+          show: "0"
+        },
+        {
+          title: "蒸发量",
+          show: "0"
+        },
+        {
+          title: "地下水",
+          show: "0"
+        },
+        {
+          title: "地下水开采量",
+          show: "0"
+        },
+        {
+          title: "泵站",
+          show: "0"
+        },
+        {
+          title: "水质",
+          show: "0"
+        },
+        {
+          title: "潮位",
+          show: "0"
+        },
+        {
+          title: "泥沙",
+          show: "0"
+        },
+        {
+          title: "工情",
+          show: "0"
+        },
+        {
+          title: "气象",
+          show: "0"
+        }
+      ],
+
+      FeatrueLayers_control: [
+        {
+          title: "闸阀控制",
+          show: "0",
+          iconUrl:require('@/assets/image/u28.svg')
+        }
+      ],
       FL_Sel: [],
       // 用于选中提示的图形图层
       graphicsLayer_Selection: {
@@ -695,85 +736,6 @@ export default {
       isActive1:true,
       isActive2:true,
       loginform:{},
-      radio4:"全部",
-      // 表单数据
-      testform: {
-          yuliang: '',
-          YCJXZ: '50',
-          singular: '50',
-          search_str: "",
-          adressList: [],
-          qudaoList: [],
-          guishuList: [],
-          model_adress: null,
-          model_qudao: null,
-          model_guishu: "",
-          model_date: [],
-          model_dengji: ["1", "2", "3", "4", "5"],
-          model_status:"",
-          yuqinginfo:false,
-          checked:false,
-          // 状态选择列表
-          statusList: [
-            {
-              value: 1,
-              label: "正常"
-            },
-            {
-              value: 2,
-              label: "异常"
-            },
-            {
-              value: 3,
-              label: "电压异常"
-            },
-            {
-              value: 4,
-              label: "通讯异常"
-            }
-          ],
-          social: ["site"],
-
-          checkBoxList: [
-              {
-                  value: "site",
-                  size: "small",
-                  title: "站点"
-              },
-              {
-                  value: "STNM",
-                  size: "small",
-                  title: "站名"
-              },
-              {
-                  value: "RZ",
-                  size: "small",
-                  title: "水位值"
-              },
-              {
-                  value: "w",
-                  size: "small",
-                  title: "库容值"
-              },
-              {
-                  value: "p",
-                  size: "small",
-                  title: "雨量值"
-              },
-              {
-                  value: "vol",
-                  size: "small",
-                  span: 6,
-                  title: "电压值"
-              },
-              {
-                  value: "CS",
-                  size: "small",
-                  span: 7,
-                  title: "通讯状态"
-              }
-          ],
-      },
       menus:[],
       menus_data:{
         jichu:false,
@@ -795,17 +757,16 @@ export default {
   //////////////////////////////////////
   components: {
     Table, // 表格
-    DetailQUDAO,// 渠道
-    DetailZHAFASHUIQING,// 闸阀水情
-    DetailZHAFAZHUANGTAI,// 闸阀状态
+    BaseBoxQUDAO, DetailQUDAO,// 渠道
+    BaseBoxZHAFASHUIQING, DetailZHAFASHUIQING,// 闸阀水情
+    BaseBoxZHAFAZHUANGTAI, DetailZHAFAZHUANGTAI,// 闸阀状态
     BaseBoxYUQING, DetailYUQING,// 雨情
-    DetailHEDAOSHUIQING,// 河道水情
+    BaseBoxHEDAOSHUIQING, DetailHEDAOSHUIQING,// 河道水情
     BaseBoxSHUIKUSHUIQING, DetailSHUIKUSHUIQING,// 水库水情
-    DetailSHIPINZHAN,// 视频站
-    DetailTUXIANGZHAN,// 图像站
+    DetailSHIPINZHAN, BaseBoxSHIPINZHAN,// 视频站
+    DetailTUXIANGZHAN, BaseBoxTUXIANGZHAN,// 图像站
     BaseBoxYUNXINGGONGKUANG, DetailYUNXINGGONGKUANG,// 运行工况
-    DetailSHUIWEIKURONG,// 水位库容
-    DetailSiteSHUIQING//水雨站点信息
+    DetailSHUIWEIKURONG// 水位库容
   },
 
   //////////////////////////////////////
@@ -846,7 +807,7 @@ export default {
         this.loadSHP();
 
         //获取要素图层数据
-         //this.getAll();
+        // this.getAll();
 
 
         this.add_GraphicsLayer_Selection_ToMap();
@@ -857,31 +818,6 @@ export default {
         console.error(err);
       });
     Vue.prototype.$App = this;
-    //设置默认时间
-    this.testform.model_date = this.getinittime();
-    // 获取行政区划数据,然后设置地址选择框选项
-    this.getTableData_WRP_AD_B(data => {
-      debugger;
-        var addresslist=[];
-        var parent={value:data[0].AD_CD,label:data[0].AD_NM,children:[]};
-        for(var i=0;i<data[0].children.length;i++){
-          var childobj=new Object();
-          childobj.value=data[0].children[i].AD_CD;
-          childobj.label=data[0].children[i].AD_NM;
-          childobj.children=[];
-          var subchild=data[0].children[i].children;
-          for(var j=0;j<subchild.length;j++){
-            var subobj=new Object();
-            subobj.value=subchild[j].AD_CD;
-            subobj.label=subchild[j].AD_NM;
-            childobj.children.push(subobj);
-          }
-          parent.children.push(childobj);
-        }
-        addresslist.push(parent);
-        this.testform.adressList = addresslist;
-        this.testform.model_adress=true;
-    });
     //this.$App=this;
     this.axios.get('/guanqu/web/users/online-user').then((res) => {
         this.loginform = res.data;
@@ -925,52 +861,6 @@ export default {
 
 
   methods: {
-    //获取默认时间
-            getinittime() {
-                var date = new Date();
-                var YR = date.getFullYear();
-                var MON = date.getMonth() + 1
-                var datearray = new Array();
-                if (parseInt(MON) < 10) {
-                    MON = `0${MON}`;
-                }
-                var Day = date.getDate();
-                if (parseInt(Day) < 10) {
-                    Day = `0${Day}`;
-                }
-                var Hour = date.getHours();
-                if (parseInt(Hour) < 10) {
-                    Hour = `0${Hour}`;
-                }
-                if (date.getHours() < 8) {
-                    //昨天的时间
-                    var day1 = new Date();
-                    day1.setTime(day1.getTime() - 24 * 60 * 60 * 1000);
-                    day1.setHours(8);
-                    day1.setMinutes(0);
-                    day1.setSeconds(0);
-                    var Hour2 = day1.getHours();
-                    var MON2 = day1.getMonth() + 1;
-                    var DAY2 = day1.getDate();
-                    if (parseInt(Hour2) < 10) {
-                        Hour2 = `0${Hour2}`;
-                    }
-                    if (parseInt(MON2) < 10) {
-                        MON2 = `0${MON2}`;
-                    }
-                    if (parseInt(DAY2) < 10) {
-                        DAY2 = `0${DAY2}`;
-                    }
-                    var s1 = `${day1.getFullYear()}-${MON2}-${DAY2} ${Hour2}:00:00`
-                    datearray[0] = s1;
-                    datearray[1] = `${YR}-${MON}-${Day} ${date.getHours()}:00:00`;
-                    console.log('time1', s1, 'time2', datearray[1]);
-                } else {
-                    datearray[0] = `${YR}-${MON}-${Day} 08:00:00`;
-                    datearray[1] = `${YR}-${MON}-${Day} ${Hour}:00:00`;
-                }
-                return datearray;
-            },
     //关闭页面
     close(){
       this.axios.delete('/guanqu/web/user/logout').then((res)=>{      
@@ -996,10 +886,6 @@ export default {
         this.isActive2 = this.isActive2;
       }
     },
-    //区域定位
-    qydw(){
-      this.areashow=!this.areashow;
-    },
     //放大地图按钮
     fangda(){ 
       $(".esriSimpleSliderIncrementButton").click();
@@ -1008,9 +894,7 @@ export default {
     suoxiao(){
       $(".esriSimpleSliderDecrementButton").click();
     },
-    showyqinfo(){
-      this.testform.yuqinginfo=!this.testform.yuqinginfo;
-    },
+
 
 
     //图层关闭或打开
@@ -1021,7 +905,7 @@ export default {
       if(item.show) item.layer.show();
       else item.layer.hide();
     },
-    
+
     //切换底图（卫星、街道...）
     dituchange1(){
       this.ditu_types = '-';
@@ -1064,49 +948,33 @@ export default {
       else this.map.getLayer(id).setVisibility(true);
       this.map.setBasemap(this.ditu_type);
     },
-    //乡镇定位
-    area_switch(item){
-      item.show=true;
-      if(this.areaitem!=null){
-        this.areaitem.show=false;
-      }
-      this.areaitem=item;
-      this.country_list=item.children;
-      this.countryshow=true;
-    },
-    //村/社区定位
-    country_switch(item){
-      item.show=true;
-      if(this.countryitem!=null){
-        this.countryitem.show=false;
-      }
-      this.countryitem=item;                                                                    
-    },
+
+
     //koen 20190930
     //转换坐标系
     zuobiaoxi(item) {
       console.log('处理坐标');
       console.log(item);
 
-      // item.Rows.forEach((one, index) => {
-      //   //获取坐标
-      //   var x=Number(one.geometry.x);
-      //   var y=Number(one.geometry.y);
+      item.Rows.forEach((one, index) => {
+        //获取坐标
+        var x=Number(one.geometry.x);
+        var y=Number(one.geometry.y);
 
-      //   //如果basemap使用ArcGIS的就需要
-      //   //转换坐标系
-      //   x = (x / 180.0) * 20037508.34
-      //   if (y > 85.05112) y = 85.05112;
-      //   if (y < -85.05112) y = -85.05112;
-      //   y = (Math.PI / 180.0) * y;
-      //   var tmp = Math.PI / 4.0 + y / 2.0;
-      //   y = 20037508.34 * Math.log(Math.tan(tmp)) / Math.PI;
+        //如果basemap使用ArcGIS的就需要
+        //转换坐标系
+        x = (x / 180.0) * 20037508.34
+        if (y > 85.05112) y = 85.05112;
+        if (y < -85.05112) y = -85.05112;
+        y = (Math.PI / 180.0) * y;
+        var tmp = Math.PI / 4.0 + y / 2.0;
+        y = 20037508.34 * Math.log(Math.tan(tmp)) / Math.PI;
 
-      //   item.Rows[index].attributes.LGTD = x;
-      //   item.Rows[index].attributes.LTTD = y;
-      //   item.Rows[index].geometry.x = x;
-      //   item.Rows[index].geometry.y = y;
-      // });
+        item.Rows[index].attributes.LGTD = x;
+        item.Rows[index].attributes.LTTD = y;
+        item.Rows[index].geometry.x = x;
+        item.Rows[index].geometry.y = y;
+      });
 
 
       return item;
@@ -1291,21 +1159,6 @@ export default {
             }
 
             console.log("graphicsSHPlayer", graphicsSHPlayer);
-            if(val.name=="界限"){
-               val.name="乡镇";
-            }
-            if(val.name=="界限2"){
-               val.name="村";
-            }
-            if(val.name=="渠道"){
-               val.name="河流";
-            }
-            if(val.name=="渠道名称"){
-               val.name="水系";
-            }
-            if(val.name=="水库"){
-               val.name="界限";
-            }
             this.tu_ceng_list.push({name:val.name, show:val.show, layer:graphicsSHPlayer,icon:val.icon,icon_active:val.icon_active});
             if (val.show==false) {
               graphicsSHPlayer.hide();
@@ -1324,119 +1177,6 @@ export default {
 
       this.map.setExtent(initExtent);  //koen 会出现中心点在太平洋上的bug
       //木木  但是没有这个函数黄材这边就没办法初始化定位了
-    },
-    //获取图层信息
-    getMapFeatureLayers(){
-      this.getFeatrueLayerByFirst(res => {
-        var data = res.data;
-        var clone_data = JSON.parse(JSON.stringify(data));
-          // 创建图层（根据图层数据）
-          var featureLayer = this.createFeatrueLayer(data);
-          var spfeatureLayer=this.createFeatrueLayer(data);
-          // 获取异常数据 
-          var wateryujingData = this.getAbnormalDataByType(data,1);
-          var rainyujingData = this.getAbnormalDataByType(data,2);
-          var equipmentyujingData = this.getAbnormalDataByType(data,3);
-          // 创建预警图层（根据图层异常数据）
-          var water_yujing = this.createFeatrueLayer(wateryujingData);
-          var rain_yujing = this.createFeatrueLayer(rainyujingData);
-          var equipment_yujing = this.createFeatrueLayer(equipmentyujingData);
-
-          //设置图层的特征点图标
-          this.setFeatrueLayerSymbol(featureLayer, this.SiteFeatrueLayer.icon, { width: 16, height: 16});
-          this.setFeatrueLayerSymbol(spfeatureLayer, this.shipinfeatureLayer.icon, { width: 16, height: 16});
-
-          // 设置预警图层的特征点图标
-          this.setFeatrueLayerSymbol( water_yujing, "/static/demo-hunanguanqu/yujing.gif", { width: 46, height: 46 } );
-          this.setFeatrueLayerSymbol( rain_yujing, "/static/demo-hunanguanqu/jyyujing.gif", { width: 46, height: 46 } );
-          this.setFeatrueLayerSymbol( equipment_yujing, "/static/demo-hunanguanqu/sbyujing.gif", { width: 46, height: 46 } );
-
-          //视频监控图层默认隐藏
-          spfeatureLayer.hide();
-          this.SiteFeatrueLayer.show=1;
-          var checknum=Math.random();
-          //运行工况提示预警信息
-          if (equipmentyujingData.features.length > 0) {
-            this.notify_Layer(
-              {
-                icon: this.SiteFeatrueLayer.sbwarmicon,
-                type: "warning",
-                sign:"sb",
-                checkindex:checknum
-              },
-              equipment_yujing
-            );
-          }
-          //雨量提示预警信息
-          if (rainyujingData.features.length > 0) {
-            this.notify_Layer(
-              {
-                icon: this.SiteFeatrueLayer.ylwarmicon,
-                type: "warning",
-                sign:"yl",
-                checkindex:checknum
-              },
-              rain_yujing
-            );
-          }
-          //水位提示预警信息
-          if (wateryujingData.features.length > 0) {
-            this.notify_Layer(
-              {
-                icon: this.SiteFeatrueLayer.swwarmicon,
-                type: "warning",
-                sign: "sw",
-                checkindex:checknum
-              },
-              water_yujing
-            );
-          }
-          
-          // 给图层对象添加 图层，图层特征点数据，地图
-          this.SiteFeatrueLayer.LayerObject = featureLayer; // 添加图层到图层对象
-          this.SiteFeatrueLayer.LayerObject_yujing = [water_yujing,rain_yujing,equipment_yujing]; // 添加图层到图层对象
-          this.SiteFeatrueLayer.Rows = clone_data.features; // 添加图层特征点数据到图层对象
-          this.SiteFeatrueLayer.map = this.map; // 添加地图到图层对象
-
-          this.shipinfeatureLayer.LayerObject=spfeatureLayer;
-          this.shipinfeatureLayer.Rows = clone_data.features; 
-          this.shipinfeatureLayer.map = this.map;
-
-          //添加图层模块
-          this.addToFeatrueLayer(
-            [equipment_yujing,rain_yujing,water_yujing, featureLayer,spfeatureLayer]
-          );
-          
-          //给图层里的特征点 添加点击事件
-          this.addEventToJsonFlayer(featureLayer,this.SiteFeatrueLayer);
-          this.addEventToJsonFlayer(spfeatureLayer,this.shipinfeatureLayer);
-
-          //添加悬浮事件
-          this.addEventToFloatFlayer(featureLayer);
-      });
-    },
-    //获取图层数据（没有过滤条件的）
-    getFeatrueLayerByFirst(callback) {
-      var body = {
-        // _filter: new Object()
-      };
-      if (this.testform.model_date && this.testform.model_date.length != 0) {
-                    body[
-                        "Time_min"
-                        ] = this.testform.model_date[0];
-                    body[
-                        "Time_max"
-                        ] = this.testform.model_date[1];
-                }
-      var url="/guanqu/sksiteinfo/gis";
-      this.axios.post(url, body).then(res => {
-        if (typeof errCallback == "function") {
-          errCallback();
-        }
-        if (typeof callback == "function") {
-          callback(res);
-        }
-      });
     },
     //获取各个图层信息
     getEachFeatureLayers(FeatureLayers) {
@@ -1465,9 +1205,9 @@ export default {
 
           // 默认显示闸阀水情 和 渠道水情图层
           if (
-            featureLayerOBJ.itype === "shuikushuiqing" ||
-            featureLayerOBJ.itype === "yuqing" ||
-            featureLayerOBJ.itype === "yunxinggongkuang"
+            featureLayerOBJ.itype === "qudaoshuiqing" ||
+            featureLayerOBJ.itype === "zhafashuiqing" ||
+            featureLayerOBJ.itype === "tuxiang"
           ) {
             featureLayerOBJ.show = "1";
           }
@@ -1526,280 +1266,24 @@ export default {
           ymax: parseFloat(GIS_CENTER.ymax),
 
           spatialReference: {wkid: 4326}
+          //spatialReference: this.map.spatialReference
+          //spatialReference: new esri.SpatialReference({ wkid: 4326 })
         });
         // 获取各个图层信息
-        //this.getEachFeatureLayers(data.FeatureLayers);
-        //获取图层信息
-        this.getMapFeatureLayers();
-        //获取区域定位行政区划信息
-        var Area_Info=data.WRP_AD_B;
-        Area_Info.forEach((val, index) => {
-            if(val.AD_LV==5){
-              var areaobj={AD_CD:val.AD_CD,AD_NM:val.AD_NM,AD_LV:val.AD_LV,children:[],show:false};
-              this.area_list.push(areaobj);
-            }
-            if(val.AD_LV==6){
-              var countrywidth=val.AD_NM.length*12;
-              var countryobj={AD_CD:val.AD_CD,AD_NM:val.AD_NM,AD_LV:val.AD_LV,UP_ADCD:val.UP_ADCD,show:false,width:countrywidth};
-              var parent=this.area_list[this.area_list.length-1];
-              parent.children.push(countryobj);
-            }
-          });
+        this.getEachFeatureLayers(data.FeatureLayers);
       });
     },
-    // 多选框标记勾选触发事件
-    checkboxGroup_onChange(onCheck_Array) {
-        this.removeAllTextGraphicsLayer(); // 清除所有文本标注图层
-        this.addTextGraphicsLayerByCheckGroup(); // 根据多选框添加文字标注图层
-    },
-    // 移除所有文字标注图层
-    removeAllTextGraphicsLayer() {
-        for (let i = 0; i < this.TextGraphicsLayers.length; i++) {
-            var val = this.TextGraphicsLayers[i];
-            this.map.removeLayer(val); // 移除对应的文字标注图层
-        }
-        this.TextGraphicsLayers = [];
-    },
-    // 根据多选框添加文字标注图层
-    addTextGraphicsLayerByCheckGroup() {
-      debugger;
-        var textTypeList;
-        var indexOfSocial = this.testform.social.indexOf("site");
-        // 如果多选框里存在 site站点类型
-        if (indexOfSocial !== -1) {
-            this.SiteFeatrueLayer.LayerObject.show();
-            var tclist = this.SiteFeatrueLayer.LayerObject_yujing;
-            for(var i=0;i<tclist.length;i++){
-              tclist[i].show();
-            }
-            textTypeList = this.testform.social.filter(val => {
-                if (val != "site") {
-                    return true;
-                }
-            });
-        } else {
-            this.SiteFeatrueLayer.LayerObject.hide();
-            var tclist = this.SiteFeatrueLayer.LayerObject_yujing;
-            for(var i=0;i<tclist.length;i++){
-              tclist[i].hide();
-            }
-            textTypeList = this.testform.social;
-        }
-
-        textTypeList.forEach((textType, index) => {
-            var textGraphicsLayer = new esri.layers.GraphicsLayer(); // 新增一个图形图层
-            textGraphicsLayer.textType = textType;
-            this.map.addLayer(textGraphicsLayer); // 给地图添加新增的标注文本图层
-            var Rows = this.SiteFeatrueLayer.Rows;
-            //创建textsymbol文本标注
-            if (Rows.length > 0) {
-                //动态读取json数据源结果集
-                for (var i = 0; i < Rows.length; i++) {
-                    var Row = Rows[i];
-                    //获取坐标
-                    var x=Number(Row.geometry.x);
-                    var y=Number(Row.geometry.y);
-                    var point = new esri.geometry.Point(
-                        x,
-                        y,
-                        new esri.SpatialReference({ wkid: 4326 })
-                    );
-                    var value = Row.rowinfo[textType];
-                    var color=[55, 55, 55];
-                    // 过滤
-                    switch (textType) {
-                        case "vol":
-                            var value = `${this.Z_Filter(Row.rowinfo[textType])}`;
-                            if (value == "") {
-                                value = "";
-                            } else {
-                                if (value < 12 || value > 16) {
-                                    color = [255, 0 , 0];
-                                  }
-                                value += "V";
-                            }
-                            break;
-                        case "cs":
-                            var value = Row.rowinfo[textType];
-                            if (value == "") {
-                              value = "";
-                            }else{
-                              if(value == "异常"){
-                                color = [255, 0 , 0];
-                              }
-                            }
-                            break;
-                        case "p":
-                            var value = `${this.$FilterData.Float_Filter(Row.rowinfo[textType], 1)}`;
-                            if (value == "") {
-                                value = "";
-                            } else {
-                                if(Row.rowinfo["status"]==0){
-                                color = [255, 0 , 0];
-                              }
-                                value += "mm";
-                            }
-                            break;
-                        case "RZ":
-                            var value = `${this.Z_Filter(Row.rowinfo[textType])}`;
-                            if (value == "") {
-                              value = "";
-                            } else {
-                              if(Row.rowinfo["skstatus"]==0){
-                                color = [255, 0 , 0];
-                              }
-                              value += "m";
-                            }
-                            break;
-                            case "w":
-                            var value = `${this.Z_Filter(Row.rowinfo[textType])}`;
-                            if (value == "") {
-                              value = "";
-                            } else {
-                              value += "万m³";
-                            }
-                            break;
-                    }                   
-                    //定义文本symbol
-                    var textsymbol = new esri.symbol.TextSymbol(value) //动态设置文本值
-                        .setColor(new dojo.Color(color)) //setColor设置文本颜色
-                        .setFont(
-                            new esri.symbol.Font("10pt") //setFont设置文本大小
-                                .setWeight(esri.symbol.Font.WEIGHT_BOLD)
-                        ) //setWeight设置文本粗体
-                        .setOffset(0, -(25 + index * 15)); //设置偏移方向
-                    var graphic = new esri.Graphic(point, textsymbol);
-                    textGraphicsLayer.add(graphic);
-                }
-            }
-            this.TextGraphicsLayers.push(textGraphicsLayer);
-        });
-    },
-    //给特征元素添加悬浮事件
-    addEventToFloatFlayer(JsonFlayer) {
-        //当鼠标悬停在元素上
-        JsonFlayer.on("mouse-over", evt => {
-            setTimeout(() => {
-                var attributes = evt.graphic.attributes;
-                attributes.eventType = "mouse-over";
-                this.showTips(attributes.rowinfo); // 展示悬浮框
-            }, 100);
-            // 给地图对象添加方法
-            // this.addEventToMap();
-        });
-
-        // 当鼠标离开元素
-        JsonFlayer.on("mouse-out", evt => {
-            setTimeout(() => {
-                this.hideTips(); // 隐藏悬浮框
-            }, 100);
-        });
-    },
-    //悬浮框
-    showTips(item){
-      var yqtime=this.testform.model_date[0].substring(0, 13)+'－'+this.testform.model_date[1].substring(0,13);
-      var yqhour=this.testform.model_date[1].substring(11,13);
-      var div='<div>'
-              +'<table style="border: 1px solid #EBEEF5" border cellspacing="0" class="table_float">'
-              +'<tr>'
-              +'<td align="right" class="dt_name">站址：</td>'
-              +'<td align="center" class="dt_vale" colspan="3" style="border-right:none;">'+item.adnm+'</td>'
-                +'</tr>'
-                +'<tr>'
-                  +'<td align="right" class="dt_name">水情时间：</td>'
-                  +'<td align="center" class="dt_vale" colspan="3" style="border-right:none;">'+item.tm+'</td>'
-                +'</tr>'
-                +'<tr>'
-                  +'<td align="right" class="dt_name">水位：</td>';
-            if(item.skstatus==0){
-              div+='<td align="center" class="dt_vale"><font style="color:red;">'+item.RZ+'m</font></td>';
-            }else{
-              div+='<td align="center" class="dt_vale">'+item.RZ+'m</td>';
-            }
-            div+='<td align="right" class="dt_name">库容：</td>'
-                  +'<td align="center" class="dt_vale" style="border-right:none;">'+item.w+'万m³</td>'
-                +'</tr>'
-                +'<tr>'
-                  +'<td align="right" class="dt_name">距汛限：</td>'
-                  +'<td align="center" class="dt_vale">'+item.jxx+'</td>'
-                  +'<td align="right" class="dt_name">水势：</td>'
-                  +'<td align="center" class="dt_vale" style="border-right:none;">'+this.$FilterData.WPTN_Filter(item.RWPTN).symbol+'</td>'
-                +'</tr>'
-                +'<tr>'
-                  +'<td align="right" class="dt_name">雨情时间段：</td>'
-                  +'<td align="center" class="dt_vale" colspan="3" style="border-right:none;">'+yqtime+'</td>'
-                +'</tr>'
-                +'<tr>'
-                  +'<td align="right" class="dt_name">累计雨量：</td>'
-                  +'<td align="center" class="dt_vale">'+item.p+'mm</td>'
-                  +'<td align="right" class="dt_name">'+yqhour+'时雨量：</td>'
-                  +'<td align="center" class="dt_vale" style="border-right:none;">'+item.hourp+'mm</td>'
-                +'</tr>'
-                +'<tr>'
-                  +'<td align="right" class="dt_name">工况时间：</td>'
-                  +'<td align="center" class="dt_vale" colspan="3" style="border-right:none;">'+item.gktm+'</td>'
-                +'</tr>'
-                +'<tr>'
-                  +'<td align="right" class="dt_name">电压：</td>';
-                if(item.vol>item.VOLMAX || item.vol<item.VOLMIN){
-                  div+='<td align="center" class="dt_vale"><font style="color:red;">'+item.vol+'V</font></td>';
-                }else{
-                  div+='<td align="center" class="dt_vale">'+item.vol+'V</td>';
-                }
-                div+='<td align="right" class="dt_name">通讯状态：</td>';
-                if(item.CS=="异常"){
-                  div+='<td align="center" class="dt_vale" style="border-right:none;"><font style="color:red;">'+item.CS+'</font></td>';
-                }else{
-                  div+='<td align="center" class="dt_vale" style="border-right:none;">'+item.CS+'</td>';             
-                }
-                
-                div+='</tr>'
-              +'</table></div>';
-              this.map.infoWindow.setTitle(item.STNM); 
-              this.map.infoWindow.resize(420, 350); // 提示框大小
-              this.map.infoWindow.setContent(div); // 提示内容
-              //获取坐标
-                var x=Number(item.LGTD);
-                var y=Number(item.LTTD);
-                //如果basemap使用ArcGIS的就需要
-                //转换坐标系
-                x = (x / 180.0) * 20037508.34
-                if (y > 85.05112) y = 85.05112;
-                if (y < -85.05112) y = -85.05112;
-                y = (Math.PI / 180.0) * y;
-                var tmp = Math.PI / 4.0 + y / 2.0;
-                y = 20037508.34 * Math.log(Math.tan(tmp)) / Math.PI;
-                var zoompoint = {
-                    //spatialReference: {wkid: 4326},
-                    spatialReference: this.map.spatialReference,
-                    x: x,
-                    y: y
-                };
-                console.log(zoompoint);
-                this.map.infoWindow.show(zoompoint, zoompoint);
-    },
-    // 隐藏提示
-    hideTips() {
-        this.map.infoWindow.hide();
-    },
-    //视频监控图层显示/隐藏
-    showShipin(){
-      //this.testform.checked=!this.testform.checked;
-      if(this.testform.checked){
-        this.shipinfeatureLayer.LayerObject.show();
-      }else{
-        this.shipinfeatureLayer.LayerObject.hide();
-      }
-    },
-    // 给特征点元素点添加点击事件
+    // 给特征点元素点添加事件
     addEventToJsonFlayer(JsonFlayer, v) {
       JsonFlayer.on("click", evt => {
         //当鼠标点击元素
         // 抽屉组件默认显示表类型
         evt.graphic.attributes.rowinfo.tableType = {
+          qdsq: "historyTable",
+          zfsq: "historyTable",
+          hdsq: "historyTable",
           yq: "hourTable",
-          sksq: "historyTable",
-          clicktype:"home"
+          sksq: "historyTable"
         };
         // 展示抽屉组件
         this.showDrawer(evt, v);
@@ -1812,18 +1296,7 @@ export default {
     // 展示抽屉组件
     showDrawer(evt, v) {
       var graphic = evt.graphic;
-      var obj_a=graphic.attributes.rowinfo;
-      if(obj_a._skstatus==1 && obj_a._status==1 && obj_a._gkstatus==1){
-        if(this.listWindow.activeName=="shuikushuiqing"){
-          obj_a.tableType.clicktype='sksq';
-        }
-        if(this.listWindow.activeName=="yuqing"){
-          obj_a.tableType.clicktype='yq';
-        }
-        if(this.listWindow.activeName=="yuxinggongkuang"){
-          obj_a.tableType.clicktype='yxgk';
-        }
-      }    
+
       var show_right = () => {
         this.details.info_right = graphic.attributes;
         this.details.info_right.itype = v.itype;
@@ -1906,13 +1379,14 @@ export default {
     },
     // 正在显示的图层
     featrueLayers_showing() {
-      var featrueLayer = this.SiteFeatrueLayer;
+      var featrueLayers = this.FeatrueLayers;
       // 获取正在显示的图层
-      if (featrueLayer.show == 1) {
-          return [featrueLayer];
-      }else{
-          return [];
-      }
+      var featrueLayers_showing = featrueLayers.filter(val => {
+        if (val.show == 1) {
+          return true;
+        }
+      });
+      return featrueLayers_showing;
     },
     // 列表窗显示隐藏切换(控制面板)
     listWindow_toggle() {
@@ -2018,36 +1492,6 @@ export default {
       });
       this.map.infoWindow.hide();
     },
-    //根据预警类别获取预警数据  1 水位  2 雨量  3 设备
-    getAbnormalDataByType(graphicsData,warmType) {
-      var data = JSON.parse(JSON.stringify(graphicsData)); // 图层数据深拷贝
-      // 把每个特征点的rowinfo数据放入每个特征点的属性中
-      data.features.forEach((val, index) => {
-        data.features[index].attributes.rowinfo = data.features[index].rowinfo;
-      });
-     
-      var AbnormalData = data.features.filter((val, index) => {
-        if(warmType==1){
-          if (val.rowinfo.skstatus == 0) {
-            return true;
-          }
-        }
-        if(warmType==2){
-          if (val.rowinfo.status == 0) {
-            return true;
-          }
-        }
-        if(warmType==3){
-          if (val.rowinfo.gkstatus == 0) {
-            return true;
-          }
-        }
-      });
-
-      data.features = AbnormalData;
-
-      return data;
-    },
     // 获取异常数据
     getAbnormalData(graphicsData) {
       var data = JSON.parse(JSON.stringify(graphicsData)); // 图层数据深拷贝
@@ -2068,39 +1512,23 @@ export default {
     },
     // 通知
     notify_Layer(options, data) {
-      if (data.graphics.length > 0) {
+      if (data.length > 0) {
         this.Message_Window_show(true); // 打开消息窗口
 
         var Voice_Controller = this.Message_Window.Voice_Controller,
           notify_info_list = this.Message_Window.notify_info.list;
 
         var time = 0;
-        if(this.SiteFeatrueLayer.checknum!=options.checkindex){
-            notify_info_list.length = 0;
-            this.SiteFeatrueLayer.checknum=options.checkindex;
-          } 
-        data.graphics.forEach((val, index, array) => {
-          var rowinfo = val.attributes.rowinfo;
+        data.forEach((val, index, array) => {
+          var rowinfo = val.rowinfo;
 
           var item = new Object();
           item.icon = options.icon;
-          if(options.sign=="sw"){
-            item.text = `${rowinfo.STNM}`+"水位超汛限";
-          }else if(options.sign=="雨量"){
-            item.text = `${rowinfo.STNM}`+"雨量预警";
-          }else{
-            item.text = `${rowinfo.STNM}`;
-            if(rowinfo.vol<rowinfo.VOLMIN || rowinfo.vol>rowinfo.VOLMAX){
-              item.text+="电压异常";
-            }
-            if(rowinfo.CS=="异常"){
-              item.text+="通讯异常";
-            }
-          }
-          
+          item.text = `${rowinfo.STNM} 出现异常`;
           item.voice = this.baiduVoice(item.text);
           item.voice_duration = item.text.length * 300;
-          item.id = notify_info_list.length;                  
+          item.id = notify_info_list.length;
+          notify_info_list.length = 0;
           notify_info_list.unshift(item);
 
           setTimeout(() => {
@@ -2140,199 +1568,78 @@ export default {
         list[index].voice = null;
       });
     },
-    search(){
-                var body = new Object();
-                // 如果输入框有内容，添加站名过滤字段
-                if (this.testform.search_str) {
-                    body["STNM"] = `${this.testform.search_str}`;
-                }
-                // 如果地址选择框有内容，添加行政区划过滤字段
-                if (this.testform.model_adress && this.testform.model_adress.length != 0) {
-                    body["ADDVCD"] = `${this.$App.ADDVCD_Array_Filter(
-                        this.testform.model_adress
-                    )}`;
-                }
-                // 如果归属单位选择框有内容，添加归属单位过滤字段
-                if (this.testform.model_guishu && this.testform.model_guishu.length != 0) {
-                    body[
-                        "STGR"
-                        ] = this.testform.model_guishu.join(',');
-                }
-                // 如果时间选择框有内容，添加时间过滤字段
-                console.log('时间', this.testform.model_date);
-                if (this.testform.model_date && this.testform.model_date.length != 0) {
-                    body[
-                        "Time_min"
-                        ] = this.testform.model_date[0];
-                    body[
-                        "Time_max"
-                        ] = this.testform.model_date[1];
-                }
-                if(this.testform.yuqinginfo){
-                  //如果雨量有异常界限值时
-                  //异常界限值
-                  if (this.testform.YCJXZ != "") {
-                      body["max_yichang"] = this.testform.YCJXZ;
-                  }
-
-                  //异常界限值
-                  if (this.testform.singular != "") {
-                      body["max_yujing"] = this.testform.singular;
-                  }
-                }
-                
-                // 如果水库等级选择框有内容，添加水库等级过滤字段
-                if (this.testform.model_dengji && this.testform.model_dengji.length != 0) {
-                  body["LEVEL"] = this.testform.model_dengji.join(",");
-                }
-                //异常界限值
-               // if (this.testform.YCJXZ != "") {
-               //     body["max_yichangsw"] = this.testform.YCJXZ;
-               // }
-                if (this.testform.model_status && this.testform.model_status.length != 0) {
-                  body["_stat"] = this.testform.model_status;
-                }
-                this.showTableLoading();
-                this.search_FeatrueLayer(body,this.SiteFeatrueLayer,newFeatureLayerOBJ => {
-                    this.initTableData();
-                    this.hideTableLoading();
-                    this.hideTips();
-                });
-    },
     // 查询图层 (要查询的图层类型, 过滤字段, 所属图层对象)
-    search_FeatrueLayer(fields, featureLayerOBJ, callback, errCallback) {
+    search_FeatrueLayer(type, fields, featureLayerOBJ, callback, errCallback) {
       // 获取具有过滤条件的图层数据
       this.getFeatrueLayer(
+        type,
         fields,
         res => {
           var clone_data = JSON.parse(JSON.stringify(res.data));
           // 创建图层（根据图层数据）
           var featrueLayer = this.createFeatrueLayer(res.data);
-          var spfeatureLayer=this.createFeatrueLayer(res.data);
-          // 获取异常数据 
-          var wateryujingData = this.getAbnormalDataByType(res.data,1);
-          var rainyujingData = this.getAbnormalDataByType(res.data,2);
-          var equipmentyujingData = this.getAbnormalDataByType(res.data,3);
+          // 获取异常数据
+          var AbnormalData = this.getAbnormalData(res.data);
           // 创建预警图层（根据图层异常数据）
-          var water_yujing = this.createFeatrueLayer(wateryujingData);
-          var rain_yujing = this.createFeatrueLayer(rainyujingData);
-          var equipment_yujing = this.createFeatrueLayer(equipmentyujingData);
+          var featrueLayer_yujing = this.createFeatrueLayer(AbnormalData);
           // 移除图层对象里的相应图层
           this.removeFeatureLayer(featureLayerOBJ);
-          //移除视频对象图层
-          this.removeFeatureLayer(this.shipinfeatureLayer.LayerObject);
           // 移除图层对象里的相应预警图层
           this.removeFeatureLayer_yujing(featureLayerOBJ);
           // 设置图层的特征点图标
-            this.setFeatrueLayerSymbol(featrueLayer, featureLayerOBJ.icon, {
-              width: 16,
-              height: 16
-            });
+          this.setFeatrueLayerSymbol(featrueLayer, featureLayerOBJ.icon, {
+            width: 16,
+            height: 16
+          });
 
           // 设置预警图层的特征点图标
-          this.setFeatrueLayerSymbol( water_yujing, "/static/demo-hunanguanqu/yujing.gif", { width: 46, height: 46 } );
-          this.setFeatrueLayerSymbol( rain_yujing, "/static/demo-hunanguanqu/jyyujing.gif", { width: 46, height: 46 } );
-          this.setFeatrueLayerSymbol( equipment_yujing, "/static/demo-hunanguanqu/sbyujing.gif", { width: 46, height: 46 } );
+          this.setFeatrueLayerSymbol(
+            featrueLayer_yujing,
+            "/static/demo-hunanguanqu/yujing.gif",
+            {
+              width: 46,
+              height: 46
+            }
+          );
 
           // 添加预警图层到地图
-          this.addFeatrueLayerToMap(water_yujing);
-          this.addFeatrueLayerToMap(rain_yujing);
-          this.addFeatrueLayerToMap(equipment_yujing);
+          this.addFeatrueLayerToMap(featrueLayer_yujing);
           // 添加图层到地图
           this.addFeatrueLayerToMap(featrueLayer);
-          this.addFeatrueLayerToMap(spfeatureLayer);
-          //水位提示预警信息
-          if (wateryujingData.features.length > 0) {
+
+          if (AbnormalData.features.length > 0) {
+            // 图层提示预警信息
             this.notify_Layer(
               {
-                icon: featureLayerOBJ.swwarmicon,
+                icon: featureLayerOBJ.icon_warning,
                 type: "warning"
               },
-              equipment_yujing
+              AbnormalData.features
             );
           }
-          //雨量提示预警信息
-          if (rainyujingData.features.length > 0) {
-            this.notify_Layer(
-              {
-                icon: featureLayerOBJ.ylwarmicon,
-                type: "warning"
-              },
-              rain_yujing
-            );
-          }
-          //运行工况提示预警信息
-          if (equipmentyujingData.features.length > 0) {
-            this.notify_Layer(
-              {
-                icon: featureLayerOBJ.sbwarmicon,
-                type: "warning"
-              },
-              rain_yujing
-            );
-          }
+
           // 更新图层对象集合里面 对应图层对象的 图层以及图层数据
-          // 给图层对象添加 图层，图层特征点数据，地图
-          featureLayerOBJ.LayerObject = featureLayer; // 添加图层到图层对象
-          featureLayerOBJ.LayerObject_yujing = [water_yujing,rain_yujing,equipment_yujing]; // 添加图层到图层对象
-          featureLayerOBJ.Rows = clone_data.features; // 添加图层特征点数据到图层对象
-
-          this.shipinfeatureLayer.LayerObject=spfeatureLayer;
-          this.shipinfeatureLayer.Rows = clone_data.features; 
-
-          // 添加图层模块
-          this.addToFeatrueLayer(
-            [equipment_yujing,rain_yujing,water_yujing, featureLayer,spfeatureLayer]
+          var newFeatureLayerOBJ = this.updateFeatrueLayers(
+            featureLayerOBJ,
+            featrueLayer,
+            featrueLayer_yujing,
+            clone_data
           );
-          
-          // 给图层里的特征点 添加事件
-          this.addEventToJsonFlayer(featureLayer,'site');
-          this.addEventToJsonFlayer(spfeatureLayer,'shipin');
           // 如果有回调，执行回调
           if (typeof callback == "function") {
-            callback(featureLayerOBJ);
+            callback(newFeatureLayerOBJ);
           }
           // 取消所有站点的闪烁
           this.GraphicsLayer_Selection_clear();
-          // 给图层里的特征点 添加点击事件
+          // 给图层里的特征点 添加事件
           this.addEventToJsonFlayer(
-            featureLayerOBJ.LayerObject,
-            featureLayerOBJ
+            newFeatureLayerOBJ.LayerObject,
+            newFeatureLayerOBJ
           );
-          this.addEventToJsonFlayer(
-            this.shipinfeatureLayer.LayerObject,
-            this.shipinfeatureLayer
-          );
-          //添加悬浮事件
-          this.addEventToFloatFlayer(featureLayer);
-           
-          //添加文字标注
-          this.checkboxGroup_onChange();
-
         }
         // errCallback
       );
     },
-//表格数据获取
-initTableData(){
-  this.$refs.sqtable.baseBox_init();
-  this.$refs.yqtable.baseBox_init();
-  this.$refs.gktable.baseBox_init();
-},
-//表格加载
-showTableLoading(){
-  this.$refs.sqtable.tableLoading();
-  this.$refs.yqtable.tableLoading();
-  this.$refs.gktable.tableLoading();
-},
-//取消加载
-hideTableLoading(){
-  this.$refs.sqtable.cancelTableLoading();
-  this.$refs.yqtable.cancelTableLoading();
-  this.$refs.gktable.cancelTableLoading();
-},
-    //表格取消加载
-
     // 获取没有过滤条件的图层数据
     getFeatrueLayerWithoutPreconditions(url, callback) {
       this.axios.get(url).then(res => {
@@ -2342,7 +1649,7 @@ hideTableLoading(){
       });
     },
     // 获取具有过滤条件的图层数据
-    getFeatrueLayer( fields, callback, errCallback) {
+    getFeatrueLayer(type, fields, callback, errCallback) {
       /*
                 type为数字，以下为不同数字对应图层
                 4: 渠道水情
@@ -2352,7 +1659,7 @@ hideTableLoading(){
                 8: 视频
                 */
 
-      var url = "/guanqu/sksiteinfo/gis";
+      var url = this.system_info.FLayerUrl[type];
 
       var body = {
         // _filter: new Object()
@@ -2387,9 +1694,7 @@ hideTableLoading(){
     removeFeatureLayer_yujing(featureLayerOBJ) {
       // 从地图中移除图层
       if (featureLayerOBJ.LayerObject_yujing) {
-        for(var i=0;i<featureLayerOBJ.LayerObject_yujing.length;i++){
-          this.map.removeLayer(featureLayerOBJ.LayerObject_yujing[i]);
-        }       
+        this.map.removeLayer(featureLayerOBJ.LayerObject_yujing);
       }
       // 从控制面板的图层对象中清空图层及图层特征点数据
       featureLayerOBJ.LayerObject_yujing = null;
@@ -2459,13 +1764,6 @@ hideTableLoading(){
           this.FeatrueLayers.splice(8, 0, featureLayerOBJ);
           break;
       }
-    },
-    // 添加图层模块
-    addToFeatrueLayer(featureLayerList) {
-      featureLayerList.forEach(val => {
-        // 添加图层到地图
-        this.addFeatrueLayerToMap(val);
-      });
     },
     // 添加图层模块
     addFeatrueLayer(featureLayerList, featureLayerOBJ) {
@@ -2733,10 +2031,6 @@ hideTableLoading(){
   color: #409EFF;
   border: 1px solid #409EFF;
 }
-.country-border{
-  color: #839FBD;
-  border: 1px solid #839FBD;
-}
 .topNav>ul>li{
   color: #fff;
   margin-right: 100px;
@@ -2780,9 +2074,10 @@ hideTableLoading(){
   bottom: 0;
   overflow: hidden;
 }
+
 #listWindow {
   position: absolute;
-  top: 80px;
+  top: 100px;
   right: 20px;
   width: 480px;
   min-height: 200px;
@@ -2970,27 +2265,7 @@ hideTableLoading(){
   padding: 0.4rem 0;
   height: auto;
 }
-//悬浮框表格样式
-.table_float {
-  width:400px;
-  td {
-    height: 30px;
-    border-top: none;
-    border-color: #EBEEF5;
-    background: #fff;
-  }
 
-  .dt_name {
-    width: 20%;
-    border-left: none;
-  }
-
-  .dt_vale {
-    width: 30%;
-    border-right: 1px solid #EBEEF5;
-    border-left: none;
-  }
-}
 svg {
   // transition: 1s;
 }

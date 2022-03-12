@@ -13,6 +13,7 @@ export default new Router({
         { path: '/yixiang-chart',component: () => import('./warm/yixiang-chart/chart.vue') },
         { path: '/yixiang-wschart',component: () => import('./warm/yixiang-chart/wschart.vue') },
         { path: '/yixiang-kschart',component: () => import('./warm/yixiang-chart/kschart.vue') },
+        { path: '/hometow', component: () => import('./HomeTow.vue')},
         {path: '/home', component: () => import('./Home.vue'),
         children:[
             //历史数据-雨晴信息-日表
