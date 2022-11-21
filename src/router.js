@@ -326,7 +326,22 @@ export default new Router({
         //权限菜单
         {path: '/tableqxcd', component: () => import('./table/table-qxcd/qxcd.vue')},
         {path: '/tableqxcd-xxk', component: () => import('./table/table-qxcd/xxk-qxcd.vue')},
-        ],   
+        //大坝安全监测
+        //基础数据
+        //断面信息
+        {path: '/safebase-dminfo', component: () => import('./warm/warm-safe/dm-base/dmlist.vue')},
+        //渗流量信息
+        {path: '/safebase-sllinfo', component: () => import('./warm/warm-safe/sll-base/slllist.vue')},
+        //渗压信息
+        {path: '/safebase-slylinfo', component: () => import('./warm/warm-safe/slyl-base/slyllist.vue')},
+        //水平位移信息
+        {path: '/safebase-spwyinfo', component: () => import('./warm/warm-safe/spwy-base/spwylist.vue')},
+        //沉降位移信息
+        {path: '/safebase-cjwyinfo', component: () => import('./warm/warm-safe/cjwy-base/cjwylist.vue')},
+        //历史分析
+        //渗流量分析
+        {path: '/safefenxi-sllls', component: () => import('./warm/warm-safe/sll-history/list.vue')},
+        ], 
         },    
     ],
 })

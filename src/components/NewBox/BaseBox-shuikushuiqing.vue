@@ -23,12 +23,12 @@
           :sortable="item.sortable"
           :show-overflow-tooltip="true"
         ></el-table-column>
-        <el-table-column align="center" label="库容(万m³)" :width="80">
+        <el-table-column align="center" prop="w" sortable="custom" label="库容(万m³)" :width="105">
           <template slot-scope="scope">
             {{ scope.row.w }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="水位(m)" :width="80">
+        <el-table-column align="center" prop="RZ" sortable="custom" label="水位(m)" :width="90">
           <template slot-scope="scope">
             <div>
               <span
@@ -39,12 +39,12 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="水面面积(㎡)" :width="90">
+        <el-table-column align="center" prop="smj" sortable="custom" label="水面面积(㎡)" :width="115">
           <template slot-scope="scope">
             {{ scope.row.smj }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="距汛限(m)" :width="80">
+        <el-table-column align="center" prop="jxx" sortable="custom" label="距汛限(m)" :width="100">
           <template slot-scope="scope">
               {{scope.row.jxx}}
           </template>
@@ -484,17 +484,26 @@ export default {
     sort_change(item) {
       var order = item.order,
         key = item.prop;
-
-      this.filterTableData();
       var newList;
       if (order) {
         switch (order) {
           case "descending":
-            if (key != "TM") {
+            if(key=="STNM"){
+              newList = this.table.Rows_filter.sort((a, b) => {
+                var vnum=0;
+                var sign=b[key]<a[key];
+                if(sign==true){
+                    vnum=1;
+                }else{
+                  vnum=-1;
+                }
+                return vnum;
+              });
+            } else if (key != "TM") {
               newList = this.table.Rows_filter.sort((a, b) => {
                 return Number(b[key]) - Number(a[key]);
               });
-            } else {
+            }else {
               newList = this.table.Rows_filter.sort((a, b) => {
                 var aTime = new Date(`20${a.TM}`).getTime(),
                   bTime = new Date(`20${b.TM}`).getTime();
@@ -506,7 +515,18 @@ export default {
             break;
 
           case "ascending":
-            if (key != "TM") {
+            if(key=="STNM"){
+              newList = this.table.Rows_filter.sort((a, b) => {
+                var vnum=0;
+                var sign=a[key]<b[key];
+                if(sign==true){
+                    vnum=1;
+                }else{
+                  vnum=-1;
+                }
+                return vnum;
+              });
+            }if (key != "TM") {
               newList = this.table.Rows_filter.sort((a, b) => {
                 return Number(a[key]) - Number(b[key]);
               });
@@ -520,7 +540,11 @@ export default {
               });
             }
         }
-        this.table.Rows_filter = newList;
+        this.table.Rows_filter = newList.map((val, index) => {                   
+              // 序号
+              val.index = index + 1;
+              return val;                 
+        });
       }
       this.$TableMethods.refreshCurrentChange(this.table, 1);
     }
@@ -528,13 +552,13 @@ export default {
   created() {
     // 初始化baseBox
     this.baseBox_init();
-    this.baseBox_Interval = setInterval(() => {
-      this.baseBox_init();
-    }, 1000 * 60 * 5);
+    // this.baseBox_Interval = setInterval(() => {
+    //   this.baseBox_init();
+    // }, 1000 * 60 * 5);
   },
-  destroyed() {
-    clearInterval(this.baseBox_Interval);
-  }
+  // destroyed() {
+  //   clearInterval(this.baseBox_Interval);
+  // }
 };
 </script>
 

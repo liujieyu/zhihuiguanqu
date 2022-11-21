@@ -456,9 +456,6 @@
             // 初始化baseBox
             this.baseBox_init();
         },
-        destroyed() {
-            clearInterval(this.baseBox_Interval)
-        }
     };
 </script>
 

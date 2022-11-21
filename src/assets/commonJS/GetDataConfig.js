@@ -632,95 +632,6 @@ export default {
             function defaultFilter(data) {
                 var newData;
                 // 根据不同类型的表，选择不同的过滤fangfa
-                // switch (tableType) {
-                //     case "historyTable":
-                //         newData = data.map(val => {
-                //             val.TM = FilterMethods.methods.dateFilter(val.TM, null, null, 0); // 时间
-                //             val.INQ = FilterMethods.methods.Float_Filter(val.INQ, 3); // 入库流量
-                //             val.OTQ = FilterMethods.methods.Float_Filter(val.OTQ, 3); // 出库流量
-                //             val.RZ = FilterMethods.methods.Float_Filter(val.RZ) // 水位
-                //             val.BLRZ = FilterMethods.methods.Float_Filter(val.BLRZ) // 水位
-                //             return val;
-                //         })
-                //         break;
-                //     case "hourTable":
-                //         newData = data.map(val => {
-                //             val.Min_TM = `${FilterMethods.methods.dateFilter(val.Min_TM, 2)}`;
-                //             ; // 时间
-                //             val.INQ = FilterMethods.methods.Float_Filter(val.INQ, 3); // 入库平均流量
-                //             val.OTQ = FilterMethods.methods.Float_Filter(val.OTQ, 3); // 出库平均流量
-                //             val.RZ = FilterMethods.methods.Float_Filter(val.RZ) // 平均水位
-                //             val.BLRZ = FilterMethods.methods.Float_Filter(val.BLRZ)//kuxia
-                //             return val;
-                //         })
-                //         break;
-                //     case "dayTable":
-                //         newData = data.map(val => {
-                //             val.TM = FilterMethods.methods.dateFilter(val.TM, null, "onlyDate"); // 时间
-                //             val.RZ = FilterMethods.methods.Float_Filter(val.RZ) // 日平均水位
-                //             val.INQ = FilterMethods.methods.Float_Filter(val.INQ, 3); // 日入库平均流量
-                //             val.OTQ = FilterMethods.methods.Float_Filter(val.OTQ, 3); // 日出库平均流量
-                //             val.BLRZ = FilterMethods.methods.Float_Filter(val.BLRZ)
-                //             return val;
-                //         })
-                //         break;
-                //     case "tenDaysTable":
-                //         newData = data.map(val => {
-                //             // val.TM = FilterMethods.methods.dateFilter(val.TM); // 时间
-                //             // val.DA_Q = FilterMethods.methods.Float_Filter(val.DA_Q, 3); // 日平均流量
-                //             // val.DA_Z = FilterMethods.methods.Float_Filter(val.DA_Z) // 日平均水位
-                //             // val.DWQ = FilterMethods.methods.Float_Filter(val.DWQ, 3); // 日累计水量
-                //             return val;
-                //         })
-                //         break;
-                //     case "monthTable":
-                //         newData = data.map(val => {
-                //             if (parseInt(val.MON) < 10) {
-                //                 val.MON = '0' + val.MON
-                //             }
-                //             val.DT = `${val.YR}-${val.MON}`; // 时间
-                //             // val.Min_TM = FilterMethods.methods.dateFilter(val.Min_TM,null,"onlyDate"); // 时间
-                //             val.INQ = FilterMethods.methods.Float_Filter(val.INQ, 3); // 月平均流量
-                //             val.OTQ = FilterMethods.methods.Float_Filter(val.OTQ, 3); // 月平均流量
-                //             val.RZ = FilterMethods.methods.Float_Filter(val.RZ) // 月平均水位
-                //             // val.MWQ = FilterMethods.methods.Float_Filter(val.MWQ, 3); // 月累计水量
-                //             val.BLRZ = FilterMethods.methods.Float_Filter(val.BLRZ)
-                //             return val;
-                //         })
-                //         break;
-                //     case "yearTable":
-                //         newData = data.map(val => {
-                //             // val.TM = FilterMethods.methods.dateFilter(val.TM); // 时间
-                //             // val.DA_Q = FilterMethods.methods.Float_Filter(val.DA_Q, 3); // 日平均流量
-                //             // val.DA_Z = FilterMethods.methods.Float_Filter(val.DA_Z) // 日平均水位
-                //             // val.DWQ = FilterMethods.methods.Float_Filter(val.DWQ, 3); // 日累计水量
-                //             return val;
-                //         })
-                //         break;
-                //     case "maxTable":
-                //         newData = data.map(val => {
-                //             // val.TMMXQ = FilterMethods.methods.dateFilter(val.TMMXQ); // 年最大流量时间
-                //             // val.TMXQ = FilterMethods.methods.Float_Filter(val.TMXQ, 3); // 年最大流量
-                //             // val.YMXQZ = FilterMethods.methods.Float_Filter(val.YMXQZ) // 对应水位
-                //             return val;
-                //         })
-                //         break;
-                //     case "alarmTable":
-                //         newData = data.map(val => {
-                //             // val.Q = FilterMethods.methods.Float_Filter(val.Q, 3); // 预警流量
-                //             val.FWL = FilterMethods.methods.Float_Filter(val.FWL) // 4-6月汛限水位
-                //             val.FWL79 = FilterMethods.methods.Float_Filter(val.FWL79) // 4-6月汛限水位
-                //             // val.JYQ = FilterMethods.methods.Float_Filter(val.JYQ, 3); // 经验预警流量
-                //             // val.JYZ = FilterMethods.methods.Float_Filter(val.JYZ); // 经验预警水位
-                //             return val;
-                //         })
-                //         break;
-                //     case "sishiTable":
-                //         newData = res.data
-                //         break;
-                //
-                // }
-
                 return newData;
             }
         })
@@ -728,7 +639,94 @@ export default {
 
 
     },
+    //大坝安全监测历史数据
+    Safe_History_DATA(jctype,body,filter,callBack){
+        var url;
+        switch(jctype){
+            case "sll":
+                url="/guanqu/slldetail/lishi";
+                break;
+            case "slyl":
+                url="/guanqu/slyldetail/lishi";
+                break;
+            case "wybx":
+                url="/guanqu/spwydetail/lishi";
+                break;
+            case "cjbx":
+                url="/guanqu/czwydetail/lishi";
+                break;
+        }
+        axios.get(url, {
+            params: body
+        })
+            .then(res => {
+                var data = res.data.list; // 数据
+                var total = res.data.total; // 数据总条数
+                // 过滤
+                if (typeof filter == "function") { // 如果传入的filte为过滤方法
+                    data = filter(data, total);
+                } else if (typeof filter == "boolean" && filter) { // 如果传入的filter为布尔值，并且为真
+                    data = defaultFilter(data);
+                } else if (filter && filter.constructor == Object) { // 如果传入的filter为对象
+                    if (filter.default === undefined || filter.default) { // 如果对象的defaul字段未设置或者值为真，则采用默认过滤
+                        data = defaultFilter(data);
+                    }
+                    if (filter.myFilter && typeof filter.myFilter == "function") { // 如果对象的myFilter字段存在并且为函数，采用此方法过滤一次data
+                        data = filter.myFilter(data)
+                    }
+                }
 
+                // 回调函数
+                if (typeof callBack == "function") { // 如果传入的callBack为函数，执行回调函数
+                    callBack({
+                        data: data || [],
+                        total: total
+                    })
+                }
+
+                // 默认过滤方法
+                function defaultFilter(data) {
+                    var newData;
+                    // 根据不同类型的表，选择不同的过滤fangfa
+                    switch (jctype) {
+                        case "sll":
+                            newData = data.map(val => {
+                                val.mstm = FilterMethods.methods.dateFilter(val.mstm, null, null, 0); // 时间
+                                val.spprwl = FilterMethods.methods.Float_Filter(val.spprwl, 3); // 渗流量
+                                val.tm = FilterMethods.methods.Float_Filter(val.tm, 1); // 渗流水温
+                                return val;
+                            })
+                            break;
+                        case "slyl":
+                            newData = data.map(val => {
+                                val.mstm = FilterMethods.methods.dateFilter(val.mstm, null, null, 0); // 时间
+                                val.spprwm = FilterMethods.methods.Float_Filter(val.spprwm, 3); // 渗压水位
+                                val.tm = FilterMethods.methods.Float_Filter(val.tm, 1); // 水温
+                                return val;
+                            })
+                            break;
+                        case "wybx":                           
+                            newData = data.map(val => {
+                                val.mstm = FilterMethods.methods.dateFilter(val.mstm, null, null, 0); // 时间
+                                val.xhrdsval = FilterMethods.methods.Float_Filter(val.xhrds.substr(3), 3); // X向位移
+                                val.yhrdsval = FilterMethods.methods.Float_Filter(val.yhrds.substr(3), 3); // Y向位移
+                                return val;
+                            })
+                            break;
+                        case "cjbx":
+                            newData = data.map(val => {
+                                val.mstm = FilterMethods.methods.dateFilter(val.mstm, null, null, 0); // 时间
+                                val.vrdsval = FilterMethods.methods.Float_Filter(val.vrds.substr(2), 3); // 垂直位移
+                                val.inel = FilterMethods.methods.Float_Filter(val.inel, 3); // 测量高程
+                                return val;
+                            })
+                            break;
+                    }
+                    return newData;
+                }
+
+            })
+    },
 
     // 水库水情
     Survey_History_SKSQ(tableType, body, filter, callBack) {

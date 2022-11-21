@@ -11,19 +11,19 @@
         class="el-menu-demo"
         background-color="#409EFF"
         text-color="#fff"
-        active-text-color=""
+        active-text-color="#ffd04b"
         mode="horizontal"
         @select="handleSelect"
       >
         <el-menu-item index="1" :disabled="true" style="opacity: 1;">
-          <img src="/static/demo-hunanguanqu/biaozhi.png" style="height: 48px; margin-right: 5px;opacity: 0.85;"/>
+          <img src="/static/demo-hunanguanqu/biaozhi.png" style="height: 48px; margin-right: 5px;opacity: 0.9;"/>
           <span style="font-size: 20px; color: #fff;font-weight: 200;">宁乡市小型水库监测预警平台</span>
         </el-menu-item>
         <el-menu-item index="1" :disabled="true" style="opacity: 1;">
           <el-switch
             @change="switchchange"
-            active-text="地图"
-            inactive-text="报表"
+            active-text="一张图"
+            inactive-text="分析"
             :active-value="1"
             :inactive-value="0"
             v-model="mapBox_show"
@@ -60,10 +60,17 @@
 
       <!-- 工具条 -->
       <div class="left-btn">
-        <el-button plain size="mini" style="width: 83px;height: 28px;" @click="tool_box = !tool_box">地图操作</el-button>
+        <el-radio-group v-model="jksign" size="small" @change="showjianceinfo">
+          <el-radio-button label="1" style="border-color:#52A7FE;"><font>水雨情监测</font></el-radio-button>
+          <el-radio-button label="2" style="border-color:#52A7FE;"><font>大坝安全监测</font></el-radio-button>
+        </el-radio-group>
+        <el-button plain type="info" size="small" style="margin-left:38px;" circle icon="el-icon-s-tools" @click="tool_box = !tool_box"></el-button>
+        <!--
         <el-button plain size="mini" style="margin-left: 0px;width: 83px;height: 28px;" @click="restoreMapView">默认大小</el-button>
-        <el-button plain size="mini" style="margin-left: 0px;width: 83px;height: 28px;" @click="fangda">放大</el-button>
-        <el-button plain size="mini" style="margin-left: 0px;width: 83px;height: 28px;" @click="suoxiao">缩小</el-button>
+        -->
+        <el-button plain type="info" size="small" style="margin-left:2px;" circle icon="el-icon-plus" @click="fangda"></el-button>
+        <el-button plain type="info" size="small" style="margin-left:2px;" circle icon="el-icon-minus" @click="suoxiao"></el-button>
+        
       </div>
 
     <transition name="el-fade-in-linear">
@@ -105,9 +112,12 @@
                 <span>地形</span>
               </div>
               
-              <Badge :count="yjcount" overflow-count="999" style="margin-top:3px;margin-left:3px;">
+              <Badge v-show="jksign==1" :count="yjcount" overflow-count="999" style="margin-top:3px;margin-left:3px;">
                 <a href="javascript:void(0)" class="demo-badge" @click="showXianyu"><Icon type="md-pulse" size="28"/><br/>情势</a>
-            </Badge>              
+            </Badge> 
+            <Badge v-show="jksign==2" :count="safecount" overflow-count="999" style="margin-top:3px;margin-left:3px;">
+                <a href="javascript:void(0)" class="safe-badge" @click="showSafeXianyu"><Icon type="md-pulse" size="28"/><br/>情势</a>
+            </Badge>             
         </div>
       </div>
       <!-- 标注 -->
@@ -115,7 +125,7 @@
         <div class="box-h">
           <span style="position: absolute;">标注</span>
         </div>
-        <div style="display: flex;flex-wrap:wrap;overflow: hidden;height:46px;">
+        <div v-show="jksign==1" style="display: flex;flex-wrap:wrap;overflow: hidden;height:46px;">
           <CheckboxGroup
               @on-change="checkboxGroup_onChange"
               v-model="testform.social"
@@ -123,6 +133,22 @@
           >
           <Checkbox
               v-for="item in testform.checkBoxList"
+              :label="item.value"
+              :size="item.size"
+              class="checkBoxItem"
+          >
+          <span>{{ item.title }}</span>
+          </Checkbox>
+         </CheckboxGroup>
+        </div>
+        <div v-show="jksign==2" style="display: flex;flex-wrap:wrap;overflow: hidden;height:46px;">
+          <CheckboxGroup
+              @on-change="checkboxGroupsafe_onChange"
+              v-model="testform.socialsafe"
+              class="checkBox-group"
+          >
+          <Checkbox
+              v-for="item in testform.checkBoxsafeList"
               :label="item.value"
               :size="item.size"
               class="checkBoxItem"
@@ -168,13 +194,17 @@
         <div class="box-h">
           <span style="position: absolute;">图例</span>         
         </div>
-        <div style="display: flex;flex-wrap:wrap;font-size:14px;">
+        <div v-show="jksign==1" style="display: flex;flex-wrap:wrap;font-size:14px;">
           <img src="/static/demo-hunanguanqu/red.png" style="margin-right:5px;width:16px;height:16px;">
           <span style="padding:1px;">水位预警</span>
           <img src="/static/demo-hunanguanqu/yellow.png" style="margin-right:5px;margin-left:5px;width:16px;height:16px;">
           <span style="padding:1px;">降雨预警</span>
           <img src="/static/demo-hunanguanqu/purple.png" style="margin-right:5px;margin-left:5px;width:16px;height:16px;">
           <span style="padding:1px;">设备运行异常</span>
+        </div>
+        <div v-show="jksign==2" style="display: flex;flex-wrap:wrap;font-size:14px;">
+          <img src="/static/demo-hunanguanqu/blue.png" style="margin-right:5px;width:16px;height:16px;">
+          <span style="padding:1px;">大坝安全预警</span>
         </div>
       </div>
     </div>
@@ -189,7 +219,7 @@
         </div>
         <!-- 主体 -->
         <div class="wrapper">
-          <el-checkbox v-model="testform.checked" style="position: absolute;right:10px;top:25px;z-index:100;" @change="showShipin"><img src="/static/demo-hunanguanqu/8.png" style="width:16px;height:16px;display:inline;"/>视频监控</el-checkbox>
+          <el-checkbox v-show="jksign==1" v-model="testform.checked" style="position: absolute;right:10px;top:25px;z-index:100;" @change="showShipin"><img src="/static/demo-hunanguanqu/8.png" style="width:16px;height:16px;display:inline;"/>视频监控</el-checkbox>
           <!-- 标签栏与内容 -->
           <Collapse active-key="1">
             <Panel key="1">
@@ -363,13 +393,29 @@
                 <el-tab-pane label="视频" name="shipin" v-if="featrueLayers_showing().length > 0 && testform.checked">
                   <BaseBoxSHIPINZHAN ref="sptable" :featrue="zuobiaoxi(SiteFeatrueLayer)"></BaseBoxSHIPINZHAN>
                 </el-tab-pane>
+                <!--渗流量 -->
+                <el-tab-pane label="渗流量" name="shenliuliang" v-if="featrueLayers_safeshowing().length>0">
+                  <BaseBoxSHENLIULIANG ref="slltable" :featrue="zuobiaoxi(safeFeatrueLayer)"></BaseBoxSHENLIULIANG>
+                </el-tab-pane>
+                <!--渗压水位 -->
+                <el-tab-pane label="渗流压力" name="shenliuyali" v-if="featrueLayers_safeshowing().length>0">
+                  <BaseBoxSHENLIUYALI ref="slyltable" :featrue="zuobiaoxi(safeFeatrueLayer)"></BaseBoxSHENLIUYALI>
+                </el-tab-pane>
+                <!--位移变形 -->
+                <el-tab-pane label="位移变形" name="weiyibianxing" v-if="featrueLayers_safeshowing().length>0">
+                  <BaseBoxWEIYIBIANXING ref="wybxtable" :featrue="zuobiaoxi(safeFeatrueLayer)"></BaseBoxWEIYIBIANXING>
+                </el-tab-pane>
+                <!--沉降变形 -->
+                <el-tab-pane label="沉降变形" name="chenjiangbianxing" v-if="featrueLayers_safeshowing().length>0">
+                  <BaseBoxCHENJIANGBIANXING ref="cjbxtable" :featrue="zuobiaoxi(safeFeatrueLayer)"></BaseBoxCHENJIANGBIANXING>
+                </el-tab-pane>
             </el-tabs>
           </div>
           <!-- 图层没有时的提示信息 -->
-          <div class="tip" v-if="featrueLayers_showing().length == 0">暂无任何显示图层</div>
+          <div class="tip" v-if="featrueLayers_showing().length == 0 && featrueLayers_safeshowing().length==0">暂无任何显示图层</div>
         </div>
         <!-- 模式按钮 -->
-        <div class="mode" v-show="listWindow.show_Controller && featrueLayers_showing().length != 0" @click="listWindow_changeMode">
+        <div class="mode" v-show="listWindow.show_Controller && (featrueLayers_showing().length != 0 || featrueLayers_safeshowing().length!=0)" @click="listWindow_changeMode">
           <i class="el-icon-setting"></i>
         </div>
       </div>
@@ -383,20 +429,12 @@
         placement="right"
         @on-close="closeDrawer('right')"
       >
-        <!-- 渠道水情 -->
-        <DetailQUDAO :info="details.info_right" v-if="details.info_right.itype=='qudaoshuiqing'"></DetailQUDAO>
         <!-- 雨情 -->
         <DetailYUQING :info="details.info_right" v-if="details.info_right.itype=='yuqing'"></DetailYUQING>
         <!--水雨视频站点信息-->
         <DetailSiteSHUIQING :info="details.info_left" v-if="details.info_left.itype=='siteinfo1'"></DetailSiteSHUIQING>
         <!-- 水库水情 -->
         <DetailSHUIKUSHUIQING :info="details.info_right" v-if="details.info_right.itype=='siteinfo'"></DetailSHUIKUSHUIQING>
-        <!-- 河道水情 -->
-        <DetailHEDAOSHUIQING :info="details.info_right" v-if="details.info_right.itype=='hedaoshuiqing'"></DetailHEDAOSHUIQING>
-        <!-- 闸阀水情 -->
-        <DetailZHAFASHUIQING :info="details.info_right" v-if="details.info_right.itype=='zhafashuiqing'"></DetailZHAFASHUIQING>
-        <!-- 闸阀状态 -->
-        <DetailZHAFAZHUANGTAI :info="details.info_right" v-if="details.info_right.itype=='zhafazhuangtai'"></DetailZHAFAZHUANGTAI>
         <!-- 视频站 -->
         <DetailSHIPINZHAN :info="details.info_right" v-if="details.info_right.itype=='shipin'"></DetailSHIPINZHAN>
         <!-- 图像站 -->
@@ -405,6 +443,8 @@
         <DetailYUNXINGGONGKUANG :info="details.info_right" v-if="details.info_right.itype=='yunxinggongkuang'" ></DetailYUNXINGGONGKUANG>
         <!-- 水位库容 -->
         <DetailSHUIWEIKURONG :info="details.info_right" v-if="details.info_right.itype=='shuiweikurong'" ></DetailSHUIWEIKURONG>
+        <!--大坝安全监测-->
+        <DetailSAFEINFO :info="details.info_right" v-if="details.info_right.itype=='safeinfo'"></DetailSAFEINFO>
       </Drawer>
 
       <!-- 详情(左边) -->
@@ -416,20 +456,12 @@
         placement="left"
         @on-close="closeDrawer('left')"
       >
-        <!-- 渠道水情 -->
-        <DetailQUDAO :info="details.info_left" v-if="details.info_left.itype=='qudaoshuiqing'"></DetailQUDAO>
         <!-- 雨情 -->
         <DetailYUQING :info="details.info_left" v-if="details.info_left.itype=='yuqing'"></DetailYUQING>
         <!--水雨视频站点信息-->
         <DetailSiteSHUIQING :info="details.info_left" v-if="details.info_left.itype=='siteinfo1'"></DetailSiteSHUIQING>
         <!-- 水库水情 -->
         <DetailSHUIKUSHUIQING :info="details.info_left" v-if="details.info_left.itype=='siteinfo'"></DetailSHUIKUSHUIQING>
-        <!-- 河道水情 -->
-        <DetailHEDAOSHUIQING :info="details.info_left" v-if="details.info_left.itype=='hedaoshuiqing'"></DetailHEDAOSHUIQING>
-        <!-- 闸阀水情 -->
-        <DetailZHAFASHUIQING :info="details.info_left" v-if="details.info_left.itype=='zhafashuiqing'"></DetailZHAFASHUIQING>
-        <!-- 闸阀状态 -->
-        <DetailZHAFAZHUANGTAI :info="details.info_left" v-if="details.info_left.itype=='zhafazhuangtai'"></DetailZHAFAZHUANGTAI>
         <!-- 视频站 -->
         <DetailSHIPINZHAN :info="details.info_left" v-if="details.info_left.itype=='shipin'"></DetailSHIPINZHAN>
         <!-- 图像站 -->
@@ -438,6 +470,8 @@
         <DetailYUNXINGGONGKUANG :info="details.info_left" v-if="details.info_left.itype=='yunxinggongkuang'"></DetailYUNXINGGONGKUANG>
         <!-- 水位库容 -->
         <DetailSHUIWEIKURONG :info="details.info_left" v-if="details.info_left.itype=='shuiweikurong'"></DetailSHUIWEIKURONG>
+        <!--大坝安全监测-->
+        <DetailSAFEINFO :info="details.info_left" v-if="details.info_left.itype=='safeinfo'"></DetailSAFEINFO>
       </Drawer>
     </div>
 
@@ -489,7 +523,7 @@
     </div>
 
     <!-- 消息窗口和控制器 -->
-    <transition name="Messag">
+    <transition name="Messag" v-if="mapBox_show == 1">
       <div v-if="!Message_Window_Controller.show" id="Message_Window" key="Window">
         <div class="title">
           <span>消息栏</span>
@@ -525,6 +559,7 @@
       </div>
 
       <div
+        v-if="mapBox_show == 1"
         v-else
         id="Message_Window_Controller"
         @click="Message_Window_show(true)"
@@ -547,13 +582,22 @@
     </span>
   </el-dialog>
   <el-dialog
-    title="全县站点预警情势分析"
+    title="全县站点水雨情预警情势分析"
     :visible.sync="yjsiteVisible"
     width="650"
     @close="closeYjDialog()"
     append-to-body center
   >
   <SitesSHISHIYUJING v-show="yjsiteVisible"></SitesSHISHIYUJING>
+  </el-dialog>
+   <el-dialog
+    title="全县站点大坝安全预警情势分析"
+    :visible.sync="yjsafeVisible"
+    width="650"
+    @close="closeSafeYjDialog()"
+    append-to-body center
+  >
+  <SafeSHISHIYUJING v-show="yjsafeVisible"></SafeSHISHIYUJING>
   </el-dialog>
   </div>
 </template>
@@ -567,12 +611,6 @@ import Vue from "vue";
 
 // 引入页面
 import Table from "./page/Table";
-// 渠道水情
-import DetailQUDAO from "@/components/Details/Details-qudaoshuiqing.vue";
-// 闸阀状态
-import DetailZHAFAZHUANGTAI from "@/components/Details/Details-zhafazhuangtai.vue";
-// 闸阀水情
-import DetailZHAFASHUIQING from "@/components/Details/Details-zhafashuiqing.vue";
 // 雨情
 import BaseBoxYUQING from "@/components/NewBox/BaseBox-yuqing.vue";
 import DetailYUQING from "@/components/Details/Details-yuqing.vue";
@@ -585,8 +623,6 @@ import BaseBoxSHUIKUSHUIQING from "@/components/NewBox/BaseBox-shuikushuiqing.vu
 import DetailSHUIKUSHUIQING from "@/components/Details/Details-siteinfo.vue";
 //水雨站点信息
 import DetailSiteSHUIQING from "@/components/Details/Details-shuikushuiqing.vue";
-// 河道水情
-import DetailHEDAOSHUIQING from "@/components/Details/Details-hedaoshuiqing.vue";
 // 视频站
 import DetailSHIPINZHAN from "@/components/Details/Details-shipinzhan.vue";
 // 图像站
@@ -597,8 +633,20 @@ import DetailYUNXINGGONGKUANG from "@/components/Details/Details-yunxinggongkuan
 import { debuglog } from "util";
 // 水位库容
 import DetailSHUIWEIKURONG from "@/components/Details/Details-shuiweikurong.vue";
-//情势分析
+//水雨情情势分析
 import SitesSHISHIYUJING from "@/components/NewBox/Sites-shishiyj.vue";
+//大坝安全情势分析
+import SafeSHISHIYUJING from "@/components/NewBox/Safe-shishiyj.vue";
+//渗流量信息
+import BaseBoxSHENLIULIANG from "@/components/NewBox/BaseBox-shenliuliang.vue";
+//渗流压力信息
+import BaseBoxSHENLIUYALI from "@/components/NewBox/BaseBox-shenliuyali.vue";
+//位移变形信息
+import BaseBoxWEIYIBIANXING from "@/components/NewBox/BaseBox-weiyibianxing.vue";
+//沉降变形信息
+import BaseBoxCHENJIANGBIANXING from "@/components/NewBox/BaseBox-chenjiangbianxing.vue";
+//弹框
+import DetailSAFEINFO from "@/components/Details/Details-safeinfo.vue";
 
 // 引入公用方法
 import FilterMethods from "@/assets/commonJS/FilterMethods";
@@ -608,6 +656,7 @@ import { constants } from "crypto";
 import $ from 'jquery'
 import { debug } from 'console';
 import About from './views/About.vue';
+import jgxxVue from './table/table-basedata/table-gqxx/jgxx.vue';
 
 
 const options = { version: "3.28" };
@@ -632,11 +681,16 @@ export default {
       countryshow:false,
       centerDialogVisible:false,
       yjsiteVisible:false,
-      yjcount:0,
+      yjsafeVisible:false,
+      yjcount:0,//水雨情
+      safecount:0,//大坝
       raincharttitle:'',
+      //监控类型
+      jksign:1,
       //当前中心点
       zhong_xin_dian:null,
-
+      //定时器
+      map_Interval:null,
       //地图类型
       ditu_type: 'topo',
       // 文字标注图层
@@ -692,7 +746,9 @@ export default {
       //正在开发图层对象
       SiteFeatrueLayer:{itype:'siteinfo',icon:'/static/demo-hunanguanqu/2.png',show:0,swwarmicon:'/static/demo-hunanguanqu/1-alert.png',ylwarmicon:'/static/demo-hunanguanqu/1-alert-new.png',sbwarmicon:'/static/demo-hunanguanqu/9-alert-xin.png',checknum:0},
       //视频图层
-      shipinfeatureLayer:{itype:'shipin',icon:'/static/demo-hunanguanqu/8.png',show:0},
+      shipinfeatureLayer:{itype:'shipin',icon:'/static/demo-hunanguanqu/8.png',show:0,lastshow:0},
+      //大坝安全图层
+      safeFeatrueLayer:{itype:'safeinfo',icon:'/static/demo-hunanguanqu/10.png',warmicon:'/static/demo-hunanguanqu/10-alert.png',show:0},
       fList: [],
       FL_Sel: [],
       // 用于选中提示的图形图层
@@ -778,6 +834,7 @@ export default {
             }
           ],
           social: ["site"],
+          socialsafe: ["site"],
 
           checkBoxList: [
               {
@@ -825,6 +882,45 @@ export default {
                   title: "通讯状态"
               },
           ],
+           checkBoxsafeList: [
+              {
+                  value: "site",
+                  size: "small",
+                  title: "站点"
+              },
+              {
+                  value: "STNM",
+                  size: "small",
+                  title: "站名"
+              },
+              
+              {
+                  value: "spprwl",
+                  size: "small",
+                  title: "渗流量"
+              },
+              {
+                  value: "spprwm",
+                  size: "small",
+                  title: "渗压水位"
+              },
+              {
+                  value: "xhrds",
+                  size: "small",
+                  title: "X向位移"
+              },  
+              {
+                  value: "yhrds",
+                  size: "small",
+                  title: "Y向位移"
+              },                         
+              {
+                  value: "vrds",
+                  size: "small",
+                  span: 6,
+                  title: "垂直位移"
+              },
+          ],
       },
       menus:[],
       menus_data:{
@@ -847,20 +943,22 @@ export default {
   //////////////////////////////////////
   components: {
     Table, // 表格
-    DetailQUDAO,// 渠道
-    DetailZHAFASHUIQING,// 闸阀水情
-    DetailZHAFAZHUANGTAI,// 闸阀状态
     BaseBoxYUQING, DetailYUQING,// 雨情
     BaseBoxSHISHIYQ,//实时雨情
     BaseBoxSHIPINZHAN,//视频
-    DetailHEDAOSHUIQING,// 河道水情
     BaseBoxSHUIKUSHUIQING, DetailSHUIKUSHUIQING,// 水库水情
     DetailSHIPINZHAN,// 视频站
     DetailTUXIANGZHAN,// 图像站
     BaseBoxYUNXINGGONGKUANG, DetailYUNXINGGONGKUANG,// 运行工况
     DetailSHUIWEIKURONG,// 水位库容
-    SitesSHISHIYUJING,//情势分析
-    DetailSiteSHUIQING//水雨站点信息
+    SitesSHISHIYUJING,//水雨情情势分析
+    SafeSHISHIYUJING,//大坝安全情势分析
+    DetailSiteSHUIQING,//水雨站点信息
+    BaseBoxSHENLIULIANG,//渗流量
+    BaseBoxSHENLIUYALI,//渗流压力
+    BaseBoxWEIYIBIANXING,//位移变形
+    BaseBoxCHENJIANGBIANXING,//沉降变形
+    DetailSAFEINFO,//大坝安全监测弹框
   },
 
   //////////////////////////////////////
@@ -906,7 +1004,18 @@ export default {
 
         this.add_GraphicsLayer_Selection_ToMap();
         
-        
+        //五分钟刷新一次数据
+        this.map_Interval=setInterval(() => {
+          this.testform.model_adress=[];
+          this.testform.model_guishu="";
+          this.testform.model_date = this.getinittime();
+          this.testform.model_dengji=[];
+          this.testform.model_status="";
+          this.testform.search_str="";
+          this.testform.socialsafe=["site"];
+          this.testform.social=["site"];
+          this.showjianceinfo();
+        }, 1000 * 60 * 5);
       })
       .catch(err => {
         console.error(err);
@@ -955,9 +1064,13 @@ export default {
             }
         })
     });
+  
   },
 
-
+     //销毁时删除定时器
+     destroyed() {
+        clearInterval(this.map_Interval);
+     },
 
 
 
@@ -1388,8 +1501,7 @@ export default {
           // 获取异常数据 
           var wateryujingData = this.getAbnormalDataByType(data,1);
           var rainyujingData = this.getAbnormalDataByType(data,2);
-          var equipmentyujingData = this.getAbnormalDataByType(data,3);
-          this.yjcount=this.getYjTongjiCount(data);
+          var equipmentyujingData = this.getAbnormalDataByType(data,3);         
           // 创建预警图层（根据图层异常数据）
           var water_yujing = this.createFeatrueLayer(wateryujingData);
           var rainyjData=this.getWarmDataByRainAndSb(rainyujingData,2);
@@ -1452,10 +1564,12 @@ export default {
           this.SiteFeatrueLayer.LayerObject_yujing = [water_yujing,rain_yujing,equipment_yujing]; // 添加图层到图层对象
           this.SiteFeatrueLayer.Rows = clone_data.features; // 添加图层特征点数据到图层对象
           this.SiteFeatrueLayer.map = this.map; // 添加地图到图层对象
+          //情势数据
+          this.yjcount=this.getYjTongjiCount(this.SiteFeatrueLayer);
 
           this.shipinfeatureLayer.LayerObject=spfeatureLayer;
           this.shipinfeatureLayer.Rows = clone_data.features; 
-          this.shipinfeatureLayer.map = this.map;
+          this.shipinfeatureLayer.map = this.map;         
 
           //添加图层模块
           this.addToFeatrueLayer(
@@ -1692,7 +1806,12 @@ export default {
                 });
       });
     },
-    // 多选框标记勾选触发事件
+    // 多选框标记勾选触发事件(大坝安全)
+    checkboxGroupsafe_onChange() {
+        this.removeAllTextGraphicsLayer(); // 清除所有文本标注图层
+        this.addTextGraphicsLayerByCheckGroupSafe(); // 根据多选框添加文字标注图层
+    },
+    // 多选框标记勾选触发事件(水雨情)
     checkboxGroup_onChange(onCheck_Array) {
         this.removeAllTextGraphicsLayer(); // 清除所有文本标注图层
         this.addTextGraphicsLayerByCheckGroup(); // 根据多选框添加文字标注图层
@@ -1705,9 +1824,8 @@ export default {
         }
         this.TextGraphicsLayers = [];
     },
-    // 根据多选框添加文字标注图层
+    // 根据多选框添加文字标注图层 水雨情
     addTextGraphicsLayerByCheckGroup() {
-      debugger;
         var textTypeList;
         var indexOfSocial = this.testform.social.indexOf("site");
         // 如果多选框里存在 site站点类型
@@ -1885,6 +2003,209 @@ export default {
             this.TextGraphicsLayers.push(textGraphicsLayer);
         });
     },
+    // 根据多选框加文字标注图层 大坝安全
+    addTextGraphicsLayerByCheckGroupSafe(){
+      var textTypeList;
+        var indexOfSocial = this.testform.socialsafe.indexOf("site");
+        // 如果多选框里存在 site站点类型
+        if (indexOfSocial !== -1) {
+          this.safeFeatrueLayer.LayerObject.show();
+          if(this.radio4!="全部"){
+            var tclist = this.safeFeatrueLayer.LayerObject_yujing;
+            for(var i=0;i<tclist.length;i++){
+              tclist[i].hide(); 
+            }
+          }else{           
+            var tclist = this.safeFeatrueLayer.LayerObject_yujing;
+            for(var i=0;i<tclist.length;i++){
+              tclist[i].show();
+            }           
+          }
+          textTypeList = this.testform.socialsafe.filter(val => {
+                if (val != "site" && val !="MJ") {
+                    return true;
+                }
+            });   
+        } else {
+            this.safeFeatrueLayer.LayerObject.hide();
+            var tclist = this.safeFeatrueLayer.LayerObject_yujing;
+            for(var i=0;i<tclist.length;i++){
+              tclist[i].hide();
+            }
+            textTypeList = this.testform.socialsafe;
+        }
+        textTypeList.forEach((textType, index) => {
+            var textGraphicsLayer = new esri.layers.GraphicsLayer(); // 新增一个图形图层
+            textGraphicsLayer.textType = textType;
+            this.map.addLayer(textGraphicsLayer); // 给地图添加新增的标注文本图层
+            var Rows = this.safeFeatrueLayer.Rows;
+            //创建textsymbol文本标注
+            if (Rows.length > 0) {            
+                //动态读取json数据源结果集
+                for (var i = 0; i < Rows.length; i++) {
+                    var Row = Rows[i];
+                    //获取坐标
+                    var x=Number(Row.geometry.x);
+                    var y=Number(Row.geometry.y);
+                    var point = new esri.geometry.Point(
+                        x,
+                        y,
+                        new esri.SpatialReference({ wkid: 4326 })
+                    );
+                    var color=[22, 22, 22];
+                    var value="";
+                    // 过滤
+                    switch (textType) {
+                        case "STNM":{
+                          value=Row.rowinfo[textType];
+                          break;
+                        }
+                        case "spprwl":
+                          var ssllist=Row.rowinfo["slllist"];
+                          if(ssllist.length==0){
+                            value="无";
+                          }else{
+                            value=ssllist[0].spprwl+"L/s";
+                          }
+                          if(Row.rowinfo["sllyj"]==1){
+                            color = [255, 0 , 0];
+                          }
+                            break;
+                        case "spprwm":
+                            var slyllist=Row.rowinfo["slyllist"];
+                          if(slyllist.length==0){
+                            value="无";
+                          }else{
+                            value=slyllist[0].spprwm+"m";
+                          }
+                          if(Row.rowinfo["slylyj"]==1){
+                            color = [255, 0 , 0];
+                          }
+                            break;
+                        case "xhrds":
+                            var spwylist=Row.rowinfo["spwylist"];
+                          if(spwylist.length==0){
+                            value="无";
+                          }else{
+                            var showred=0;
+                            value=spwylist[0].xhrds+"mm";
+                            if(spwylist[0].xjyz>=0){
+                                  showred=1;
+                                }
+                            if(showred==1){
+                              color = [255, 0 , 0];
+                            }
+                          }
+                            break;
+                            case "yhrds":
+                            var spwylist=Row.rowinfo["spwylist"];
+                            if(spwylist.length==0){
+                              value="无";
+                            }else{
+                              var showred=0;
+                              value+=spwylist[0].yhrds+"mm";
+                              if(spwylist[0].yjyz>=0){
+                                  showred=1;
+                                }
+                              if(showred==1){
+                                color = [255, 0 , 0];
+                              }
+                            }
+                            break;
+                            case "vrds":
+                              var czwylist=Row.rowinfo["czwylist"];
+                              if(czwylist.length==0){
+                                value="无";
+                              }else{
+                                value+=czwylist[0].vrds+"mm";
+                              }
+                              if(Row.rowinfo["czwyyj"]==1){
+                                color = [255, 0 , 0];
+                              }
+                            break;
+                    }
+                    //定义背景框
+                    if(index==0){
+                      var lenth=textTypeList.length;
+                      var maxsize=0;
+                      for(var s=0;s<textTypeList.length;s++){
+                        var text="";
+                        // 过滤
+                    switch (textTypeList[s]) {
+                        case "STNM":{
+                          text=Row.rowinfo[textType];
+                          break;
+                        }
+                        case "spprwl":
+                          var ssllist=Row.rowinfo["slllist"];
+                          if(ssllist.length==0){
+                            text="无";
+                          }else{
+                            text=ssllist[0].spprwl+"L/s";
+                          }
+                            break;
+                        case "spprwm":
+                            var slyllist=Row.rowinfo["slyllist"];
+                          if(slyllist.length==0){
+                            text="无";
+                          }else{
+                            text=slyllist[0].spprwm+"m";
+                          }
+                            break;
+                        case "xhrds":
+                            var spwylist=Row.rowinfo["spwylist"];
+                          if(spwylist.length==0){
+                            text="无";
+                          }else{
+                            var showred=0;
+                            text=spwylist[0].xhrds+"mm";
+                          }
+                            break;
+                            case "yhrds":
+                            var spwylist=Row.rowinfo["spwylist"];
+                            if(spwylist.length==0){
+                              text="无";
+                            }else{
+                              text=spwylist[0].yhrds+"mm";
+                            }
+                            break;
+                            case "vrds":
+                              var czwylist=Row.rowinfo["czwylist"];
+                              if(czwylist.length==0){
+                                text="无";
+                              }else{
+                                text=czwylist[0].vrds+"mm";
+                              }
+                            break;
+                    }
+                        var textlen=this.strlen(text);                        
+                        if(maxsize<textlen){
+                          maxsize=textlen;
+                        }
+                      }
+                      var picturesymbol = new esri.symbol.PictureMarkerSymbol(
+                        '/static/demo-hunanguanqu/back.png',
+                        (maxsize*7+5),
+                        lenth*16
+                      ).setOffset(0, -(19+(lenth-1)*8));
+                      var bgGraphic = new esri.Graphic(point, picturesymbol);
+	                    textGraphicsLayer.add(bgGraphic);
+                    }
+                    //定义文本symbol
+                    var textsymbol = new esri.symbol.TextSymbol(value) //动态设置文本值
+                        .setColor(new dojo.Color(color)) //setColor设置文本颜色
+                        .setFont(
+                            new esri.symbol.Font("10pt") //setFont设置文本大小
+                                .setWeight(esri.symbol.Font.WEIGHT_BOLD)
+                        ) //setWeight设置文本粗体
+                        .setOffset(0, -(25 + index * 15)); //设置偏移方向
+                    var graphic = new esri.Graphic(point, textsymbol);
+                    textGraphicsLayer.add(graphic);
+                }
+            }
+            this.TextGraphicsLayers.push(textGraphicsLayer);
+        });
+    },
     strlen(str){
     var len = 0;
     for (var i=0; i<str.length; i++) {
@@ -1972,7 +2293,12 @@ export default {
             setTimeout(() => {
                 var attributes = evt.graphic.attributes;
                 attributes.eventType = "mouse-over";
-                this.showTips(attributes.rowinfo); // 展示悬浮框
+                if(this.jksign==1){
+                    this.showTips(attributes.rowinfo); // 展示悬浮框 水雨情
+                }else{
+                    this.showSafeTips(attributes.rowinfo);// 展示悬浮框 大坝安全
+                }
+                
             }, 100);
             // 给地图对象添加方法
             // this.addEventToMap();
@@ -1990,9 +2316,16 @@ export default {
         this.yjsiteVisible=true;
       }
     },
+    showSafeXianyu(){
+      if(this.safecount>0){
+        this.yjsafeVisible=true;
+      }
+    },
     closeYjDialog(){
-      debugger;
       this.yjsiteVisible=false;
+    },
+    closeSafeYjDialog(){
+      this.yjsafeVisible=false;
     },
     //悬浮框
     showTips(item){
@@ -2070,6 +2403,105 @@ export default {
                 console.log(zoompoint);
                 this.map.infoWindow.show(zoompoint, zoompoint);
     },
+    //悬浮框 大坝安全
+    showSafeTips(item){
+      var height=1;
+      var div='<div>'
+              +'<table border="0" cellspacing="0" class="table_safe">'
+              +'<tr>'
+              +'<th align="right" >站址：</th>'
+              +'<td colspan="3">'+item.adnm.replace("|","")+'</td>'
+                +'</tr>';               
+                if(item.slllist.length>0){
+                  height=height+item.slllist.length+2;
+                  div+='<tr><td colspan="4">渗流量</td></tr>'
+                  +'<tr><th>测点编号</th><th>渗流量(L/s)</th><th>阈值(L/s)</th><th>渗流水温(℃)</th></tr>';
+                  for(var i=0;i<item.slllist.length;i++){
+                      var sllobj=item.slllist[i];
+                      div+='<tr><td>'+sllobj.mpcd+'</td>';
+                      if(sllobj.wljyz>=0){
+                        div+='<td><font style="color:#ff0000;">'+sllobj.spprwl+'</font></td>';
+                      }else{
+                        div+='<td>'+sllobj.spprwl+'</td>';
+                      }
+                      div+='<td>'+sllobj.wlyz+'</td><td>'+sllobj.tm+'</td></tr>';
+                  }
+                }
+                if(item.slyllist.length>0){
+                  height=height+item.slyllist.length+2;
+                  div+='<tr><td colspan="4">渗流压力</td></tr>'
+                  +'<tr><th>测点编号</th><th>渗压水位(m)</th><th>阈值(m)</th><th>水温(℃)</th></tr>';
+                  for(var i=0;i<item.slyllist.length;i++){
+                      var slylobj=item.slyllist[i];
+                      div+='<tr><td>'+slylobj.mpcd+'</td>';
+                      if(slylobj.pzjyz>=0){
+                        div+='<td><font style="color:#ff0000;">'+slylobj.spprwm+'</font></td>';
+                      }else{
+                        div+='<td>'+slylobj.spprwm+'</td>';
+                      }
+                      div+='<td>'+slylobj.pzyz+'</td><td>'+slylobj.tm+'</td></tr>';
+                  }
+                }
+                if(item.spwylist.length>0){
+                  height=height+item.spwylist.length+2;
+                  div+='<tr><td colspan="4">位移变形</td></tr>'
+                  +'<tr><th>测点编号</th><th>X向位移(mm)</th><th>Y向位移(mm)</th><th>阈值(mm)</th></tr>';
+                  for(var i=0;i<item.spwylist.length;i++){
+                      var spwyobj=item.spwylist[i];
+                      div+='<tr><td>'+spwyobj.mpcd+'</td>';
+                      if(spwyobj.xjyz>=0){
+                        div+='<td><font style="color:#ff0000;">'+spwyobj.xhrds+'</font></td>';
+                      }else{
+                        div+='<td>'+spwyobj.xhrds+'</td>';
+                      }
+                      if(spwyobj.yjyz>=0){
+                        div+='<td><font style="color:#ff0000;">'+spwyobj.yhrds+'</font></td>';
+                      }else{
+                        div+='<td>'+spwyobj.yhrds+'</td>';
+                      }
+                      div+='<td>'+spwyobj.xyhrds+'</td></tr>';
+                  }
+                }
+                if(item.czwylist.length>0){
+                  height=height+item.czwylist.length+2;
+                  div+='<tr><td colspan="4">沉降变形</td></tr>'
+                  +'<tr><th>测点编号</th><th>垂直位移(mm)</th><th>阈值(m)</th><th>测量高程(m)</th></tr>';
+                  for(var i=0;i<item.czwylist.length;i++){
+                      var cjwyobj=item.czwylist[i];
+                      div+='<td>'+cjwyobj.mpcd+'</td>';
+                      if(cjwyobj.vjyz>=0){
+                        div+='<td><font style="color:#ff0000;">'+cjwyobj.vrds+'</font></td>';
+                      }else{
+                        div+='<td>'+cjwyobj.vrds+'</td>';
+                      }
+                      div+='<td>'+cjwyobj.vrdsyj+'</td><td>'+cjwyobj.inel+'</td></tr>';
+                  }
+                }
+              div+='</table></div>';
+              height=height*30+40;
+              this.map.infoWindow.setTitle(item.STNM); 
+              this.map.infoWindow.resize(400, height); // 提示框大小
+              this.map.infoWindow.setContent(div); // 提示内容
+              //获取坐标
+                var x=Number(item.LGTD);
+                var y=Number(item.LTTD);
+                //如果basemap使用ArcGIS的就需要
+                //转换坐标系
+                x = (x / 180.0) * 20037508.34
+                if (y > 85.05112) y = 85.05112;
+                if (y < -85.05112) y = -85.05112;
+                y = (Math.PI / 180.0) * y;
+                var tmp = Math.PI / 4.0 + y / 2.0;
+                y = 20037508.34 * Math.log(Math.tan(tmp)) / Math.PI;
+                var zoompoint = {
+                    //spatialReference: {wkid: 4326},
+                    spatialReference: this.map.spatialReference,
+                    x: x,
+                    y: y
+                };
+                console.log(zoompoint);
+                this.map.infoWindow.show(zoompoint, zoompoint);
+    },
     // 隐藏提示
     hideTips() {
         this.map.infoWindow.hide();
@@ -2088,7 +2520,7 @@ export default {
         }
       }
     },
-    // 给特征点元素点添加点击事件
+    // 给特征点元素点添加点击事件 水雨情
     addEventToJsonFlayer(JsonFlayer, v) {
       JsonFlayer.on("click", evt => {
         //当鼠标点击元素
@@ -2096,6 +2528,18 @@ export default {
         evt.graphic.attributes.rowinfo.tableType = {
           yq: "hourTable",
           sksq: "historyTable",
+          clicktype:"home"
+        };
+        // 展示抽屉组件
+        this.showDrawer(evt, v);
+      });
+    },
+    // 给特征点元素点添加点击事件 大坝安全
+    addSafeEventToJsonFlayer(JsonFlayer, v) {
+      JsonFlayer.on("click", evt => {
+        //当鼠标点击元素
+        // 抽屉组件默认显示表类型
+        evt.graphic.attributes.rowinfo.tableType = {
           clicktype:"home"
         };
         // 展示抽屉组件
@@ -2110,7 +2554,7 @@ export default {
     showDrawer(evt, v) {
       var graphic = evt.graphic;
       var obj_a=graphic.attributes.rowinfo;
-      if(v.itype!="shipin"){
+      if(v.itype!="shipin" && v.itype!="safeinfo"){
         if(obj_a._skstatus==1 && obj_a._status==1 && obj_a._gkstatus==1){
           if(this.listWindow.activeName=="shuikushuiqing"){
             obj_a.tableType.clicktype='sksq';
@@ -2203,9 +2647,19 @@ export default {
 
       return n;
     },
-    // 正在显示的图层
+    // 正在显示的图层 水雨情
     featrueLayers_showing() {
       var featrueLayer = this.SiteFeatrueLayer;
+      // 获取正在显示的图层
+      if (featrueLayer.show == 1) {
+          return [featrueLayer];
+      }else{
+          return [];
+      }
+    },
+    // 正在显示的图层 大坝安全
+    featrueLayers_safeshowing() {
+      var featrueLayer = this.safeFeatrueLayer;
       // 获取正在显示的图层
       if (featrueLayer.show == 1) {
           return [featrueLayer];
@@ -2347,15 +2801,42 @@ export default {
 
       return data;
     },
-    //获取预警统计数据
+    //根据大坝安全预警类别获取预警数据 
+    getSafeAbnormalDataByType(graphicsData) {
+      var data = JSON.parse(JSON.stringify(graphicsData)); // 图层数据深拷贝
+      // 把每个特征点的rowinfo数据放入每个特征点的属性中
+      data.features.forEach((val, index) => {
+        data.features[index].attributes.rowinfo = data.features[index].rowinfo;
+      });     
+      var AbnormalData = data.features.filter((val, index) => {
+          if (val.rowinfo.sllyj == 1 || val.rowinfo.slylyj == 1|| val.rowinfo.spwyyj == 1|| val.rowinfo.czwyyj == 1) {
+            return true;
+          }
+      });
+
+      data.features = AbnormalData;
+
+      return data;
+    },
+    //获取水雨情预警统计数据
     getYjTongjiCount(graphicsData){
       var yunum=0;
-      graphicsData.features.forEach((val, index) => {
+      graphicsData.Rows.forEach((val, index) => {
         if (val.rowinfo.skstatus == 0 || val.rowinfo.status ==0 || val.rowinfo.gkstatus==0 ) {
               yunum++;
           }
       });
       return yunum;
+    },
+    //获取大坝安全预警统计数据
+    getSafeYjTongjiCount(graphicsData){
+      var yjnum=0;
+      graphicsData.Rows.forEach((val, index) => {
+        if (val.rowinfo.sllyj == 1 || val.rowinfo.slylyj ==1 || val.rowinfo.spwyyj==1 || val.rowinfo.czwyyj==1 ) {
+              yjnum++;
+          }
+      });
+      return yjnum;
     },
     //获取异常显示数据 2雨量  3设备
     getWarmDataByRainAndSb(graphicsData,warmType) {
@@ -2412,6 +2893,7 @@ export default {
 
           var item = new Object();
           item.icon = options.icon;
+         if(options.sign!="safe"){
           if(options.sign=="sw"){
             item.text = `${rowinfo.STNM}`+"水位超汛限";
             item.color="#FF0000";
@@ -2433,13 +2915,28 @@ export default {
             if(rowinfo.CS=="异常"){
               item.text+="通讯异常";
             }
-          }
-          
-          item.voice = this.baiduVoice(item.text);
+          }          
+         }else{
+          item.text=`${rowinfo.STNM}`;
+           if(rowinfo.sllyj=="1"){
+            item.text+="渗流量、";
+           }
+            if(rowinfo.slylyj=="1"){
+              item.text+="渗压水位、";
+            }
+            if(rowinfo.spwyyj=="1"){
+              item.text+="位移变形、";
+            }
+            if(rowinfo.czwyyj=="1"){
+              item.text+="沉降变形、";
+            }
+            item.text=item.text.substring(0,item.text.length-1);
+            item.text+="预警";
+         }
+         item.voice = this.baiduVoice(item.text);
           item.voice_duration = item.text.length * 300;
           item.id = notify_info_list.length;                  
           notify_info_list.unshift(item);
-
           setTimeout(() => {
             if (Voice_Controller) {
               var duration = notify_info_list[index].voice.duration;
@@ -2521,6 +3018,31 @@ export default {
           this.addTextGraphicsLayerByCheckGroup(); 
       }
     },
+    //切换水雨情监测和大坝安全监测
+    showjianceinfo(){
+      //水雨情监测
+      if(this.jksign==1){
+        this.safeFeatrueLayer.show=0;          
+         //移除大坝安全监测图层
+         this.removeFeatureLayer(this.safeFeatrueLayer);
+         //移除大坝安全监测预警图层
+         this.removeFeatureLayer_yujing(this.safeFeatrueLayer);
+         this.search('change');
+      }else{
+          this.SiteFeatrueLayer.show=0;
+          this.shipinfeatureLayer.lastshow=this.shipinfeatureLayer.show;
+          this.shipinfeatureLayer.show=0;
+          this.testform.checked=false;
+          // 移除水雨情图层对象里的相应图层
+          this.removeFeatureLayer(this.SiteFeatrueLayer);
+          //移除视频对象图层
+          this.removeFeatureLayer(this.shipinfeatureLayer);
+          // 移除预警图层对象里的相应预警图层
+          this.removeFeatureLayer_yujing(this.SiteFeatrueLayer);
+          this.search('change');
+      }
+    },
+    //查询
     search(opsign){
                 var body = new Object();
                 // 如果输入框有内容，添加站名过滤字段
@@ -2582,15 +3104,48 @@ export default {
                 if(opsign!=null && typeof(opsign)!="undefinded" && opsign=='yq'){
                       this.listWindow.activeName="yuqing";
                     }
-                this.showTableLoading();
-                this.search_FeatrueLayer(body,this.SiteFeatrueLayer,newFeatureLayerOBJ => {     
-                    newFeatureLayerOBJ.SUMP= this.radio4;            
-                    this.initTableData();
-                    this.hideTableLoading();
-                    this.hideTips();                                     
-                });
+                if(this.jksign==1){
+                   if(!(opsign!=null && typeof(opsign)!="undefinded" && opsign=='change')){
+                      this.showTableLoading();  
+                   }                              
+                  this.search_FeatrueLayer(body,this.SiteFeatrueLayer,newFeatureLayerOBJ => {     
+                      newFeatureLayerOBJ.SUMP= this.radio4; 
+                      if(!(opsign!=null && typeof(opsign)!="undefinded" && opsign=='change')){
+                          this.initTableData();
+                          this.hideTableLoading();                        
+                      }else{
+                          this.SiteFeatrueLayer.show=1;
+                          this.shipinfeatureLayer.show=this.shipinfeatureLayer.lastshow;
+                          if(this.shipinfeatureLayer.show==1){
+                            this.testform.checked=true;
+                            this.listWindow.activeName="shipin";
+                          }else{
+                            this.listWindow.activeName="shuikushuiqing";
+                          }
+                          //情势数据
+                          this.yjcount=this.getYjTongjiCount(newFeatureLayerOBJ);
+                      }           
+                      this.hideTips();                                     
+                  });
+                }else{
+                  if(!(opsign!=null && typeof(opsign)!="undefinded" && opsign=='change')){
+                    this.showSafeTableLoading();
+                  }
+                  this.search_SafeFeatrueLayer(body,this.safeFeatrueLayer,newFeatureLayerOBJ => {     
+                      newFeatureLayerOBJ.SUMP= this.radio4;  
+                      if(!(opsign!=null && typeof(opsign)!="undefinded" && opsign=='change')){
+                          this.initSafeTableData();
+                          this.hideSafeTableLoading();  
+                      }else{
+                        this.safeFeatrueLayer.show=1;
+                        this.listWindow.activeName="shenliuliang";
+                        this.safecount=this.getSafeYjTongjiCount(newFeatureLayerOBJ);
+                      }                          
+                      this.hideTips();                                     
+                  });
+                }
     },
-    // 查询图层 (要查询的图层类型, 过滤字段, 所属图层对象)
+    // 查询图层 (要查询的图层类型, 过滤字段, 所属图层对象)水雨情
     search_FeatrueLayer(fields, featureLayerOBJ, callback, errCallback) {
       // 获取具有过滤条件的图层数据
       this.getFeatrueLayer(
@@ -2708,6 +3263,75 @@ export default {
 
         }
         // errCallback
+      );
+    },
+    // 查询图层 (要查询的图层类型, 过滤字段, 所属图层对象)大坝安全
+    search_SafeFeatrueLayer(fields, featureLayerOBJ, callback, errCallback) {
+      // 获取具有过滤条件的图层数据
+      this.getSafeFeatrueLayer(
+        fields,
+        res => {
+          var clone_data = JSON.parse(JSON.stringify(res.data));
+          console.log(clone_data);
+          // 创建图层（根据图层数据）
+          var featureLayer = this.createFeatrueLayer(res.data);
+          // 获取异常数据 
+          var yujingData = this.getSafeAbnormalDataByType(res.data);
+          //获取预警显示数据
+
+          // 创建预警图层（根据图层异常数据）
+          var safe_yujing = this.createFeatrueLayer(yujingData);
+          // 移除图层对象里的相应图层
+          this.removeFeatureLayer(featureLayerOBJ);
+          // 移除图层对象里的相应预警图层
+          this.removeFeatureLayer_yujing(featureLayerOBJ);
+          // 设置图层的特征点图标
+            this.setFeatrueLayerSymbol(featureLayer, featureLayerOBJ.icon, {
+              width: 16,
+              height: 16
+            });
+          // 设置预警图层的特征点图标
+          this.setFeatrueLayerSymbol( safe_yujing, "/static/demo-hunanguanqu/dbyujing.gif", { width: 46, height: 46 } );
+
+         var checknum=Math.random();
+          //大坝安全提示预警信息
+          if (yujingData.features.length > 0) {
+            this.notify_Layer(
+              {
+                icon: this.safeFeatrueLayer.warmicon,
+                type: "warning",
+                sign:"safe",
+                checkindex:checknum
+              },
+              yujingData.features
+            );
+          }
+          // 更新图层对象集合里面 对应图层对象的 图层以及图层数据
+          // 给图层对象添加 图层，图层特征点数据，地图
+          featureLayerOBJ.LayerObject = featureLayer; // 添加图层到图层对象
+          featureLayerOBJ.LayerObject_yujing = [safe_yujing]; // 添加图层到图层对象
+          featureLayerOBJ.Rows = clone_data.features; // 添加图层特征点数据到图层对象
+          // 添加图层模块
+          this.addToFeatrueLayer(
+            [safe_yujing, featureLayer]
+          );
+          
+          // 如果有回调，执行回调
+          if (typeof callback == "function") {
+            callback(featureLayerOBJ);
+          }
+          // 取消所有站点的闪烁
+          this.GraphicsLayer_Selection_clear();
+          // 给图层里的特征点 添加点击事件
+          this.addSafeEventToJsonFlayer(
+            featureLayerOBJ.LayerObject,
+            featureLayerOBJ
+          );
+          //添加悬浮事件
+          this.addEventToFloatFlayer(featureLayer);
+          //添加文字标注
+          this.checkboxGroupsafe_onChange();
+        }
       );
     },
 //实时降雨柱状图数据获取
@@ -2868,7 +3492,7 @@ createRainChart(echartData){
                 ]
             });
 },
-//表格数据获取
+//表格数据获取 水雨情
 initTableData(){
   this.$refs.sqtable.baseBox_init();
   this.$refs.yqtable.baseBox_init();
@@ -2878,7 +3502,14 @@ initTableData(){
     this.$refs.sptable.baseBox_init();
   }
 },
-//表格加载
+//表格数据获取 大坝监测
+initSafeTableData(){
+  this.$refs.slltable.baseBox_init();
+  this.$refs.slyltable.baseBox_init();
+  this.$refs.wybxtable.baseBox_init();
+  this.$refs.cybxtable.baseBox_init();
+},
+//表格加载 水雨情
 showTableLoading(){
   this.$refs.sqtable.tableLoading();
   this.$refs.yqtable.tableLoading();
@@ -2888,7 +3519,7 @@ showTableLoading(){
     this.$refs.sptable.tableLoading();
   }
 },
-//取消加载
+//取消加载 水雨情
 hideTableLoading(){
   this.$refs.sqtable.cancelTableLoading();
   this.$refs.yqtable.cancelTableLoading();
@@ -2898,7 +3529,20 @@ hideTableLoading(){
     this.$refs.sptable.cancelTableLoading();
   }
 },
-    //表格取消加载
+//表格加载  大坝安全
+showSafeTableLoading(){
+  this.$refs.slltable.tableLoading();
+  this.$refs.slyltable.tableLoading();
+  this.$refs.wybxtable.tableLoading();
+  this.$refs.cjbxtable.tableLoading();
+},
+//表格取消加载 大坝安全
+hideSafeTableLoading(){
+  this.$refs.slltable.cancelTableLoading();
+  this.$refs.slyltable.cancelTableLoading();
+  this.$refs.wybxtable.cancelTableLoading();
+  this.$refs.cjbxtable.cancelTableLoading();
+},
 
     // 获取没有过滤条件的图层数据
     getFeatrueLayerWithoutPreconditions(url, callback) {
@@ -2908,18 +3552,31 @@ hideTableLoading(){
         }
       });
     },
-    // 获取具有过滤条件的图层数据
+    // 获取具有过滤条件的水雨情图层数据
     getFeatrueLayer( fields, callback, errCallback) {
-      /*
-                type为数字，以下为不同数字对应图层
-                4: 渠道水情
-                5: 闸阀水情
-                6: 闸阀状态
-                7: 图像
-                8: 视频
-                */
-
       var url = "/guanqu/sksiteinfo/gis";
+
+      var body = {
+        // _filter: new Object()
+      };
+      // 增加过滤字段
+      for (var key in fields) {
+        body[key] = fields[key];
+      }
+
+      this.axios.post(url, body).then(res => {
+        if (typeof errCallback == "function") {
+          errCallback();
+        }
+        if (typeof callback == "function") {
+          callback(res);
+        }
+      });
+
+    },
+    // 获取具有过滤条件的大坝安全监测图层数据
+    getSafeFeatrueLayer( fields, callback, errCallback) {
+      var url = "/guanqu/dabasafe/gis";
 
       var body = {
         // _filter: new Object()
@@ -3358,6 +4015,22 @@ hideTableLoading(){
 .demo-badge:hover{
   color: #DC3409;
 }
+.safe-badge{
+        width: 52px;
+        height: 52px;
+        background: #eee;
+        border-radius: 6px;
+        display: inline-block;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 700;
+        padding-top:2px;
+        color: #04905B;
+        border: 1px solid #04905B;
+    }
+.safe-badge:hover{
+  color: #04905B;
+}
 </style>
       <style lang="less">
 .zZindex {
@@ -3571,7 +4244,7 @@ hideTableLoading(){
   padding: 0.4rem 0;
   height: auto;
 }
-//悬浮框表格样式
+//悬浮框表格样式 水雨情
 .table_float {
   width:380px;
   td {
@@ -3590,6 +4263,29 @@ hideTableLoading(){
     width: 26%;
     border-right: 1px solid #EBEEF5;
     border-left: none;
+  }
+}
+//悬浮框表格样式 大坝安全
+.table_safe{
+  width:380px;
+    border-right: 1px solid #EBEEF5;
+    border-bottom: 1px solid #EBEEF5;
+  th {
+    text-align: center;
+    font-weight:bold;
+    height: 30px;
+    border-top: 1px solid #EBEEF5;
+    border-left: 1px solid #EBEEF5;
+    background: #edf0f8;
+    width: 25%;
+  }
+  td {
+    text-align: center;
+    height: 30px;
+    border-top: 1px solid #EBEEF5;
+    border-left: 1px solid #EBEEF5;
+    background: #fff;
+    width: 25%;
   }
 }
 .areatable{

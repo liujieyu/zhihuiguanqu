@@ -1741,41 +1741,50 @@ export default {
           datePickerOptions: {
             shortcuts: [
               {
-                text: "最近5年",
-                onClick(picker) {
-                  const end = new Date();
-                  const start = new Date();
-                  start.setTime(start.getTime() - 3600 * 1000 * 24 * 365 * 5);
-                  picker.$emit("pick", [start, end]);
+                  text: "最近6小时",
+                  onClick(picker) {
+                    const end = new Date();
+                    const start = new Date();
+                    start.setTime(start.getTime() - 3600 * 1000 * 6);
+                    picker.$emit("pick", [start, end]);
+                  }
+                },
+                {
+                  text: "最近12小时",
+                  onClick(picker) {
+                    const end = new Date();
+                    const start = new Date();
+                    start.setTime(start.getTime() - 3600 * 1000 * 12);
+                    picker.$emit("pick", [start, end]);
+                  }
+                },
+                {
+                  text: "最近24小时",
+                  onClick(picker) {
+                    const end = new Date();
+                    const start = new Date();
+                    start.setTime(start.getTime() - 3600 * 1000 * 24);
+                    picker.$emit("pick", [start, end]);
+                  }
+                },
+                {
+                  text: "最近36小时",
+                  onClick(picker) {
+                    const end = new Date();
+                    const start = new Date();
+                    start.setTime(start.getTime() - 3600 * 1000 * 36);
+                    picker.$emit("pick", [start, end]);
+                  }
+                },
+                {
+                  text: "最近72小时",
+                  onClick(picker) {
+                    const end = new Date();
+                    const start = new Date();
+                    start.setTime(start.getTime() - 3600 * 1000 * 72);
+                    picker.$emit("pick", [start, end]);
+                  }
                 }
-              },
-              {
-                text: "最近3年",
-                onClick(picker) {
-                  const end = new Date();
-                  const start = new Date();
-                  start.setTime(start.getTime() - 3600 * 1000 * 24 * 365 * 3);
-                  picker.$emit("pick", [start, end]);
-                }
-              },
-              {
-                text: "最近2年",
-                onClick(picker) {
-                  const end = new Date();
-                  const start = new Date();
-                  start.setTime(start.getTime() - 3600 * 1000 * 24 * 365 * 2);
-                  picker.$emit("pick", [start, end]);
-                }
-              },
-              {
-                text: "最近1年",
-                onClick(picker) {
-                  const end = new Date();
-                  const start = new Date();
-                  start.setTime(start.getTime() - 3600 * 1000 * 24 * 365 * 1);
-                  picker.$emit("pick", [start, end]);
-                }
-              }
             ]
           },
           // 表体内容
@@ -3213,16 +3222,9 @@ export default {
     handleDatePickerChange_guanxiquxian(item) {
       this.search_guanxiquxian();
     },
-    // 查询关系曲线表格
-    search_guanxiquxian() {
-      //this.letTableLoading("guanxiquxian");
-      // 传递参数
-      // var body = {
-      //   STCD: this.siteInfo.STCD,
-      //   _page: this.table["guanxiquxian"].currentPage || 1,
-      //   _page_size: this.table["guanxiquxian"].pageSizes || 20
-      // };
-      const end = new Date();
+    //设置水位库容默认日期
+    setTableDefaultDate_guanxiquxian(){
+        const end = new Date();
       const start = zeroPointOfTheDay();
 
       var timeSlot = [start, end];
@@ -3237,6 +3239,17 @@ export default {
         date.setMilliseconds(0);
         return date;
       }
+    },
+    // 查询关系曲线表格
+    search_guanxiquxian() {
+      //this.letTableLoading("guanxiquxian");
+      // 传递参数
+      // var body = {
+      //   STCD: this.siteInfo.STCD,
+      //   _page: this.table["guanxiquxian"].currentPage || 1,
+      //   _page_size: this.table["guanxiquxian"].pageSizes || 20
+      // };
+      
       this.loadkrlineBydate();
       // this.$GetData.Base_MonitoringSites(
       //   "Z_Q_relation",
@@ -3583,6 +3596,8 @@ export default {
         this.setTableDefaultDate_zhuangtaishuju();
         // 查询状态数据表的数据
         this.search_StationStatus();
+        //设置水位库容曲线默认查询日期
+        this.setTableDefaultDate_guanxiquxian();
         // 关系曲线
         this.search_guanxiquxian();
 
@@ -3603,11 +3618,14 @@ export default {
     height: 32px;
     border-top: none;
     border-color: #EBEEF5;
+    font-size: 12px;
   }
 
   .dt_name {
     width: 20%;
     border-left: none;
+    font-weight: bold;
+    background-color: #F6FAFF;
   }
 
   .dt_vale {

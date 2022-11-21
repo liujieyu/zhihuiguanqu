@@ -431,7 +431,18 @@ export default {
       if (order) {
         switch (order) {
           case "descending":
-            if (key == "TM") {
+            if(key=="STNM"){
+                newList = this.table.Rows_filter.sort((a, b) => {
+                    var vnum=0;
+                    var sign=b[key]<a[key];
+                    if(sign==true){
+                        vnum=1;
+                    }else{
+                    vnum=-1;
+                    }
+                    return vnum;
+                });
+                }else if (key == "TM") {
               newList = this.table.Rows_filter.sort((a, b) => {
                 var aTime = new Date(`20${a.TM}`).getTime(),
                   bTime = new Date(`20${b.TM}`).getTime();
@@ -453,7 +464,18 @@ export default {
             break;
 
           case "ascending":
-            if (key == "TM") {
+            if(key=="STNM"){
+              newList = this.table.Rows_filter.sort((a, b) => {
+                  var vnum=0;
+                  var sign=a[key]<b[key];
+                  if(sign==true){
+                      vnum=1;
+                  }else{
+                      vnum=-1;
+                  }
+                  return vnum;
+              });
+              }else if (key == "TM") {
               newList = this.table.Rows_filter.sort((a, b) => {
                 var aTime = new Date(`20${a.TM}`).getTime(),
                   bTime = new Date(`20${b.TM}`).getTime();
@@ -474,7 +496,11 @@ export default {
             }
         }
 
-        this.table.Rows_filter = newList;
+        this.table.Rows_filter = newList.map((val, index) => {                   
+                            // 序号
+                            val.index = index + 1;
+                            return val;                 
+                    });
       }
       this.$TableMethods.refreshCurrentChange(this.table, 1);
     }
@@ -482,13 +508,13 @@ export default {
   created() {
     // 初始化baseBox
     this.baseBox_init();
-    this.baseBox_Interval = setInterval(() => {
-      this.baseBox_init();
-    },1000 * 60 * 5)
+    // this.baseBox_Interval = setInterval(() => {
+    //   this.baseBox_init();
+    // },1000 * 60 * 5)
   },
-  destroyed() {
-    clearInterval(this.baseBox_Interval)
-  }
+  // destroyed() {
+  //   clearInterval(this.baseBox_Interval)
+  // }
 };
 </script>
 

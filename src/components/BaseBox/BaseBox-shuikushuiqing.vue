@@ -1128,9 +1128,9 @@ export default {
     // 初始化baseBox
     this.baseBox_init();
     this.search();
-    this.baseBox_Interval = setInterval(() => {
-      this.search();
-    }, 1000 * 60 * 5);
+    // this.baseBox_Interval = setInterval(() => {
+    //   this.search();
+    // }, 1000 * 60 * 5);
   },
   destroyed() {
     clearInterval(this.baseBox_Interval);

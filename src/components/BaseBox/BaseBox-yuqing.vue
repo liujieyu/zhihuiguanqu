@@ -1356,9 +1356,9 @@
             this.baseBox_init();
             this.getinittime();
             this.search();
-            this.baseBox_Interval = setInterval(() => {
-                this.search();
-            }, 1000 * 60 * 5)
+            // this.baseBox_Interval = setInterval(() => {
+            //     this.search();
+            // }, 1000 * 60 * 5)
         },
         destroyed() {
             clearInterval(this.baseBox_Interval)

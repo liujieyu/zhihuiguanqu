@@ -26,7 +26,7 @@
                         :show-overflow-tooltip="true"
                 ></el-table-column>
                 <!-- 自定义 -->
-                <el-table-column align="center" label="降雨(mm)" width="110" sortable="custom">
+                <el-table-column align="center" prop="p" label="降雨(mm)" width="110" sortable="custom">
                   <template slot-scope="scope">
                     <div>
                       <font v-if="colorshow"
@@ -36,7 +36,7 @@
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column align="center" label="行政区划" width="179" sortable="custom">
+                <el-table-column align="center" prop="adnm" label="行政区划" width="179" sortable="custom">
                   <template slot-scope="scope">
                     {{ scope.row.adnm }}
                   </template>
@@ -464,13 +464,22 @@
             sort_change(item) {
                 var order = item.order,
                     key = item.prop;
-
-                this.filterTableData();
                 var newList;
                 if (order) {
                     switch (order) {
                         case "descending":
-                            if (key != "TM") {
+                        if(key=="STNM" || key=="adnm"){
+                            newList = this.table.Rows_filter.sort((a, b) => {
+                                var vnum=0;
+                                var sign=b[key]<a[key];
+                                if(sign==true){
+                                    vnum=1;
+                                }else{
+                                vnum=-1;
+                                }
+                                return vnum;
+                            });
+                            }else if (key != "TM") {
                                 newList = this.table.Rows_filter.sort((a, b) => {
                                     return Number(b[key]) - Number(a[key]);
                                 });
@@ -486,7 +495,18 @@
                             break;
 
                         case "ascending":
-                            if (key != "TM") {
+                            if(key=="STNM" || key=="adnm"){
+                                newList = this.table.Rows_filter.sort((a, b) => {
+                                    var vnum=0;
+                                    var sign=a[key]<b[key];
+                                    if(sign==true){
+                                        vnum=1;
+                                    }else{
+                                    vnum=-1;
+                                    }
+                                    return vnum;
+                                });
+                                }else if (key != "TM") {
                                 newList = this.table.Rows_filter.sort((a, b) => {
                                     return Number(a[key]) - Number(b[key]);
                                 });
@@ -500,7 +520,11 @@
                                 });
                             }
                     }
-                    this.table.Rows_filter = newList;
+                    this.table.Rows_filter = newList.map((val, index) => {                   
+                            // 序号
+                            val.index = index + 1;
+                            return val;                 
+                    });
                 }
                 this.$TableMethods.refreshCurrentChange(this.table, 1);
             }
@@ -509,9 +533,9 @@
             // 初始化baseBox
             this.baseBox_init();
         },
-        destroyed() {
-            clearInterval(this.baseBox_Interval)
-        }
+        // destroyed() {
+        //     clearInterval(this.baseBox_Interval)
+        // }
     };
 </script>
 

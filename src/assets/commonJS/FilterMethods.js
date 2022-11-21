@@ -1089,6 +1089,111 @@ var FilterMethods =
             return echartData;
         },
 
+        //大坝安全历史统计表数据 转 echart图形用数据 返回一个对象
+        transform_SAFE_data_into_ehart_data(data, jctype, reverse){
+            var _data = JSON.parse(JSON.stringify(data)); // 数据深拷贝
+            if (reverse) {
+                _data = _data.reverse(); // 数组倒序
+            }
+            var xname,yname,vname;
+            var echartData = {
+                chartName: "",
+                x: new Object(),
+                y1: new Object(),
+                y2: new Object(),
+            }
+            switch (jctype) {
+                case "sll":
+                    echartData.chartName="渗流曲线图";
+                    echartData.y1.name="渗流量";
+                    echartData.y1.list = FilterMethods.methods.newArrayByObjArray(_data, "spprwl", val => { // 过滤
+                        if (isNaN(val) || val === "" || val == null) {
+                            return 0;
+                        }
+                        return parseFloat(val).toFixed(3);
+                    });
+                    echartData.y2.name="渗流水温";
+                    echartData.y2.list=FilterMethods.methods.newArrayByObjArray(_data, "tm", val => { // 过滤
+                        if (isNaN(val) || val === "" || val == null) {
+                            return 0;
+                        }
+                        return parseFloat(val).toFixed(1);
+                    });
+                    break;
+                case "slyl":
+                    echartData.chartName="渗压曲线图";
+                    echartData.y1.name="渗压水位";
+                    echartData.y1.list = FilterMethods.methods.newArrayByObjArray(_data, "spprwm", val => { // 过滤
+                        if (isNaN(val) || val === "" || val == null) {
+                            return 0;
+                        }
+                        return parseFloat(val).toFixed(3);
+                    });
+                    break;
+                case "wybx":
+                    echartData.chartName="位移曲线图";
+                    echartData.y1.name="X向水平位移";
+                    echartData.y1.list = FilterMethods.methods.newArrayByObjArray(_data, "xhrdsval", val => { // 过滤
+                        if (isNaN(val) || val === "" || val == null) {
+                            return 0;
+                        }
+                        return parseFloat(val).toFixed(3);
+                    });
+                    echartData.y2.name="Y向水平位移";
+                    echartData.y2.list = FilterMethods.methods.newArrayByObjArray(_data, "yhrdsval", val => { // 过滤
+                        if (isNaN(val) || val === "" || val == null) {
+                            return 0;
+                        }
+                        return parseFloat(val).toFixed(3);
+                    });
+                    for(var i=0;i<_data.length;i++){
+                        var obj=_data[i];
+                        if(i==0){
+                            xname=obj.xhrds.substring(0,3);
+                            yname=obj.yhrds.substring(0,3);  
+                        }
+                        if(i>0){
+                            if(obj.xhrds.substring(0,3)!=xname){
+                                xname="位移";
+                            }
+                            if(obj.yhrds.substring(0,3)!=yname){
+                                yname="位移";
+                            }
+                        }                      
+                    }
+                    echartData.y1.title=xname;
+                    echartData.y2.title=yname;
+                    break;
+                case "cjbx":
+                    echartData.chartName="沉降曲线图";
+                    echartData.y1.name="垂直位移";
+                    echartData.y1.list = FilterMethods.methods.newArrayByObjArray(_data, "vrdsval", val => { // 过滤
+                        if (isNaN(val) || val === "" || val == null) {
+                            return 0;
+                        }
+                        return parseFloat(val).toFixed(3);
+                    });
+                    for(var i=0;i<_data.length;i++){
+                        var obj=_data[i];
+                        if(i==0){
+                            vname=obj.vrds.substring(0,2);
+                        }
+                        if(i>0){
+                            if(obj.vrds.substring(0,2)!=vname){
+                                vname="位移";
+                            }
+                        }
+                    }
+                    echartData.y1.title=vname;
+                    break;
+            }
+                // x轴
+                echartData.x.list = _data.map((val, index, array) => {
+                    var time = val.mstm;
+                    return time;
+                });
+                return echartData;
+        },
         // 水库水情历史统计表数据 转 ehart图形用数据 返回一个对象, 对象里分别装 Y1轴对象 Y2轴对象 X轴对象
         transform_SKSQ_data_into_ehart_data(data, tableType, reverse) {
             var _data = JSON.parse(JSON.stringify(data)); // 数据深拷贝

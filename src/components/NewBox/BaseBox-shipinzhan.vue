@@ -353,7 +353,14 @@ export default {
           case "descending":
             if (key != "TM") {
               newList = this.table.Rows_filter.sort((a, b) => {
-                return Number(b[key]) - Number(a[key]);
+                var vnum=0;
+                    var sign=b[key]<a[key];
+                    if(sign==true){
+                        vnum=1;
+                    }else{
+                    vnum=-1;
+                    }
+                    return vnum;
               });
             } else {
               newList = this.table.Rows_filter.sort((a, b) => {
@@ -369,7 +376,14 @@ export default {
           case "ascending":
             if (key != "TM") {
               newList = this.table.Rows_filter.sort((a, b) => {
-                return Number(a[key]) - Number(b[key]);
+                var vnum=0;
+                  var sign=a[key]<b[key];
+                  if(sign==true){
+                      vnum=1;
+                  }else{
+                      vnum=-1;
+                  }
+                  return vnum;
               });
             } else {
               newList = this.table.Rows_filter.sort((a, b) => {
@@ -381,7 +395,11 @@ export default {
               });
             }
         }
-        this.table.Rows_filter = newList;
+        this.table.Rows_filter = newList.map((val, index) => {                   
+                            // 序号
+                            val.index = index + 1;
+                            return val;                 
+                    });
       }
       this.$TableMethods.refreshCurrentChange(this.table, 1);
     }
@@ -390,13 +408,13 @@ export default {
     // 初始化baseBox
     this.baseBox_init();
     //this.search();
-    this.baseBox_Interval = setInterval(() => {
-      this.baseBox_init();
-    },1000 * 60 * 5)
+    // this.baseBox_Interval = setInterval(() => {
+    //   this.baseBox_init();
+    // },1000 * 60 * 5)
   },
-  destroyed() {
-    clearInterval(this.baseBox_Interval)
-  }
+  // destroyed() {
+  //   clearInterval(this.baseBox_Interval)
+  // }
 };
 </script>
 
