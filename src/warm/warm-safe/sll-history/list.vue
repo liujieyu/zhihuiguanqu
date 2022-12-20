@@ -1,6 +1,6 @@
 <template>
 	<div style="overflow:hidden;">
-		<Breadcrumb :style="{margin: '0 0 0 0'}">
+		<Breadcrumb :style="{margin: '0 0 15px 0'}">
             <BreadcrumbItem>安全监测</BreadcrumbItem>
             <BreadcrumbItem>历史分析</BreadcrumbItem>
             <BreadcrumbItem>渗流量分析</BreadcrumbItem>

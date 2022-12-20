@@ -202,7 +202,7 @@
                 },
                 date:'',
                 data:[],
-                theight:window.innerWidth>=1340?window.innerHeight-316:window.innerHeight-360,
+                theight:window.innerWidth>=1340?window.innerHeight-304:window.innerHeight-358,
                 list_input:{
                     total:100,
                     pagesize:50,

@@ -187,7 +187,7 @@
                 },
                 date:'',
                 data:[],
-                theight:window.innerWidth>=980?window.innerHeight-316:window.innerHeight-280,
+                theight:window.innerWidth>=980?window.innerHeight-304:window.innerHeight-267,
                 list_input:{
                     total:100,
                     pagesize:50,

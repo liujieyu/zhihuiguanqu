@@ -1,6 +1,7 @@
 <template>
 	<div>
-		<Breadcrumb :style="{margin: '0 0 24px 0'}">
+		<Breadcrumb :style="{margin: '0 0 15px 0'}">
+            <BreadcrumbItem>水雨情监测</BreadcrumbItem>
             <BreadcrumbItem>预警指标</BreadcrumbItem>
             <BreadcrumbItem>降雨预警指标</BreadcrumbItem>
         </Breadcrumb>

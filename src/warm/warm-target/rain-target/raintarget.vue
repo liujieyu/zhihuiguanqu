@@ -10,11 +10,31 @@
           </Select>
         </Col>
         <Col>
-          <Input search enter-button suffix="ios-search" placeholder="请输入站名：" style="width: auto;margin-right: 20px;" @on-search="Typesearch" v-model="form.searchmsg" />
+          <Input search enter-button suffix="ios-search" placeholder="请输入站名" style="width: auto;margin-right: 20px;" @on-search="Typesearch" v-model="form.searchmsg" />
         </Col>
         <Col>
+        <!-- 地址级联选择器 -->
+          <el-cascader
+            :props="{ multiple: true }"
+            clearable
+            filterable
+            collapse-tags
+            style="width:270px;"
+            size="mini"
+            placeholder="所属行政区划"
+            :options="form.adressList"
+            v-model="form.model_adress"
+            @change="Typesearch"
+            change-on-select
+          ></el-cascader>
+        </Col>
+        <!--
+        <Col>
+        
           <Button type="primary" style="width: auto;margin-right: 20px;" @click="exportToExcel">导出</Button>
-        </col>
+          
+        </Col>
+        -->
       </Row>
       <Row class="fgline"></Row>
       <el-table
@@ -33,27 +53,28 @@
           fixed>
         </el-table-column>
         <el-table-column
-           prop="STNM"
-           label="站名"
+           prop="STLC"
+           label="所属行政区划"
            align="center"
            fixed
            sortable="custom"
            min-width="150">
         </el-table-column>
+        <el-table-column
+           prop="STNM"
+           label="站名"
+           align="center"
+           fixed
+           sortable="custom"
+           min-width="120">
+        </el-table-column>
         <el-table-column 
            prop="EWLNAME"
            label="预警等级" 
            sortable="custom"
-           min-width="150"
+           min-width="120"
            align="center">  
         </el-table-column>
-        <el-table-column
-            prop="PTD_P"
-            label="前72H降雨"
-            align="center"
-            sortable="custom"
-            min-width="90">
-          </el-table-column>
           <el-table-column
             prop="OH_P"
             label="1H降雨"
@@ -119,7 +140,7 @@
     {
       return{
         loading:false,
-        theight:window.innerHeight-316,
+        theight:window.innerHeight-306,
         tabledata:[],
         types:[],
         form:{
@@ -127,6 +148,8 @@
           type:'',
           orderby:'STCD',
           sequence:'asc',
+          adressList:[],
+          model_adress:'',
         },
         list_input:{
         total:100,
@@ -143,6 +166,11 @@
       this.Get_WrpFieldinfo('ST_PP_Alarm','EWL',data => {
           this.types = data;
       });
+      // 获取行政区划数据,然后设置地址选择框选项
+      this.getTableData_WRP_AD_B(data => {
+          this.form.adressList = data[0].children;
+          this.form.model_adress=true;
+      });
       this.Reload();
     },
     methods:{
@@ -153,8 +181,19 @@
       var _pageSizes = this.list_input.pagesize;
       var _bgincount=(_currentPage - 1) * _pageSizes+1;
       var _endcount=_currentPage * _pageSizes;
+      var ADDVCD='';
+      // 如果地址选择框有内容，添加行政区划过滤字段
+                if (this.form.model_adress !=null && typeof(this.form.model_adress.length) != "undefined" && this.form.model_adress.length>0) {
+                    var addvdds=[];
+                    for(var i=0;i<this.form.model_adress.length;i++){
+                        addvdds.push(`${this.$App.SUB_ADDVCD_Array_Filter(
+                          this.form.model_adress[i]
+                      )}`);
+                    }
+                    ADDVCD = addvdds.toString();                   
+                }
       //调用后台函数，传递参数
-      this.axios.get('/alarm/getppalarm',{params:{begincount:_bgincount,endcount:_endcount,types:this.form.type,stnm:this.form.searchmsg,orderBy:this.form.orderby,sequence:this.form.sequence}}).then((res)=>{
+      this.axios.get('/alarm/getppalarm',{params:{begincount:_bgincount,endcount:_endcount,types:this.form.type,stnm:this.form.searchmsg,orderBy:this.form.orderby,sequence:this.form.sequence,canalname:ADDVCD}}).then((res)=>{
                     this.loading = false;
                     this.tabledata = res.data.rows;
                     this.list_input.total = res.data.total;

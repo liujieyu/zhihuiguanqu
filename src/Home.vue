@@ -9,9 +9,9 @@
       <el-menu
         
         class="el-menu-demo"
-        background-color="#409EFF"
+        background-color="#1E7AEB"
         text-color="#fff"
-        active-text-color="#ffd04b"
+        active-text-color="#fff"
         mode="horizontal"
         @select="handleSelect"
       >
@@ -27,7 +27,7 @@
             :active-value="1"
             :inactive-value="0"
             v-model="mapBox_show"
-            active-color="#468ecb"
+            active-color="#1995FE"
           ></el-switch>
         </el-menu-item>
 
@@ -36,9 +36,37 @@
         <div style="cursor: pointer;">退出</div>
         </div>
         <div style="float: right;padding-top:13px;">
-        <Input search enter-button="定位" placeholder="请输入水库名称" v-model="search_str" @on-search="locationByName()"/>
+        <Input search enter-button="定位" placeholder="请输入水库站点名称" v-model="search_str" @on-search="locationByName()"/>
         </div>
-
+        
+        <el-menu-item index="/warm-warmmessage" v-if="menusshow" style="float:right;margin-right:20px;" @click="showmenu()">
+         <template slot="title">
+            <i class="el-icon-edit-outline" style="color:#ffffff;"></i>
+            <span style="font-size:14px;">预警发布</span>
+        </template>
+        </el-menu-item>
+        <el-menu-item index="/safefenxi-sllls" v-if="menusshow" style="float:right;" @click="showmenu()">
+         <template slot="title">
+            <i class="el-icon-s-fold" style="color:#ffffff;"></i>
+            <span style="font-size:14px;">渗流量分析</span>
+        </template>
+        </el-menu-item>
+        <el-menu-item index="/tablexxfw-yqxx" v-if="menusshow" style="float:right;" @click="showmenu()">
+         <template slot="title">
+            <i class="el-icon-s-finance" style="color:#ffffff;"></i>
+            <span style="font-size:14px;">雨情分析</span>
+        </template>
+        </el-menu-item>
+        <el-menu-item index="/table-sqxx-sksq" v-if="menusshow" style="float:right;" @click="showmenu()">
+         <template slot="title">
+            <i class="el-icon-s-marketing" style="color:#ffffff;"></i>
+            <span style="font-size:14px;">水情分析</span>
+        </template>
+        </el-menu-item>
+        <el-menu-item :disabled="true" style="opacity: 1;float:right;" v-if="menusshow">
+          <el-button type="text" @click="navchange9()" style="color:#ffffff;"><i class="el-icon-s-data" style="color:#ffffff;"></i>监测统计图</el-button>
+        </el-menu-item>        
+        <!--
         <el-menu-item v-if="menus_data.weihu" index="/tablexxfw-yxgk" style="float: right;" @click="navchange9()"><img class='img9' :src="imgflag=='weihuguanli'?require('@/assets/image/u520.svg'):require('@/assets/image/u516.svg')">维护管理</el-menu-item>
         <el-menu-item v-if="menus_data.peishui" index="/water-plan" style="float: right;" @click="navchange8()"><img class='img8' :src="imgflag=='peishuiguanli'?require('@/assets/image/u511.svg'):require('@/assets/image/u507.svg')">配水管理</el-menu-item>
         <el-menu-item v-if="menus_data.lvding" index="/tableldgl-ldjggl" style="float: right;" @click="navchange7()"><img class='img7' :src="imgflag=='lvdingguanli'?require('@/assets/image/u502.svg'):require('@/assets/image/u498.svg')">率定管理</el-menu-item>
@@ -47,7 +75,8 @@
         <el-menu-item v-if="menus_data.zhiban" index="/tabletest-test13" style="float: right;"  @click="navchange4()"><img class='img4' :src="imgflag=='zhibanguanli'?require('@/assets/image/u475.svg'):require('@/assets/image/u471.svg')" >值班管理</el-menu-item>
         <el-menu-item v-if="menus_data.zhafa" index="/tablezfkz-zfdd" style="float: right;" @click="navchange3()"><img class='img3' :src="imgflag=='zhafakongzhi'?require('@/assets/image/u466.svg'):require('@/assets/image/u462.svg')" >闸阀控制</el-menu-item>
         <el-menu-item v-if="menus_data.xinxi" index="/" style="float: right;" @click="navchange2()"><img class='img2' :src="imgflag=='xinxifuwu'?require('@/assets/image/u457.svg'):require('@/assets/image/u453.svg')" >信息服务</el-menu-item>
-        <el-menu-item v-if="menus_data.jichu" index="/tablebasedata-gqxx" style="float: right;" @click="navchange1()"><img class='img1'  :src="imgflag=='jichushuju'?require('@/assets/image/u448.svg'):require('@/assets/image/u444.svg')" />基础数据</el-menu-item>       
+        <el-menu-item v-if="menus_data.jichu" index="/tablebasedata-gqxx" style="float: right;" @click="navchange1()"><img class='img1'  :src="imgflag=='jichushuju'?require('@/assets/image/u448.svg'):require('@/assets/image/u444.svg')" />基础数据</el-menu-item>   
+        -->    
       </el-menu>
     </div>
 
@@ -236,7 +265,7 @@
                                   filterable
                                   collapse-tags
                                   size="mini"
-                                  placeholder="地址"
+                                  placeholder="所属行政区划"
                                   :options="testform.adressList"
                                   v-model="testform.model_adress"
                                   @change="search"
@@ -295,7 +324,7 @@
                             size="mini"
                             v-model="testform.model_status"
                             popper-append-to-body
-                            placeholder="状态"
+                            placeholder="运行状态"
                           >
                             <el-option
                               v-for="item in testform.statusList"
@@ -478,7 +507,7 @@
     <!-- 表格 -->
     <div v-if="mapBox_show == 0">
       <!-- <router-view></router-view> -->
-      <Table></Table>
+      <Table :info="routerurl"></Table>
     </div>
 
     <!-- 图片放大模态框 -->
@@ -542,8 +571,8 @@
           </div>
         </div>
 
-        <el-tabs type="border-card">
-          <el-tab-pane>
+        <el-tabs type="border-card" v-model="Message_Window.activename">
+          <el-tab-pane name="yujing">
             <span slot="label">
               <i class="el-icon-bell"></i> 预警
             </span>
@@ -554,7 +583,16 @@
               </li>
             </transition-group>
           </el-tab-pane>
-          <el-tab-pane label="消息中心">消息中心</el-tab-pane>
+          <el-tab-pane name="xiaoxi">
+            <span slot="label">
+              <i class="el-icon-info"></i> 消息中心
+            </span>
+            <transition-group tag="ul" class="content" name="Messag" mode="in-out">
+             <li v-for="(item,index) in Message_Window.alarm_info.list" :key="index">
+                <span>{{ item}}</span>
+              </li>
+            </transition-group>
+          </el-tab-pane>
         </el-tabs>
       </div>
 
@@ -565,8 +603,8 @@
         @click="Message_Window_show(true)"
         key="Controller"
       >
-        <el-badge :value="Message_Window.notify_info.list.length">
-          <div class="text">消息</div>
+        <el-badge :value="Message_Window.notify_info.sign==1?Message_Window.notify_info.list.length:Message_Window.alarm_info.list.length">
+          <div class="text">{{Message_Window.notify_info.text}}</div>
         </el-badge>
       </div>
     </transition>
@@ -672,6 +710,8 @@ export default {
       area_list:[],
       lastclass:null,
       lastcounrty:null,
+      //选中菜单
+      routerurl:'',
       //首字母列表
       letter_list:[],
       areaitem:null,
@@ -774,10 +814,18 @@ export default {
       },
       // 消息窗口对象
       Message_Window: {
+        activename:"yujing",
         // 预警信息
         notify_info: {
           // 列表
-          list: []
+          list: [],
+          sign:1,
+          text:"预警",         
+        },
+        //消息中心
+        alarm_info:{
+          //列表
+          list:[]
         },
         // 声音开关
         Voice_Controller: true
@@ -923,6 +971,7 @@ export default {
           ],
       },
       menus:[],
+      menusshow:window.innerWidth>=1360?true:false,
       menus_data:{
         jichu:false,
         xinxi:false,
@@ -1015,6 +1064,8 @@ export default {
           this.testform.socialsafe=["site"];
           this.testform.social=["site"];
           this.showjianceinfo();
+          //消息中心数据获取
+          this.alarm_info();
         }, 1000 * 60 * 5);
       })
       .catch(err => {
@@ -1303,6 +1354,9 @@ export default {
         window.location.href="http://222.240.238.58:7001/static/demo-guanqu-lcs-3d/#/"
       }
     },
+    showmenu(){
+        this.routerurl=0;
+    },
     switchchange() {
       // if (this.mapBox_show == "0") {
       //   this.$router.push("/");
@@ -1310,6 +1364,11 @@ export default {
       // if (this.mapBox_show == "1") {
       //   this.$router.push("/");
       // }
+      if(this.mapBox_show=="0"){
+        this.routerurl=1;
+      }else{
+        this.routerurl=0;
+      }
     },
     // 当选择的监控图层发生变化
     // 重新显示或隐藏部分图层
@@ -1583,6 +1642,8 @@ export default {
           //添加悬浮事件
           this.addEventToFloatFlayer(featureLayer);
           this.addShipiEventToFloatFlayer(spfeatureLayer);
+          //消息中心数据获取
+          this.alarm_info();
       });
     },
     //获取图层数据（没有过滤条件的）
@@ -1670,6 +1731,9 @@ export default {
     },
     //根据水库名称定位
     locationByName(){
+      if(this.mapBox_show==0){
+        this.mapBox_show=1;
+      }
       if(this.search_str!=""){
        var Rows = this.SiteFeatrueLayer.Rows;
             //创建textsymbol文本标注
@@ -1728,7 +1792,7 @@ export default {
         // 获取各个图层信息
         //this.getEachFeatureLayers(data.FeatureLayers);
         //获取图层信息
-        this.getMapFeatureLayers();
+        this.getMapFeatureLayers();       
         //获取区域定位行政区划信息
         var Area_Info=data.WRP_AD_B;
         Area_Info.forEach((val, index) => {
@@ -2874,7 +2938,53 @@ export default {
 
       return data;
     },
-    // 通知
+    //消息中心
+    alarm_info(){
+      this.Message_Window.alarm_info.list=[];
+      this.axios.get("/alarm/gettodayalarm").then(res => {
+          var alarmobj=res.data;
+          if(alarmobj.sitecount==0 && alarmobj.messagecount==0){
+            this.Message_Window.alarm_info.list.push("今日无站点预警发布");
+            this.Message_Window.alarm_info.list.push("今日无短信预警发布");
+          }else{
+            if(alarmobj.sitecount>0){
+              var siteinfo=alarmobj.sitealarm;
+              for(var i=0;i<siteinfo.length;i++){
+                var siteobj=siteinfo[i];
+                var text=siteobj.TM+" "+siteobj.STNM+siteobj.ALARMNAME;
+                this.Message_Window.alarm_info.list.push(text);
+              }
+            }
+            if(alarmobj.messagecount>0){
+              var messageinfo=alarmobj.messagealarm;
+              for(var i=0;i<messageinfo.length;i++){
+                var messageobj=messageinfo[i];
+                var text=messageobj.TMSTR+" "+messageobj.ALARMNAME;
+                this.Message_Window.alarm_info.list.push(text);
+              }
+            }
+          }
+          var timer = setTimeout(() => {
+           if(this.Message_Window.notify_info.list>0){
+            this.Message_Window.notify_info.sign=1;
+            this.Message_Window.notify_info.text="预警";
+            this.Message_Window.activename="yujing";
+           }else{
+            if(this.Message_Window.alarm_info.list>0){
+              this.Message_Window.notify_info.sign=0;
+            this.Message_Window.notify_info.text="消息";
+            this.Message_Window.activename="xiaoxi";
+            }else{
+              this.Message_Window.notify_info.sign=1;
+              this.Message_Window.notify_info.text="预警";
+              this.Message_Window.activename="yujing";
+            }
+           }
+           clearTimeout(timer);
+        }, 100);
+      });
+    },
+    // 预警通知
     notify_Layer(options, data) {
       if (data.length > 0) {
          if(this.radio4=="全部"){
@@ -3358,34 +3468,62 @@ loadRainChartData(){
   var num=0;
   var maxval=0;
   var rainattr="RAIN1";
+  var rainsign="SIGN1";
   switch(this.sign){
     case 1:
       rainattr="RAIN1";
       this.raincharttitle="1小时降雨柱状图";
+      rainsign="SIGN1";
       break;
     case 3:
       rainattr="RAIN3";
       this.raincharttitle="3小时降雨柱状图";
+      rainsign="SIGN3";
       break;
     case 6:
       rainattr="RAIN6";
       this.raincharttitle="6小时降雨柱状图";
+      rainsign="SIGN6";
       break;
     case 12:
       rainattr="RAIN12";
       this.raincharttitle="12小时降雨柱状图";
+      rainsign="SIGN12";
       break;
     case 24:
       rainattr="RAIN24";
       this.raincharttitle="24小时降雨柱状图";
+      rainsign="SIGN24";
       break;
   }
   
-  echartData.y1.list=FilterMethods.methods.newGisArrayByGisArray(this.SiteFeatrueLayer.Rows, rainattr, val => { // 过滤            
-              var rain=parseFloat(val);
-              if(rain>maxval) maxval=rain;
-              return rain.toFixed(1);
-          });
+  // echartData.y1.list=FilterMethods.methods.newGisArrayByGisArray(this.SiteFeatrueLayer.Rows, rainattr, val => { // 过滤            
+  //             var rain=parseFloat(val);
+  //             if(rain>maxval) maxval=rain;
+  //             return rain.toFixed(1);
+  //         });
+  echartData.y1.list = this.SiteFeatrueLayer.Rows.map(val => {
+                var newVal = val.rowinfo[rainattr];
+                var yjsign = val.rowinfo[rainsign];
+                var rain=parseFloat(newVal);
+               if(rain>maxval) maxval=rain;
+                var rainobj=new Object();
+                rainobj.itemStyle={color:''};  
+                rainobj.value=newVal;
+                switch(yjsign){
+                  case 0:rainobj.itemStyle.color="#6C84CE";
+                    break;
+                  case 1:rainobj.itemStyle.color="#F7ED23";
+                    break;
+                  case 2:rainobj.itemStyle.color="#F77823";
+                    break;
+                  case 3:rainobj.itemStyle.color="#F72323";
+                    break;
+                  default:rainobj.itemStyle.color="#6C84CE";
+
+                }
+                return rainobj;
+            });
     echartData.data=1;
   if(maxval<5){
     maxval=5;
@@ -3408,7 +3546,7 @@ createRainChart(echartData){
                 tooltip: {
                     trigger: "axis"
                 },
-                color:["blue"],
+                color:["#6C84CE"],
                 legend: {
                     data: [echartData.y1.name],
                     y: "bottom"
@@ -3446,48 +3584,48 @@ createRainChart(echartData){
                         name: echartData.y1.name,
                         type: "bar",
                         data: echartData.y1.list,
-                        barMaxWidth:30,
-                        itemStyle: {
-                            //通常情况下：
-                            normal: {
-                                //每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
-                                color: function (params) {
+                        barMaxWidth:50,
+                        // itemStyle: {
+                        //     //通常情况下：
+                        //     normal: {
+                        //         //每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
+                        //         color: function (params) {
 
-                                    switch (echartData.sign) {
-                                        case 1:
-                                            if (params.data >= 30 && params.data < 40) return 'yellow';
-                                            if (params.data >= 40 && params.data < 80) return 'orange';
-                                            if (params.data >= 80) return 'red';
-                                            return 'blue'
-                                            break
-                                        case 3:
-                                            if (params.data >= 50 && params.data < 70) return 'yellow';
-                                            if (params.data >= 70 && params.data < 100) return 'orange';
-                                            if (params.data >= 100) return 'red';
-                                            return 'blue'
-                                            break
-                                        case 6:
-                                            if (params.data >= 70 && params.data < 90) return 'yellow';
-                                            if (params.data >= 90 && params.data < 120) return 'orange';
-                                            if (params.data >= 120) return 'red';
-                                            return 'blue'
-                                            break
-                                        case 12:
-                                            if (params.data >= 80 && params.data < 100) return 'yellow';
-                                            if (params.data >= 100 && params.data < 150) return 'orange';
-                                            if (params.data >= 150) return 'red';
-                                            return 'blue'                                       
-                                        case 24:
-                                            if (params.data >= 100 && params.data < 120) return 'yellow';
-                                            if (params.data >= 120 && params.data < 180) return 'orange';
-                                            if (params.data >= 180) return 'red';
-                                            return 'blue'
-                                            break
+                        //             switch (echartData.sign) {
+                        //                 case 1:
+                        //                     if (params.data >= 30 && params.data < 40) return '#F7ED23';
+                        //                     if (params.data >= 40 && params.data < 80) return '#F77823';
+                        //                     if (params.data >= 80) return '#F72323';
+                        //                     return '#6C84CE'
+                        //                     break
+                        //                 case 3:
+                        //                     if (params.data >= 50 && params.data < 70) return '#F7ED23';
+                        //                     if (params.data >= 70 && params.data < 100) return '#F77823';
+                        //                     if (params.data >= 100) return '#F72323';
+                        //                     return '#6C84CE'
+                        //                     break
+                        //                 case 6:
+                        //                     if (params.data >= 70 && params.data < 90) return '#F7ED23';
+                        //                     if (params.data >= 90 && params.data < 120) return '#F77823';
+                        //                     if (params.data >= 120) return '#F72323';
+                        //                     return '#6C84CE'
+                        //                     break
+                        //                 case 12:
+                        //                     if (params.data >= 80 && params.data < 100) return '#F7ED23';
+                        //                     if (params.data >= 100 && params.data < 150) return '#F77823';
+                        //                     if (params.data >= 150) return '#F72323';
+                        //                     return '#6C84CE'                                       
+                        //                 case 24:
+                        //                     if (params.data >= 100 && params.data < 120) return '#F7ED23';
+                        //                     if (params.data >= 120 && params.data < 180) return '#F77823';
+                        //                     if (params.data >= 180) return '#F72323';
+                        //                     return '#6C84CE'
+                        //                     break
 
-                                    }
-                                }
-                            },
-                        }
+                        //             }
+                        //         }
+                        //     },
+                        // }
                     },
                 ]
             });
@@ -3913,8 +4051,7 @@ hideSafeTableLoading(){
         console.log(this.imgflag)
       },
       navchange9(){
-        this.imgflag='weihuguanli';
-        console.log(this.imgflag)
+        window.open("/#/yixiang-chart",'newwindow','width='+(window.screen.availWidth-10)+',height='+(window.screen.availHeight-30)+ ',top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
       }
 
   },
@@ -4037,14 +4174,14 @@ hideSafeTableLoading(){
   z-index: 3000 !important;
 }
 
- .el-menu-item.is-active { background-color: #fff !important; color:#409EFF !important;border-bottom: 2px solid #fff;  }
- .el-menu-item>img{
-  margin-right: 5px;
- }
- .el-menu>.el-menu-item.is-active{
-       border-bottom: 2px solid #fff;
+ //.el-menu-item.is-active { background-color: #fff !important; color:#409EFF !important;border-bottom: 2px solid #fff;  }
+ //.el-menu-item>img{
+ // margin-right: 5px;
+ //}
+ //.el-menu>.el-menu-item.is-active{
+ //      border-bottom: 2px solid #fff;
 
- }
+ //}
 
 #app {
   position: absolute;
@@ -4236,7 +4373,6 @@ hideSafeTableLoading(){
     padding: 0;
   }
 }
-
 // 表格单元格样式
 .ivu-table-wrapper .ivu-table td,
 .ivu-table-wrapper .ivu-table th {
@@ -4657,7 +4793,7 @@ body {
   margin-bottom: 0 !important;
 }
 .borsLine{
-  text-align: left;height: 40px;line-height: 40px
+  text-align: left;height: 36px;line-height: 36px
 }
 @media (max-width: 1800px) {
   .btn_baobiao{

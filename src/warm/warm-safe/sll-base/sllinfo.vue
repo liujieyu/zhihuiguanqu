@@ -173,7 +173,7 @@
               },
             ],                
                 data:[],
-                theight:window.innerWidth>=850?window.innerHeight-318:window.innerHeight-280,
+                theight:window.innerWidth>=850?window.innerHeight-306:window.innerHeight-271,
                 dialogwidth:(520/window.innerWidth*100)+"%",
                 list_input:{
                     total:100,

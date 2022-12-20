@@ -1,10 +1,10 @@
 <template>
     <div>
-        <Content :style="{padding: '24px', background: '#fff'}">
+        <Content :style="{padding: '12px 24px 24px 24px', background: '#fff'}">
 
             <Row type="flex" style="margin: 10px;" :gutter="16" justify="start">
                 <Col>
-                   时间:
+                   日期:
                           <el-date-picker
                             v-model="form.date"
                             type="date"
@@ -18,22 +18,21 @@
                     </el-date-picker>
                 </Col>
                 <Col>
-                    行政区划:
                     <!-- 地址级联选择器 -->
                     <el-cascader
-
                             clearable
                             size="small"
-                            placeholder="请选择地址"
+                            style="width: 200px"
+                            placeholder="所属行政区划"
                             :options="form.adressList"
                             v-model="form.model_adress"
                             @change="XZQHsearch"
                             change-on-select
                     ></el-cascader>
                 </Col>
+                <!-- 渠道级联选择器 
                 <Col>
-                    渠道:
-                    <!-- 渠道级联选择器 -->
+                    渠道:                   
                     <el-cascader
                             clearable
                             size="small"
@@ -44,37 +43,36 @@
                             change-on-select
                     ></el-cascader>
                 </Col>
+                -->
                 <Col>
-                    归属单位:
-                    <Select v-model="form.gsdw" style="width:120px" @on-change="STGRsearch" clearable>
+                    <Select v-model="form.gsdw" style="width:120px" @on-change="STGRsearch" clearable placeholder="归属单位">
                         <Option v-for="item in gsdwlist" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
                 </Col>
-                <Col style="margin-top: 10px;">
-                    降雨:
-                    <Select v-model="form.jiangyu" style="width:120px;" @on-change="JIANGYUsearch" clearable>
+                <Col>
+                    <Select v-model="form.jiangyu" style="width:120px;" @on-change="JIANGYUsearch" clearable placeholder="降雨量">
                         <Option v-for="item in jiangyulist" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
                 </Col>
 
-                <Col class="btn_baobiao">
+                <Col>
                     <!-- 站名模糊搜索 -->
                     <Input search enter-button suffix="ios-search" placeholder="请输入站名"
                            style="width: 160px;" @on-search="search" v-model="form.searchmsg"/>
                 </Col>
+                <!--
                 <Col class="btn_baobiao">
                     <Button type="primary" style="width: auto; margin-right: 10px; " @click="err">导出</Button>
                     <Button type="primary" @click="optable" style="width: auto;">综合报表</Button>
                 </Col>
+                -->
             </Row>
-            <Row type="flex" :gutter="16" justify="end">
-            </Row>
-            <Row type="flex" style="margin: 10px;" :gutter="16" justify="end">
+            <Row type="flex" style="margin:15px 10px 15px 10px;" :gutter="16" justify="end">
                 <el-table
                         :cell-class-name="rowClass"
                         :data="tableData3"
                         border
-                        style="width: 100%"
+                        style="width: 100%;color:#000000;"
                 >
                     <el-table-column
                             prop="rain1"
@@ -108,7 +106,7 @@
                 </el-table>
             </Row>
 
-            <Divider/>
+            <Divider style="margin-top:0px;"/>
             <Row style="font-size: 16px;">
                 <!-- <Col style="text-align: center;margin: 0 0 10px 0;">
                    共{{Tables.total}}个站点
@@ -121,13 +119,13 @@
                     :data="tableData1"
                     :span-method="objectSpanMethod"
                     border
-                    height="450"
+                    :height="theight"
                     v-loading="loading"
-                    style="width: 100%"
-                    @cell-click="cellclick"
+                    style="width: 100%"                    
                     @sort-change="sort_change"
             >
-                <!-- <el-table-column
+                <!--@cell-click="cellclick" 
+                    <el-table-column
                         label=" "
                         type="index"
                         align="center"
@@ -145,6 +143,7 @@
                         prop="stnm"
                         label="站名"
                         align="center"
+                        fixed="left"
                         sortable
                         width="120">
                 </el-table-column>
@@ -152,8 +151,18 @@
                         prop="p"
                         label="日雨量"
                         align="center"
+                        fixed="left"
                         sortable
                         width="110">
+                <template slot-scope="scope">
+                        <div>
+                        <span
+                            :style="{
+                        color: scope.row.p <= 10?'green' :scope.row.p <= 25 ?'#227700' : scope.row.p <= 50?'#00BBFF' :scope.row.p <= 100?'#003377':scope.row.p <= 250?'#CC6600':'#CC0000',
+                        }"
+                        >{{ scope.row.p }}</span>
+                        </div>
+                    </template>
                 </el-table-column>
                 <el-table-column
                         prop="8:00-9:00"
@@ -175,7 +184,7 @@
                         prop="10:00-11:00"
                         label="10:00-11:00"
                         align="center"
-                        width="140"
+                        width="130"
                         sortable
                 >
                 </el-table-column>
@@ -183,7 +192,7 @@
                         prop="11:00-12:00"
                         label="11:00-12:00"
                         align="center"
-                        width="140"
+                        width="130"
                         sortable
                 >
                 </el-table-column>
@@ -191,7 +200,7 @@
                         prop="12:00-13:00"
                         label="12:00-13:00"
                         align="center"
-                        width="175"
+                        width="130"
                         sortable
                 >
                 </el-table-column>
@@ -199,7 +208,7 @@
                         prop="13:00-14:00"
                         label="13:00-14:00"
                         align="center"
-                        width="140"
+                        width="130"
                         sortable
                 >
                 </el-table-column>
@@ -207,7 +216,7 @@
                         prop="14:00-15:00"
                         label="14:00-15:00"
                         align="center"
-                        width="175"
+                        width="130"
                         sortable
                 >
                 </el-table-column>
@@ -215,7 +224,7 @@
                         prop="15:00-16:00"
                         label="15:00-16:00"
                         align="center"
-                        width="175"
+                        width="130"
                         sortable
                 >
                 </el-table-column>
@@ -223,7 +232,7 @@
                         prop="16:00-17:00"
                         label="16:00-17:00"
                         align="center"
-                        width="175"
+                        width="130"
                         sortable
                 >
                 </el-table-column>
@@ -231,7 +240,7 @@
                         prop="17:00-18:00"
                         label="17:00-18:00"
                         align="center"
-                        width="175"
+                        width="130"
                         sortable
                 >
                 </el-table-column>
@@ -239,7 +248,7 @@
                         prop="19:00-20:00"
                         label="19:00-20:00"
                         align="center"
-                        width="175"
+                        width="130"
                         sortable
                 >
                 </el-table-column>
@@ -247,7 +256,7 @@
                         prop="20:00-21:00"
                         label="20:00-21:00"
                         align="center"
-                        width="175"
+                        width="130"
                         sortable
                 >
                 </el-table-column>
@@ -255,7 +264,7 @@
                         prop="21:00-22:00"
                         label="21:00-22:00"
                         align="center"
-                        width="175"
+                        width="130"
                         sortable
                 >
                 </el-table-column>
@@ -263,7 +272,7 @@
                         prop="22:00-23:00"
                         label="22:00-23:00"
                         align="center"
-                        width="175"
+                        width="130"
                         sortable
                 >
                 </el-table-column>
@@ -271,7 +280,7 @@
                         prop="23:00-0:00"
                         label="23:00-00:00"
                         align="center"
-                        width="175"
+                        width="130"
                         sortable
                 >
                 </el-table-column>
@@ -279,7 +288,7 @@
                         prop="00:00-1:00"
                         label="00:00-1:00"
                         align="center"
-                        width="175"
+                        width="130"
                         sortable
                 >
                 </el-table-column>
@@ -287,7 +296,7 @@
                         prop="1:00-2:00"
                         label="1:00-2:00"
                         align="center"
-                        width="175"
+                        width="120"
                         sortable
                 >
                 </el-table-column>
@@ -295,7 +304,7 @@
                         prop="2:00-3:00"
                         label="2:00-3:00"
                         align="center"
-                        width="175"
+                        width="120"
                         sortable
                 >
                 </el-table-column>
@@ -303,7 +312,7 @@
                         prop="3:00-4:00"
                         label="3:00-4:00"
                         align="center"
-                        width="175"
+                        width="120"
                         sortable
                 >
                 </el-table-column>
@@ -311,7 +320,7 @@
                         prop="4:00-5:00"
                         label="4:00-5:00"
                         align="center"
-                        width="175"
+                        width="120"
                         sortable
                 >
                 </el-table-column>
@@ -319,7 +328,7 @@
                         prop="5:00-6:00"
                         label="5:00-6:00"
                         align="center"
-                        width="175"
+                        width="120"
                         sortable
                 >
                 </el-table-column>
@@ -327,7 +336,7 @@
                         prop="6:00-7:00"
                         label="6:00-7:00"
                         align="center"
-                        width="175"
+                        width="120"
                         sortable
                 >
                 </el-table-column>
@@ -335,7 +344,7 @@
                         prop="7:00-8:00"
                         label="7:00-8:00"
                         align="center"
-                        width="175"
+                        width="120"
                         sortable
                 >
                 </el-table-column>
@@ -343,10 +352,11 @@
                         prop="STGR"
                         label="归属单位"
                         align="center"
-                        width="175"
+                        width="120"
                         sortable
                 >
                 </el-table-column>
+                <!--
                  <el-table-column
                         prop="canal_name"
                         label="渠道"
@@ -355,9 +365,10 @@
                         sortable
                 >
                 </el-table-column>
+                -->
                  <el-table-column
                         prop="AD_NM"
-                        label="地址"
+                        label="所属行政区划"
                         align="center"
                         width="175"
                         sortable
@@ -371,16 +382,7 @@
             <!-- <Table border :columns="columns1" :data="data" :loading="loading" height="600" :index="indexMethod"></Table> -->
             <div style="margin: 10px;overflow: hidden">
                 <div style="float: right;">
-                    <!-- <Page
-                    :total="list_input.total"
-                    :current="list_input.current" show-sizer
-                    :page-size="list_input.pagesize" :page-size-opts="list_input.pagesizeopts"
-                    @on-change="CurrentChange"
-                    @on-page-size-change="PagesizeChange"
-                    size="small"
-                    show-total
-                    show-elevator
-                    ></Page> -->
+
                 </div>
             </div>
         </Content>
@@ -414,20 +416,6 @@
                     @cell-click="cellclick"
                     @sort-change="sort_change"
             >
-                <!-- <el-table-column
-                        label=" "
-                        type="index"
-                        align="center"
-                        width="65"
-                        :index="indexMethod">
-                </el-table-column> -->
-                <!-- <el-table-column
-                        prop="SHI"
-                        label="市"
-                        align="center"
-                        sortable
-                        width="">
-                </el-table-column> -->
                 <el-table-column
                         prop="stnm"
                         label="站名"
@@ -634,6 +622,7 @@
                         sortable
                 >
                 </el-table-column>
+                <!--
                  <el-table-column
                         prop="canal_name"
                         label="渠道"
@@ -642,9 +631,10 @@
                         sortable
                 >
                 </el-table-column>
+                -->
                  <el-table-column
                         prop="AD_NM"
-                        label="地址"
+                        label="所属行政区划"
                         align="center"
                         width="175"
                         sortable
@@ -664,6 +654,7 @@
     export default {
         data() {
             return {
+                theight:window.screen.height-480,
                  gsdwlist:[
                     {
                         value:'1',
@@ -814,11 +805,14 @@
         mixins: [FilterMethods, GetDataMethods],
         mounted() {
            this.handleTime();
-            // // var Month = date.getMonth() + 1;
-            // // this.form.date = date.getFullYear() + '-' + Month + '-' + date.getDate();
-            // datelist[0] = `${date.getFullYear()}-${Month}-${date.getDate()} 00:00:00`;
-            // datelist[1] = `${date.getFullYear()}-${Month}-${date.getDate()} ${Hours}:${Minutes}:${Seconds}`;
-            // this.form.date = datelist;
+             //行政区划
+                this.getTableData_WRP_AD_B(data => {
+                    this.form.adressList = data[0].children;
+                });
+                // 获取输排水渠道数据,然后设置渠道选择框选项
+                //this.getTableData_WRP_IrrBTCanalSystem(data => {
+                //    this.form.qudaoList = data;
+                //});
 
             this.Reload();
 
@@ -1075,18 +1069,18 @@
                 if (this.form.model_adress.length == 0) {
                     this.form.xzqh = '';
                 }
+                // if (this.form.model_adress.length == 1) {
+                //     var str1 = this.form.model_adress[0];
+                //     str1 = str1.substring(0, 6);
+                //     this.form.xzqh = str1;
+                // }
                 if (this.form.model_adress.length == 1) {
-                    var str1 = this.form.model_adress[0];
-                    str1 = str1.substring(0, 6);
-                    this.form.xzqh = str1;
-                }
-                if (this.form.model_adress.length == 2) {
-                    var str2 = this.form.model_adress[1];
+                    var str2 = this.form.model_adress[0];
                     str2 = str2.substring(0, 9);
                     this.form.xzqh = str2;
                 }
-                if (this.form.model_adress.length == 3) {
-                    var str3 = this.form.model_adress[2];
+                if (this.form.model_adress.length == 2) {
+                    var str3 = this.form.model_adress[1];
                     str3 = str3.substring(0, 12);
                     this.form.xzqh = str3;
                 }
@@ -1213,16 +1207,7 @@
                         this.tableData1[i].p = this.Z_Filter(this.tableData1[i].p);
                         this.tableData1[i]['8:00-9:00'] = this.Z_Filter(this.tableData1[i]['8:00-9:00']);
                     }
-                });
-
-                //行政区划
-                this.getTableData_WRP_AD_B(data => {
-                    this.form.adressList = data;
-                });
-                // 获取输排水渠道数据,然后设置渠道选择框选项
-                this.getTableData_WRP_IrrBTCanalSystem(data => {
-                    this.form.qudaoList = data;
-                });
+                });              
             },
             // 处理页码切换
             CurrentChange(index) {

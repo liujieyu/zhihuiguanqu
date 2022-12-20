@@ -1,12 +1,12 @@
 <template>
   <div>
-    <Breadcrumb :style="{margin: '0 0 24px 0'}">
+    <Breadcrumb :style="{margin: '0 0 15px 0'}">
       <BreadcrumbItem>系统权限</BreadcrumbItem>
       <BreadcrumbItem>角色管理</BreadcrumbItem>
     </Breadcrumb>
 
     <!-- 按钮与筛选 -->
-    <el-row :gutter="0" type="flex" justify="space-between" style="margin: 30px 0;">
+    <el-row :gutter="0" type="flex" justify="space-between" style="margin: 22px 0;">
       <!-- 按钮 -->
       <el-col :span="24">
         <el-input
@@ -15,17 +15,14 @@
           placeholder
           class="input-with-select"
           auto-complete="true"
-          style="padding-top: 15px;width: 200px;float: left;"
+          style="padding-top: 5px;width: 200px;float: left;"
           :clearable="true"
         >
           <el-button slot="append" icon="el-icon-search" @click="ReLoad()"></el-button>
         </el-input>
-        <div style="float: left;margin-left: 20px; margin-top: 15px;">
+        <div style="float: left;margin-left: 20px; margin-top: 5px;">
           <el-button type="primary" size="small" @click="dialog_add_showing=true">新增</el-button>
-          <!-- <el-button type="primary" size="small" @click="dialog_edit_showing=true">修改</el-button> -->
-          <!-- <el-button type="primary" size="small">删除</el-button> -->
-          <!-- <el-button type="primary" size="small" @click="dialog_power_showing=true">赋权</el-button> -->
-          <el-button type="primary" size="small">导出</el-button>
+          <!--<el-button type="primary" size="small">导出</el-button>-->
           <el-button type="primary" size="small" @click="piliangDel()">批量删除</el-button>
         </div>
       </el-col>
@@ -49,7 +46,7 @@
       </el-col>-->
     </el-row>
 
-    <el-table :data="tableData" border height="550" style="width: 100%" @selection-change="selectRow" v-loading="loading">
+    <el-table :data="tableData" border :height="theight" style="width: 100%" @selection-change="selectRow" v-loading="loading">
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column
         label=" "
@@ -75,9 +72,9 @@
       <el-table-column property="remark" label="备注" ></el-table-column>
       <el-table-column label="操作" width="210" align="center">
         <template slot-scope="scope">
-          <el-button type="primary" size="small" @click="item=scope.row;dialog_edit_showing=true">修改</el-button>
-          <el-button type="primary" size="small" @click="item=scope.row;dialog_power_showing=true;">赋权</el-button>
-          <el-button type="primary" size="small" @click="del(scope.row)">删除</el-button>
+          <el-button type="primary" size="mini" @click="item=scope.row;dialog_edit_showing=true">修改</el-button>
+          <el-button type="primary" size="mini" @click="item=scope.row;dialog_power_showing=true;">赋权</el-button>
+          <el-button type="primary" size="mini" @click="del(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -92,7 +89,7 @@
       </el-col>
       <el-col>
         <el-pagination
-          style="margin:20px 0;float: right;"
+          style="margin:10px 0;float: right;"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           background
@@ -101,20 +98,21 @@
           :page-size="list_input.page_size"
           layout=" prev, pager, next, sizes, jumper"
           :total="list_input.total"
+          small
         ></el-pagination>
       </el-col>
     </el-row>
 
     <!-- 新增 -->
-    <el-dialog title="新增" :visible.sync="dialog_add_showing" width="1200px" append-to-body>
+    <el-dialog title="新增" :visible.sync="dialog_add_showing" width="760px" append-to-body>
       <ADDDIALOG v-if="dialog_add_showing" @closewindows="dialog_add_showing=false;ReLoad()"></ADDDIALOG>
     </el-dialog>
     <!-- 修改-->
-    <el-dialog title="修改" :visible.sync="dialog_edit_showing" width="1200px" append-to-body>
+    <el-dialog title="修改" :visible.sync="dialog_edit_showing" width="760px" append-to-body>
       <EDITDIALOG :id="item.id" v-if="dialog_edit_showing" @closewindows="dialog_edit_showing=false;ReLoad()"></EDITDIALOG>
     </el-dialog>
     <!-- 赋权-->
-    <el-dialog title="赋权" :visible.sync="dialog_power_showing" width="1200px" append-to-body>
+    <el-dialog title="赋权" :visible.sync="dialog_power_showing" width="500px" append-to-body>
       <POWERDIALOG :id="item.id" v-if="dialog_power_showing" @closewindows="dialog_power_showing=false;ReLoad()"></POWERDIALOG>
     </el-dialog>
   </div>
@@ -136,6 +134,7 @@ export default {
   data() {
     return {
       loading:false,
+      theight:window.innerHeight-233,
       value: "",
       timeValue: "",
       idList: [],

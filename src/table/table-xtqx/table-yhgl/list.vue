@@ -1,14 +1,14 @@
 <template>
   <div>
-    <Breadcrumb :style="{margin: '0 0 24px 0'}">
+    <Breadcrumb :style="{margin: '0 0 15px 0'}">
       <BreadcrumbItem>系统权限</BreadcrumbItem>
       <BreadcrumbItem>用户管理</BreadcrumbItem>
     </Breadcrumb>
 
     <!-- 按钮与筛选 -->
-    <el-row :gutter="0"  style="margin: 30px 0;">
+    <el-row :gutter="0"  style="margin: 22px 0;">
       <!-- 按钮 -->
-      <el-col :span="14" style="margin-top: 15px;">
+      <el-col :span="24" style="margin-top: 5px;">
         用户名：
         <el-input
           v-model="value"
@@ -43,42 +43,13 @@
         >
            <el-option v-for="item in op_status" :key="item.id" :label="item.title" :value="item.value"></el-option>
         </el-select>
-      </el-col>
-      <el-col :span="10" style="margin-top: 15px;">  
-        <div>
-          <el-button type="primary" size="small" @click="dialog_add_showing=true">新增</el-button>
-          <el-button type="primary" size="small">导出</el-button>
+          <el-button type="primary" size="small" @click="dialog_add_showing=true" style="margin-left:20px;">新增</el-button>
+          <!--<el-button type="primary" size="small">导出</el-button>-->
           <el-button type="primary" size="small" @click="piliangDel()">批量删除</el-button>
-        </div>
-        
-        
-        
-      </el-col>
-
-      <!-- <el-col
-        :span="14"
-        style="display: flex;font-size: 14px;"
-      >
-      <el-input
-          v-model="value"
-          size="small"
-          placeholder='请输入用户名'
-          class="input-with-select"
-          auto-complete="true"
-          style="padding-top: 15px;width: 200px;float: left;"
-          :clearable="true"
-        >
-          <el-button slot="append" icon="el-icon-search"></el-button>
-        </el-input>
-        <div style="float: left;margin-left: 20px; margin-top: 15px;">
-          <el-button type="primary" size="small" @click="dialog_add_showing=true">新增</el-button>
-          <el-button type="primary" size="small">导出</el-button>
-          <el-button type="primary" size="small" @click="piliangDel()">批量删除</el-button>
-        </div>
-      </el-col> -->
+      </el-col>     
     </el-row>
 
-    <el-table :data="tableData" height="550" border style="width: 100%" @selection-change="selectRow" v-loading="loading">
+    <el-table :data="tableData" :height="theight" border style="width: 100%" @selection-change="selectRow" v-loading="loading">
       <el-table-column type="selection" width="50"></el-table-column>
       <el-table-column
         label=" "
@@ -113,10 +84,10 @@
       <el-table-column property="modifier" label="最后一次修改人" width="120"></el-table-column>
       <el-table-column label="操作" width="230px" align="center" style="display: flex;">
         <template slot-scope="scope" style="display: flex;">
-          <el-button type="primary" size="small" @click="item = scope.row;open_edit_dialog()">修改</el-button>
+          <el-button type="primary" size="mini" @click="item = scope.row;open_edit_dialog()">修改</el-button>
           
-          <el-button type="primary" size="small" @click="item = scope.row;open_reset_dialog()">重置密码</el-button>
-          <el-button type="primary" size="small" v-if="scope.row.role.name!='超级管理员'" @click="del(scope)">删除</el-button>
+          <el-button type="primary" size="mini" @click="item = scope.row;open_reset_dialog()">重置密码</el-button>
+          <el-button type="primary" size="mini" v-if="scope.row.role.name!='超级管理员'" @click="del(scope)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -131,7 +102,7 @@
       </el-col>
       <el-col>
         <el-pagination
-          style="margin:20px 0;float: right;"
+          style="margin:10px 0;float: right;"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           background
@@ -140,20 +111,21 @@
           :page-size="list_input.page_size"
           layout=" prev, pager, next, sizes, jumper"
           :total="list_input.total"
+          small
         ></el-pagination>
       </el-col>
     </el-row>
 
     <!-- 新增 -->
-    <el-dialog title="新增" :visible.sync="dialog_add_showing" width="1200px" append-to-body>
+    <el-dialog title="新增" :visible.sync="dialog_add_showing" width="870px" append-to-body>
       <ADDDIALOG v-if="dialog_add_showing" @closewindows="dialog_add_showing=false;ReLoad()"></ADDDIALOG>
     </el-dialog>
     <!-- 修改-->
-    <el-dialog title="修改" :visible.sync="dialog_edit_showing" width="1200px" append-to-body>
+    <el-dialog title="修改" :visible.sync="dialog_edit_showing" width="870px" append-to-body>
       <EDITDIALOG :id="item.id" v-if="dialog_edit_showing" @closewindows="dialog_edit_showing=false;ReLoad()"></EDITDIALOG>
     </el-dialog>
     <!-- 赋权-->
-    <el-dialog title="重置密码" :visible.sync="dialog_reset_showing" width="800px" append-to-body>
+    <el-dialog title="重置密码" :visible.sync="dialog_reset_showing" width="500px" append-to-body>
       <RESETDIALOG :id="item.id" v-if="dialog_reset_showing" @closewindows="dialog_reset_showing=false;ReLoad()"></RESETDIALOG>
     </el-dialog>
   </div>
@@ -171,6 +143,7 @@ export default {
   data() {
     return {
       loading:false,
+      theight:(window.innerWidth>=1280)?window.innerHeight-233:window.innerHeight-265,
       value: "",
       timeValue: "",
       idList: [],

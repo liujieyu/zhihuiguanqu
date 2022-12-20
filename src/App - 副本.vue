@@ -2599,7 +2599,7 @@ body {
   margin-bottom: 0 !important;
 }
 .borsLine{
-  text-align: left;height: 40px;line-height: 40px
+  text-align: left;height: 30px;line-height: 30px
 }
 @media (max-width: 1800px) {
   .btn_baobiao{

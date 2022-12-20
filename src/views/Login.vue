@@ -9,7 +9,7 @@
         <!--</div>-->
         <div class="m-cover">
             <div style="padding: 6em; box-sizing: border-box; text-align: center;">
-                <h1 style="font-size: 3.8em;font-weight: 400;color: #FFF;">黄材灌区综合信息管理平台</h1>
+                <h1 style="font-size: 3.8em;font-weight: 400;color: #FFF;">宁乡市小型水库监测预警平台</h1>
             </div>
 
             <div style="box-sizing: border-box; text-align: center; ">
@@ -34,7 +34,7 @@
                 </div>
             </div>
 
-            <p style="font-size: 12px; color: #fff; margin: 2em; text-align: center;">2019 © 黄材灌区综合信息管理平台 版权所有</p>
+            <p style="font-size: 12px; color: #fff; margin: 2em; text-align: center;">2022 © 宁乡市小型水库监测预警平台 版权所有</p>
         </div>
 
     </div>
@@ -139,7 +139,7 @@ import ValidCode from "@/components/VaildCode.vue";
         padding: 0;
     }
     #login{
-        background-image:url(../assets/bgimage.jpg);
+        background-image:url(../assets/skimage.jpg);
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;

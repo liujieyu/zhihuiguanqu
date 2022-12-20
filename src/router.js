@@ -341,6 +341,12 @@ export default new Router({
         //历史分析
         //渗流量分析
         {path: '/safefenxi-sllls', component: () => import('./warm/warm-safe/sll-history/list.vue')},
+        //渗流压力分析
+        {path: '/safefenxi-slylls', component: () => import('./warm/warm-safe/slyl-history/list.vue')},
+        //位移变形分析
+        {path: '/safefenxi-wybxls', component: () => import('./warm/warm-safe/spwy-history/list.vue')},
+        //沉降变形分析
+        {path: '/safefenxi-cjbxls', component: () => import('./warm/warm-safe/cjwy-history/list.vue')},
         ], 
         },    
     ],

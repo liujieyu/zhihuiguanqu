@@ -1,9 +1,9 @@
 <template>
     <div>
-        <Content :style="{padding: '24px', background: '#fff'}">
+        <Content :style="{padding: '12px 24px 24px 24px', background: '#fff'}">
             <Row type="flex" style="margin: 10px;" :gutter="16" justify="start">
                 <Col>
-                   时间:
+                   时段:
                         <el-date-picker
                         v-model="form.date"
                         type="datetimerange"
@@ -15,27 +15,25 @@
                         value-format="yyyy-MM-dd HH:mm:ss"
                         :clearable="false"
                         size="small"
-                        width="200"
                         >
                         </el-date-picker>
                 </Col>
                 <Col>
-                    行政区划:
                     <!-- 地址级联选择器 -->
                     <el-cascader
                             clearable
                             size="small"
-                            style="width: 160px"
-                            placeholder="请选择地址"
+                            style="width: 200px"
+                            placeholder="所属行政区划"
                             :options="form.adressList"
                             v-model="form.model_adress"
                             @change="XZQHsearch"
                             change-on-select
                     ></el-cascader>
                 </Col>
+                <!-- 渠道级联选择器
                 <Col>
-                    渠道:
-                    <!-- 渠道级联选择器 -->
+                    渠道:                   
                     <el-cascader
                             clearable
                             style="width: 160px"
@@ -47,37 +45,32 @@
                             change-on-select
                     ></el-cascader>
                 </Col>
-                <Col style="margin-top:10px;">
-                    归属单位:
-                    <Select v-model="form.gsdw" style="width:120px;" @on-change="STGRsearch" clearable>
+                 -->
+                <Col>
+                    <Select v-model="form.gsdw" style="width:120px;" @on-change="STGRsearch" clearable placeholder="归属单位">
                         <Option v-for="item in gsdwlist" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
                 </Col>
-                <Col style="margin-top:10px;">
-                    降雨:
-                    <Select v-model="form.zdlx" style="width:120px;" @on-change="TYPEsearch" clearable>
+                <Col>
+                    <Select v-model="form.zdlx" style="width:120px;" @on-change="TYPEsearch" clearable placeholder="降雨量">
                         <Option v-for="item in zdlxlist" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
                 </Col>
-                <Col class="btn_baobiao" style="display: flex;justify-content: flex-start">
+                <Col>
                     <!-- 站名模糊搜索 -->
                     <Input search enter-button suffix="ios-search" placeholder="请输入站名"
                            style="width: 160px;" @on-search="search" v-model="form.searchmsg"/>
+                    <!--
                     <Button type="primary" style="width: auto;margin-left: 10px;" @click="err">导出</Button>
+                    -->
                 </Col>
             </Row>
-            <Row type="flex" :gutter="16" justify="end">
-            </Row>
-            <Row type="flex" style="margin: 10px;" :gutter="16" justify="end">
+            <Row type="flex" style="margin:15px 10px 15px 10px;" :gutter="16" justify="end">
                 <el-table
                         :cell-class-name="rowClass"
                         :data="tableData3"
                         border
-                        style="width: 100%"
-
-
-
-
+                        style="width: 100%;color:#000000;"
                 >
                     <el-table-column
                             prop="rain1"
@@ -110,78 +103,7 @@
                     </el-table-column>
                 </el-table>
             </Row>
-            <Row>
-                <!-- <el-table
-                        :data="tableData1"
-                        style="width: 100%">
-                    <el-table-column
-                            prop="STCD"
-
-                            width="180">
-                    </el-table-column>
-                    <el-table-column
-                            prop="STNM"
-
-                            width="240">
-                    </el-table-column>
-                    <el-table-column
-                            prop="startTimeHeader"
-
-                    >
-                    </el-table-column>
-                    <el-table-column
-                            prop="dt"
-                            width="240"
-
-                    >
-                    </el-table-column>
-                    <el-table-column
-                            prop="meteHeader"
-                            width="100"
-                    >
-                    </el-table-column>
-                    <el-table-column
-                            prop="mete"
-                    >
-                    </el-table-column>
-                </el-table> -->
-
-                <!-- <el-table
-                        :data="data"
-                        border
-                        height="180"
-                        v-loading="loading"
-                        style="width: 100%"
-
-                        >
-
-                        <el-table-column
-                          prop="dt"
-                          label="时间"
-                          align="center"
-
-                          width="140">
-                        </el-table-column>
-                          <el-table-column
-
-                            v-for="(item,index) in cols1" :key="index"
-                            :prop="item.STNM+'雨量'"
-                            align="center"  :label="item.STNM"
-                            width="358">
-
-                            <el-table-column
-                              :prop="item.STNM+'雨量'"
-                              label="雨量"
-                              align="center"
-                              width="160"
-                              >
-                            </el-table-column>
-
-                            </el-table-column>
-
-                      </el-table> -->
-            </Row>
-            <Divider/>
+            <Divider style="margin-top:0px;"/>
 
 
 
@@ -199,13 +121,13 @@
                     :data="Tables.data"
                     :span-method="objectSpanMethod"
                     border
-                    height="400"
+                    :height="theight"
                     v-loading="loading"
-                    style="width: 100%"
-                    @cell-click="cellclick"
+                    style="width: 100%;"                   
                     @sort-change="sort_change"
             >
-                <!-- <el-table-column
+                <!-- @cell-click="cellclick"
+                    <el-table-column
                         prop="SHI"
                         label="市"
                         align="center"
@@ -218,14 +140,7 @@
                         align="center"
 
                         width="350">
-                </el-table-column> -->
-                <el-table-column
-                        prop="ZHEN"
-                        label="乡镇"
-                        align="center"
-
-                >
-                </el-table-column>
+                </el-table-column> -->               
                 <el-table-column
                         prop="STNM"
                         label="站名"
@@ -238,6 +153,36 @@
                         label="雨量"
                         align="center"
                         sortable
+                >
+                <template slot-scope="scope">
+                        <div>
+                        <span
+                            :style="{
+                        color: scope.row.P <= 10?'green' :scope.row.P <= 25 ?'#227700' : scope.row.P <= 50?'#00BBFF' :scope.row.P <= 100?'#003377':scope.row.P <= 250?'#CC6600':'#CC0000',
+                        }"
+                        >{{ scope.row.P }}</span>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="STGR"
+                        label="归属单位"
+                        align="center"
+
+                >
+                </el-table-column>
+                <el-table-column
+                        prop="ZHEN"
+                        label="所属乡镇"
+                        align="center"
+
+                >
+                </el-table-column>
+                <el-table-column
+                        prop="CUN"
+                        label="所属村"
+                        align="center"
+
                 >
                 </el-table-column>
             </el-table>
@@ -370,6 +315,7 @@
                         label:'灌区站'
                     },
                 ],
+                theight:window.screen.height-480,
                 cols1:[],
                 loading: false,
                 dialog_detail_showing: false,
@@ -513,49 +459,18 @@
         // 引入过滤方法到此组件
         mixins: [FilterMethods, GetDataMethods],
         mounted() {
-            //  var date = new Date();
-            //  var Month = date.getMonth()+1;
-            // var datelist = new Array();
-            // var Hours = date.getHours();
-            // var Minutes = date.getMinutes();
-            // var Seconds = date.getSeconds();
-            // if (Hours<10) {
-            //   Hours = `0${Hours}`
-            // }
-            // if (Minutes<10) {
-            //   Minutes = `0${Minutes}`
-            // }
-            // if (Seconds<10) {
-            //   Seconds = `0${Seconds}`
-            // }
-            // if (Month<10) {
-            //   Month = `0${Month}`
-            // }
-
-            // var Month = date.getMonth() + 1;
-            // this.form.date = date.getFullYear() + '-' + Month + '-' + date.getDate();
-            // datelist[0] = `${date.getFullYear()}-${Month}-${date.getDate()} 08:00:00`;
-            // datelist[1] = `${date.getFullYear()}-${Month}-${date.getDate()} ${Hours}:${Minutes}:${Seconds}`;
-            // temp=`${date.getFullYear()}-${Month}-${date.getDate()} ${Hours}:${Minutes}:${Seconds}`;
-            // console.log('++++++++++++',Hours);
-            //  if(Hours < 8){
-            //      var date2 = new Date();
-            //      date2.setTime(date2 - 3600 * 1000 * 24);
-
-            //     }
-            //     // val[0].setTime(val[0] - 3600 * 1000 * 24);
-            //     console.log('++++++++++++',Hours);
-
-                // this.table[tableName].date = val;
-
+            //行政区划
+            this.getTableData_WRP_AD_B(data => {
+                //this.form.adressList = data;
+                this.form.adressList = data[0].children;
+                this.form.model_adress=true;
+            });
+            // 获取输排水渠道数据,然后设置渠道选择框选项
+            //this.getTableData_WRP_IrrBTCanalSystem(data => {
+            //    this.form.qudaoList = data;
+            //});
             this.Reload();
             this.handleTime();
-            // datelist[0] = this.form.startTime;
-            // datelist[1] = this.form.overTime;
-            // this.form.date = datelist;
-
-
-
         },
         methods: {
             //对时间选择器进行时间处理
@@ -600,15 +515,6 @@
                 datelist[1] = this.form.overTime;
                 this.form.date = datelist;
             }else{
-                // date2=date2.setTime(date2.getTime()+24*60*60*1000);
-                // date2 = new Date(date2);
-                // var Year = date2.getFullYear();
-                // var Month = date2.getMonth()+1;
-                // var Day = date2.getDate();
-                // var Hours = date2.getHours();
-                // var Minutes = date2.getMinutes();
-                // var Seconds = date2.getSeconds();
-
                 var Year2 = date.getFullYear();
                 var Month2 = date.getMonth()+1;
                 var Day2 = date.getDate();
@@ -636,16 +542,6 @@
             }
 
             },
-            //  setTableDate(tableName, val) {
-            //     // 判断当前时间是否小于8时
-            //     if(val[1].getHours() < 8){
-            //         val[0].setTime(val[0] - 3600 * 1000 * 24);
-            //     }
-            //     // val[0].setTime(val[0] - 3600 * 1000 * 24);
-            //     console.log('++++++++++++',val[0].getHours());
-
-            //     this.table[tableName].date = val;
-            // },
             rowClass({row, column, rowIndex, columnIndex}) {
                 if (rowIndex === 0 && columnIndex === 0) {
                     return 'green'
@@ -662,43 +558,10 @@
                     return 'bacColorCC0000'
                 }
             },
-            // cell({row, column, rowIndex, columnIndex}) {
-            //     //第八列添加 red 类
-            //     if (columnIndex == 4) {
-            //         return 'red'
-            //     }
-            //     //某一行其中的一个变量applies值如果大于0，并且在第六列，即确定一个具体的单元格需要确定行和列
-            //     if (parseFloat(row.applies) > 0 && columnIndex == 5) {
-            //         return 'red'
-            //     }
-            // },
 
 
             //表格合并方法
             objectSpanMethod({row, column, rowIndex, columnIndex}) {
-                /*
-                if (!this.now_col_row_num[column.property]) {
-                    this.now_col_row_num[column.property] = Object.assign([], this.column_row_offset[column.property]);
-                    let a = this.now_col_row_num[column.property].shift();
-                    this.now_col_offset[column.property] = a;
-                    return {
-                        rowspan: a,
-                        colspan: 1
-                    };
-                } else if (rowIndex >= this.now_col_offset[column.property]) {
-                    let a = this.now_col_row_num[column.property].shift();
-                    this.now_col_offset[column.property] += a;
-                    return {
-                        rowspan: a,
-                        colspan: 1
-                    };
-                } else {
-                    return {
-                        rowspan: 0,
-                        colspan: 0
-                    };
-                }
-                */
             },
 
 
@@ -782,18 +645,18 @@
                 if (this.form.model_adress.length == 0) {
                     this.form.xzqh = '';
                 }
+                // if (this.form.model_adress.length == 1) {
+                //     var str1 = this.form.model_adress[0];
+                //     str1 = str1.substring(0, 6);
+                //     this.form.xzqh = str1;
+                // }
                 if (this.form.model_adress.length == 1) {
-                    var str1 = this.form.model_adress[0];
-                    str1 = str1.substring(0, 6);
-                    this.form.xzqh = str1;
-                }
-                if (this.form.model_adress.length == 2) {
-                    var str2 = this.form.model_adress[1];
+                    var str2 = this.form.model_adress[0];
                     str2 = str2.substring(0, 9);
                     this.form.xzqh = str2;
                 }
-                if (this.form.model_adress.length == 3) {
-                    var str3 = this.form.model_adress[2];
+                if (this.form.model_adress.length == 2) {
+                    var str3 = this.form.model_adress[1];
                     str3 = str3.substring(0, 12);
                     this.form.xzqh = str3;
                 }
@@ -860,9 +723,6 @@
 
                     console.log('+++++');
                     console.log(this.Tables.data);
-                    //  this.Tables.data.STNM[0] = res.data[0];
-                    // console.log(this.Tables.data[0]);
-                    // console.log(res.data[0]);
                     //123
                     for (var i = 0; i < this.Tables.data.length; i++) {
                         this.Tables.data[i].da_z = this.Z_Filter(this.Tables.data[i].da_z);
@@ -870,90 +730,19 @@
                         this.Tables.data[i].dwq = this.Z_Filter(this.Tables.data[i].dwq, 3);
                     }
                 });
-                //小时统计分析栏获取数据接口
-                // this.axios.get('/guanqu/yuqing/lishi_xiaoshitezheng?_page_size=99999' + this.searchs, {
-                //     params: {
-                //         // TM: this.form.date,
-                //         Time_min:this.form.date[0],
-                //         Time_max:this.form.date[1],
-                //         ADDVCD: this.form.xzqh,
-                //         Canal_Code: this.form.qd,
-                //         P: this.form.zdlx,
-                //         STGR:this.form.gsdw,
-                //     }
-                // }).then((res) => {
-                //     console.log(res);
-                //     this.loading = false;
-                //     this.tableData1 = res.data[0].zhandian;
-                //      //this.tableData1 = res.data[0].tongji;
-
-                //     console.log('+++++');
-                //     console.log(this.tableData1);
-                //     //  this.Tables.data.STNM[0] = res.data[0];
-                //     // console.log(this.Tables.data[0]);
-                //     // console.log(res.data[0]);
-                //     //123
-                //     for (var i = 0; i < this.tableData1.length; i++) {
-                //        this.tableData1[i].da_z = this.Z_Filter(this.tableData1[i].da_z);
-                //         this.tableData1[i].da_q = this.Z_Filter(this.tableData1[i].da_q, 3);
-                //         this.tableData1[i].dwq = this.Z_Filter(this.tableData1[i].dwq, 3);
-                //     }
-                // });
-
 
                 this.axios.get('/guanqu/yuqing/lishi_xiaoshitezheng?'+this.searchs,{params:{Time_min:this.form.date[0],Time_max:this.form.date[1],ADDVCD:this.form.xzqh,Canal_Code:this.form.qd,STYPE:this.form.zdlx}}).then((res)=>{
                     this.loading = false;
                     console.log(res);
-
-
-                    // 处理拿回来的数据并赋值给表格
-                    // this.data  = res.data[0].tongji.map((val, index) => {
-                    //     // debugger;
-                    //     for (let key in val) {
-                    //         if (val[key] === 0) {
-                    //             val[key] = ""
-                    //         }else if(/水位$/.test(key)){
-                    //             val[key] =this.Float_Filter(val[key],2)
-                    //         }else if(/流量$/.test(key)){
-                    //             val[key] = this.Float_Filter(val[key],3)
-                    //         }else if(key.indexOf('小时累计水量') !== -1){
-                    //             val[key] = `${val[key]}`
-                    //             let oFl = val[key].split('.')
-                    //             if(oFl[1] === undefined){
-                    //                 val[key] = `${val[key]}.000`
-                    //             }else if(oFl[1].length === 1){
-                    //                 val[key] = `${val[key]}00`
-                    //             }else if(oFl[1].length === 2){
-                    //                 val[key] = `${val[key]}0`
-                    //             }else if(oFl[1].length === 3){
-                    //                 val[key] = val[key]
-                    //             }else {
-                    //                 val[key] = val[key]
-                    //             }
-                    //         }
-                    //     }
-                    //     return val
-                    // }) ;
                     this.cols1 = res.data[0].zhandian;
                     this.data  = res.data[0].tongji;
 
-                    // this.data = res.data.rows;
-                    // console.log('tap',this.data[0].val.胜溪支渠站.pingjshuiwei);
                     this.list_input.total = res.data.total;
                     for (var i = 0;i<this.data.length ; i++) {
-                        // this.data[i].DT = this.data[i].DT+' '+this.data[i].TM+':00';
                         this.data[i].A_Z = this.Z_Filter(this.data[i].A_Z);
                         this.data[i].A_Q = this.Z_Filter(this.data[i].A_Q, 3);
                         this.data[i].WQ = this.Z_Filter(this.data[i].WQ, 3);
-                    }
-                    //行政区划
-                    this.getTableData_WRP_AD_B(data => {
-                        this.form.adressList = data;
-                    });
-                    // 获取输排水渠道数据,然后设置渠道选择框选项
-                    this.getTableData_WRP_IrrBTCanalSystem(data => {
-                        this.form.qudaoList = data;
-                    });
+                    }                   
                 });
 
 
@@ -986,15 +775,6 @@
                         this.tableData3[i].dwq = this.Z_Filter(this.tableData3[i].dwq, 3);
                     }
 
-                });
-
-                //行政区划
-                this.getTableData_WRP_AD_B(data => {
-                    this.form.adressList = data;
-                });
-                // 获取输排水渠道数据,然后设置渠道选择框选项
-                this.getTableData_WRP_IrrBTCanalSystem(data => {
-                    this.form.qudaoList = data;
                 });
             },
             // 处理页码切换

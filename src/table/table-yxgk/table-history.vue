@@ -1,10 +1,9 @@
 <template>
     <div>
-        <Content :style="{padding: '24px', background: '#fff'}">
-
+        <Content :style="{padding: '12px 24px 16px 24px', background: '#fff'}">
             <Row :gutter="16">
-                <Col :span="span1" style="padding: 0">
-                    <Row :gutter="16" type="flex" justify="start" z style="margin: 10px;line-height: 32px;">
+                <Col :span="span1">
+                    <Row :gutter="16" type="flex" justify="start" z style="margin: 10px;">
                         <Col>
                             时间:
                             <el-date-picker
@@ -23,58 +22,59 @@
                             >
                             </el-date-picker>
                         </Col>
+                        <!--
                         <Col class="" style="display: flex;justify-content: flex-start">
                             <Button type="primary" style="width: auto;margin-right: 10px;margin-left: 10px"
                                     @click="cellclick">站点详情
                             </Button>
                             <Button type="primary" style="width:auto;" @click="err">导出</Button>
                         </Col>
+                        -->
                         <Col>
 
                             <!-- <Button type="primary" style="width: auto;margin-right: 0px;margin-left: 10px;" @click="test1">显示/隐藏树形</Button> -->
-                        </Col>
-                        <Col>
-
                         </Col>
                     </Row>
                     <div class="switch" @click="Menu_toggle">
                         <i class="el-icon-d-arrow-left" v-if="Menu.show_Controller"></i>
                         <i class="el-icon-d-arrow-right" v-if="!Menu.show_Controller"></i>
                     </div>
-                    <Divider/>
+                    <Divider style="margin-top:20px;"/>
                     <Row>
                         <!-- <Col style="text-align: center;margin: 0 0 10px 0;">
                             监测站名：{{SiteiNFO.CZMC}}
                         </Col> -->
-                        <Col style='font-size: 14px;' class="borsLine">监测站名：{{SiteiNFO.CZMC}}&nbsp;
-                            正常电压范围：{{ZCDY.VOLMIN}}-{{ZCDY.VOLMAX}}V；单位:电压：V
+                        <Col style='font-size: 14px;' class="borsLine">监测站名：{{siteno}}&nbsp;
+                            正常电压范围：{{ZCDY.VOLMIN}}-{{ZCDY.VOLMAX}}V&nbsp;单位：电压：V
                         </Col>
                     </Row>
                     <Row :gutter="16" style="display: flex">
-                        <Col style="width: 500px;">
+                        <Col style="width: 480px;">
                             <el-table
                                     :data="data1"
                                     border
-                                    height="500"
+                                    :height="theight"
                                     v-loading="loading"
                                     @sort-change="sort_change"
-                                    style="width: 500px">
+                                    style="width: 480px">
                                 <el-table-column
                                         label=" "
                                         type="index"
                                         align="center"
-                                        width="60"
+                                        width="55"
                                         :index="indexMethod">
                                 </el-table-column>
                                 <el-table-column
                                         prop="tm"
                                         label="时间"
                                         sortable="custom"
+                                        width="160"
                                         align="center">
                                 </el-table-column>
                                 <el-table-column
                                         prop="VOL"
                                         label="电压"
+                                        width="120"
                                         sortable="custom"
                                         align="center"
                                 >
@@ -87,26 +87,26 @@
                                 >
                                 </el-table-column>
                             </el-table>
-                            <div style="margin: 10px;overflow: hidden">
+                            <div style="margin: 10px 0px 0px 10px;overflow: hidden">
                                 <div style="float: right;">
-                                    <Page
-                                            :total="list_input.total"
-                                            :current="list_input.current"
-                                            show-sizer
-                                            :page-size="list_input.pagesize"
-                                            :page-size-opts="list_input.pagesizeopts"
-                                            @on-change="CurrentChange"
-                                            @on-page-size-change="PagesizeChange"
-                                            size="small"
-                                            show-total
-                                            show-elevator
-                                    ></Page>
+                                <Page
+                                    :total="list_input.total"
+                                    :current="list_input.current"
+                                    show-sizer
+                                    :page-size="list_input.pagesize"
+                                    :page-size-opts="list_input.pagesizeopts"
+                                    @on-change="CurrentChange"
+                                    @on-page-size-change="PagesizeChange"
+                                    size="small"
+                                    show-total
+                                    show-elevator
+                                ></Page>
                                 </div>
                             </div>
                         </Col>
-                        <Col span="13">
-                            <div ref="achart"
-                                 style="width: 100%;height: 400px;margin-top: 1%;margin-bottom: 50px;"></div>
+                        <Col span="14">
+                            <div ref="achart" v-show="data1.length>0" :style="{'width': '100%','height': chartheight+'px','margin-top': '1%'}"></div>
+                            <div ref="noachart" v-show="data1.length==0"  :style="{'width': '100%','height': chartheight+'px',margin: 'auto', display:'flex', alignItems:'center', justifyContent: 'center','margin-top': '1%'}">暂无电压图数据</div>
                         </Col>
                     </Row>
                 </Col>
@@ -114,42 +114,26 @@
                     <Col :span="span2" v-show="show1">
                         <Row style="margin-top: 10px;line-height: 32px;">
                             <Col>
-                                <Input search enter-button suffix="ios-search" placeholder="请输入站名" style="width: auto;margin-right: 20px;" @on-search="search" v-model="searchmsg" />
+                                <Input search enter-button suffix="ios-search" placeholder="请输入行政区划或者站点名称" style="width:250px;margin-right: 20px;" @on-search="search" v-model="searchmsg" />
                             </Col>
                         </Row>
                         <Row style="margin-top: 30px;margin-left: 20px;">
-                            <Col style="max-height: 600px;overflow-y: auto;">
-                                <Button shape="circle" @click="changeTree">切换树形图</Button>
-                                <el-tree
-                                        class="filter-tree"
-                                        :data="Treedata2"
-
-                                        :filter-node-method="filterNode"
-                                        v-if="xingzhengquhua"
-                                        @node-click="xingzheng_tree"
-                                        ref="tree">
-                                </el-tree>
-                                <el-tree
-                                        class="filter-tree"
-                                        :data="Treedata"
-
-                                        :filter-node-method="filterNode"
-                                        v-if="qudao"
-                                        @node-click="qudao_tree"
-                                        ref="tree">
+                            <Col :style="{'overflow-y': 'auto', height: (theight+30)+'px'}">
+                                <el-tree               
+                                    class="filter-tree"
+                                    :data="Treedata"
+                                    highlight-current="true"
+                                    node-key="id"
+                                    :default-expanded-keys="expandedarray"
+                                    :filter-node-method="filterNode"
+                                    @node-click="xzqh_tree"
+                                    ref="tree">
                                 </el-tree>
                             </Col>
                         </Row>
                     </Col>
                 </transition>
             </Row>
-
-
-            <!-- <Row type="flex" :gutter="16">
-              <Col span="10">
-                <div ref="achart" style="width: 100%;height: 300px;margin-top: 1%;margin-bottom: 50px;"></div>
-              </Col>
-          </Row> -->
         </Content>
     </div>
 </template>
@@ -163,6 +147,8 @@
         data() {
             return {
                 loading: false,
+                theight:window.innerHeight-330,
+                chartheight:(window.innerHeight-330)>430?430:(window.innerHeight-330),
                 qudao: true,
                 xingzhengquhua: false,
                 show1: true,
@@ -171,12 +157,15 @@
                 span2: '5',
                 STinfo: {},
                 Treedata: [],
+                expandedarray:[],
+                filterTreeData:[],
                 Treedata2: [],
                 GD: '',
                 data1: [],
                 data2: [],
                 date: '',
-                searchs: '&STNM= P2支渠站',
+                searchs: '',
+                siteno:'',
                 timesearch: '',
                 CZMC: '',
                 echarts: {
@@ -212,7 +201,7 @@
         //   }
         // },
         mounted() {
-            this.form.field = 'TM'
+            this.form.field = 'TM desc';
             var date = new Date();
             var Month = date.getMonth() + 1;
             var datelist = new Array();
@@ -220,21 +209,32 @@
             datelist[1] = date.getFullYear() + '-' + Month + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + '.000';
             this.form.date = datelist;
             console.log(this.form.date);
-            this.axios.get("/guanqu/table/xingzhen_gongkuang_tree").then(res => {
-                console.log(res);
-                this.Treedata2 = this.XingZheng_Tree_Filter('650000000000', res.data).data;
+            //获取行政区划树
+            this.axios.get("/guanqu/info/xzqhtree?TYPE=7").then(res => {
+            this.Treedata = res.data;
+            this.expandedarray.push(this.Treedata[0].id);
+            this.expandedarray.push(this.Treedata[0].children[0].id);
+            var stcd=this.Treedata[0].children[0].children[0].value;
+            this.searchs = stcd;    
+            this.siteno = this.Treedata[0].children[0].children[0].label;
+            let body = {};
+                body.STCD = this.searchs;
+                this.$GetData.Survey_Around_YXGK(null, body, false, data => {
+                    let dataVol = data.data[0]
+                    this.ZCDY.VOLMIN = dataVol.VOLMIN,
+                    this.ZCDY.VOLMAX = dataVol.VOLMAX
+                    this.Reload();
+                });            
             });
-            // 获取输排水渠道数据,然后设置渠道选择框选项
-            this.axios.get("/guanqu/table/qudao_gongkuang_tree").then(res => {
-                // console.log(res);
-                this.Treedata = this.QuDao_Tree_Filter(res.data).data;
-                this.SiteiNFO.CZMC = this.QuDao_Tree_Filter(res.data).siteinfo.canal_name;
-                this.SiteiNFO.STCD = this.QuDao_Tree_Filter(res.data).siteinfo.canal_code;
-                console.log(this.QuDao_Tree_Filter(res.data));
-                // this.searchs = `&STCD=${this.QuDao_Tree_Filter(res.data).siteinfo.canal_code}`;
-                this.Reload();
-                console.log('渠道', this.QuDao_Tree_Filter(res.data));
-            });
+            // // 获取输排水渠道数据,然后设置渠道选择框选项
+            // this.axios.get("/guanqu/table/qudao_gongkuang_tree").then(res => {
+            //     // console.log(res);
+            //     this.Treedata = this.QuDao_Tree_Filter(res.data).data;
+            //     this.SiteiNFO.CZMC = this.QuDao_Tree_Filter(res.data).siteinfo.canal_name;
+            //     this.SiteiNFO.STCD = this.QuDao_Tree_Filter(res.data).siteinfo.canal_code;
+            //     // this.searchs = `&STCD=${this.QuDao_Tree_Filter(res.data).siteinfo.canal_code}`;
+            //     this.Reload();
+            // });
 
         },
         methods: {
@@ -242,15 +242,15 @@
                 console.log(column);
                 if (column.order == 'ascending') {
                     this.form.field = column.prop;
-                    this.Reload();
+                    this.ReloadSort();
                 }
                 if (column.order == 'descending') {
                     this.form.field = column.prop + ' desc';
-                    this.Reload();
+                    this.ReloadSort();
                 }
                 if (column.order == null) {
                     this.form.field = '';
-                    this.Reload();
+                    this.ReloadSort();
                 }
             },
             Menu_toggle() {
@@ -298,54 +298,104 @@
             asyncExecute(){
                 setTimeout(this.Reload, 100)
             },
-            qudao_tree(data) {
-                console.log(data);
-                if (data.bj == 0) {
-                    this.searchs = '&STCD=' + data.canal_code;
-                    this.SiteiNFO.STCD = data.canal_code;
-                    this.SiteiNFO.CZMC = data.label;
+            xzqh_tree(data){
+            console.log(data);
+            if (data.level==3) {
+                this.searchs = data.value;
+                this.siteno=data.label;
+                this.list_input.current = 1;
+                this.form.field = ''; 
+                let body = {};
+                body.STCD = this.searchs;
+                this.$GetData.Survey_Around_YXGK(null, body, false, data => {
+                    let dataVol = data.data[0]
+                    this.ZCDY.VOLMIN = dataVol.VOLMIN,
+                    this.ZCDY.VOLMAX = dataVol.VOLMAX
                     this.Reload();
+                });
+            }
+            },
+            filterNode(value, Treedata, node) {  
+                if (!value){
+                    this.filterTreeData.push(Treedata);
+                    return true;
+                } 
+                if(Treedata.label.indexOf(value) !== -1){
+                    this.filterTreeData.push(Treedata);
+                    return true;
+                }else{
+                    if(this.filterTreeData.length==0){
+                    return false;
+                    }else{
+                    var nodedata=this.filterTreeData[this.filterTreeData.length-1];
+                    if(nodedata.level==3){
+                        return false;
+                    }else{
+                        if(nodedata.level>=Treedata.level){
+                        return false;
+                        }else{
+                        var parent=Treedata.parent;
+                            if(parent.indexOf(nodedata.value)>-1){
+                            return true;
+                            }else{
+                            return false;
+                            }     
+                        }
+                    }
+                    
+                    }
+                    
                 }
-            },
-            xingzheng_tree(data) {
-                console.log(data);
-                if (data.bj == 0) {
-                    this.searchs = '&STCD=' + data.ad_cd;
-                    this.SiteiNFO.STCD = data.ad_cd;
-                    this.SiteiNFO.CZMC = data.title;
-                    this.Reload();
-                }
-            },
-            filterNode(value, Treedata, node) {
-                this.filterTreeData.push(node);
-                if (!value) return true;
-                return Treedata.label.indexOf(value) !== -1;
-            },
+                
+                },
             search() {
                 this.filterTreeData = [];
                 this.$refs.tree.filter(this.searchmsg);
-
                 if (this.searchmsg != '') {
                     this.filterTreeData.some((val, index) => {
-                        // console.log(val.expanded,val.data.bj)
-                        if (val.visible && val.data.bj == 0 && val.data.canal_code) {
-                            console.log(val);
-                            val.isCurrent = true;
-                            this.SiteiNFO.STCD = `${val.data.canal_code}`;
-                            this.SiteiNFO.CZMC = val.label;
-                            console.log("this.searchmsg", this.searchmsg)
-                            return true;
-                        } else if (val.visible && val.data.bj == 0 && val.data.ad_cd) {
-                            val.isCurrent = true;
-                            this.SiteiNFO.STCD = `${val.data.ad_cd}`;
-                            this.SiteiNFO.CZMC = val.label;
-                            return true;
-                        }
-                    })
-                    this.Reload();
-                } else {
-                    // this.SiteiNFO.STCD = '';
-                    this.Reload();
+                    if(index==0 && val.level==1){
+                    this.expandedarray=[val.id,val.children[0].id];
+                    this.searchs=val.children[0].children[0].value;
+                    this.siteno=val.children[0].children[0].label;
+                    return true;
+                    }else if(index==0 && val.level==2){
+                    this.expandedarray=[val.id];
+                    this.searchs=val.children[0].value;
+                    this.siteno=val.children[0].label;
+                    return true;
+                    }else if(index==0 && val.level==3){
+                    this.searchs = val.value;
+                    this.siteno=val.label;
+                    return true;
+                    }
+                });
+                    this.list_input.current = 1;
+                    this.form.field = ''; 
+                    let body = {};
+                    body.STCD = this.searchs;
+                    this.$GetData.Survey_Around_YXGK(null, body, false, data => {
+                        let dataVol = data.data[0]
+                        this.ZCDY.VOLMIN = dataVol.VOLMIN,
+                        this.ZCDY.VOLMAX = dataVol.VOLMAX
+                        this.Reload();
+                    });
+                }else{
+                    this.$refs.tree.root.childNodes.forEach((e)=>{
+                        e.expanded=false;
+                    }); 
+                    this.expandedarray=[this.Treedata[0].id,this.Treedata[0].children[0].id];
+                    this.searchs = this.Treedata[0].children[0].children[0].value;   
+                    this.siteno= this.Treedata[0].children[0].children[0].label; 
+                    this.list_input.current = 1;
+                    this.form.field = '';    
+                    let body = {};
+                    body.STCD = this.searchs;
+                    this.$GetData.Survey_Around_YXGK(null, body, false, data => {
+                        let dataVol = data.data[0]
+                        this.ZCDY.VOLMIN = dataVol.VOLMIN,
+                        this.ZCDY.VOLMAX = dataVol.VOLMAX
+                        this.Reload();
+                    });
                 }
             },
             timechange(date) {
@@ -373,42 +423,73 @@
                 console.log(achart);
                 achart.resize();
                 achart.setOption({
-                    title: {text: ""},
+                    title: {text: this.data2.chartName},
                     tooltip: {
                         trigger: "axis"
                     },
                     legend: {
-                        data: ["电压"]
+                        data: ["电压"],
+                        y: "bottom"
+                    },
+                    toolbox: {
+                        show: true,
+                        feature: {
+                        mark: { show: true },
+                        magicType: { show: true, type: ["line", "bar"] },
+                        saveAsImage: { show: true }
+                        }
                     },
                     calculable: true,
+                    animation: true,
                     xAxis: [
                         {
                             type: "category",
                             boundaryGap: false,
                             data: this.data2.x.list,
-                            axisLabel: {interval: parseInt(this.data2.x.list.length / 3.35), rotate: 50},
                         }
                     ],
-                    grid: { // 控制图的大小，调整下面这些值就可以，
-                        x: 70,
-                        x2: 40,
-                        y2: 100// y2可以控制 X轴跟Zoom控件之间的间隔，避免以为倾斜后造成 label重叠到zoom上
-                    },
                     yAxis: [
                         {
-                            name: "电压",
+                            name: "电压V",
                             type: "value",
                             min: this.data2.y1.min,
-                            max: this.data2.y1.max
+                            max: this.data2.y1.max,
+                            scale: true
                         },
                     ],
                     series: [
                         {
                             name: "电压",
                             type: "line",
-                            yAxisIndex: 0,
-                            data: this.data2.y1.list
-                            // data: [0.36, 0.28, 0.36, 0.02, 0.12]
+                            data: this.data2.y1.list,
+                            showSymbol: false,
+                            itemStyle : {  
+                                normal : {  
+                                    color:'#6C84CE'  
+                                }  
+                            },  
+                            markLine: {
+                            symbol:'none',
+                                itemStyle : {  
+                                                normal : {  
+                                                    lineStyle:{ 
+                                                    type:'solid', 
+                                                        color:'red',
+                                                    }  
+                                                }  
+                                            },
+                            data: [{name:"下界阈值"+this.data2.y1.markval1,
+                                    yAxis: this.data2.y1.markval1,
+                                    label: {
+                                    formatter: '{b}',
+                                    position: 'middle'
+                                    }},{name:"上界阈值"+this.data2.y1.markval2,
+                                    yAxis: this.data2.y1.markval2,
+                                    label: {
+                                    formatter: '{b}',
+                                    position: 'middle'
+                                    }}],
+                        }
                         },
                     ]
                 });
@@ -416,67 +497,89 @@
             err() {
                 this.$Message.warning('该功能还在开发中...');
             },
-            changeTree() {
-                this.qudao = !this.qudao;
-                this.xingzhengquhua = !this.xingzhengquhua;
-            },
-            Reload() {
-                console.log(this.SiteiNFO.STCD);
-                let body = {}
-                body.STCD = this.SiteiNFO.STCD
-                this.$GetData.Survey_Around_YXGK(null, body, false, data => {
-
-                    // const around = document.getElementById(`${item.STCD}_VOLMAX_VOLMIN`)
-                    let dataVol = data.data[0]
-                    this.ZCDY.VOLMIN = dataVol.VOLMIN,
-                        this.ZCDY.VOLMAX = dataVol.VOLMAX
-
-                })
-
+            ReloadSort(){
                 this.loading = true;
                 this.axios.get("/guanqu/lishigongkuang/lishibiao?_page_size=" + this.list_input.pagesize + "&_page=" + this.list_input.current, {
                     params: {
-                        // TM: 'bt,' +  + ',' + this.form.date[1],
                         _orderby: this.form.field,
-                        STCD: this.SiteiNFO.STCD,
+                        STCD: this.searchs,
                         Time_min: this.form.date[0],
                         Time_max: this.form.date[1],
                     }
                 }).then(res => {
-                    console.log(res);
-                    this.data1 = res.data.list.reverse();
-                    if (res.data.total != 0) {
-                        // this.SiteiNFO.CZMC = res.data.list[0].STNM;
-                        console.log(this.SiteiNFO.CZMC);
-                        // this.STinfo = res.data.list;
-                    }
+                    this.data1=res.data.list;
                     this.list_input.total = res.data.total;
-                    for (var i = 0; i < this.data1.length; i++) {
-                        this.data1[i].tm = this.dateFilter(this.data1[i].tm);
-                        this.data1[i].VOL = this.Float_Filter(this.data1[i].VOL, 1)
+                    // for (var i = 0; i < this.data1.length; i++) {
+                    //     this.data1[i].tm = this.dateFilter(this.data1[i].tm);
+                    //     this.data1[i].VOL = this.Float_Filter(this.data1[i].VOL, 1)
+                    // }
+                    this.loading = false;
+                });
+            },
+            Reload() {
+                this.loading = true;
+                this.axios.get("/guanqu/lishigongkuang/lishibiao?_page_size=" + this.list_input.pagesize + "&_page=" + this.list_input.current, {
+                    params: {
+                        _orderby: this.form.field,
+                        STCD: this.searchs,
+                        Time_min: this.form.date[0],
+                        Time_max: this.form.date[1],
                     }
+                }).then(res => {
+                    this.data1=res.data.list;
+                    this.list_input.total = res.data.total;
+                    // for (var i = 0; i < this.data1.length; i++) {
+                    //     this.data1[i].tm = this.dateFilter(this.data1[i].tm);
+                    //     this.data1[i].VOL = this.Float_Filter(this.data1[i].VOL, 1)
+                    // }
                     this.loading = false;
                 });
                 this.axios.get("/guanqu/lishigongkuang/lishibiao?_page=1&_page_size=99999", {
                     params: {
-                        // TM: 'bt,' + this.form.date[0] + ',' + this.form.date[1],
-                        STCD: this.SiteiNFO.STCD,
+                        STCD: this.searchs,
                         Time_min: this.form.date[0],
                         Time_max: this.form.date[1],
                     }
                 }).then(res => {
                     this.data2 = res.data.list.reverse();
+                    if(this.data2==null || this.data2.length==0){            
+                        return;
+                    }
                     for (var i = 0; i < this.data2.length; i++) {
                         this.data2[i].tm = this.dateFilter(this.data2[i].tm);
                     }
                     this.data2 = this.transform_YXGK_data_into_ehart_data(this.data2, 'zhuangtaishuju');
-                    console.log(this.transform_YXGK_data_into_ehart_data(res.data.list, 'zhuangtaishuju'));
+                    var mintime=this.data2.x.list[0].slice(0, 10),maxtime=this.data2.x.list[this.data2.x.list.length-1].slice(0, 10);
+                    var now=new Date();
+                    var nowday=this.getNowDayString(now);
+                    this.data2.chartName="电压图";
+                    this.data2.y1.markval1=this.ZCDY.VOLMIN;
+                    this.data2.y1.markval2=this.ZCDY.VOLMAX;
+                    if(this.data2.y1.min>=parseInt(this.ZCDY.VOLMIN)){
+                    this.data2.y1.min=parseInt(this.ZCDY.VOLMIN)-0.5;
+                    }
+                    if(this.data2.y1.max<=parseInt(this.ZCDY.VOLMAX)){
+                    this.data2.y1.max=parseInt(this.ZCDY.VOLMAX)+0.5;
+                    }
+                    if(mintime==nowday && maxtime==nowday){
+                        this.data2.chartName = "今日电压图";
+                        for(var i=0;i<this.data2.x.list.length;i++){
+                        var time=this.data2.x.list[i].split(" ");
+                        this.data2.x.list[i]=time[1];
+                        }
+                    }else if(mintime.slice(0,4)==maxtime.slice(0,4) && maxtime.slice(0,4)==now.getFullYear()){
+                    for(var i=0;i<this.data2.x.list.length;i++){
+                        var time=this.data2.x.list[i].substr(5);
+                        this.data2.x.list[i]=time;
+                        }
+                    }
                     this.drawchart();
                     this.data2 = {};
                 });
-                this.axios.get("/guanqu/admin/ST_StationStatusType").then(res => {
-                    this.ZCDY = res.data.rows[0];
-                });
+            },
+            //返回日期
+            getNowDayString(now){
+            return now.getFullYear()+"-"+((now.getMonth()+1)<10?"0"+(now.getMonth()+1):(now.getMonth()+1))+"-"+(now.getDate()<10?"0"+now.getDate():now.getDate());
             },
             indexMethod(index) {
                 return index + 1 + (this.list_input.pagesize * (this.list_input.current - 1));
@@ -485,13 +588,13 @@
             CurrentChange(index) {
                 // console.log(index);
                 this.list_input.current = index;
-                this.Reload();
+                this.ReloadSort();
             },
             // 处理每页显示条数切换
             PagesizeChange(pagesize) {
                 // console.log(pagesize)
                 this.list_input.pagesize = pagesize;
-                this.Reload();
+                this.ReloadSort();
             }
         },
         created() {

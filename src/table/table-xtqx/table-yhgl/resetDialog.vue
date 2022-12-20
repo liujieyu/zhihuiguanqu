@@ -1,7 +1,7 @@
 <template>
   <div style>
     <div style="display: flex;flex-wrap: wrap;">
-      <el-form ref="form" :model="form" label-width="100px" style="margin: 50px;">
+      <el-form ref="form" :model="form" label-width="100px" size="mini">
         <el-form-item label="新密码:" prop="newPasswd">
           <el-input v-model="form.newPasswd" placeholder="请输入" style="width:300px"></el-input>
         </el-form-item>
@@ -11,8 +11,8 @@
       </el-form>
     </div>
     <div style="display: flex;justify-content: flex-end;">
-      <el-button type="info" @click="del()" style>取消</el-button>
-      <el-button type="primary" @click="Edit()">确定</el-button>
+      <el-button type="info" @click="del()" size="small">取消</el-button>
+      <el-button type="primary" @click="Edit()" size="small">确定</el-button>
     </div>
   </div>
 </template>

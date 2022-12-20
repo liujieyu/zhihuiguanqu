@@ -1,14 +1,14 @@
 <template>
   <div>
-	<Breadcrumb :style="{margin: '0 0 24px 0'}">
-    <BreadcrumbItem>值班管理</BreadcrumbItem>
+	<Breadcrumb :style="{margin: '0 0 15px 0'}">
+    <BreadcrumbItem>水雨情监测</BreadcrumbItem>
     <BreadcrumbItem>雨水情报表导出</BreadcrumbItem>
     </Breadcrumb>
 	<Tabs value="warmexport">
 	  <TabPane label="雨情报表导出" name="warmexport">
 	    <WarmExport></WarmExport>
 	  </TabPane>
-    <TabPane label="水库水情报表导出" name="rsvrexport">
+    <TabPane label="水情报表导出" name="rsvrexport">
 	    <RsvrExport></RsvrExport>
 	  </TabPane>
     <TabPane label="河道水情报表导出" name="riverexport">

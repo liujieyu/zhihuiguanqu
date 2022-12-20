@@ -40,9 +40,10 @@
                 <!-- 分割线 -->
                  <div class="divider"></div>
                   <Row :gutter="16" type="flex" justify="center" align="middle">
-                    <Col>
-                      4-6月汛限水位: {{yujingdata.FWL}} m &nbsp;7-9月汛限水位：{{yujingdata.FWL79}} m
-                    </Col>
+                    <Col span="1"></Col>
+                    <Col span="8">4-6月汛限水位: {{yujingdata.FWL}}m</Col>
+                    <Col span="8">7-9月汛限水位：{{yujingdata.FWL79}}m</Col>
+                    <Col span="7">校核洪水位：{{yujingdata.XHWL}}m</Col>                   
                   </Row>
                 <!-- 分割线 -->
                 <div class="divider"></div>
@@ -149,9 +150,7 @@
                                                 style="min-width: 360px"
                                                 v-show="table.yuqing.datePickerType != 'yearrange'"
                                         ></el-date-picker>
-
-
-<!--                                        年表-->
+                                       <!--年表-->
                                         <div class="div_year" v-show="table.yuqing.datePickerType == 'yearrange'">
                                             <el-date-picker
                                                     class="wAh"
@@ -170,7 +169,6 @@
                                                     value-format="yyyy"
                                                     placeholder="选择年">
                                             </el-date-picker>
-
                                             <el-button style="margin-left: 20px"
                                                        type="primary" @click="search_yuqing('yearTable')" size="mini" plain>查询</el-button>
                                         </div>
@@ -179,13 +177,14 @@
                                 <!-- 分割线 -->
                                 <div class="divider"></div>
                                 <Row :gutter="16" type="flex" justify="end" align="middle">
-                                    <Col span="8">
+                                   <Col span="3"></Col>
+                                    <Col span="7">
                                         累计降雨:{{jiangyu_tongji.rainSum}}mm
                                     </Col>
-                                    <Col span="8">
+                                    <Col span="7">
                                         平均{{biao_yuqing}}降雨:{{jiangyu_tongji.rainVag}}mm
                                     </Col>
-                                    <Col span="8">
+                                    <Col span="7">
                                         最大{{biao_yuqing}}降雨:{{jiangyu_tongji.rainMax}}mm
                                     </Col>
                                 </Row>
@@ -265,6 +264,7 @@
                 </Button>
                 -->
                 <div>
+                  <div class="divider"></div>
                     <!-- 查询，导出行 -->
                     <Row :gutter="16" type="flex" justify="end" align="middle">
                         <Col span="2">
@@ -358,6 +358,7 @@
                 </Button>
                 -->
                 <!-- 查询&换算 -->
+                <div class="divider"></div>
                         <Row :gutter="19" type="flex" align="middle" style="margin-bottom:10px;">
                             <Col span="2">
                             <span></span>
@@ -414,7 +415,15 @@
                 <Tabs type="card">
                     <TabPane label="关系曲线">
                     <!-- 绘图 -->
-                    <div id="guanxiChart" :style="{width: '530px', height: '450px',margin: 'auto'}"></div>
+                    <div
+                        v-show="table.guanxiquxian.Rows_filter.length > 0"
+                        id="guanxiChart"
+                        :style="{width: '540px', height: '450px',margin: 'auto'}"
+                        ></div>
+                        <div id="noguanxi"
+                        v-show="table.guanxiquxian.Rows_filter.length == 0"
+                        :style="{width: '540px', height: '350px',margin: 'auto', display:'flex', alignItems:'center', justifyContent: 'center'}"
+                        ></div>
                     </TabPane>
                     <TabPane label="关系数据">
                     <!-- 表格用于展示数据 -->
@@ -567,9 +576,9 @@
                     align="center"
                     class="dt_vale"
                     style="border-right: 1px solid #EBEEF5"
-                  >{{ `2514.00m` || "&nbsp;" }}</td>
-                  <td align="right" class="dt_name">校核水位：</td>
-                  <td align="center" class="dt_vale">{{ `2524.12m` || "&nbsp;" }}</td>
+                  >{{  `${$FilterData.Float_Filter(yujingdata.SWL)} m` || "&nbsp;" }}</td>
+                  <td align="right" class="dt_name">校核洪水位：</td>
+                  <td align="center" class="dt_vale">{{ `${$FilterData.Float_Filter(yujingdata.XHWL)} m` || "&nbsp;" }}</td>
                 </tr>
                 <tr>
                   <td align="right" class="dt_name">正常蓄水位：</td>
@@ -577,7 +586,7 @@
                     align="center"
                     class="dt_vale"
                     style="border-right: 1px solid #EBEEF5"
-                  >{{ `2520.20m` || "&nbsp;" }}</td>
+                  >{{ `${$FilterData.Float_Filter(yujingdata.ZCWL)} m` || "&nbsp;" }}</td>
                   <td align="right" class="dt_name"></td>
                   <td align="center" class="dt_vale"></td>
                 </tr>
@@ -606,7 +615,7 @@
                     align="center"
                     class="dt_vale"
                   ><span :style="{
-                        color: jiangyu_warm.SIGN1 == 3?'red' :jiangyu_warm.SIGN1 == 2?'orange' : jiangyu_warm.SIGN1 == 1?'yellow' :'#606266',
+                        color: jiangyu_warm.SIGN1 == 3?'#F72323' :jiangyu_warm.SIGN1 == 2?'#F77823' : jiangyu_warm.SIGN1 == 1?'#F7ED23' :'#606266',
                         }">{{ jiangyu_warm.RAIN1 || "&nbsp;" }}</span></td>
                 </tr>
                 <tr>
@@ -616,11 +625,11 @@
                     class="dt_vale"
                     style="border-right: 1px solid #EBEEF5"
                   ><span :style="{
-                        color: jiangyu_warm.SIGN3 == 3?'red' :jiangyu_warm.SIGN3 == 2?'orange' : jiangyu_warm.SIGN3 == 1?'yellow' :'#606266',
+                        color: jiangyu_warm.SIGN3 == 3?'#F72323' :jiangyu_warm.SIGN3 == 2?'#F77823' : jiangyu_warm.SIGN3 == 1?'#F7ED23' :'#606266',
                         }">{{ jiangyu_warm.RAIN3 || "&nbsp;" }}</span></td>
                   <td align="right" class="dt_name">6小时降雨：</td>
                   <td align="center" class="dt_vale"><span :style="{
-                        color: jiangyu_warm.SIGN6 == 3?'red' :jiangyu_warm.SIGN6 == 2?'orange' : jiangyu_warm.SIGN6 == 1?'yellow' :'#606266',
+                        color: jiangyu_warm.SIGN6 == 3?'#F72323' :jiangyu_warm.SIGN6 == 2?'#F77823' : jiangyu_warm.SIGN6 == 1?'#F7ED23' :'#606266',
                         }">{{ jiangyu_warm.RAIN6 || "&nbsp;" }}</span></td>
                 </tr>
                 <tr>
@@ -630,11 +639,11 @@
                     class="dt_vale"
                     style="border-right: 1px solid #EBEEF5"
                   ><span :style="{
-                        color: jiangyu_warm.SIGN12 == 3?'red' :jiangyu_warm.SIGN12 == 2?'orange' : jiangyu_warm.SIGN12 == 1?'yellow' :'#606266',
+                        color: jiangyu_warm.SIGN12 == 3?'#F72323' :jiangyu_warm.SIGN12 == 2?'#F77823' : jiangyu_warm.SIGN12 == 1?'#F7ED23' :'#606266',
                         }">{{ jiangyu_warm.RAIN12 || "&nbsp;" }}</span></td>
                   <td align="right" class="dt_name">24小时降雨：</td>
                   <td align="center" class="dt_vale"><span :style="{
-                        color: jiangyu_warm.SIGN24 == 3?'red' :jiangyu_warm.SIGN24 == 2?'orange' : jiangyu_warm.SIGN24 == 1?'yellow' :'#606266',
+                        color: jiangyu_warm.SIGN24 == 3?'#F72323' :jiangyu_warm.SIGN24 == 2?'#F77823' : jiangyu_warm.SIGN24 == 1?'#F7ED23' :'#606266',
                         }">{{ jiangyu_warm.RAIN24 || "&nbsp;" }}</span></td>
                 </tr>
                </table>
@@ -708,6 +717,8 @@ export default {
         SIGN12:null,
         SIGN24:null,
       },
+      //降雨柱状图预警等级
+      yqyjinfo:{houryj:{},dateyj:{},periodyj:{yellow:100,orange:180,red:250},monthyj:{yellow:150,orange:250,red:400},yearyj:{yellow:1400,orange:1650,red:2000}},
       select: {
         // 当前激活的水位数据快速查询选项
         activeQuickSearchList: [],
@@ -821,21 +832,14 @@ export default {
               {
                 title: "时间",
                 key: "tm",
-                width: 150,
+                width: 140,
                 align: "center",
                 sortable: "custom"
               },
               {
-                title: "库前水位(m)",
-                width: 150,
+                title: "库水位(m)",
+                width: 110,
                 key: "RZ",
-                align: "center",
-                sortable: "custom"
-              },
-              {
-                title: "库下水位(m)",
-                width: 150,
-                key: "BLRZ",
                 align: "center",
                 sortable: "custom"
               },
@@ -859,7 +863,7 @@ export default {
               {
                 title: " ",
                 type: "index",
-                width: 50,
+                width: 60,
                 align: "center",
                 // 自定义序号
                 indexMethod(item) {
@@ -872,34 +876,34 @@ export default {
               {
                 title: "时间",
                 key: "dt",
-                width: 150,
+                width: 140,
                 align: "center",
                 sortable: "custom"
               },
               {
-                title: "库前水位(m)",
-                width: 150,
+                title: "库水位(m)",
+                width: 110,
                 key: "RZ",
                 align: "center",
                 sortable: "custom"
               },
+              // {
+              //   title: "库下水位(m)",
+              //   width: 150,
+              //   key: "BLRZ",
+              //   align: "center",
+              //   sortable: "custom"
+              // },
               {
-                title: "库下水位(m)",
-                width: 150,
-                key: "BLRZ",
-                align: "center",
-                sortable: "custom"
-              },
-              {
-                width: 160,
-                title: "平均入库流量(m³/s)",
+                width: 140,
+                title: "入库流量(m³/s)",
                 key: "INQ",
                 align: "center",
                 sortable: "custom"
               },
               {
-                width: 160,
-                title: "平均出库流量(m³)",
+                width: 140,
+                title: "出库流量(m³)",
                 key: "OTQ",
                 align: "center",
                 sortable: "custom"
@@ -910,7 +914,7 @@ export default {
               {
                 title: " ",
                 type: "index",
-                width: 50,
+                width: 60,
                 align: "center",
                 // 自定义序号
                 indexMethod(item) {
@@ -924,34 +928,34 @@ export default {
               {
                 title: "时间",
                 key: "tm",
-                width: 150,
+                width: 140,
                 align: "center",
                 sortable: "custom"
               },
               {
-                title: "库前水位(m)",
-                width: 150,
+                title: "库水位(m)",
+                width: 110,
                 key: "RZ",
                 align: "center",
                 sortable: "custom"
               },
+              // {
+              //   title: "库下水位(m)",
+              //   width: 150,
+              //   key: "BLRZ",
+              //   align: "center",
+              //   sortable: "custom"
+              // },
               {
-                title: "库下水位(m)",
-                width: 150,
-                key: "BLRZ",
-                align: "center",
-                sortable: "custom"
-              },
-              {
-                width: 170,
-                title: "平均入库流量(m³/s)",
+                width: 140,
+                title: "入库流量(m³/s)",
                 key: "INQ",
                 align: "center",
                 sortable: "custom"
               },
               {
-                width: 170,
-                title: "平均出库流量(m³)",
+                width: 140,
+                title: "出库流量(m³)",
                 key: "OTQ",
                 align: "center",
                 sortable: "custom"
@@ -962,7 +966,7 @@ export default {
               {
                 title: " ",
                 type: "index",
-                width: 50,
+                width: 60,
                 align: "center",
                 // 自定义序号
                 indexMethod(item) {
@@ -976,34 +980,34 @@ export default {
               {
                 title: "时间",
                 key: "dt",
-                width: 150,
+                width: 140,
                 align: "center",
                 sortable: "custom"
               },
               {
                 title: "库水位(m)",
-                width: 150,
+                width: 110,
                 key: "RZ",
                 align: "center",
                 sortable: "custom"
               },
+              // {
+              //   title: "库下水位(m)",
+              //   width: 150,
+              //   key: "BLRZ",
+              //   align: "center",
+              //   sortable: "custom"
+              // },
               {
-                title: "库下水位(m)",
-                width: 150,
-                key: "BLRZ",
-                align: "center",
-                sortable: "custom"
-              },
-              {
-                width: 180,
-                title: "平均入库流量(m³/s)",
+                width: 140,
+                title: "入库流量(m³/s)",
                 key: "INQ",
                 align: "center",
                 sortable: "custom"
               },
               {
-                width: 170,
-                title: "平均出库流量(m³)",
+                width: 140,
+                title: "出库流量(m³)",
                 key: "OTQ",
                 align: "center",
                 sortable: "custom"
@@ -1593,12 +1597,12 @@ export default {
               align: "center",
               render: (h, params) => {
                 console.log("params", params);
-                console.log("VOL", params.row.VOL < this.ZCDY.VOLMIN || params.row.VOL > this.ZCDY.VOLMAX ? "red" : "black");
+                console.log("VOL", params.row.VOL < this.ZCDY.VOLMIN || params.row.VOL > this.ZCDY.VOLMAX ? "#F72323" : "black");
                 return h(
                   "div",
                   {
                     style: {
-                      color: params.row.VOL < this.ZCDY.VOLMIN || params.row.VOL > this.ZCDY.VOLMAX ? "red" : "black"
+                      color: params.row.VOL < this.ZCDY.VOLMIN || params.row.VOL > this.ZCDY.VOLMAX ? "#F72323" : "black"
                     }
                   },
                   params.row.VOL
@@ -1834,7 +1838,9 @@ export default {
         FWL: null, // 4-6月汛限水位
         FWL79: null, // 7-9月汛限水位
         SJWL: null, // 设计洪水位
-        JYWL: null, // 经验水位       
+        JYWL: null, // 经验水位  
+        XHWL:null,//校核洪水位 
+        ZCWL:null,//正常蓄水位    
       },
       tableType: '',
       yqtableType: '',
@@ -2095,14 +2101,48 @@ export default {
           true
         ); // 水库水情历史统计表数据 转 ehart图形用数据 返回一个对象, 对象里分别装 Y1轴对象 Y2轴对象 X轴对象
         console.log(echartData);
-        var y1max = 2525,
+        echartData.markdata=[];
+        var y1max = Math.ceil(parseFloat(this.yujingdata.XHWL)),
             y1min = Math.floor(FilterMethods.methods.get_echart_min(echartData.y1.list));
-        if(y1min>2514){
-          y1min=2514;
-        }
         echartData.y1.max=y1max;
         echartData.y1.min=y1min;
         var mintime=echartData.x.list[0].slice(0, 10),maxtime=echartData.x.list[echartData.x.list.length-1].slice(0, 10);
+        var minmonth=mintime.split("-")[1],maxmonth=maxtime.split("-")[1];
+          echartData.y1.markval2=this.yujingdata.XHWL;
+        if((parseInt(minmonth)>=7 && parseInt(minmonth)<=9) || (parseInt(maxmonth)>=7 && parseInt(maxmonth)<=9)){
+          echartData.y1.markval=this.yujingdata.FWL79;
+        }else{
+          echartData.y1.markval=this.yujingdata.FWL;
+        }
+        //设置markLine
+                    var jhsw=new Object();
+                    jhsw.name='校核水位 '+echartData.y1.markval2;
+                    jhsw.yAxis=parseFloat(this.yujingdata.XHWL);
+                    jhsw.label={
+                           formatter: '{b}',
+                           position: 'middle',
+                    }
+                    echartData.markdata.push(jhsw);
+                    var zcsw=new Object();
+                    zcsw.name='汛限水位 '+echartData.y1.markval;
+                    zcsw.yAxis=parseFloat(echartData.y1.markval);
+                    zcsw.label={
+                           formatter: '{b}',
+                           position: 'middle',
+                    }
+                    echartData.markdata.push(zcsw);
+        if(echartData.y1.min>parseFloat(this.yujingdata.SWL)){
+          echartData.y1.min=parseFloat(this.yujingdata.SWL);
+        }else{
+          var ssw=new Object();
+                      ssw.name='死水位 '+this.yujingdata.SWL;
+                      ssw.yAxis=parseFloat(this.yujingdata.SWL);
+                      ssw.label={
+                           formatter: '{b}',
+                           position: 'middle',
+                    }
+                      echartData.markdata.push(ssw);
+        }
         var nowDate=new Date();
         var now=this.getNowDayString(nowDate);
         console.log(now);
@@ -2146,7 +2186,7 @@ export default {
             trigger: "axis"
           },
           legend: {
-            data: [echartData.y1.name, echartData.y2.name],
+            data: ["库水位"],
             y: "bottom"
           },
           toolbox: {
@@ -2180,15 +2220,30 @@ export default {
           ],
           series: [
             {
-              name: echartData.y1.name,
+              name: "库水位",
               type: "line",
-              data: echartData.y1.list
+              data: echartData.y1.list,
+              showSymbol: false,
+            smooth: true,
+            itemStyle : {  
+                normal : {  
+                    color:'#6C84CE'  
+                }  
+            },  
+            areaStyle: {},
+            markLine: {
+            symbol:'none',
+                itemStyle : {  
+                                normal : {                                    
+                                    lineStyle:{  
+                                        type:'solid',
+                                        color:'red',
+                                    }  
+                                }  
+                            },
+            data: echartData.markdata,
+          }
             },
-            {
-              name: echartData.y2.name,
-              type: "line",
-              data: echartData.y2.list
-            }
           ]
         });
       }else{
@@ -2462,6 +2517,8 @@ export default {
           this.yujingdata.FWL79 = yujingdata.FWL79;
           this.yujingdata.SJWL = yujingdata.SJWL;
           this.yujingdata.JYWL = yujingdata.JYWL;
+          this.yujingdata.XHWL=yujingdata.XHWL;
+          this.yujingdata.ZCWL=yujingdata.ZCWL;
         }
       );
     },
@@ -2477,6 +2534,7 @@ export default {
     },
     // 查询降雨信息
     search_yuqing(tableType) {
+      debugger;
         var tableType = tableType || this.select.yuqing_select;
         this.letTableLoading("yuqing"); // 表格加载中
 
@@ -2562,7 +2620,6 @@ export default {
                 body.Time_min = start.getFullYear()
                 body.Time_max = end.getFullYear()
             }
-
         }
 
         // 获取雨情历史数据
@@ -2573,11 +2630,16 @@ export default {
                 default: true,
                 myFilter: data => {
                     data.map(val => {
+                        if(val.P==''){
+                          val.P='0.0';
+                        }
+                        if(val.p==''){
+                          val.p='0.0';
+                        }
                         val.currentPage = body._page;
                         val.pageSizes = body._page_size;
                         return val;
                     });
-                    console.log(data);
                     return data;
                 }
             },
@@ -2640,7 +2702,43 @@ export default {
         if (data.length > 0) {
             // 雨情历史统计表数据 转 ehart图形用数据 返回一个对象, 对象里分别装 Y1轴对象 Y2轴对象 X轴对象
             var echartData = this.$App.transform_YQ_data_into_ehart_data(data, tableType);
-
+            var ydata=[],yjobj={};
+            switch (tableType) {
+              case "hourTable":
+                yjobj=this.yqyjinfo.houryj;
+                break;
+              case "dayTable":
+                yjobj=this.yqyjinfo.dateyj;
+                break;
+              case "tenDaysTable":
+                yjobj=this.yqyjinfo.periodyj;
+                break;
+              case "monthTable":
+                yjobj=this.yqyjinfo.monthyj;
+                break;
+              case "yearTable":
+                yjobj=this.yqyjinfo.yearyj;
+                break;
+              default: yjobj=this.yqyjinfo.houryj;
+            }
+            for(var s=0; s<echartData.y1.list.length;s++){
+              var yobj=new Object();    
+              yobj.itemStyle={color:''};          
+              var yval=echartData.y1.list[s];
+              console.log(yval);
+              yobj.value=yval;
+              if(yval<yjobj.yellow){
+                yobj.itemStyle.color="#6C84CE";
+              }else if(yval>=yjobj.yellow && yval<yjobj.orange){
+                yobj.itemStyle.color="#F7ED23";
+              }else if(yval>=yjobj.orange && yval<yjobj.red){
+                yobj.itemStyle.color="#F77823";
+              }else{
+                yobj.itemStyle.color="#F72323";
+              }
+              ydata.push(yobj);
+            }
+            echartData.y1.list=ydata;
             echartData.x.list = echartData.x.list;
             var showname=echartData.chartName;
             var mintime=echartData.x.list[0].slice(0, 13),maxtime=echartData.x.list[echartData.x.list.length-1].slice(0, 13);
@@ -2702,6 +2800,7 @@ export default {
                 tooltip: {
                     trigger: "axis"
                 },
+                color:["#6C84CE"],
                 legend: {
                     data: [echartData.y1.name],
                     y: "bottom"
@@ -2738,45 +2837,46 @@ export default {
                     {
                         name: echartData.y1.name,
                         type: "bar",
+                        barMaxWidth:50,
                         data: echartData.y1.list,
+                        showBackground: true,
+                        // itemStyle: {
+                        //     //通常情况下：
+                        //     normal: {
+                        //         //每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
+                        //         color: function (params) {
+                        //             var colorarray=[];
+                        //             switch (echartData.chartName) {
+                        //                 case "小时表":
+                        //                     if (params.data >= 25 && params.data < 50) return "#F77823";
+                        //                     if (params.data > 50) return "#F72323";
+                        //                     return "#6C84CE";
+                        //                     break;
+                        //                 case "日表":
+                        //                     if (params.data >= 25 && params.data < 50) return "#F77823";
+                        //                     if (params.data > 50) return "#F72323";
+                        //                     return "#6C84CE";
+                        //                     break;
+                        //                 case "月表":
+                        //                     if (params.data >= 100 && params.data < 250) return "#F77823";
+                        //                     if (params.data > 250) return "#F72323";
+                        //                     return "#6C84CE";
+                        //                     break;
+                        //                 case "旬表":
+                        //                     if (params.data >= 100 && params.data < 250) return "#F77823";
+                        //                     if (params.data > 250) return "#F72323";
+                        //                     return "#6C84CE";
+                        //                     break;
+                        //                 case "年表":
+                        //                     if (params.data >= 1400 && params.data < 1650) return "#F77823";
+                        //                     if (params.data > 1650) return "#F72323";
+                        //                     return "#6C84CE";
+                        //                     break;
 
-                        itemStyle: {
-                            //通常情况下：
-                            normal: {
-                                //每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
-                                color: function (params) {
-
-                                    switch (echartData.chartName) {
-                                        case "小时表":
-                                            if (params.data >= 25 && params.data < 50) return 'orange';
-                                            if (params.data > 50) return 'red';
-                                            return 'blue'
-                                            break
-                                        case "日表":
-                                            if (params.data >= 25 && params.data < 50) return 'orange';
-                                            if (params.data > 50) return 'red';
-                                            return 'blue'
-                                            break
-                                        case "月表":
-                                            if (params.data >= 100 && params.data < 250) return 'orange';
-                                            if (params.data > 250) return 'red';
-                                            return 'blue'
-                                            break
-                                        case "旬表":
-                                            if (params.data >= 100 && params.data < 250) return 'orange';
-                                            if (params.data > 250) return 'red';
-                                            return 'blue'
-                                            break
-                                        case "年表":
-                                            if (params.data >= 1400 && params.data < 1650) return 'orange';
-                                            if (params.data > 1650) return 'red';
-                                            return 'blue'
-                                            break
-
-                                    }
-                                }
-                            },
-                        }
+                        //             }
+                        //         }                                
+                        //     },
+                        // }
                     },
                 ]
             });
@@ -2854,23 +2954,23 @@ export default {
         this.search_yuqing(tableType);
     },
     // 设置降雨数据历史表默认查询日期
-            setTableDefaultDate_yuqing_historyTable() {
-                const end = new Date();
-                const start = eightPointOfTheDay();
+      setTableDefaultDate_yuqing_historyTable() {
+          const end = new Date();
+          const start = eightPointOfTheDay();
 
-                var timeSlot = [start, end];
+          var timeSlot = [start, end];
 
-                this.setTableDate("yuqing", timeSlot);
+          this.setTableDate("yuqing", timeSlot);
 
-                function eightPointOfTheDay() {
-                    var date = new Date();
-                    date.setHours(8);
-                    date.setMinutes(0);
-                    date.setSeconds(0);
-                    date.setMilliseconds(0);
-                    return date;
-                }
-            },
+          function eightPointOfTheDay() {
+              var date = new Date();
+              date.setHours(8);
+              date.setMinutes(0);
+              date.setSeconds(0);
+              date.setMilliseconds(0);
+              return date;
+          }
+      },
             // 设置降雨数据小时表默认查询日期
             setTableDefaultDate_yuqing_hourTable() {
                 const end = new Date();
@@ -3136,11 +3236,19 @@ export default {
         var echartData = this.$App.transform_YXGK_data_into_ehart_data(
           data,
           tableType
-        ); // 渠道水情历史统计表数据 转 ehart图形用数据 返回一个对象, 对象里分别装 Y1轴对象 Y2轴对象 X轴对象
+        ); // 运行工况历史统计表数据 转 ehart图形用数据 返回一个对象, 对象里分别装 Y1轴对象 Y2轴对象 X轴对象
         var mintime=echartData.x.list[0].slice(0, 10),maxtime=echartData.x.list[echartData.x.list.length-1].slice(0, 10);
         var now=new Date();
         var nowday=this.getNowDayString(now);
         echartData.chartName="电压图";
+        echartData.y1.markval1=this.ZCDY.VOLMIN;
+        echartData.y1.markval2=this.ZCDY.VOLMAX;
+        if(echartData.y1.min>=parseInt(this.ZCDY.VOLMIN)){
+          echartData.y1.min=parseInt(this.ZCDY.VOLMIN)-0.5;
+        }
+        if(echartData.y1.max<=parseInt(this.ZCDY.VOLMAX)){
+          echartData.y1.max=parseInt(this.ZCDY.VOLMAX)+0.5;
+        }
         if(mintime==nowday && maxtime==nowday){
             echartData.chartName = "今日电压图";
             for(var i=0;i<echartData.x.list.length;i++){
@@ -3199,7 +3307,35 @@ export default {
             {
               name: echartData.y1.name,
               type: "line",
-              data: echartData.y1.list
+              data: echartData.y1.list,
+            showSymbol: false,
+            itemStyle : {  
+                normal : {  
+                    color:'#6C84CE'  
+                }  
+            },  
+            markLine: {
+            symbol:'none',
+                itemStyle : {  
+                                normal : {  
+                                    lineStyle:{ 
+                                      type:'solid', 
+                                        color:'red',
+                                    }  
+                                }  
+                            },
+            data: [{name:"下界阈值"+echartData.y1.markval1,
+                    yAxis: echartData.y1.markval1,
+                    label: {
+                      formatter: '{b}',
+                      position: 'middle'
+                    }},{name:"上界阈值"+echartData.y1.markval2,
+                    yAxis: echartData.y1.markval2,
+                    label: {
+                      formatter: '{b}',
+                      position: 'middle'
+                    }}],
+          }
             }
           ]
         });
@@ -3298,6 +3434,21 @@ export default {
                 y3: new Object(),
                 markdata:[],
             }
+            if(_data.length==0){
+              var now=new Date();
+                var nowday=this.getNowDayString(now);
+                let time = this.$FilterData.elDatePicker_Filter(
+                  this.table.guanxiquxian.date
+                );
+                time = time.split(',');
+                var begintime=time[1].slice(0,10);
+                var endtime=time[2].slice(0,10);
+                if(begintime==nowday && endtime==nowday){
+                  document.getElementById("noguanxi").innerHTML = "暂无今天数据";
+                }else{
+                  document.getElementById("noguanxi").innerHTML = "暂无数据";
+                }     
+            }
                     // y1轴
                     echartData.y1.name = "水位"; // Y1轴名字
 
@@ -3306,38 +3457,74 @@ export default {
                             return 0;
                         }
                         return parseFloat(val).toFixed(2);
-                    });
+                    });                                        
+                      // x轴
+                        echartData.x.list = _data.map((val, index, array) => {
+                            var time = val.TM.substring(0,16);
+                            return time;
+                        });
+                      console.log(echartData.x.list);
+                      echartData.y1.markval2=this.yujingdata.XHWL;
+                      var mintime=echartData.x.list[0].slice(0, 10),maxtime=echartData.x.list[echartData.x.list.length-1].slice(0, 10);
+                      var minmonth=mintime.split("-")[1],maxmonth=maxtime.split("-")[1];
+                      if((parseInt(minmonth)>=7 && parseInt(minmonth)<=9) || (parseInt(maxmonth)>=7 && parseInt(maxmonth)<=9)){
+                        echartData.y1.markval=this.yujingdata.FWL79;
+                      }else{
+                        echartData.y1.markval=this.yujingdata.FWL;
+                      } 
+                      var nowDate=new Date();
+                      var now=this.getNowDayString(nowDate);
+                      echartData.right=38;
+                      console.log(now);
+                      if(mintime==now && maxtime==now){
+                         echartData.right=22;
+                          for(var i=0;i<echartData.x.list.length;i++){
+                            var time = echartData.x.list[i].split(" ");
+                            echartData.x.list[i]=time[1];
+                          }
+                      }else if(mintime.slice(0,4)==maxtime.slice(0,4) && maxtime.slice(0,4)==nowDate.getFullYear()){
+                          for(var i=0;i<echartData.x.list.length;i++){
+                            var time = echartData.x.list[i].substr(5);
+                            echartData.x.list[i]=time;
+                          }
+                      }
                     //设置markLine
                     var jhsw=new Object();
-                    jhsw.name='校核水位 '+2524.12;
-                    jhsw.yAxis=2524.12;
+                    jhsw.name='校核水位 '+echartData.y1.markval2;
+                    jhsw.yAxis=parseFloat(this.yujingdata.XHWL);
                     jhsw.label={
                            formatter: '{b}',
                            position: 'middle',
-                           color:'orange'
+                           color:'red'
                     }
                     echartData.markdata.push(jhsw);
                     var zcsw=new Object();
-                    zcsw.name='正常蓄水位 '+2520.2;
-                    zcsw.yAxis=2520.2;
+                    zcsw.name='汛限水位 '+echartData.y1.markval;
+                    zcsw.yAxis=parseFloat(echartData.y1.markval);
                     zcsw.label={
                            formatter: '{b}',
                            position: 'middle',
-                           color:'orange'
+                           color:'red'
                     }
                     echartData.markdata.push(zcsw);
-                    var y1max = 2525,
+                    var y1max = Math.ceil(FilterMethods.methods.get_echart_max(echartData.y1.list)),
                         y1min = Math.floor(FilterMethods.methods.get_echart_min(echartData.y1.list));
-                    if(y1min>2514){
-                      y1min=2514;
+                    if(y1max<parseFloat(this.yujingdata.XHWL)){
+                        y1max=Math.ceil(parseFloat(this.yujingdata.XHWL));
+                      }
+                      if(y1min>echartData.y1.markval){
+                        y1min=Math.floor(echartData.y1.markval);
+                      }
+                    if(y1min>parseFloat(this.yujingdata.SWL)){
+                      y1min=this.yujingdata.SWL;
                     }else{
                       var ssw=new Object();
-                      ssw.name='死水位 '+2514;
-                      ssw.yAxis=2514;
+                      ssw.name='死水位 '+this.yujingdata.SWL;
+                      ssw.yAxis=parseFloat(this.yujingdata.SWL);
                       ssw.label={
                            formatter: '{b}',
                            position: 'middle',
-                           color:'orange'
+                           color:'red'
                     }
                       echartData.markdata.push(ssw);
                     }
@@ -3357,14 +3544,7 @@ export default {
                     var y2max = Math.ceil(FilterMethods.methods.get_echart_max(echartData.y2.list)),
                         y2min = Math.floor(FilterMethods.methods.get_echart_min(echartData.y2.list));
                     echartData.y2.max = y2max; // y2最大值
-                    echartData.y2.min = y2min < 0 ? 0 : y2min; // y2最小值
-
-                    // x轴
-                    echartData.x.list = _data.map((val, index, array) => {
-                        // var time = `${index}:00 ~ ${index + 1}:00`;
-                        var time = val.TM;
-                        return time;
-                    });
+                    echartData.y2.min = y2min < 0 ? 0 : y2min; // y2最小值                    
                     var datalist1=[];
                     var datalist2=[];
                     for(var i=0;i<echartData.x.list.length;i++){
@@ -3382,7 +3562,7 @@ export default {
     createKrchart(echartData){
       var myChart = this.$echarts.init(document.getElementById("guanxiChart"));
       myChart.setOption({
-        title: { text: "" },
+        title: { text: "水位库容曲线图" },
         tooltip: {
           trigger: "axis",
           axisPointer: {
@@ -3390,31 +3570,40 @@ export default {
          }
         },
         legend: {
-          data: [ echartData.y1.name, echartData.y2.name ]
+          data: [ echartData.y1.name, echartData.y2.name ],
+          bottom:-5
         },
+        toolbox: {
+                show: true,
+                feature: {
+                  mark: { show: true },
+                  magicType: { show: true, type: ["line", "bar"] },
+                  saveAsImage: { show: true }
+                }
+              },
         axisPointer: {
         link: {xAxisIndex: 'all'}
         },
         grid: [{
         left: 38,
-        right: 18,
+        right: echartData.right,
         height: '34%'
         }, {
         left: 38,
-        right: 18,
-        top: '60.1%',
-        height: '33.5%'
+        right: echartData.right,
+        top: '59%',
+        height: '34%'
        }],
         xAxis: [
         {
-            type: 'time',
+            //type: 'time',
             boundaryGap: false,
             data: echartData.x.list,
             //axisLabel:{interval:parseInt(echartData.x.list.length/5),rotate:0},
         },
         {
             gridIndex: 1,
-            type: 'time',
+            //type: 'time',
             boundaryGap: false,
             data: echartData.x.list,
             position: 'bottom'
@@ -3442,14 +3631,22 @@ export default {
             name: echartData.y1.name,
             type: "line",
             yAxisIndex: 0,
-            smooth:true,
             data:echartData.y1.list,
+            showSymbol: false,
+            smooth: true,
+            itemStyle : {  
+                normal : {  
+                    color:'#6C84CE'  
+                }  
+            },  
+            areaStyle: {},
             markLine : {
                 symbol:'none',
                 itemStyle : {  
                                 normal : {  
                                     lineStyle:{  
-                                        color:'orange',
+                                      type:'solid',
+                                        color:'red',
                                     }  
                                 }  
                             },
@@ -3461,8 +3658,32 @@ export default {
             type: "line",
             xAxisIndex: 1,
             yAxisIndex: 1,
-            smooth:true,
-            data:echartData.y2.list
+            data:echartData.y2.list,
+            showSymbol: false,
+            smooth: true,
+            itemStyle : {  
+                normal : {  
+                    color:'#91CC75'  
+                }  
+            },  
+            areaStyle: {},
+            markLine: {
+            symbol:'none',
+                itemStyle : {  
+                                normal : {  
+                                    lineStyle:{ 
+                                        type:'solid', 
+                                        color:'red',
+                                    }  
+                                }  
+                            },
+            data: [{name:"防洪库容820.50",
+                    yAxis: 820.5,
+                    label: {
+                      formatter: '{b}',
+                      position: 'middle'
+                    }}],
+          }
           }
         ]
       });
@@ -3517,15 +3738,15 @@ export default {
     }
     if(level==1){
       this.jiangyu_warm.LEVEL="黄色预警";
-      this.jiangyu_warm.COLOR="yellow";
+      this.jiangyu_warm.COLOR="#F7ED23";
     }
     if(level==2){
       this.jiangyu_warm.LEVEL="橙色预警";
-      this.jiangyu_warm.COLOR="orange";
+      this.jiangyu_warm.COLOR="#F77823";
     }
     if(level==3){
       this.jiangyu_warm.LEVEL="红色预警";
-      this.jiangyu_warm.COLOR="red";
+      this.jiangyu_warm.COLOR="#F72323";
     }
     this.jiangyu_warm.SIGN1=this.info.rowinfo.SIGN1;
     this.jiangyu_warm.SIGN3=this.info.rowinfo.SIGN3;
@@ -3589,9 +3810,18 @@ export default {
           this.tableTypeOnChange_shuiqing(this.info.rowinfo.tableType.sksq); // 设置 默认的水情历史数据表
         // 设置水库水情预警信息
         this.set_SKSQ_alarmInfo(this.siteInfo.STCD);
-
-        this.tableTypeOnChange_yuqing(this.info.rowinfo.tableType.yq); // 设置 默认的雨情历史数据表
-
+        this.axios.get("/alarm/rainalarm", {
+            params: {stcd:this.siteInfo.STCD}
+        }).then(res => {
+            var data=res.data.rows;
+            this.yqyjinfo.houryj.yellow=data[0].OH_P;
+            this.yqyjinfo.houryj.orange=data[1].OH_P;
+            this.yqyjinfo.houryj.red=data[2].OH_P;
+            this.yqyjinfo.dateyj.yellow=data[0].OD_P;
+            this.yqyjinfo.dateyj.orange=data[1].OD_P;
+            this.yqyjinfo.dateyj.red=data[2].OD_P;
+            this.tableTypeOnChange_yuqing(this.info.rowinfo.tableType.yq); // 设置 默认的雨情历史数据表
+        });
         // 设置状态数据表默认查询日期
         this.setTableDefaultDate_zhuangtaishuju();
         // 查询状态数据表的数据

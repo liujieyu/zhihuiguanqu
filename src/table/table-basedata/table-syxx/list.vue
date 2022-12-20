@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Breadcrumb :style="{margin: '0 0 24px 0'}">
+    <Breadcrumb :style="{margin: '0 0 15px 0'}">
             <BreadcrumbItem>基础数据</BreadcrumbItem>
             <BreadcrumbItem>水库信息</BreadcrumbItem>
         </Breadcrumb>

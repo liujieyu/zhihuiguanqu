@@ -9,6 +9,34 @@
     </div>
     <div ref="center" :style="{'display':'inline-block','height':theight+'px','width':cwidth+'px','z-index':'3','margin-left':lwidth+'px'}">
       <div style="color:#fff;text-shadow:5px 2px 6px #000;text-align:center;z-index:10;position:relative;top:25px;"><h1>宁乡市小型水库监测预警平台</h1></div>
+      <div style="text-align:center;z-index:10;position:relative;">
+        <table cellspacing="8" style="color:#F7ED23;font-family:Microsoft YaHei;font-weight:bold;font-size:19px;text-align:center;z-index:10;position:relative;top:50px;text-shadow: 0 0 5px #083BD6, 0 0 10px #083BD6, 0 0 15px #083BD6, 0 0 20px #000080, 0 0 30px #000080;margin-left:20%;">
+          <tr>
+            <td></td>
+            <td>小型水库</td>
+            <td>小I型水库</td>
+            <td>小II型水库</td>
+          </tr>
+          <tr>
+            <td align="right">水库总数</td>
+            <td>58座</td>
+            <td>12座</td>
+            <td>46座</td>
+          </tr>
+          <tr>
+            <td align="right">水雨情监测</td>
+            <td>47座</td>
+            <td>12座</td>
+            <td>35座</td>
+          </tr>
+          <tr>
+            <td align="right">大坝安全监测</td>
+            <td>38座</td>
+            <td>10座</td>
+            <td>28座</td>
+          </tr>
+        </table>
+      </div>
       <div class="switch" @click="switchleft" ref="switchleft">
           <i class="el-icon-d-arrow-left" v-if="showleft"></i>
           <i class="el-icon-d-arrow-right" v-if="!showleft"></i>
@@ -31,6 +59,11 @@
       </el-popover>
     </div>
     <div ref="right" :style="{'display':'inline-block','height':theight+'px','width':lwidth+'px','z-index':'3','position':'absolute','top':'0px','right':'0px'}" v-show="showright">
+      <div ref="sllchart" :style="{'width':lwidth+'px','height':(subheight4-1)+'px','margin-bottom':'1px'}" class="subback"></div>
+      <div ref="slylchart" :style="{'width':lwidth+'px','height':(subheight4-1)+'px','margin-bottom':'1px'}" class="subback"></div>
+      <div ref="wybxchart" :style="{'width':lwidth+'px','height':(subheight4-1)+'px','margin-bottom':'1px'}" class="subback"></div>
+      <div ref="cjbxchart" :style="{'width':lwidth+'px','height':(subheight4)+'px'}" class="subback"></div>
+      <!--  原水雨情汛情发布
       <div ref="table" :style="{'width':lwidth+'px','height':(theight*0.65-1)+'px','margin-top':'0px','text-align':'center'}" class="subback">
         <div style="color:#fff;font-size:14px;font-weight:bold;padding-top:5px;padding-bottom:5px;text-align:center;">今日汛情</div>
         <el-table
@@ -65,6 +98,7 @@
       <div ref="rainzzchart" :style="{'width':lwidth+'px','height':(theight*0.35)+'px'}" class="subback">
                
       </div>  
+      -->
     </div>
     <audio id="audio" controls="controls" hidden :src="audiosrc"></audio>
   </div>
@@ -82,6 +116,7 @@ export default {
             tableheight:window.screen.height*0.334*0.9-80,
             subheight1:window.screen.height*0.30,
             subheight3:window.screen.height*0.35,
+            subheight4:window.screen.height*0.25,
             lwidth:window.screen.width*0.28125,
             cwidth:window.screen.width*0.4375,
             imgwidth:window.screen.height*2000/1362,
@@ -114,8 +149,10 @@ export default {
   mixins: [FilterMethods, GetDataMethods],
   mounted() {
       this.chartRealData();
+      this.chartSafeData();
       setInterval(() => {
           this.chartRealData();
+          this.chartSafeData();
         }, 1000*60*5); 
   },
   methods: {
@@ -131,6 +168,24 @@ export default {
               el.msRequestFullscreen()            
             }
       },
+    //大坝安全统计数据
+    chartSafeData(){
+      this.axios.get('/guanqu/safechart/tongji').then(res => {
+        var data=res.data;
+        //渗流量饼状图数据
+        var slllist=data.slldata;
+        this.loadSafeData("渗流量预警分布图",slllist,this.$refs.sllchart);
+        //渗流压力饼状图数据
+        var slyllist=data.slyldata;
+        this.loadSafeData("渗流压力预警分布图",slyllist,this.$refs.slylchart);
+        //位移变形饼状图数据
+        var wybxlist=data.wybxdata;
+        this.loadSafeData("位移变形预警分布图",wybxlist,this.$refs.wybxchart);
+        //沉降变形饼状图数据
+        var cjbxlist=data.cjbxdata;
+        this.loadSafeData("沉降变形预警分布图",cjbxlist,this.$refs.cjbxchart);
+      });
+    },
     //获取仪表图实时数据
     chartRealData(){
       this.axios.get('/guanqu/system/chartdata').then(res => {
@@ -181,6 +236,18 @@ export default {
                  colspan: _col
              }
          }
+    },
+    //生成大坝安全饼状图
+    loadSafeData(chartname,safelist,chartobj){
+       var echartData={y:{list:[]},titles:[],title:chartname};     
+      for(var i=0;i<safelist.length;i++){
+        var p1=new Object();
+        p1.value=safelist[i].TOTAL;
+        p1.name=safelist[i].TITLE;
+        echartData.y.list.push(p1);
+        echartData.titles.push(safelist[i].TITLE);
+      }
+      this.createSafePiechart(echartData,chartobj);
     },
     //生成水情饼状图
     loadWaterData(sqlist){
@@ -378,7 +445,7 @@ export default {
         var option = {
             // 标题
             title: {
-                text: '站点运行工况故障分布图',
+                text: '运行工况故障分布图',
                  x: 'center',
                  top: 10,
                  textStyle: {
@@ -498,7 +565,7 @@ export default {
         var option = {
             // 标题
             title: {
-                text: '站点降雨预警分布图',
+                text: '雨情预警分布图',
                  x: 'center',
                  top: 10,
                  textStyle: {
@@ -618,7 +685,7 @@ export default {
         var option = {
             // 标题
             title: {
-                text: '站点水位超汛限预警分布图',
+                text: '水情预警分布图',
                  x: 'center',
                  top: 10,
                  textStyle: {
@@ -646,8 +713,8 @@ export default {
             series: [{
                 name: '分布情况',
                 type: 'pie',
-                radius : '71%',
-                center: ['51%', '56%'],
+                radius : '76%',
+                center: ['45%', '55%'],
                 data: edata.y.list,
                  label: {
                 normal: {
@@ -657,13 +724,96 @@ export default {
                 }
             },
             labelLine: {
+                show:false,
                 normal: {
                     lineStyle: {
                         color: 'rgba(255, 255, 255, 1)'
                     },
                     smooth: 0.2,
-                    length: 10,
-                    length2: 20
+                    length: 1,
+                    length2: 0
+                }
+            },
+                itemStyle: {
+                    emphasis: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(255, 255, 255, 0.9)'
+                    },
+                    normal:{ 
+                        label:{ 
+                            show: true, 
+                            formatter: '{b}:{c}({d}%)'
+                        }, 
+                        labelLine :{show:true},
+                        // 设置扇形的阴影
+                        shadowBlur: 30,
+                        shadowColor: 'rgba(6,121,159,0.8)', 
+                        shadowOffsetX: -10,
+                        shadowOffsetY: 10
+                    }
+                } 
+            }
+            ]
+        };
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);           
+    },
+  //渗流量统计图数据
+  //大坝安全统计图
+   createSafePiechart(edata,chartobj){
+    var myChart = this.$echarts.init(chartobj);
+        // 指定图表的配置项和数据
+        var option = {
+            // 标题
+            title: {
+                text: edata.title,
+                 x: 'center',
+                 top: 10,
+                 textStyle: {
+                    fontSize: 14,
+                    fontWeight: 'bold',
+                    color:'#fff',
+                  },
+            },
+            //自定义的颜色
+            color:[ '#12d0ff','#ef2424'],
+            // 图例
+            legend: {
+                data: edata.titles,
+                orient: 'vertical',
+                x:'right',
+                y:'center',
+                textStyle:{
+                    color:'#fff'
+                }
+            },
+            grid: {  
+                bottom:'2%',
+            },
+            // 数据
+            series: [{
+                name: '分布情况',
+                type: 'pie',
+                radius : '73%',
+                center: ['46%', '56%'],
+                data: edata.y.list,
+                 label: {
+                normal: {
+                    textStyle: {
+                        color: 'rgba(255, 255, 255, 1)'
+                    }
+                }
+            },
+            labelLine: {
+                show:false,
+                normal: {
+                    lineStyle: {
+                        color: 'rgba(255, 255, 255, 1)'
+                    },
+                    smooth: 0.2,
+                    length: 1,
+                    length2: 0
                 }
             },
                 itemStyle: {
@@ -815,7 +965,6 @@ border-radius: 50%;//圆角百分比
 width:100%;
 height: 100vh;
 margin: 0 auto;
-background:;
 background: linear-gradient(to bottom, #0068DE, #11C9FD);
   background: -ms-linear-gradient(top, #0068DE, #11C9FD);
   background: -webkit-linear-gradient(top, #0068DE, #11C9FD);
@@ -834,10 +983,10 @@ z-index: 2;
 }
 .subback{
   opacity:0.9;
-  background: linear-gradient(to bottom, #1C8173, #0E4F47);
-  background: -ms-linear-gradient(top, #1C8173, #0E4F47);
-  background: -webkit-linear-gradient(top, #1C8173, #0E4F47);
-  background: -moz-linear-gradient(top, #1C8173, #0E4F47);
+  background: linear-gradient(to bottom, #2A709E, #0E3B4F);//#1C8173   #0E4F47     #1c6A81
+  background: -ms-linear-gradient(top, #2A709E, #0E3B4F);
+  background: -webkit-linear-gradient(top, #2A709E, #0E3B4F);
+  background: -moz-linear-gradient(top, #2A709E, #0E3B4F);
   box-shadow: 0 0 1px #fff;
 }
 .raindiv{
@@ -983,7 +1132,7 @@ opacity:0.85;
     background: #EAFCF9;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
-    border: #147063 2px solid;
+    border: #145170 2px solid;//#147063
     border-left: 0;
 
     &:hover {
@@ -1000,10 +1149,10 @@ opacity:0.85;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #EAFCF9;
+    background: #EAF8FC;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
-    border: #147063 2px solid;
+    border: #145170 2px solid;
     border-right: 0;
 
     &:hover {

@@ -1,9 +1,9 @@
 <template>
     <div>
-        <Content :style="{padding: '24px', background: '#fff'}">
+        <Content :style="{padding: '12px 24px 24px 24px', background: '#fff'}">
                     <Row type="flex" style="margin: 10px;" :gutter="16" justify="start">
                         <Col>
-                        时间:
+                        日期:
                             <el-date-picker
                                     style="width: 180px"
                                     v-model="form.date"
@@ -17,22 +17,22 @@
                             </el-date-picker>
                         </Col>
                         <Col>
-                            行政区划:
                             <!-- 地址级联选择器 -->
                             <el-cascader
                               clearable
                               size="small"
-                              placeholder="请选择地址"
-                              style="width: 150px"
+                              placeholder="所属行政区划"
+                              style="width: 200px"
                               :options="form.adressList"
                               v-model="form.model_adress"
                               @change="XZQHsearch"
                               change-on-select
                             ></el-cascader>
                         </Col>
+                        <!-- 渠道级联选择器
                         <Col>
                             渠道:
-                            <!-- 渠道级联选择器 -->
+                            
                             <el-cascader
                               clearable
                               style="width: 150px"
@@ -44,112 +44,94 @@
                               change-on-select
                             ></el-cascader>
                         </Col>
+                         -->
                         <Col>
-                            归属单位:
-                            <Select v-model="form.gsdw" style="width:120px;margin-left: 5px;" @on-change="STGRsearch" clearable>
+                            <Select v-model="form.gsdw" style="width:120px;margin-left: 5px;" @on-change="STGRsearch" clearable placeholder="归属单位">
                                 <Option v-for="item in gsdwlist" :value="item.value" :key="item.value">{{ item.label }}</Option>
                             </Select>
                         </Col>
                         <Col>
-                            水库等级:
-                            <Select v-model="form.skdj" style="width:120px;margin-left: 5px;" @on-change="LEVELsearch" clearable>
+                            <Select v-model="form.skdj" style="width:120px;margin-left: 5px;" @on-change="LEVELsearch" clearable placeholder="水库等级">
                                 <Option v-for="item in skdjlist" :value="item.value" :key="item.value">{{ item.label }}</Option>
                             </Select>
                         </Col>
-                        <Col class="btn_baobiao" style="display: flex;justify-content: flex-start;">
+                        <Col>
                         <!-- 站名模糊搜索 -->
-                            <Input search enter-button suffix="ios-search" placeholder="请输入站名" style="width: auto;margin-right: 10px;" @on-search="search" v-model="form.searchmsg" />
+                            <Input search enter-button suffix="ios-search" placeholder="请输入站名" style="width: 160px;" @on-search="search" v-model="form.searchmsg" />
+                            <!--
                             <Button type="primary" style="width: auto; margin-right: 10px" @click="err">导出</Button>
                             <Button type="primary" @click="optable" style="width: auto;margin-right: 0px;">综合报表</Button>
+                            -->
                         </Col>
                     </Row>
-                    <Divider style="margin: 20px 0;"/>
+                   <Divider style="margin-top:0px;"/>
                     <Row style="font-size: 16px;">
                         <!-- <Col style="text-align: center;margin: 0 0 10px 0;">
                            共{{Tables.total}}个站点
                         </Col> -->
                         <Col style='font-size: 14px;' class="borsLine">总站数：{{data.length}}&nbsp;
-                        单位：水位 m，流量m³/s，水量 10⁶m³</Col>
+                        单位：库水位 m，流量m³/s，蓄水量 万m³</Col>
                     </Row>
+                    <!--@cell-click="cellclick"-->
                     <el-table
                         :data="data"
                         border
-                        height="480"
-                        v-loading="loading"
-                        @cell-click="cellclick"
+                        :height="theight"
+                        v-loading="loading"                        
                         @sort-change="sort_change"
                         style="width: 100%">
                         <el-table-column
                           label=" "
                           type="index"
                           align="center"
-                          width="65"
+                          width="55"
+                          fixed="left"
                           :index="indexMethod">
                         </el-table-column>
                         <el-table-column
                           prop="STNM"
                           label="站名"
+                          min-width="110"
                           sortable
+                          fixed="left"
                           align="center">
                         </el-table-column>
                         <el-table-column
                           prop="RZ"
-                          label="平均水位"
+                          label="库水位"
+                          min-width="90"
+                          fixed="left"
                           sortable
                           align="center">
                         </el-table-column>
                         <el-table-column
                           prop="RWPTN"
                           label="水势"
+                          min-width="80"
                           sortable
                           align="center"
                           >
                         </el-table-column>
                         <el-table-column
                           prop="INQ"
-                          label="平均入库流量"
+                          label="入库流量"
+                          min-width="110"
                           sortable
                           align="center"
                           >
                         </el-table-column>
                         <el-table-column
                           prop="OTQ"
-                          label="平均出库流量"
+                          label="出库流量"
+                          min-width="110"
                           sortable
                           align="center"
                           >
                         </el-table-column>
                         <el-table-column
                           prop="DW"
-                          label="日蓄水量"
-                          sortable
-                          align="center"
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="Max_RZ"
-                          label="日最高水位"
-                          sortable
-                          align="center"
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="Max_TM"
-                          label="日最高水位时刻"
-                          sortable
-                          align="center"
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="Min_RZ"
-                          label="日最低水位"
-                          sortable
-                          align="center"
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="Min_TM"
-                          label="日最低水位时刻"
+                          label="蓄水量"
+                          min-width="90"
                           sortable
                           align="center"
                           >
@@ -157,6 +139,7 @@
                         <el-table-column
                           prop="FWL"
                           label="汛限水位4-6月"
+                          min-width="140"
                           sortable
                           align="center"
                           >
@@ -164,13 +147,47 @@
                         <el-table-column
                           prop="FWL79"
                           label="汛限水位7-9月"
+                          min-width="140"
                           sortable
                           align="center"
                           >
                         </el-table-column>
                         <el-table-column
+                          prop="Max_RZ"
+                          label="最高水位"
+                          min-width="110"
+                          sortable
+                          align="center"
+                          >
+                        </el-table-column>
+                        <el-table-column
+                          prop="Max_TM"
+                          label="最高水位时间"
+                          min-width="130"
+                          sortable
+                          align="center"
+                          >
+                        </el-table-column>
+                        <el-table-column
+                          prop="Min_RZ"
+                          label="最低水位"
+                          min-width="110"
+                          sortable
+                          align="center"
+                          >
+                        </el-table-column>
+                        <el-table-column
+                          prop="Min_TM"
+                          label="最低水位时间"
+                          min-width="130"
+                          sortable
+                          align="center"
+                          >
+                        </el-table-column>                       
+                        <el-table-column
                           prop="LEVEL"
                           label="水库等级"
+                          min-width="110"
                           sortable
                           align="center"
                           >
@@ -178,10 +195,12 @@
                         <el-table-column
                           prop="STGR"
                           label="归属单位"
+                          min-width="110"
                           sortable
                           align="center"
                           >
                         </el-table-column>
+                        <!--
                         <el-table-column
                           prop="Canal_Name"
                           label="渠道"
@@ -189,9 +208,11 @@
                           align="center"
                           >
                         </el-table-column>
+                        -->
                         <el-table-column
                           prop="AD_NM"
-                          label="地址"
+                          label="所属行政区划"
+                          min-width="140"
                           sortable
                           align="center"
                           >
@@ -206,6 +227,7 @@
                             :page-size="list_input.pagesize" :page-size-opts="list_input.pagesizeopts"
                             @on-change="CurrentChange"
                             @on-page-size-change="PagesizeChange"
+                            size="small"
                             show-total
                             show-elevator
                             ></Page>
@@ -294,6 +316,7 @@
         data(){
             return{
                 loading:false,
+                theight:window.screen.height-435,
                 dialog_detail_showing:false,
                 gsdwlist:[
                 {
@@ -331,24 +354,12 @@
                 ],
                 skdjlist:[
                 {
-                    value:'1',
-                    label:'大型'
-                },
-                {
-                    value:'2',
-                    label:'中型'
-                },
-                {
                     value:'3',
                     label:'小I型'
                 },
                 {
                     value:'4',
                     label:'小II型'
-                },
-                {
-                    value:'5',
-                    label:'山塘'
                 },
                 ],
                 Tables:{
@@ -395,6 +406,14 @@
             var date = new Date();
             var Month = date.getMonth()+1;
             this.form.date = date.getFullYear()+'-'+Month+'-'+date.getDate();
+            this.getTableData_WRP_AD_B(data => {
+                  //this.form.adressList = data;
+              this.form.adressList = data[0].children;
+            });
+                // 获取输排水渠道数据,然后设置渠道选择框选项
+                // this.getTableData_WRP_IrrBTCanalSystem(data => {
+                //   this.form.qudaoList = data;
+                // });
             this.Reload();
         },
          // 引入过滤方法到此组件
@@ -483,18 +502,18 @@
                 if (this.form.model_adress.length == 0) {
                   this.form.xzqh = '';
                 }
+                // if (this.form.model_adress.length == 1) {
+                //   var str1 = this.form.model_adress[0];
+                //   str1 = str1.substring(0,6);
+                //   this.form.xzqh = str1;
+                // }
                 if (this.form.model_adress.length == 1) {
-                  var str1 = this.form.model_adress[0];
-                  str1 = str1.substring(0,6);
-                  this.form.xzqh = str1;
-                }
-                if (this.form.model_adress.length == 2) {
-                  var str2 = this.form.model_adress[1];
+                  var str2 = this.form.model_adress[0];
                   str2 = str2.substring(0,9);
                   this.form.xzqh = str2;
                 }
-                if (this.form.model_adress.length == 3) {
-                  var str3 = this.form.model_adress[2];
+                if (this.form.model_adress.length == 2) {
+                  var str3 = this.form.model_adress[1];
                   str3 = str3.substring(0,12);
                   this.form.xzqh = str3;
                 }
@@ -536,14 +555,7 @@
                     }
                     this.data = aList
                     this.Tables.title = this.data[0].TM;
-                });
-                this.getTableData_WRP_AD_B(data => {
-                  this.form.adressList = data;
-                });
-                // 获取输排水渠道数据,然后设置渠道选择框选项
-                this.getTableData_WRP_IrrBTCanalSystem(data => {
-                  this.form.qudaoList = data;
-                });
+                });               
                 this.axios.get('/guanqu/shuikushuiqing/lishi_ribiao?_page_size=99999'+this.searchs,{params:{TM:this.form.date,ADDVCD:this.form.xzqh,Canal_Code:this.form.qd,STGR:this.form.gsdw,LEVEL:this.form.skdj}}).then((res)=>{
                     console.log(res);
                     this.loading = false;

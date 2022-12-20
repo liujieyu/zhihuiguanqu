@@ -22,23 +22,23 @@
                             @select="handleSelect"
                     >
 
-                        <el-submenu :index="item.index" v-for="item in data" @click="fclassmenu(item)">
+                        <el-submenu :index="item.index" v-for="item in data" :id="item.id" @click="fclassmenu(item)">
                             <template slot="title">
                                 <i class="el-icon-menu" style="color:#B5BBC9;"></i>
                                 <span>{{item.name}}</span>
                             </template>
-                            <el-menu-item v-if="item2.children.length==0" :index="index" v-for="item2 in item.children" @click="sclassmenu(item2)">
+                            <el-menu-item v-if="item2.children.length==0" :index="index" :id="item.id" v-for="item2 in item.children" @click="sclassmenu(item2)">
                                 <template slot="title">
                                     <i class="el-icon-document" style="color:#8BAAC9;"></i>
                                     <span>{{item2.name}}</span>
                                 </template>
                             </el-menu-item>
-                            <el-submenu v-if="item2.children.length>0" :index="item2.id" v-for="item2 in item.children">
+                            <el-submenu v-if="item2.children.length>0" :index="item2.id" :id="item2.id" v-for="item2 in item.children">
                                 <template slot="title">
                                     <i class="el-icon-location" style="color:#B5BBC9;"></i>
                                     <span>{{item2.name}}</span>
                                 </template>
-                                <el-menu-item :index="item3.id" v-for="item3 in item2.children" @click="tclassmenu(item3)">
+                                <el-menu-item :index="item3.id" :id="item3.id" v-for="item3 in item2.children" @click="tclassmenu(item3)">
                                     <template slot="title">
                                         <i class="el-icon-document" style="color:#8BAAC9;"></i>
                                         <span>{{item3.name}}</span>
@@ -63,12 +63,15 @@
     import Vue from "vue";
     import Utils from '@/assets/utils.js';
     export default {
+        props: {
+            info:0
+        },
         data() {
             return {
                 Menu: {show_Controller: false},
                 data:[],
                 value:false,
-                activeindex:'/tablexxfw-sqxx-qdsq',
+                activeindex:'/table-sqxx-sksq',
             };
         },
         methods: {
@@ -78,7 +81,8 @@
             },
             Reload(){
                 this.axios.get('/guanqu/web/users/online-user/menus').then((res) => {
-                    this.data = res.data;
+                    console.log(res.data);
+                    this.data = res.data;                   
                 });
             },
             fclassmenu(item){
@@ -121,7 +125,9 @@
             },
         },
         mounted() {
-            this.$router.push({path: '/tablexxfw-sqxx-qdsq'});
+            if(this.info==1){
+            this.$router.push({path: '/table-sqxx-sksq'});            
+            }
             localStorage.anniu = 0;
             this.Reload();
             var that = this;

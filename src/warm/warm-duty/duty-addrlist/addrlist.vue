@@ -104,7 +104,7 @@ export default {
   {
     return{
       loading:false,
-      theight:window.innerHeight-316,
+      theight:window.innerHeight-305,
       years:[],
       dutytypes:[],
       tabledata:[],

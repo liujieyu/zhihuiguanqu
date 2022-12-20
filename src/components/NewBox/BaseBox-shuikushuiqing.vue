@@ -51,7 +51,7 @@
         </el-table-column>
 
         <!-- 自定义 -->
-        <el-table-column align="center" label="水势" :width="60">
+        <el-table-column align="center" label="水势" :width="70" prop="RWPTN" sortable="custom">
           <template slot-scope="scope">
             <div>
               <strong
@@ -482,6 +482,7 @@ export default {
     },
     // 排序
     sort_change(item) {
+      debugger;
       var order = item.order,
         key = item.prop;
       var newList;
@@ -498,6 +499,10 @@ export default {
                   vnum=-1;
                 }
                 return vnum;
+              });
+            }else if(key=="RWPTN"){             
+              newList = this.table.Rows_filter.sort((a, b) => {
+                return Number(b[key].status) - Number(a[key].status);
               });
             } else if (key != "TM") {
               newList = this.table.Rows_filter.sort((a, b) => {
@@ -526,7 +531,11 @@ export default {
                 }
                 return vnum;
               });
-            }if (key != "TM") {
+            }else if(key=="RWPTN"){             
+              newList = this.table.Rows_filter.sort((a, b) => {
+                return Number(a[key].status) - Number(b[key].status);
+              });
+            }else if (key != "TM") {
               newList = this.table.Rows_filter.sort((a, b) => {
                 return Number(a[key]) - Number(b[key]);
               });

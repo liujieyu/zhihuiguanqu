@@ -1,22 +1,22 @@
 <template>
-	<div>
-		<Breadcrumb :style="{margin: '0 0 24px 0'}">
-            <BreadcrumbItem>信息服务</BreadcrumbItem>
-            <BreadcrumbItem>水情信息</BreadcrumbItem>
-            <BreadcrumbItem>水库水情</BreadcrumbItem>
+	<div style="overflow:hidden;">
+		<Breadcrumb :style="{margin: '0 0 15px 0'}">
+            <BreadcrumbItem>水雨情监测</BreadcrumbItem>
+            <BreadcrumbItem>历史分析</BreadcrumbItem>
+            <BreadcrumbItem>水情分析</BreadcrumbItem>
         </Breadcrumb>
 
-		<Tabs value="hour">
-	        <TabPane label="小时表" name="hour">
+		<Tabs value="history">
+	        <TabPane label="小时报表" name="hour">
 	        	<Tablehour></Tablehour>
 	        </TabPane>
-	        <TabPane label="日表" name="day">
+	        <TabPane label="日报表" name="day">
 	        	<Tableday></Tableday>
 	        </TabPane>
-	        <TabPane label="月表" name="month">
+	        <TabPane label="月报表" name="month">
 	        	<Tablemonth></Tablemonth>
 	        </TabPane>
-	        <TabPane label="历史表" name="history">
+	        <TabPane label="历史分析" name="history">
 	        	<Tablehistory></Tablehistory>
 	        </TabPane>
 	    </Tabs>

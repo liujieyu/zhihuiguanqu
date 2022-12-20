@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <div style="width: 50%;margin: 0 auto;">
+      <div style="width: 450;margin: 0 auto;">
         <el-tree
           class="filter-tree"
           :data="data"
@@ -28,8 +28,8 @@
     </div> 
     
     <div style="display: flex; justify-content: flex-end;">
-      <el-button style @click="del">取消</el-button>
-      <el-button type="primary" @click="POWER()">确定</el-button>
+      <el-button style @click="del" size="small">取消</el-button>
+      <el-button type="primary" @click="POWER()" size="small">确定</el-button>
     </div>
   </div>
 </template>

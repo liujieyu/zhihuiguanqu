@@ -26,7 +26,7 @@
                         </Col>
                         -->
                         <Col> 
-                            <Button type="primary" style="width: auto; margin-left:10px;" @click="showchart()">仪表图</Button>
+                            <Button type="primary" style="width: auto; margin-left:10px;" @click="showchart()">监测统计图</Button>
                         </Col>
                     </Row>
                     <Row class="fgline"></Row>
@@ -113,7 +113,7 @@
                window.location.href='/excel/exportqandwhour/';
              },
             showchart(){
-              window.open("/dist/index.html#/yixiang-chart",'newwindow','width='+(window.screen.availWidth-10)+',height='+(window.screen.availHeight-30)+ ',top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
+              window.open("/#/yixiang-chart",'newwindow','width='+(window.screen.availWidth-10)+',height='+(window.screen.availHeight-30)+ ',top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
               //window.open("/dist/index.html#/yixiang-wschart",'newwindow','width='+(window.screen.availWidth-10)+',height='+(window.screen.availHeight-30)+ ',top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
               //window.open("/dist/index.html#/yixiang-kschart",'newwindow','width='+(window.screen.availWidth-10)+',height='+(window.screen.availHeight-30)+ ',top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
             },                  

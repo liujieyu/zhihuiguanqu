@@ -6,7 +6,7 @@
         :model="form"
         :rules="rules"
         label-width="100px"
-        style="margin: 50px;display: flex;flex-wrap: wrap;"
+        style="display: flex;flex-wrap: wrap;" size="mini"
       >
         <el-form-item label="用户名:" prop="login">
           <el-input v-model="form.login" placeholder="请输入" style="width:300px"></el-input>
@@ -40,8 +40,8 @@
       <!-- {{form}} -->
     </div>
     <div style="width: 320px;margin: 0px auto;">
-      <el-button type="primary" @click="Edit()">确定</el-button>
-      <el-button type="info" @click="del()" style="float: right;">取消</el-button>
+      <el-button type="primary" @click="Edit()" size="small">确定</el-button>
+      <el-button type="info" @click="del()" style="float: right;" size="small">取消</el-button>
     </div>
   </div>
 </template>

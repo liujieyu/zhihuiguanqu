@@ -137,7 +137,6 @@
                 this.Reload();
             },
             Reload(){
-                debugger;
                 this.loading = true;
                 var lastbtime1=new Date(this.form.date[0]);
                 var lastbtime2=new Date(lastbtime1.setHours(lastbtime1.getHours()-1));

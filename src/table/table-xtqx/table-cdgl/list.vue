@@ -4,11 +4,11 @@
       <BreadcrumbItem>系统权限</BreadcrumbItem>
       <BreadcrumbItem>菜单管理</BreadcrumbItem>
     </Breadcrumb>
-    <el-row style="margin-bottom: 30px;">
-      <el-button type="primary" @click="add()">新增菜单</el-button>
+    <el-row style="margin-bottom: 14px;">
+      <el-button type="primary" @click="add()" size="mini">新增菜单</el-button>
     </el-row>
-    <el-container style="height: 100%; border: 1px solid #eee">
-      <el-aside width="200px" style="background-color:#fff;height:800px;">
+    <el-container :style="{'height': theight+'px','border': '1px solid #eee'}">
+      <el-aside width="200px" :style="{'background-color':'#fff','height':(theight-1)+'px'}">
         <el-tree
           v-loading="loading"
           class="filter-tree"
@@ -19,14 +19,14 @@
         ></el-tree>
       </el-aside>
 
-      <el-main style="position:relative;">
+      <el-main style="position:relative;margin-top:-15px;padding-bottom:0px;">
         <!-- 提示语 -->
         <p v-if="tipshow" style="font-size: 14px;margin-top: 25%;position: absolute;left: 40%;">请在左侧树形图选择菜单</p>
         <!-- 新增菜单 -->
         <div v-if="addShow">
           <h2>新增菜单</h2>
 
-          <el-form ref="form" :model="form" :rules="rules" label-width="80px" style="margin: 30px;">
+          <el-form ref="form" :model="form" :rules="rules" label-width="80px" size="mini">
             <el-form-item label="菜单名称" prop="name">
               <el-input v-model="form.name" style="width: 350px;"></el-input>
             </el-form-item>
@@ -60,7 +60,7 @@
             <el-form-item label="备注">
               <el-input type="textarea" v-model="form.remark" style="width:700px"></el-input>
             </el-form-item>
-            <el-form-item style="margin-top: 40px;">
+            <el-form-item style="margin-top: 20px;">
               <el-button type="primary" @click="Save">确定</el-button>
               <el-button type="info" style="margin-left: 70px;" @click="resetForm()">重置</el-button>
             </el-form-item>
@@ -72,7 +72,7 @@
         <div v-if="dialog_detail_showing">
           <h2>菜单信息</h2>
 
-          <el-form ref="form2" :model="form2" label-width="140px" style="margin: 30px;">
+          <el-form ref="form2" :model="form2" label-width="140px" size="mini">
             <el-form-item label="菜单名称:">{{this.form2.name}}</el-form-item>
             <el-form-item label="URL:">{{this.form2.url}}</el-form-item>
             <el-form-item label="排序:">
@@ -89,7 +89,7 @@
             </el-form-item>
             <el-form-item label="备注:">{{this.form2.remark}}</el-form-item>
 
-            <el-form-item style="margin-top: 40px;">
+            <el-form-item style="margin-top: 20px;">
               <el-button type="primary" @click="openEdit()">修改菜单</el-button>
               <el-button type="primary" @click="deldetail()" style="margin-left: 70px;">删除菜单</el-button>
               <el-button type="primary" @click="closedetail()" style="margin-left: 70px;">关闭</el-button>
@@ -101,7 +101,7 @@
         <div v-if="editShow">
           <h2>修改菜单</h2>
 
-          <el-form ref="form3" :model="form3" label-width="130px" style="margin: 30px;">
+          <el-form ref="form3" :model="form3" label-width="140px" size="mini">
             <el-form-item label="菜单名称">
               <el-input v-model="form3.name" style="width: 350px;"></el-input>
             </el-form-item>
@@ -147,7 +147,7 @@
             <el-form-item label="备注" style="width:700px">
               <el-input type="textarea" v-model="form3.remark"></el-input>
             </el-form-item>
-            <el-form-item style="margin-top: 40px;">
+            <el-form-item style="margin-top: 20px;">
               <el-button type="primary" @click="onSubmit()">确定修改</el-button>
               <el-button type="info" style="margin-left: 70px;" @click="closeedit">返回</el-button>
             </el-form-item>
@@ -175,6 +175,7 @@ import Utils from '@/assets/utils.js';
 export default {
   data() {
     return {
+      theight:window.innerHeight-167,
       loading:false,
       addShow: false,
       dialog_detail_showing: false,
@@ -242,6 +243,7 @@ export default {
         this.form2.namelist = this.form2.namelist.join('/');
       });
       this.dialog_detail_showing = true;
+      this.editShow=false;
       this.addShow = false;
       this.tipshow = false;
       

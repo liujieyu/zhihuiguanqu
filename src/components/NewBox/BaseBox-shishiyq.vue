@@ -31,7 +31,7 @@
                         <div>
                         <span
                             :style="{
-                        color: scope.row.level == 3?'red' :scope.row.level == 2?'orange' : scope.row.level == 1?'yellow' :'#606266',
+                        color: scope.row.level == 3?'#F72323' :scope.row.level == 2?'#F77823' : scope.row.level == 1?'#F7ED23' :'#606266',
                         }"
                         >{{ scope.row.STNM }}</span>
                         </div>
@@ -42,7 +42,7 @@
                         <div>
                         <span
                             :style="{
-                        color: scope.row.SIGN1 == 3?'red' :scope.row.SIGN1 == 2?'orange' : scope.row.SIGN1 == 1?'yellow' :'#606266',
+                        color: scope.row.SIGN1 == 3?'#F72323' :scope.row.SIGN1 == 2?'#F77823' : scope.row.SIGN1 == 1?'#F7ED23' :'#606266',
                         }"
                         >{{ scope.row.RAIN1 }}</span>
                         </div>
@@ -53,7 +53,7 @@
                         <div>
                         <span
                             :style="{
-                        color: scope.row.SIGN3 == 3?'red' :scope.row.SIGN3 == 2?'orange' : scope.row.SIGN3 == 1?'yellow' :'#606266',
+                        color: scope.row.SIGN3 == 3?'#F72323' :scope.row.SIGN3 == 2?'#F77823' : scope.row.SIGN3 == 1?'#F7ED23' :'#606266',
                         }"
                         >{{ scope.row.RAIN3 }}</span>
                         </div>
@@ -64,7 +64,7 @@
                         <div>
                         <span
                             :style="{
-                        color: scope.row.SIGN6 == 3?'red' :scope.row.SIGN6 == 2?'orange' : scope.row.SIGN6 == 1?'yellow' :'#606266',
+                        color: scope.row.SIGN6 == 3?'#F72323' :scope.row.SIGN6 == 2?'#F77823' : scope.row.SIGN6 == 1?'#F7ED23' :'#606266',
                         }"
                         >{{ scope.row.RAIN6 }}</span>
                         </div>
@@ -75,7 +75,7 @@
                         <div>
                         <span
                             :style="{
-                        color: scope.row.SIGN12 == 3?'red' :scope.row.SIGN12 == 2?'orange' : scope.row.SIGN12 == 1?'yellow' :'#606266',
+                        color: scope.row.SIGN12 == 3?'#F72323' :scope.row.SIGN12 == 2?'#F77823' : scope.row.SIGN12 == 1?'#F7ED23' :'#606266',
                         }"
                         >{{ scope.row.RAIN12 }}</span>
                         </div>
@@ -86,7 +86,7 @@
                         <div>
                         <span
                             :style="{
-                        color: scope.row.SIGN24 == 3?'red' :scope.row.SIGN24 == 2?'orange' : scope.row.SIGN24 == 1?'yellow' :'#606266',
+                        color: scope.row.SIGN24 == 3?'#F72323' :scope.row.SIGN24 == 2?'#F77823' : scope.row.SIGN24 == 1?'#F7ED23' :'#606266',
                         }"
                         >{{ scope.row.RAIN24 }}</span>
                         </div>
@@ -327,8 +327,8 @@
                                 itemStyle: {
                                     normal: {
                                         color: (params) => {
-                                            if (params.data >= 25 && params.data < 50) return 'orange';
-                                            if (params.data > 50) return 'red';
+                                            if (params.data >= 25 && params.data < 50) return '#F77823';
+                                            if (params.data > 50) return '#F72323';
                                             return 'blue'
                                         }
                                     }

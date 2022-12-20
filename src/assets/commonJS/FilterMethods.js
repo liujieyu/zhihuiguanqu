@@ -1137,14 +1137,14 @@ var FilterMethods =
                         if (isNaN(val) || val === "" || val == null) {
                             return 0;
                         }
-                        return parseFloat(val).toFixed(3);
+                        return parseFloat(val).toFixed(2);
                     });
                     echartData.y2.name="Y向水平位移";
                     echartData.y2.list = FilterMethods.methods.newArrayByObjArray(_data, "yhrdsval", val => { // 过滤
                         if (isNaN(val) || val === "" || val == null) {
                             return 0;
                         }
-                        return parseFloat(val).toFixed(3);
+                        return parseFloat(val).toFixed(2);
                     });
                     for(var i=0;i<_data.length;i++){
                         var obj=_data[i];
@@ -1171,7 +1171,7 @@ var FilterMethods =
                         if (isNaN(val) || val === "" || val == null) {
                             return 0;
                         }
-                        return parseFloat(val).toFixed(3);
+                        return parseFloat(val).toFixed(2);
                     });
                     for(var i=0;i<_data.length;i++){
                         var obj=_data[i];
@@ -1245,7 +1245,7 @@ var FilterMethods =
                         return parseFloat(val).toFixed(3);
                     });
 
-                    // y3轴
+                    // y4轴
                     echartData.y4.name = "库容"; // Y3轴名字
 
                     echartData.y4.list = FilterMethods.methods.newArrayByObjArray(_data, "W", val => { // 过滤
@@ -1286,6 +1286,17 @@ var FilterMethods =
                             return 0;
                         }
                         return parseFloat(val).toFixed(2);
+                    });
+
+                    
+                    // y4轴
+                    echartData.y4.name = "库容"; // Y3轴名字
+
+                    echartData.y4.list = FilterMethods.methods.newArrayByObjArray(_data, "HW", val => { // 过滤
+                        if (isNaN(val) || val === "" || val == null) {
+                            return 0;
+                        }
+                        return parseFloat(val).toFixed(3);
                     });
 
                     // x轴
@@ -1348,6 +1359,15 @@ var FilterMethods =
                     //     y3min = (FilterMethods.methods.get_echart_min(echartData.y3.list) - 0.5).toFixed(2);
                     // echartData.y3.max = y3max; // y2最大值
                     // echartData.y3.min = y3min < 0 ? 0 : y3min; // y2最小值
+                    // y4轴
+                    echartData.y4.name = "库容"; // Y3轴名字
+
+                    echartData.y4.list = FilterMethods.methods.newArrayByObjArray(_data, "DW", val => { // 过滤
+                        if (isNaN(val) || val === "" || val == null) {
+                            return 0;
+                        }
+                        return parseFloat(val).toFixed(3);
+                    });
 
                     // x轴
                     echartData.x.list = _data.map((val, index, array) => {
@@ -1406,6 +1426,15 @@ var FilterMethods =
                     //     y3min = (FilterMethods.methods.get_echart_min(echartData.y3.list) - 0.5).toFixed(2);
                     // echartData.y3.max = y3max; // y2最大值
                     // echartData.y3.min = y3min < 0 ? 0 : y3min; // y2最小值
+                    // y4轴
+                    echartData.y4.name = "库容"; // Y3轴名字
+
+                    echartData.y4.list = FilterMethods.methods.newArrayByObjArray(_data, "MW", val => { // 过滤
+                        if (isNaN(val) || val === "" || val == null) {
+                            return 0;
+                        }
+                        return parseFloat(val).toFixed(3);
+                    });
 
                     // x轴
                     echartData.x.list = _data.map((val, index, array) => {

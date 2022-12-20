@@ -29,6 +29,7 @@ Vue.use(iView);
 
 //echarts
 import echarts from 'echarts';
+
 import 'echarts-gl';
 
 import './table/table.css';

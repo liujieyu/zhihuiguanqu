@@ -1,24 +1,24 @@
 <template>
 	<div>
-		<Content :style="{padding: '24px', background: '#fff'}">
+		<Content :style="{padding: '24px 24px 4px 24px', background: '#fff'}">
                     <Row type="flex" :gutter="16" justify="start" style="margin-bottom: 20px">
                         <Col>
                             行政区划:
                             <!-- 地址级联选择器 -->
                             <el-cascader
                               clearable
-                              size="mini"
-                              style="width: 150px"
-                              placeholder="请选择地址"
+                              size="small"
+                              style="width: 200px"
+                              placeholder="所属行政区划"
                               :options="form.adressList"
                               v-model="form.model_adress"
                               @change="XZQHsearch"
                               change-on-select
                             ></el-cascader>
                         </Col>
+                        <!--渠道级联选择器
                         <Col>
-                            渠道:
-                            <!-- 渠道级联选择器 -->
+                            渠道:                             
                             <el-cascader
                               clearable
                               size="mini"
@@ -30,6 +30,7 @@
                               change-on-select
                             ></el-cascader>
                         </Col>
+                        -->
                         <Col>
                             国家定类:
                             <Select v-model="gjdl.Field" clearable @on-change="STTPUpdate" style="width:120px;">
@@ -42,12 +43,13 @@
                                 <Option v-for="item in zddj.STGR" :value="item.Field" :key="item.Field">{{ item.FieldName }}</Option>
                             </Select>
                         </Col>
-                        <Col>
-                            监测要素:
+                        <!--监测要素:
+                        <Col>                           
                             <Select v-model="jcys.Field" clearable @on-change="jcysUpdate" style="width:120px;">
                                 <Option v-for="item in jcys.TYPE" :value="item.Field" :key="item.Field">{{ item.FieldName }}</Option>
                             </Select>
                         </Col>
+                        -->
                         <Col>
                         <!-- 站名模糊搜索 -->
                             <Input search enter-button suffix="ios-search" placeholder="请输入站名" style="width: 150px;" @on-search="search" v-model.trim="form.searchmsg" />
@@ -60,7 +62,7 @@
                     <el-table
                         :data="data"
                         border
-                        height="450"
+                        :height="theight"
                         v-loading="loading"
                         style="width: 100%"
                         @cell-click="cellclick"
@@ -120,12 +122,14 @@
                           align="center"
                           >
                         </el-table-column>
+                        <!--
                         <el-table-column
                           prop="CANAL_NAME"
                           label="所在灌区渠道"
                           align="center"
                           >
                         </el-table-column>
+                        -->
                       </el-table>
                     <div style="margin: 10px;overflow: hidden">
                         <div style="float: right;">
@@ -152,6 +156,7 @@
         data(){
             return{
                 loading:false,
+                theight:window.screen.height-404,
                 zdlxlist:[
                 {
                     value:'1',
@@ -207,6 +212,24 @@
                 // 引入过滤方法到此组件
         mixins: [FilterMethods,GetDataMethods],
         mounted(){
+            //行政区划
+                this.getTableData_WRP_AD_B(data => {
+                    //this.form.adressList = data;
+                     this.form.adressList = data[0].children;
+                });
+                // 获取输排水渠道数据,然后设置渠道选择框选项
+                this.getTableData_WRP_IrrBTCanalSystem(data => {
+                    this.form.qudaoList = data;
+                });
+                this.axios.get('/guanqu/admin/WRP_FieldInfo?FieldID=STTP').then((res)=>{
+                    this.gjdl.STTP = res.data.list;
+                });
+                this.axios.get('/guanqu/admin/WRP_FieldInfo?FieldID=STGR').then((res)=>{
+                    this.zddj.STGR = res.data.list;
+                });
+                this.axios.get('/guanqu/admin/WRP_FieldInfo?FieldID=TYPE').then((res)=>{
+                    this.jcys.TYPE = res.data.list;
+                });
             this.Reload();
         },
         methods:{
@@ -255,18 +278,18 @@
                 if (this.form.model_adress.length == 0) {
                     this.form.xzqh = '';
                 }
+                // if (this.form.model_adress.length == 1) {
+                //     var str1 = this.form.model_adress[0];
+                //     str1 = str1.substring(0,6);
+                //     this.form.xzqh = str1;
+                // }
                 if (this.form.model_adress.length == 1) {
-                    var str1 = this.form.model_adress[0];
-                    str1 = str1.substring(0,6);
-                    this.form.xzqh = str1;
-                }
-                if (this.form.model_adress.length == 2) {
-                    var str2 = this.form.model_adress[1];
+                    var str2 = this.form.model_adress[0];
                     str2 = str2.substring(0,9);
                     this.form.xzqh = str2;
                 }
-                if (this.form.model_adress.length == 3) {
-                    var str3 = this.form.model_adress[2];
+                if (this.form.model_adress.length == 2) {
+                    var str3 = this.form.model_adress[1];
                     str3 = str3.substring(0,12);
                     this.form.xzqh = str3;
                 }
@@ -305,24 +328,7 @@
                         }
                         this.data[i].DA_Q = '0'+this.data[i].DA_Q;
                     };
-                });
-                //行政区划
-                this.getTableData_WRP_AD_B(data => {
-                    this.form.adressList = data;
-                });
-                // 获取输排水渠道数据,然后设置渠道选择框选项
-                this.getTableData_WRP_IrrBTCanalSystem(data => {
-                    this.form.qudaoList = data;
-                });
-                this.axios.get('/guanqu/admin/WRP_FieldInfo?FieldID=STTP').then((res)=>{
-                    this.gjdl.STTP = res.data.list;
-                });
-                this.axios.get('/guanqu/admin/WRP_FieldInfo?FieldID=STGR').then((res)=>{
-                    this.zddj.STGR = res.data.list;
-                });
-                this.axios.get('/guanqu/admin/WRP_FieldInfo?FieldID=TYPE').then((res)=>{
-                    this.jcys.TYPE = res.data.list;
-                });
+                });                
             },
             // 处理页码切换
             CurrentChange(index) {

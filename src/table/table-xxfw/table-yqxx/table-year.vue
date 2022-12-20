@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Content :style="{padding: '24px', background: '#fff'}">
+        <Content :style="{padding: '12px 24px 24px 24px', background: '#fff'}">
 
             <Row type="flex" style="margin: 10px;" :gutter="16" justify="start">
                 <Col>
@@ -18,22 +18,22 @@
                     </el-date-picker>
                 </Col>
                 <Col>
-                    行政区划:
                     <!-- 地址级联选择器 -->
                     <el-cascader
 
                             clearable
                             size="small"
-                            placeholder="请选择地址"
+                            style="width: 200px"
+                            placeholder="所属行政区划"
                             :options="form.adressList"
                             v-model="form.model_adress"
                             @change="XZQHsearch"
                             change-on-select
                     ></el-cascader>
                 </Col>
+                <!-- 渠道级联选择器 
                 <Col>
-                    渠道:
-                    <!-- 渠道级联选择器 -->
+                    渠道:                  
                     <el-cascader
                             clearable
                             size="small"
@@ -44,41 +44,40 @@
                             change-on-select
                     ></el-cascader>
                 </Col>
+                -->
                 <Col>
-                    归属单位:
-                    <Select v-model="form.gsdw" style="width:120px" @on-change="STGRsearch" clearable>
+                    <Select v-model="form.gsdw" style="width:120px" @on-change="STGRsearch" clearable placeholder="归属单位">
                         <Option v-for="item in gsdwlist" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
                 </Col>
-                <Col style="margin-top: 10px;">
-                    降雨:
-                    <Select v-model="form.jiangyu" style="width:120px;" @on-change="JIANGYUsearch" clearable>
+                <Col>
+                    <Select v-model="form.jiangyu" style="width:120px;" @on-change="JIANGYUsearch" clearable placeholder="降雨量">
                         <Option v-for="item in jiangyulist" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
                 </Col>
 
-                <Col class="btn_baobiao">
+                <Col>
                     <!-- 站名模糊搜索 -->
                     <Input search enter-button suffix="ios-search" placeholder="请输入站名"
                            style="width: 160px;" @on-search="search" v-model="form.searchmsg"/>
                 </Col>
+                <!--
                 <Col class="btn_baobiao">
                     <Button type="primary" style="width: auto; margin-right: 10px; " @click="err">导出</Button>
                     <Button type="primary" @click="optable" style="width: auto;">综合报表</Button>
                 </Col>
+                -->
             </Row>
-            <Row type="flex" :gutter="16" justify="end">
-            </Row>
-            <Row type="flex" style="margin: 10px;" :gutter="16" justify="end">
+            <Row type="flex" style="margin:15px 10px 15px 10px;" :gutter="16" justify="end">
                 <el-table
                         :cell-class-name="rowClass"
                         :data="tableData3"
                         border
-                        style="width: 100%"
+                        style="width: 100%;color:#000000;"
                 >
                     <el-table-column
                             prop="rain1"
-                            label="0~10"
+                            label="0~800"
                             width="180"
                             height='25'
                             style="background-color: antiquewhite;"
@@ -86,28 +85,28 @@
                     </el-table-column>
                     <el-table-column
                             prop="rain2"
-                            label="10~25"
+                            label="800~1150"
                             width="180">
                     </el-table-column>
                     <el-table-column
                             prop="rain3"
-                            label="25~50">
+                            label="1150~1400">
                     </el-table-column>
                     <el-table-column
                             prop="rain4"
-                            label="50~100">
+                            label="1400~1650">
                     </el-table-column>
                     <el-table-column
                             prop="rain5"
-                            label="100~250">
+                            label="1650~2000">
                     </el-table-column>
                     <el-table-column
                             prop="rain6"
-                            label=">250">
+                            label=">2000">
                     </el-table-column>
                 </el-table>
             </Row>
-            <Divider/>
+            <Divider style="margin-top:0px;"/>
             <Row style="font-size: 16px;">
                 <!-- <Col style="text-align: center;margin: 0 0 10px 0;">
                    共{{Tables.total}}个站点
@@ -120,13 +119,13 @@
                     :data="tableData1"
                     :span-method="objectSpanMethod"
                     border
-                    height="450"
+                    :height="theight"
                     v-loading="loading"
-                    style="width: 100%"
-                    @cell-click="cellclick"
+                    style="width: 100%"                   
                     @sort-change="sort_change"
             >
-                <!-- <el-table-column
+                <!--@cell-click="cellclick" 
+                    <el-table-column
                         label=" "
                         type="index"
                         align="center"
@@ -155,12 +154,21 @@
                         align="center"
                         sortable
                         width="110">
+                <template slot-scope="scope">
+                        <div>
+                        <span
+                            :style="{
+                        color: scope.row.p <= 800?'green' :scope.row.p <= 1150 ?'#227700' : scope.row.p <= 1400?'#00BBFF' :scope.row.p <= 1650?'#003377':scope.row.p <= 2000?'#CC6600':'#CC0000',
+                        }"
+                        >{{ scope.row.p }}</span>
+                        </div>
+                    </template>
                 </el-table-column>
                 <el-table-column
                         prop="a1"
                         label="1月"
                         align="center"
-                        width="120"
+                        width="90"
                         sortable
                 >
                 </el-table-column>
@@ -168,7 +176,7 @@
                         prop="a2"
                         label="2月"
                         align="center"
-                        width="120"
+                        width="90"
                         sortable
                 >
                 </el-table-column>
@@ -176,7 +184,7 @@
                         prop="a3"
                         label="3月"
                         align="center"
-                        width="140"
+                        width="90"
                         sortable
                 >
                 </el-table-column>
@@ -184,7 +192,7 @@
                         prop="a4"
                         label="4月"
                         align="center"
-                        width="140"
+                        width="90"
                         sortable
                 >
                 </el-table-column>
@@ -192,7 +200,7 @@
                         prop="a5"
                         label="5月"
                         align="center"
-                        width="175"
+                        width="90"
                         sortable
                 >
                 </el-table-column>
@@ -200,7 +208,7 @@
                         prop="a6"
                         label="6月"
                         align="center"
-                        width="140"
+                        width="90"
                         sortable
                 >
                 </el-table-column>
@@ -208,7 +216,7 @@
                         prop="a7"
                         label="7月"
                         align="center"
-                        width="175"
+                        width="90"
                         sortable
                 >
                 </el-table-column>
@@ -216,7 +224,7 @@
                         prop="a8"
                         label="8月"
                         align="center"
-                        width="175"
+                        width="90"
                         sortable
                 >
                 </el-table-column>
@@ -224,7 +232,7 @@
                         prop="a9"
                         label="9月"
                         align="center"
-                        width="175"
+                        width="90"
                         sortable
                 >
                 </el-table-column>
@@ -232,7 +240,7 @@
                         prop="a10"
                         label="10月"
                         align="center"
-                        width="175"
+                        width="100"
                         sortable
                 >
                 </el-table-column>
@@ -240,7 +248,7 @@
                         prop="a11"
                         label="11月"
                         align="center"
-                        width="175"
+                        width="100"
                         sortable
                 >
                 </el-table-column>
@@ -248,7 +256,7 @@
                         prop="a12"
                         label="12月"
                         align="center"
-                        width="175"
+                        width="100"
                         sortable
                 >
                 </el-table-column>
@@ -256,10 +264,11 @@
                         prop="STGR"
                         label="归属单位"
                         align="center"
-                        width="175"
+                        width="120"
                         sortable
                 >
                 </el-table-column>
+                <!--
                  <el-table-column
                         prop="canal_name"
                         label="渠道"
@@ -268,9 +277,11 @@
                         sortable
                 >
                 </el-table-column>
+                >
+                -->
                  <el-table-column
                         prop="AD_NM"
-                        label="地址"
+                        label="所属行政区划"
                         align="center"
                         width="175"
                         sortable
@@ -496,6 +507,7 @@
     export default {
         data() {
             return {
+                theight:window.screen.height-480,
                  gsdwlist:[
                     {
                         value:'1',
@@ -660,7 +672,14 @@
             let date = new Date()
             this.yqYear = date.getFullYear()
             this.form.date = `${date.getFullYear()}`
-
+            //行政区划
+            this.getTableData_WRP_AD_B(data => {
+                this.form.adressList = data.children;
+            });
+            // 获取输排水渠道数据,然后设置渠道选择框选项
+            //this.getTableData_WRP_IrrBTCanalSystem(data => {
+            //    this.form.qudaoList = data;
+            //});
             this.Reload();
 
         },
@@ -862,18 +881,18 @@
                 if (this.form.model_adress.length == 0) {
                     this.form.xzqh = '';
                 }
+                // if (this.form.model_adress.length == 1) {
+                //     var str1 = this.form.model_adress[0];
+                //     str1 = str1.substring(0, 6);
+                //     this.form.xzqh = str1;
+                // }
                 if (this.form.model_adress.length == 1) {
-                    var str1 = this.form.model_adress[0];
-                    str1 = str1.substring(0, 6);
-                    this.form.xzqh = str1;
-                }
-                if (this.form.model_adress.length == 2) {
-                    var str2 = this.form.model_adress[1];
+                    var str2 = this.form.model_adress[0];
                     str2 = str2.substring(0, 9);
                     this.form.xzqh = str2;
                 }
-                if (this.form.model_adress.length == 3) {
-                    var str3 = this.form.model_adress[2];
+                if (this.form.model_adress.length == 2) {
+                    var str3 = this.form.model_adress[1];
                     str3 = str3.substring(0, 12);
                     this.form.xzqh = str3;
                 }
@@ -1010,15 +1029,6 @@
                         this.tableData1[i].p = this.Z_Filter(this.tableData1[i].p);
                         this.tableData1[i]['8:00-9:00'] = this.Z_Filter(this.tableData1[i]['8:00-9:00']);
                     }
-                });
-
-                //行政区划
-                this.getTableData_WRP_AD_B(data => {
-                    this.form.adressList = data;
-                });
-                // 获取输排水渠道数据,然后设置渠道选择框选项
-                this.getTableData_WRP_IrrBTCanalSystem(data => {
-                    this.form.qudaoList = data;
                 });
             },
             // 处理页码切换

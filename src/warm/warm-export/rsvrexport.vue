@@ -2,7 +2,7 @@
   <div>
     <Content class="searchcon">
          <el-container>
-            <el-header class="el-header" height="30px">水库水情报表导出</el-header>
+            <el-header class="el-header" height="30px">水情报表导出</el-header>
             <el-main>
             <Row type="flex" :gutter="16" >
             <Col align="left" fixed="left">
@@ -46,11 +46,13 @@
                         >
                         </el-date-picker>
                 </Col>
+            <!--
             <Col align="left" fixed="left">
                 <Button type="primary" style="width: auto;margin-right: 20px;" @click="exportSkWByDay">日入库出库水量导出</Button>
             </Col>
+            -->
             <Col align="left" fixed="left">
-                <Button type="primary" style="width: auto;" @click="exportSkDay">日表导出</Button>
+                <Button type="primary" style="width: auto;margin-left:164px;" @click="exportSkDay">日表导出</Button>
             </Col>
             </Row>
             <el-divider></el-divider>
@@ -70,11 +72,13 @@
                         >
                         </el-date-picker>
                 </Col>
+            <!--
             <Col align="left" fixed="left">
                 <Button type="primary" style="width: auto;margin-right: 20px;" @click="exportSkWByMonth">月入库出库水量导出</Button>
             </Col>
+            -->
             <Col align="left" fixed="left">
-                <Button type="primary" style="width: auto;" @click="exportSkMonth">月表导出</Button>
+                <Button type="primary" style="width: auto;margin-left:164px;" @click="exportSkMonth">月表导出</Button>
             </Col>
             </Row>
             </el-main>

@@ -6,7 +6,7 @@
     </Breadcrumb>
 
     <!-- 按钮与筛选 -->
-    <el-row :gutter="0" type="flex" justify="space-between" style="margin: 30px 0;">
+    <el-row :gutter="0" type="flex" justify="space-between" style="margin: 22px 0;">
       <!-- 按钮 -->
       <el-col :span="24">
         <!-- <el-button-group style="margin-right: 10px;">
@@ -37,24 +37,24 @@
       ></el-col>
     </el-row>
 
-    <el-table :data="tableData" border height="550" style="width: 100%" @sort-change="sort_change">
+    <el-table :data="tableData" border :height="theight" style="width: 100%" @sort-change="sort_change">
       <el-table-column
         label=" "
         type="index"
         align="center"
-        width="65"
+        width="60"
         :index="indexMethod">
       </el-table-column>
-      <el-table-column sortable property="webUser.login" label="用户名" width="120"></el-table-column>
-      <el-table-column sortable property="webUser.name" label="姓名" width="120"></el-table-column>
-      <el-table-column sortable property="webUser.phone" label="联系电话"></el-table-column>
-      <el-table-column sortable property="webUser.role.name" label="角色"></el-table-column>
-      <el-table-column sortable property="loginTime" label="登录时间">
+      <el-table-column sortable property="webUser.login" label="用户名" width="100"></el-table-column>
+      <el-table-column sortable property="webUser.name" label="姓名" width="100"></el-table-column>
+      <el-table-column sortable property="webUser.phone" label="联系电话" width="130"></el-table-column>
+      <el-table-column sortable property="webUser.role.name" label="角色" width="100"></el-table-column>
+      <el-table-column sortable property="loginTime" label="登录时间" width="160">
         <template slot-scope="scope"> 
           {{scope.row.loginTime}}
         </template>
       </el-table-column>
-      <el-table-column sortable property="loginIp" label="登录ip"></el-table-column>
+      <el-table-column sortable property="loginIp" label="登录ip" width="130"></el-table-column>
       <el-table-column sortable property="browser" label="浏览器"></el-table-column>
     </el-table>
 
@@ -68,7 +68,7 @@
       </el-col>
       <el-col>
         <el-pagination
-          style="margin:20px 0;float: right;"
+          style="margin:10px 0;float: right;"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           background
@@ -77,6 +77,7 @@
           :page-size="list_input.page_size"
           layout=" prev, pager, next, sizes, jumper"
           :total="list_input.total"
+          small
         ></el-pagination>
       </el-col>
     </el-row>
@@ -93,6 +94,7 @@ export default {
   data() {
     return {
       value: "",
+      theight:(window.innerWidth>=1280)?window.innerHeight-233:window.innerHeight-265,
       timeValue: "",
       list_input: {
         value: "",

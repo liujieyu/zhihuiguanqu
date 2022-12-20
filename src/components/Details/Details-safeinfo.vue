@@ -34,10 +34,12 @@
                 <!-- 分割线 -->
                  <div class="divider"></div>
                   <Row :gutter="16" type="flex" justify="center" align="middle">
-                    <Col span="12">
+                    <Col span="4">
+                    </Col>
+                    <Col span="10">
                       渗流阈值: {{base.sllInfo.spprwl}} L/s
                     </Col>
-                    <Col span="12">
+                    <Col span="10">
                       测量最小值：{{base.sllInfo.tdmin}} L/s
                     </Col>
                   </Row>
@@ -143,10 +145,11 @@
                                 <!-- 分割线 -->
                                 <div class="divider"></div>
                                 <Row :gutter="16" type="flex" justify="end" align="middle">
-                                    <Col span="12">
+                                  <Col span="4"></Col>
+                                    <Col span="10">
                                         渗压阈值:{{base.sygInfo.pztbtel}}m
                                     </Col>
-                                    <Col span="12">
+                                    <Col span="10">
                                         监测部位:{{base.sygInfo.msps}}
                                     </Col>
                                 </Row>
@@ -236,7 +239,7 @@
                             start-placeholder="开始日期"
                             end-placeholder="结束日期"
                             @change="weiyibianxingDatePickerChange"
-                            :picker-options="table.weiyibianxing.datePickerOptions"
+                            :picker-options="table.weiyibianxing.datePickerOptions['historyTable']"
                             unlink-panels
                             type="datetimerange"
                             size="mini"
@@ -247,13 +250,14 @@
                         <!-- 分割线 -->
                         <div class="divider"></div>
                         <Row :gutter="16" type="flex" justify="center" align="middle">
-                                    <Col span="8">
+                                    <Col span="3"></Col>
+                                    <Col span="7">
                                         位移阈值:{{base.wybxInfo.xyhrds}}mm
                                     </Col>
-                                    <Col span="8">
+                                    <Col span="7">
                                         基准值X:{{base.wybxInfo.stvlx}}m
                                     </Col>
-                                    <Col span="8">
+                                    <Col span="7">
                                         基准值Y:{{base.wybxInfo.stvly}}m
                                     </Col>
                         </Row>
@@ -284,6 +288,7 @@
                             border
                             size="small"
                             :height="table.weiyibianxing.height"
+                            @on-sort-change="sort_change_weiyibianxing"
                         ></Table>
                         <!-- 分割线 -->
                         <div class="divider"></div>
@@ -344,10 +349,9 @@
                             start-placeholder="开始日期"
                             end-placeholder="结束日期"
                             @change="handleDatePickerChange_chenjiangbianxing"
-                            :picker-options="table.chenjiangbianxing.datePickerOptions"
+                            :picker-options="table.chenjiangbianxing.datePickerOptions['historyTable']"
                             unlink-panels
                             type="datetimerange"
-                            value-format="yyyy-MM-dd HH:mm:ss"
                             size="mini"
                             style="min-width: 360px"
                         ></el-date-picker>
@@ -356,10 +360,11 @@
                     <!-- 分割线 -->
                         <div class="divider"></div>
                         <Row :gutter="16" type="flex" justify="center" align="middle">
-                                    <Col span="12">
+                              <Col span="4"></Col>
+                                    <Col span="10">
                                         位移阈值:{{base.cjbxInfo.vrds}}mm
                                     </Col>
-                                    <Col span="12">
+                                    <Col span="10">
                                         初始高程:{{base.cjbxInfo.inel}}m
                                     </Col>
                         </Row>
@@ -388,6 +393,7 @@
                         border
                         size="small"
                         :height="table.chenjiangbianxing.height"
+                        @on-sort-change="sort_change_chenjiangbianxing"
                         ></Table>
                         <!-- 分割线 -->
                         <div class="divider"></div>
@@ -604,14 +610,14 @@
                         </el-table-column>
                     </el-table>
                     </TabPane>
-                    <TabPane label="渗流测点">
+                    <TabPane label="渗流测点" v-if="select.sllmpsdList.length>0">
                       <Row :gutter="16" type="flex" justify="center" align="middle">
                         <COL span="5">                            
                             测点编号：
                           </COL>
                           <COL span="19">
                           <Select style="width:130px;margin-right:265px;"
-                                @on-change="tableTypeOnChange_BaseSll"
+                                @on-change="tableTypeOnChange_shenliuliang"
                                 prefix="ios-calendar-outline"
                                 v-model="select.shenliuliang_select"
                                 slot="extra"
@@ -716,14 +722,14 @@
                         </tr>
                       </table> 
                     </TabPane>
-                    <TabPane label="渗压测点">
+                    <TabPane label="渗压测点" v-if="select.slylmpsdList.length>0">
                        <Row :gutter="16" type="flex" justify="center" align="middle">
                         <COL span="5">                            
                             测点编号：
                           </COL>
                           <COL span="19">
                           <Select style="width:130px;margin-right:265px;"
-                                    @on-change="tableTypeOnChange_BaseSyg"
+                                    @on-change="tableTypeOnChange_shenliuyali"
                                     prefix="ios-calendar-outline"
                                     v-model="select.shenliuyali_select"
                                     slot="extra"
@@ -840,14 +846,14 @@
                         </tr>
                       </table> 
                     </TabPane>
-                    <TabPane label="位移测点">
+                    <TabPane label="位移测点" v-if="select.wybxmpsdList.length>0">
                       <Row :gutter="16" type="flex" justify="center" align="middle">
                         <COL span="5">                            
                             测点编号：
                           </COL>
                           <COL span="19">
                           <Select style="width:130px;margin-right:265px;"
-                                    @on-change="tableTypeOnChange_Basewybx"
+                                    @on-change="tableTypeOnChange_weiyibianxing"
                                     prefix="ios-calendar-outline"
                                     v-model="select.weiyibianxing_select"
                                     slot="extra"
@@ -964,7 +970,7 @@
                         </tr>
                       </table> 
                     </TabPane>
-                    <TabPane label="沉降测点">
+                    <TabPane label="沉降测点" v-if="select.cjbxmpsdList.length>0">
                       <Row :gutter="16" type="flex" justify="center" align="middle">
                         <COL span="5">                            
                             测点编号：
@@ -1599,6 +1605,58 @@ export default {
   },
   mixins: [FilterMethods, GetDataMethods],
   methods: {
+    //渗流量排序和换页
+    sort_shenliuliang(mpcd){
+      var mpcdstr = mpcd || this.select.shenliuliang_select;
+      this.letTableLoading("shenliuliang"); // 表格加载中
+
+      // 传递参数
+      var body = {
+        MPCD: mpcdstr,
+        _page: this.table.shenliuliang.currentPage || 1,
+        _page_size: this.table.shenliuliang.pageSizes || 20
+      };
+
+      // 如果有选择排序，则传递排序参数
+      if (this.table.shenliuliang.sort) {
+        var _sort = this.$FilterData.sort_Filter(this.table.shenliuliang.sort);
+        if (_sort) {
+          body._orderby = _sort;
+        }
+      }
+
+      // 如果有选择日期进行查询，根据表格类型传递参数
+      if (this.table.shenliuliang.date) {
+        var DTT = this.$FilterData
+              .elDatePicker_Filter(this.table.shenliuliang.date)
+              .split(",");
+            body.Time_min = DTT[1];
+            body.Time_max = DTT[2];
+      }
+      // 获取水库水情历史数据
+      this.$GetData.Safe_History_DATA(
+        "sll",
+        body,
+        {
+          default: true,
+          myFilter: data => {
+            data.map(val => {
+              val.currentPage = body._page;
+              val.pageSizes = body._page_size;
+              return val;
+            });
+            return data;
+          }
+        },
+        data => {
+          this.setTableTotal("shenliuliang", data.total); // 根据返回的total数量, 设置表格总条数
+          this.setTableData("shenliuliang", data.data); // 更新水情历史数据表的数据
+          body._page_size = 999999999;
+          body._page = 1;
+          this.cancelTableLoading("shenliuliang"); // 取消表格加载
+        }
+      );
+    },
     // 渗流量查询
     search_shenliuliang(mpcd) {
       var mpcdstr = mpcd || this.select.shenliuliang_select;
@@ -1687,11 +1745,17 @@ export default {
     },
      // 切换测站渗流历史数据表类型
     tableTypeOnChange_shenliuliang(mpcd) {
-      this.table["shenliuliang"].currentPage = 1;
-      this.table["shenliuliang"].sort = null;
-      this.table.shenliuliang.loading = true; // 表格加载中
-      // 获取对应渗流量历史数据表的数据
-      this.search_shenliuliang(mpcd);
+      this.axios.get("/guanqu/detail/sllinfo", {
+            params: {MPCD:mpcd}
+        }).then(res => {
+            var data=res.data.sllinfo;
+            this.base.sllInfo=data[0];
+            this.table["shenliuliang"].currentPage = 1;
+            this.table["shenliuliang"].sort = null;
+            this.table.shenliuliang.loading = true; // 表格加载中
+            // 获取对应渗流量历史数据表的数据
+            this.search_shenliuliang(mpcd);
+        });     
     },
     // 绘图
     createChart_guanxiquxian(idName) {
@@ -1862,6 +1926,7 @@ export default {
                 name: echartData.y1.name,
                 type: "line",
                 data: echartData.y1.list,
+                showSymbol: false,
                 smooth: true,
             itemStyle : {  
                 normal : {  
@@ -1874,6 +1939,7 @@ export default {
                 itemStyle : {  
                                 normal : {  
                                     lineStyle:{  
+                                        type:'solid',
                                         color:'red',
                                     }  
                                 }  
@@ -1916,27 +1982,32 @@ export default {
     cancelComponentLoading() {
       this.boxLoading = false;
     },
-    // 处理页码切换_水位数据
+    // 处理页码切换_渗流量数据
     handleCurrentChange_shenliuliang(index) {
       this.table["shenliuliang"].currentPage = index;
-      this.search_shenliuliang(this.select.shenliuliang_select);
-    },
-    // 处理页码切换_沉降变形
-    handleCurrentChange_chenjiangbianxing(index) {
-      this.table["chenjiangbianxing"].currentPage = index;
-      this.search_chenjiangbianxing();
+      this.sort_shenliuliang(this.select.shenliuliang_select);
     },
     // 处理每页显示条数切换_渗流量数据
     handleSizeChange_shenliuliang(pageSizes) {
       this.table["shenliuliang"].pageSizes = pageSizes;
       this.table["shenliuliang"].currentPage = 1;
-      this.search_shenliuliang(this.select.shenliuliang_select);
+      this.sort_shenliuliang(this.select.shenliuliang_select);
     },
+    // 处理页码切换_沉降变形
+    handleCurrentChange_chenjiangbianxing(index) {
+      this.table["chenjiangbianxing"].currentPage = index;
+      this.sort_chenjiangbianxing();
+    },  
     // 处理每页显示条数切换_沉降变形
     handleSizeChange_chenjiangbianxing(pageSizes) {
       this.table["chenjiangbianxing"].pageSizes = pageSizes;
       this.table["chenjiangbianxing"].currentPage = 1;
-      this.search_chenjiangbianxing();
+      this.sort_chenjiangbianxing();
+    },
+    //处理排序_沉降变形
+    sort_change_chenjiangbianxing(item){
+      this.table.chenjiangbianxing.sort=item;
+      this.sort_chenjiangbianxing();
     },
     // 分页过滤
     pageFilter(currentPage, pageSizes, tableName) {
@@ -2056,9 +2127,57 @@ export default {
     // 排序
     sort_change_shenliuliang(item) {
       this.table.shenliuliang.sort = item;
-      this.search_shenliuliang(this.select.shenliuliang_select);
+      this.sort_shenliuliang(this.select.shenliuliang_select);
     },
-    // 查询降雨信息
+    //排序换页查询
+    sort_shenliuyali(mpcd){
+      var mpcd = mpcd || this.select.yuqing_select;
+        this.letTableLoading("shenliuyali"); // 表格加载中
+
+        // 传递参数
+        var body = {
+            MPCD: mpcd,
+            _page: this.table.shenliuyali.currentPage || 1,
+            _page_size: this.table.shenliuyali.pageSizes || 20
+        };
+
+        // 如果有选择排序，则传递排序参数
+        if (this.table.shenliuyali.sort) {
+            var _sort = this.$FilterData.sort_Filter(this.table.shenliuyali.sort);
+            if (_sort) {
+                body._orderby = _sort;
+            }
+        }
+         var DTT = this.$FilterData
+                        .elDatePicker_Filter(this.table.shenliuyali.date)
+                        .split(",");
+                    body.Time_min = DTT[1];
+                    body.Time_max = DTT[2];
+
+        // 获取渗流压力历史数据
+        this.$GetData.Safe_History_DATA(
+            "slyl",
+            body,
+            {
+                default: true,
+                myFilter: data => {
+                    data.map(val => {
+                        val.currentPage = body._page;
+                        val.pageSizes = body._page_size;
+                        return val;
+                    });
+                    console.log(data);
+                    return data;
+                }
+            },
+            data => {
+                this.setTableTotal("shenliuyali", data.total); // 根据返回的total数量, 设置表格总条数
+                this.setTableData("shenliuyali", data.data); // 更新水情历史数据表的数据
+                this.cancelTableLoading("shenliuyali"); // 取消表格加载               
+            }
+        );
+    },
+    // 查询渗流压力信息
     search_shenliuyali(mpcd) {
         var mpcd = mpcd || this.select.yuqing_select;
         this.letTableLoading("shenliuyali"); // 表格加载中
@@ -2141,12 +2260,18 @@ export default {
             echartData.x.list = echartData.x.list;
             var y1max = Math.ceil(FilterMethods.methods.get_echart_max(echartData.y1.list)),
             y1min = Math.floor(FilterMethods.methods.get_echart_min(echartData.y1.list));
+            if(y1max<this.base.sygInfo.pztbtel){
+                y1max=Math.ceil(this.base.sygInfo.pztbtel);
+              }
+              if(y1min>this.base.sygInfo.pztbtel){
+                y1min=Math.floor(this.base.sygInfo.pztbtel);
+              }
             echartData.y1.max=y1max;
             echartData.y1.min=y1min;
+            echartData.y1.markval=this.base.sygInfo.pztbtel;
             var mintime=echartData.x.list[0].slice(0, 10),maxtime=echartData.x.list[echartData.x.list.length-1].slice(0, 10);
             var nowDate=new Date();
             var now=this.getNowDayString(nowDate);
-            console.log(now);
             if(mintime==now && maxtime==now){
                 echartData.chartName = "今日渗压曲线图";
                 for(var i=0;i<echartData.x.list.length;i++){
@@ -2206,7 +2331,32 @@ export default {
               {
                 name: echartData.y1.name,
                 type: "line",
-                data: echartData.y1.list
+                data: echartData.y1.list,
+                showSymbol: false,
+                smooth: true,
+                itemStyle : {  
+                    normal : {  
+                        color:'#6C84CE'  
+                    }  
+                },  
+                areaStyle: {},
+                markLine: {
+                symbol:'none',
+                    itemStyle : {  
+                                    normal : {  
+                                        lineStyle:{  
+                                            type:'solid',
+                                            color:'red',
+                                        }  
+                                    }  
+                                },
+                data: [{name:"渗压阈值"+echartData.y1.markval,
+                        yAxis: echartData.y1.markval,
+                        label: {
+                          formatter: '{b}',
+                          position: 'middle'
+                        }}],
+              }
               }
             ],
             });
@@ -2226,34 +2376,40 @@ export default {
             } 
           }
     },
-    // 处理日期时间选择器确定事件_降雨数据
+    // 处理日期时间选择器确定事件_渗流压力数据
     shenliuyaliDatePickerChange(item) {
         this.table.shenliuyali.currentPage = 1;
         this.search_shenliuyali(this.select.shenliuyali_select);
     },
-    // 处理每页显示条数切换_降雨数据
+    // 处理每页显示条数切换_渗流压力数据
     handleSizeChange_shenliuyali(pageSizes) {
         this.table["shenliuyali"].pageSizes = pageSizes;
         this.table["shenliuyali"].currentPage = 1;
-        this.search_shenliuyali(this.select.shenliuyali_select);
+        this.sort_shenliuyali(this.select.shenliuyali_select);
     },
-    // 处理页码切换_降雨数据
+    // 处理页码切换_渗流压力数据
     handleCurrentChange_shenliuyali(index) {
         this.table["shenliuyali"].currentPage = index;
-        this.search_shenliuyali(this.select.shenliuyali_select);
+        this.sort_shenliuyali(this.select.shenliuyali_select);
     },
     // 排序
     sort_change_shenliuyali(item) {
         this.table.shenliuyali.sort = item;
-        this.search_shenliuyali(this.select.shenliuyali_select);
+        this.sort_shenliuyali(this.select.shenliuyali_select);
     },
     // 切换渗压测站历史数据
-    tableTypeOnChange_shenliuyali(mpsd) {
-        this.table["shenliuyali"].currentPage = 1;
-        this.table["shenliuyali"].sort = null;
-        this.table.shenliuyali.loading = true; // 表格加载中
-        // 获取对应水情历史数据表的数据
-        this.search_shenliuyali(mpsd);
+    tableTypeOnChange_shenliuyali(mpcd) {
+        this.axios.get("/guanqu/detail/syginfo", {
+            params: {MPCD:mpcd}
+        }).then(res => {
+            var data=res.data.syginfo;
+            this.base.sygInfo=data[0];
+            this.table["shenliuyali"].currentPage = 1;
+            this.table["shenliuyali"].sort = null;
+            this.table.shenliuyali.loading = true; // 表格加载中
+            // 获取对应水情历史数据表的数据
+            this.search_shenliuyali(mpcd);
+            });       
     },
     // 设置渗压数据历史表默认查询日期
     setTableDefaultDate_shenliuyali_historyTable() {
@@ -2266,12 +2422,18 @@ export default {
       this.search_weiyibianxing(this.select.weiyibianxing_select);
     },
     //切换位移变形测站历史数据
-    tableTypeOnChange_weiyibianxing(mpsd){
-        this.table["weiyibianxing"].currentPage = 1;
-        this.table["weiyibianxing"].sort = null;
-        this.table.weiyibianxing.loading = true; // 表格加载中
-        // 获取对应水情历史数据表的数据
-        this.search_weiyibianxing(mpsd);
+    tableTypeOnChange_weiyibianxing(mpcd){
+        this.axios.get("/guanqu/detail/spwyinfo", {
+            params: {MPCD:mpcd}
+        }).then(res => {
+            var data=res.data.spwyinfo;
+            this.base.wybxInfo=data[0];
+            this.table["weiyibianxing"].currentPage = 1;
+            this.table["weiyibianxing"].sort = null;
+            this.table.weiyibianxing.loading = true; // 表格加载中
+            // 获取对应水情历史数据表的数据
+            this.search_weiyibianxing(mpcd);
+        });       
     },
     // 更新位移变形数据表的数据
     setTableData_weiyibianxing(data) {
@@ -2279,6 +2441,50 @@ export default {
     },
     setTableTotal_weiyibianxing(total) {
       this.table.weiyibianxing.total = total;
+    },
+    //排序和切换页码进行查询
+    sort_weiyibianxing(mpcd) {
+      var mpcd=mpcd || this.select.weiyibianxing_select;
+      this.letTableLoading("weiyibianxing"); 
+      var body = {
+        _page: this.table["weiyibianxing"].currentPage || 1,
+        _page_size: this.table["weiyibianxing"].pageSizes || 20,
+        MPCD: mpcd
+      };
+
+      let time = this.$FilterData.elDatePicker_Filter(
+          this.table.weiyibianxing.date
+        );
+        time = time.split(',');
+        body.Time_min = time[1];
+        body.Time_max = time[2];
+      // 如果有选择排序，则传递排序参数
+        if (this.table.weiyibianxing.sort) {
+            var _sort = this.$FilterData.sort_Filter(this.table.weiyibianxing.sort);
+            if (_sort) {
+                body._orderby = _sort;
+            }
+        }
+      this.$GetData.Safe_History_DATA(
+        "wybx",
+        body,
+        {
+          default: true,
+          myFilter: data => {
+            data.map(val => {
+              val.currentPage = body._page;
+              val.pageSizes = body._page_size;
+              return val;
+            });
+            return data;
+          }
+        },
+        data => {
+          this.setTableTotal_weiyibianxing(data.total); // 设置状态数据表格总条数
+          this.setTableData_weiyibianxing(data.data); // 更新状态数据表的数据
+          this.cancelTableLoading("weiyibianxing");        
+        }
+      );
     },
     // 查询位移变形数据历史表
     search_weiyibianxing(mpcd) {
@@ -2296,6 +2502,13 @@ export default {
         time = time.split(',');
         body.Time_min = time[1];
         body.Time_max = time[2];
+      // 如果有选择排序，则传递排序参数
+        if (this.table.weiyibianxing.sort) {
+            var _sort = this.$FilterData.sort_Filter(this.table.weiyibianxing.sort);
+            if (_sort) {
+                body._orderby = _sort;
+            }
+        }
       this.$GetData.Safe_History_DATA(
         "wybx",
         body,
@@ -2350,13 +2563,18 @@ export default {
     // 处理页码切换
     handleCurrentChange_weiyibianxing(index) {
       this.table["weiyibianxing"].currentPage = index;
-      this.search_weiyibianxing();
+      this.sort_weiyibianxing();
     },
     // 处理每页显示条数切换
     handleSizeChange_weiyibianxing(pageSizes) {
       this.table["weiyibianxing"].pageSizes = pageSizes;
       this.table["weiyibianxing"].currentPasge = 1;
-      this.search_weiyibianxing();
+      this.sort_weiyibianxing();
+    },
+    //处理位移变形排序
+    sort_change_weiyibianxing(item){
+      this.table.weiyibianxing.sort=item;
+      this.sort_weiyibianxing();
     },
     //返回日期
     getNowDayString(now){
@@ -2371,11 +2589,31 @@ export default {
             y1min = Math.floor(FilterMethods.methods.get_echart_min(echartData.y1.list)),
             y2max = Math.ceil(FilterMethods.methods.get_echart_max(echartData.y2.list)),
             y2min = Math.floor(FilterMethods.methods.get_echart_min(echartData.y2.list));
+        if(y1max<this.base.wybxInfo.xyhrds){
+                y1max=Math.ceil(this.base.wybxInfo.xyhrds);
+              }
+              if(y1min>this.base.wybxInfo.xyhrds){
+                y1min=Math.floor(this.base.wybxInfo.xyhrds);
+              }
+              echartData.y1.max=y1max;
+              echartData.y1.min=y1min;
+              echartData.y1.markval=this.base.wybxInfo.xyhrds;
+              if(y2max<this.base.wybxInfo.xyhrds){
+                y2max=Math.ceil(this.base.wybxInfo.xyhrds);
+              }
+              if(y2min>this.base.wybxInfo.xyhrds){
+                y2min=Math.floor(this.base.wybxInfo.xyhrds);
+              }
+              echartData.y2.max=y2max;
+              echartData.y2.min=y2min;
+              echartData.y2.markval=this.base.wybxInfo.xyhrds;
         var mintime=echartData.x.list[0].slice(0, 10),maxtime=echartData.x.list[echartData.x.list.length-1].slice(0, 10);
         var now=new Date();
         var nowday=this.getNowDayString(now);
+        echartData.right=38;
         if(mintime==nowday && maxtime==nowday){
             echartData.chartName = "今日位移曲线图";
+            echartData.right=22;
             for(var i=0;i<echartData.x.list.length;i++){
               var time=echartData.x.list[i].split(" ");
               echartData.x.list[i]=time[time.length-1];
@@ -2386,7 +2624,6 @@ export default {
               echartData.x.list[i]=time;
             }
         }
-        console.log(echartData);
         if (!this.chart.weiyibianxing) {
           this.chart.weiyibianxing = this.$echarts.init(ele);
         }
@@ -2415,11 +2652,11 @@ export default {
         },
         grid: [{
         left: 38,
-        right: 18,
+        right: echartData.right,
         height: '33%'
         }, {
         left: 38,
-        right: 18,
+        right: echartData.right,
         top: '59%',
         height: '33%'
        }],
@@ -2427,7 +2664,6 @@ export default {
         {
             boundaryGap: false,
             data: echartData.x.list,
-            //axisLabel:{interval:parseInt(echartData.x.list.length/5),rotate:0},
         },
         {
             gridIndex: 1,
@@ -2458,16 +2694,64 @@ export default {
             name: echartData.y1.name,
             type: "line",
             yAxisIndex: 0,
+            showSymbol: false,
             smooth:true,
             data:echartData.y1.list,
+            itemStyle : {  
+                normal : {  
+                    color:'#6C84CE'  
+                }  
+            },  
+            areaStyle: {},
+            markLine: {
+            symbol:'none',
+                itemStyle : {  
+                                normal : {  
+                                    lineStyle:{ 
+                                        type:'solid', 
+                                        color:'red',
+                                    }  
+                                }  
+                            },
+            data: [{name:"位移阈值"+echartData.y1.markval,
+                    yAxis: echartData.y1.markval,
+                    label: {
+                      formatter: '{b}',
+                      position: 'middle'
+                    }}],
+          }
           },
           {
             name: echartData.y2.name,
             type: "line",
             xAxisIndex: 1,
             yAxisIndex: 1,
+            showSymbol: false,
             smooth:true,
-            data:echartData.y2.list
+            data:echartData.y2.list,
+            itemStyle : {  
+                normal : {  
+                    color:'#91CC75'  
+                }  
+            },  
+            areaStyle: {},
+            markLine: {
+            symbol:'none',
+                itemStyle : {  
+                                normal : {  
+                                    lineStyle:{ 
+                                        type:'solid', 
+                                        color:'red',
+                                    }  
+                                }  
+                            },
+            data: [{name:"位移阈值"+echartData.y2.markval,
+                    yAxis: echartData.y2.markval,
+                    label: {
+                      formatter: '{b}',
+                      position: 'middle'
+                    }}],
+          }
           }
         ]
       });
@@ -2494,19 +2778,77 @@ export default {
       this.setTableDate("chenjiangbianxing", timeSlot);
     },
     //切换位移变形测站历史数据
-    tableTypeOnChange_chenjiangbianxing(mpsd){
-        this.table["chenjiangbianxing"].currentPage = 1;
-        this.table["chenjiangbianxing"].sort = null;
-        this.table.chenjiangbianxing.loading = true; // 表格加载中
-        // 获取对应水情历史数据表的数据
-        this.search_chenjiangbianxing(mpsd);
+    tableTypeOnChange_chenjiangbianxing(mpcd){
+        this.axios.get("/guanqu/detail/czwyinfo", {
+            params: {MPCD:mpcd}
+        }).then(res => {
+            var data=res.data.czwyinfo;
+            this.base.cjbxInfo=data[0];
+            this.table["chenjiangbianxing"].currentPage = 1;
+            this.table["chenjiangbianxing"].sort = null;
+            this.table.chenjiangbianxing.loading = true; // 表格加载中
+            // 获取对应水情历史数据表的数据
+            this.search_chenjiangbianxing(mpcd);
+        });        
     },
     //沉降变形
     handleDatePickerChange_chenjiangbianxing(item) {
       this.table.chenjiangbianxing.currentPage = 1;
       this.search_chenjiangbianxing(this.select.chenjiangbianxing_select);
     },
-    // 查询关系曲线表格
+    //排序和切换页码查询
+     sort_chenjiangbianxing(mpcd) {
+        var mpcd=mpcd || this.select.chenjiangbianxing_select;
+      this.letTableLoading("chenjiangbianxing"); 
+      var body = {
+        _page: this.table["chenjiangbianxing"].currentPage || 1,
+        _page_size: this.table["chenjiangbianxing"].pageSizes || 20,
+        mpcd: mpcd
+      };
+       // 传递参数
+        var body = {
+            MPCD: mpcd,
+            _page: this.table.chenjiangbianxing.currentPage || 1,
+            _page_size: this.table.chenjiangbianxing.pageSizes || 20
+        };
+
+        // 如果有选择排序，则传递排序参数
+        if (this.table.chenjiangbianxing.sort) {
+            var _sort = this.$FilterData.sort_Filter(this.table.chenjiangbianxing.sort);
+            if (_sort) {
+                body._orderby = _sort;
+            }
+        }
+         var DTT = this.$FilterData
+                        .elDatePicker_Filter(this.table.chenjiangbianxing.date)
+                        .split(",");
+                    body.Time_min = DTT[1];
+                    body.Time_max = DTT[2];
+
+        // 获取沉降变形历史数据
+        this.$GetData.Safe_History_DATA(
+            "cjbx",
+            body,
+            {
+                default: true,
+                myFilter: data => {
+                    data.map(val => {
+                        val.currentPage = body._page;
+                        val.pageSizes = body._page_size;
+                        return val;
+                    });
+                    console.log(data);
+                    return data;
+                }
+            },
+            data => {
+                this.setTableTotal("chenjiangbianxing", data.total); // 根据返回的total数量, 设置表格总条数
+                this.setTableData("chenjiangbianxing", data.data); // 更新水情历史数据表的数据
+                this.cancelTableLoading("chenjiangbianxing"); // 取消表格加载             
+            }
+        );
+     },
+    // 查询沉降变形曲线表格
     search_chenjiangbianxing(mpcd) {
       var mpcd=mpcd || this.select.chenjiangbianxing_select;
       this.letTableLoading("chenjiangbianxing"); 
@@ -2515,14 +2857,6 @@ export default {
         _page_size: this.table["chenjiangbianxing"].pageSizes || 20,
         mpcd: mpcd
       };
-
-      let time = this.$FilterData.elDatePicker_Filter(
-          this.table.chenjiangbianxing.date
-        );
-        time = time.split(',');
-        body.Time_min = time[1];
-        body.Time_max = time[2];
-        
        // 传递参数
         var body = {
             MPCD: mpcd,
@@ -2600,6 +2934,13 @@ export default {
             echartData.x.list = echartData.x.list;
             var y1max = Math.ceil(FilterMethods.methods.get_echart_max(echartData.y1.list)),
             y1min = Math.floor(FilterMethods.methods.get_echart_min(echartData.y1.list));
+            if(y1max<this.base.cjbxInfo.vrds){
+                y1max=Math.ceil(this.base.cjbxInfo.vrds);
+              }
+              if(y1min>this.base.cjbxInfo.vrds){
+                y1min=Math.floor(this.base.cjbxInfo.vrds);
+              }
+            echartData.y1.markval=this.base.cjbxInfo.vrds;
             var mintime=echartData.x.list[0].slice(0, 10),maxtime=echartData.x.list[echartData.x.list.length-1].slice(0, 10);
             var nowDate=new Date();
             var now=this.getNowDayString(nowDate);
@@ -2662,7 +3003,32 @@ export default {
               {
                 name: echartData.y1.name,
                 type: "line",
-                data: echartData.y1.list
+                data: echartData.y1.list,
+                showSymbol: false,
+            smooth: true,
+            itemStyle : {  
+                normal : {  
+                    color:'#6C84CE'  
+                }  
+            },  
+            areaStyle: {},
+            markLine: {
+            symbol:'none',
+                itemStyle : {  
+                                normal : {  
+                                    lineStyle:{ 
+                                        type:'solid', 
+                                        color:'red',
+                                    }  
+                                }  
+                            },
+            data: [{name:"沉降阈值"+echartData.y1.markval,
+                    yAxis: echartData.y1.markval,
+                    label: {
+                      formatter: '{b}',
+                      position: 'middle'
+                    }}],
+          }
               }
             ],
             });
@@ -2676,9 +3042,9 @@ export default {
             var begintime=time[1].slice(0,10);
             var endtime=time[2].slice(0,10);
             if(begintime==nowday && endtime==nowday){
-              document.getElementById("noshenliuyali").innerHTML = "暂无今天数据";
+              document.getElementById("nochenjiangbianxing").innerHTML = "暂无今天数据";
             }else{
-              document.getElementById("noshenliuyali").innerHTML = "暂无数据";
+              document.getElementById("nochenjiangbianxing").innerHTML = "暂无数据";
             } 
           }
     },
@@ -2858,7 +3224,8 @@ export default {
                 symbol:'none',
                 itemStyle : {  
                                 normal : {  
-                                    lineStyle:{  
+                                    lineStyle:{ 
+                                        type:'solid', 
                                         color:'orange',
                                     }  
                                 }  
@@ -2948,7 +3315,6 @@ export default {
 },
   mounted() {
     // 组件加载中
-    console.log(this.info);
       this.componentLoading();
     for(var i=0;i<this.info.rowinfo.slllist.length;i++){
       var infoobj=this.info.rowinfo.slllist[i];
@@ -3150,13 +3516,13 @@ export default {
         //加载断面及断面特征数据
         this.tableTypeOnChange_Duanmian(this.select.duanmian_select);
         //加载渗流量测站数据
-        this.loadSllBaseInfo(this.select.shenliuliang_select);
+        //this.loadSllBaseInfo(this.select.shenliuliang_select);
         //加载渗压管数据
-        this.loadSygBaseInfo(this.select.shenliuyali_select);
+        //this.loadSygBaseInfo(this.select.shenliuyali_select);
         //加载位移变形数据
-        this.loadWybxBaseInfo(this.select.weiyibianxing_select);
+        //this.loadWybxBaseInfo(this.select.weiyibianxing_select);
         //加载沉降变形数据
-        this.loadCjbxBaseInfo(this.select.chenjiangbianxing_select);
+        //this.loadCjbxBaseInfo(this.select.chenjiangbianxing_select);
         // 加载取消
         this.cancelComponentLoading();
         if(this.info.rowinfo.slllist.length>0){

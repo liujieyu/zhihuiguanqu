@@ -1,11 +1,11 @@
 <template>
   <div>
-    <Content :style="{padding: '12px 20px 0px 20px', background: '#fff'}">
+    <Content :style="{padding: '12px 24px 24px 24px', background: '#fff'}">
       <Row :gutter="16">
         <Col :span="span1">
           <Row :gutter="16" type="flex" justify="start" z style="margin-top: 10px;line-height: 32px;">
+            <Col>时间:</Col>
             <Col>
-              时间:
                 <el-date-picker
                 v-model="form.date"
                 type="datetimerange"
@@ -29,7 +29,7 @@
                             </Select>
             </Col>
             <Col>
-            <Button type="primary" style="width: auto;margin-right: 10px;" @click="SllInfo">渗流量信息</Button>
+            <Button type="primary" style="width: auto;margin-right: 10px;" @click="SllInfo">渗流测点信息</Button>
             </Col>
           </Row>
           <div class="switch" @click="Menu_toggle">
@@ -37,10 +37,10 @@
             <i class="el-icon-d-arrow-right" v-if="!Menu.show_Controller"></i>
 
           </div>
-          <Divider/>
+          <Divider style="margin-top:20px;"/>
 
           <Row>
-                <Col style='font-size: 14px;' class="borsLine">站名：{{sllInfo.stnm}}&nbsp;测点编号：{{sllInfo.mpcd}}&nbsp;渗流阈值：{{sllInfo.spprwl}}L/s&nbsp;测量最小值：{{sllInfo.tdmin}}L/s&nbsp;
+                <Col style='font-size: 14px;' class="borsLine"> 站名：{{sllInfo.stnm}}&nbsp;测点编号：{{sllInfo.mpcd}}&nbsp;渗流阈值：{{sllInfo.spprwl}}L/s&nbsp;测量最小值：{{sllInfo.tdmin}}L/s&nbsp;
               单位：渗流量 L/s，渗流水温 ℃</Col>
             </Row>
           <Row :gutter="24" style="display: flex;">
@@ -101,7 +101,8 @@
               </div>
             </Col>
             <Col span="14">
-              <div ref="achart"  :style="{'width': '100%','height': chartheight+'px','margin-top': '1%'}"><div style="margin-top:42%;margin-left:40%;">暂无曲线图数据</div></div>
+              <div ref="achart" v-show="data1.length > 0"  :style="{'width': '100%','height': chartheight+'px','margin-top': '1%'}"></div>
+              <div ref="noachart" v-show="data1.length==0"  :style="{'width': '100%','height': chartheight+'px',margin: 'auto', display:'flex', alignItems:'center', justifyContent: 'center','margin-top': '1%'}">暂无曲线图数据</div>
             </Col>
           </Row>
         </Col>
@@ -359,6 +360,8 @@ export default {
       console.log(data);
       if (data.level==3) {
         this.searchs = data.value;
+        this.list_input.current = 1;
+        this.form.field = '';
         this.getMpcdList(mpcd=>{
         this.axios.get("/guanqu/detail/sllinfo", {
             params: {MPCD:mpcd}
@@ -373,6 +376,8 @@ export default {
     },
     optionchange(){
       var stnm=this.sllInfo.stnm;
+      this.list_input.current = 1;
+      this.form.field = '';
        this.axios.get("/guanqu/detail/sllinfo", {
             params: {MPCD:this.select.shenliuliang_select}
         }).then(res => {
@@ -403,6 +408,8 @@ export default {
           return true;
         }
       });
+        this.list_input.current = 1;
+        this.form.field = '';
         this.getMpcdList(mpcd=>{
           this.axios.get("/guanqu/detail/sllinfo", {
             params: {MPCD:mpcd}
@@ -414,9 +421,14 @@ export default {
         });          
         });
       }else{
+        this.$refs.tree.root.childNodes.forEach((e)=>{
+            e.expanded=false;
+        }); 
         this.expandedarray=[this.Treedata[0].id,this.Treedata[0].children[0].id];
         this.searchs = this.Treedata[0].children[0].children[0].value;   
-        this.siteno= this.Treedata[0].children[0].children[0].label;    
+        this.siteno= this.Treedata[0].children[0].children[0].label;  
+        this.list_input.current = 1;
+        this.form.field = '';  
         this.getMpcdList(mpcd=>{
           this.axios.get("/guanqu/detail/sllinfo", {
             params: {MPCD:mpcd}
@@ -477,6 +489,7 @@ export default {
             name: "渗流量",
             type: "line",
             data:this.data2.y1.list,
+            showSymbol: false,
             smooth: true,
             itemStyle : {  
                 normal : {  
@@ -609,6 +622,9 @@ export default {
               if(y1max<this.sllInfo.spprwl){
                 y1max=Math.ceil(this.sllInfo.spprwl);
               }
+              if(y1min>this.sllInfo.spprwl){
+                y1min=Math.floor(this.sllInfo.spprwl);
+              }
               this.data2.y1.max=y1max;
               this.data2.y1.min=y1min;
               this.data2.y1.markval=this.sllInfo.spprwl;
@@ -646,13 +662,13 @@ export default {
     CurrentChange(index) {
       // console.log(index);
       this.list_input.current = index;
-      this.Reload();
+      this.ReloadBysort();
     },
     // 处理每页显示条数切换
     PagesizeChange(pagesize) {
       // console.log(pagesize)
       this.list_input.pagesize = pagesize;
-      this.Reload();
+      this.ReloadBysort();
     }
   },
   created() {

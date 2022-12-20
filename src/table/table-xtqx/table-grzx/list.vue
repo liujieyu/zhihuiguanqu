@@ -4,17 +4,17 @@
       <BreadcrumbItem>系统权限</BreadcrumbItem>
       <BreadcrumbItem>个人中心</BreadcrumbItem>
     </Breadcrumb>
-    <el-button type="primary" @click="edit()">修改</el-button>
+    <el-button type="primary" @click="edit()" size="small">修改</el-button>
 
     <div style="display: flex;margin: 0 auto;">
-      <el-form ref="form" :model="form" label-width="100px" style="margin: 80px;">
+      <el-form ref="form" :model="form" label-width="100px" style="margin: 50px;" size="mini">
         <el-form-item label="用户名:">{{this.form.login}}</el-form-item>
         <el-form-item label="角色:">{{this.form.role.name}}</el-form-item>
         <el-form-item label="单位:">{{this.form.enterprise}}</el-form-item>
         <el-form-item label="职务:">{{this.form.position}}</el-form-item>
         <el-form-item label="性别:">{{this.form.sex=='1'?'男':(this.form.sex=='2'?'女':'')}}</el-form-item>
       </el-form>
-      <el-form label-width="100px" style="margin: 80px;">
+      <el-form label-width="100px" style="margin: 50px;">
         <el-form-item label="姓名:">{{this.form.name}}</el-form-item>
         <el-form-item label="状态:">{{this.form.status=='NORMAL'?'正常':'冻结'}}</el-form-item>
         <el-form-item label="部门:">{{this.form.department}}</el-form-item>
@@ -24,7 +24,7 @@
     </div>
 
     <!-- 修改 -->
-    <el-dialog title="修改" :visible.sync="dialog_edit_showing" width="1200px" append-to-body>
+    <el-dialog title="修改" :visible.sync="dialog_edit_showing" width="870px" append-to-body>
       <EDIT
         v-if="dialog_edit_showing"
         @closewindows="dialog_edit_showing=false; ReLoad();"
