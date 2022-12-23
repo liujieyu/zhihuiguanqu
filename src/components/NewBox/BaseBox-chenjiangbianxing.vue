@@ -171,7 +171,7 @@
                     clicktype:"cjbx",
                 };
                 var v = new Object();
-                v.itype = "siteinfo";
+                v.itype = "safeinfo";
 
                 // 设置中心缩放
                 //this.setMapCenterandZoom(item.LGTD, item.LTTD);

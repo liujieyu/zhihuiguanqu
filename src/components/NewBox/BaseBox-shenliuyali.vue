@@ -171,7 +171,7 @@
                     clicktype:"slyl",
                 };
                 var v = new Object();
-                v.itype = "siteinfo";
+                v.itype = "safeinfo";
 
                 // 设置中心缩放
                 //this.setMapCenterandZoom(item.LGTD, item.LTTD);
@@ -259,6 +259,8 @@
                 return tableData;
             },
             rowspan() {
+                    this.spanArr=[];
+                    this.position=0;
                     var tabledata=this.pageFilter();
                     tabledata.forEach((item,index) => {
                     if( index === 0){

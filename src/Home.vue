@@ -3645,7 +3645,7 @@ initSafeTableData(){
   this.$refs.slltable.baseBox_init();
   this.$refs.slyltable.baseBox_init();
   this.$refs.wybxtable.baseBox_init();
-  this.$refs.cybxtable.baseBox_init();
+  this.$refs.cjbxtable.baseBox_init();
 },
 //表格加载 水雨情
 showTableLoading(){

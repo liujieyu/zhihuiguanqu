@@ -706,6 +706,7 @@
             xzqh_tree(data){
                 console.log(data);
                 if (data.level==3) {
+                    debugger;
                     this.searchs = data.value;
                     this.siteno=data.label;
                     this.set_SKSQ_alarmInfo(this.searchs,data=>{

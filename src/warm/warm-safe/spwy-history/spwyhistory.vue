@@ -358,6 +358,7 @@ export default {
     xzqh_tree(data){
       if (data.level==3) {
         this.searchs = data.value;
+        this.siteno=data.label;
         this.list_input.current = 1;
         this.form.field = '';
         this.getMpcdList(mpcd=>{
@@ -366,7 +367,7 @@ export default {
         }).then(res => {
             var data=res.data.spwyinfo;
             this.spwyInfo=data[0];
-            this.spwyInfo.stnm=data.label;
+            this.spwyInfo.stnm=this.siteno;
             this.Reload();
         });         
         });

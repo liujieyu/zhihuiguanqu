@@ -360,6 +360,7 @@ export default {
       console.log(data);
       if (data.level==3) {
         this.searchs = data.value;
+        this.siteno=data.label;
         this.list_input.current = 1;
         this.form.field = '';
         this.getMpcdList(mpcd=>{
@@ -368,7 +369,7 @@ export default {
         }).then(res => {
             var data=res.data.syginfo;
             this.slylInfo=data[0];
-            this.slylInfo.stnm=data.label;
+            this.slylInfo.stnm=this.siteno;
             this.Reload();
         });         
         });

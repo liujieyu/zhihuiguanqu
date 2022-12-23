@@ -80,7 +80,7 @@
     @close="closeYjDialog()"
     append-to-body center
    >
-  <DMTZINFO v-show="detailVisible" :info="detailitem"></DMTZINFO>
+  <DMTZINFO v-if="detailitem.itemshow" :info="detailitem"></DMTZINFO>
   </el-dialog>
 	</div>
 </template>
@@ -106,7 +106,7 @@
                 },
                 dmtzdetail:'',//断面特征弹框标题
                 detailVisible:false,//是否显示弹框
-                detailitem:{},//弹框对象
+                detailitem:{itemshow:false},//弹框对象
                 // 表头设置
           tablecolumns: [
               {
@@ -276,11 +276,12 @@
             }, 
             handleClick(item){
               this.dmtzdetail=item.stnm+"断面"+item.damcd+"断面特征信息";
-              this.detailitem={damcd:item.damcd};
+              this.detailitem={damcd:item.damcd,itemshow:true};
               this.detailVisible=true;
             },
             closeYjDialog(){
               this.detailVisible=false;
+              this.detailitem.itemshow=false;
             },
             exportData(){
                 var params='orderBy='+this.form.orderby+'&sequence='+this.form.sequence;

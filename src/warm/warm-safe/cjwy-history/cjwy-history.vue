@@ -359,6 +359,7 @@ export default {
       console.log(data);
       if (data.level==3) {
         this.searchs = data.value;
+        this.siteno=data.label;
         this.list_input.current = 1;
         this.form.field = '';
         this.getMpcdList(mpcd=>{
@@ -367,7 +368,7 @@ export default {
         }).then(res => {
             var data=res.data.czwyinfo;
             this.cjwyInfo=data[0];
-            this.cjwyInfo.stnm=data.label;
+            this.cjwyInfo.stnm=this.siteno;
             this.Reload();
         });         
         });

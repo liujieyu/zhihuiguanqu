@@ -260,6 +260,8 @@
                 return tableData;
             },
             rowspan() {
+                    this.spanArr=[];
+                    this.position=0;
                     var tabledata=this.pageFilter();
                     tabledata.forEach((item,index) => {
                     if( index === 0){
