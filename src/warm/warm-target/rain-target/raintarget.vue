@@ -43,7 +43,6 @@
         :height="theight"
         v-loading="loading"
         style="width: 100%"
-        @cell-click="cellclick"
         @sort-change="sort_change">
          <el-table-column
           label=" "
@@ -51,6 +50,14 @@
           align="center"
           width="65"
           fixed>
+        </el-table-column>       
+        <el-table-column
+           prop="STNM"
+           label="站名"
+           align="center"
+           fixed
+           sortable="custom"
+           min-width="120">
         </el-table-column>
         <el-table-column
            prop="STLC"
@@ -59,14 +66,6 @@
            fixed
            sortable="custom"
            min-width="150">
-        </el-table-column>
-        <el-table-column
-           prop="STNM"
-           label="站名"
-           align="center"
-           fixed
-           sortable="custom"
-           min-width="120">
         </el-table-column>
         <el-table-column 
            prop="EWLNAME"
@@ -77,35 +76,35 @@
         </el-table-column>
           <el-table-column
             prop="OH_P"
-            label="1H降雨"
+            label="1H降雨(mm)"
             align="center"
             sortable="custom"
             min-width="90">
           </el-table-column>
           <el-table-column
             prop="TH_P"
-            label="3H降雨"
+            label="3H降雨(mm)"
             align="center"
             sortable="custom"
             min-width="90">
           </el-table-column>
           <el-table-column
             prop="SH_P"
-            label="6H降雨"
+            label="6H降雨(mm)"
             align="center"
             sortable="custom"
             min-width="90">
           </el-table-column>
           <el-table-column
             prop="TWH_P"
-            label="12H降雨"
+            label="12H降雨(mm)"
             align="center"
             sortable="custom"
             min-width="90">
           </el-table-column>
           <el-table-column
             prop="OD_P"
-            label="24H降雨"
+            label="24H降雨(mm)"
             align="center"
             sortable="custom"
             min-width="90">

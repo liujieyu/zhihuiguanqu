@@ -1,9 +1,12 @@
 <template>
 	<div>
-		<Content :style="{padding: '24px 24px 4px 24px', background: '#fff'}">
+		<Content :style="{padding: '22px 24px 4px 24px', background: '#fff'}">
                     <Row type="flex" :gutter="16" justify="start" style="margin-bottom: 20px">
                         <Col>
-                            行政区划:
+                        <!-- 站名模糊搜索 -->
+                            <Input search enter-button suffix="ios-search" placeholder="请输入站名" style="width: 190px;" @on-search="search" v-model.trim="form.searchmsg" />
+                        </Col>
+                        <Col>
                             <!-- 地址级联选择器 -->
                             <el-cascader
                               clearable
@@ -32,14 +35,12 @@
                         </Col>
                         -->
                         <Col>
-                            国家定类:
-                            <Select v-model="gjdl.Field" clearable @on-change="STTPUpdate" style="width:120px;">
+                            <Select v-model="gjdl.Field" clearable @on-change="STTPUpdate" style="width:120px;" placeholder="国家定类">
                                 <Option v-for="item in gjdl.STTP" :value="item.Field" :key="item.Field">{{ item.FieldName }}</Option>
                             </Select>
                         </Col>
                         <Col>
-                            站点等级:
-                            <Select v-model="zddj.Field" clearable @on-change="STGRUpdate" style="width:120px;">
+                            <Select v-model="zddj.Field" clearable @on-change="STGRUpdate" style="width:120px;" placeholder="站点等级">
                                 <Option v-for="item in zddj.STGR" :value="item.Field" :key="item.Field">{{ item.FieldName }}</Option>
                             </Select>
                         </Col>
@@ -49,14 +50,12 @@
                                 <Option v-for="item in jcys.TYPE" :value="item.Field" :key="item.Field">{{ item.FieldName }}</Option>
                             </Select>
                         </Col>
-                        -->
-                        <Col>
-                        <!-- 站名模糊搜索 -->
-                            <Input search enter-button suffix="ios-search" placeholder="请输入站名" style="width: 150px;" @on-search="search" v-model.trim="form.searchmsg" />
-                        </Col>
+                        -->                      
+                        <!--
                         <Col>
                             <Button type="primary" style="width: auto;" @click="err">导出</Button>
                         </Col>
+                        -->
                     </Row>
                     <!-- <Divider /> -->
                     <el-table
@@ -65,7 +64,7 @@
                         :height="theight"
                         v-loading="loading"
                         style="width: 100%"
-                        @cell-click="cellclick"
+                        @sort-change="sort_change"
                         >
                         <el-table-column
                           label=" "
@@ -79,46 +78,54 @@
                           prop="STNM"
                           label="站名"
                           align="center"
+                          sortable="custom"
                           fixed="left">
                         </el-table-column>
                         <el-table-column
                           prop="STTP"
                           label="国家定类"
+                          sortable="custom"
                           align="center">
                         </el-table-column>
                         <el-table-column
                           prop="STGR"
                           label="等级"
+                          sortable="custom"
                           align="center"
                           >
                         </el-table-column>
                         <el-table-column
                           prop="THYPE"
                           label="监测要素"
+                          sortable="custom"
                           align="center"
                           >
                         </el-table-column>
                         <el-table-column
                           prop="ESSTDT"
                           label="建站日期"
+                          sortable="custom"
                           align="center"
                           >
                         </el-table-column>
                         <el-table-column
                           prop="DLOG"
                           label="建设单位"
+                          sortable="custom"
                           align="center"
                           >
                         </el-table-column>
                         <el-table-column
                           prop="ADMAUTH"
                           label="管理单位"
+                          sortable="custom"
                           align="center"
                           >
                         </el-table-column>
                         <el-table-column
                           prop="AD_NM"
-                          label="所在行政区划"
+                          label="所属行政区划"
+                          sortable="custom"
                           align="center"
                           >
                         </el-table-column>
@@ -185,6 +192,7 @@
                     searchmsg:'',
                     xzqh:'',
                     qd:'',
+                    orderby:'',
                 },
                 gjdl: {
                     STTP: [],
@@ -260,10 +268,29 @@
             },
             // 监测要素选择器
             jcysUpdate(){
-                debugger;
                 console.log(this.jcys.Field);
                 this.Reload();
             },
+            sort_change(item){
+              var order=item.order;
+                if(order==null){
+                    return;
+                }
+                var key= item.prop;
+                switch (order) {
+                    case "normal":
+                        this.form.orderby = null;
+                        brak;
+                    case "ascending": // 升序
+                        this.form.orderby = `${key}`;
+                        break;
+                    case "descending": // 降序
+                        this.form.orderby = `${key} desc`;
+                        break;
+                }
+                this.list_input.current=1;
+                this.Reload();
+            }, 
             //搜索框方法
             search(){
               if (this.form.searchmsg != '') {
@@ -272,6 +299,9 @@
                 this.searchs = '';
               }
                 this.Reload();
+            },
+            indexMethod(index){
+                return index + 1 + (this.list_input.pagesize*(this.list_input.current-1));
             },
             Reload(){
                 this.loading = true;
@@ -305,7 +335,7 @@
                     var str5 = this.form.model_qudao[1];
                     str5 = str5.substring(0,9);
                     this.form.qd = str5;
-                }
+                }               
                 let obj = {
                     ADDVCD: this.form.xzqh,
                     STTP: this.gjdl.Field,
@@ -314,6 +344,9 @@
                     STNM: this.searchs,
                     _orderby: '',
                     TYPE: this.jcys.Field
+                }
+                if(this.form.orderby){
+                  obj._orderby=this.form.orderby;
                 }
                 this.axios.get('/guanqu/jichujiancezhandian/jiancezhandian?_page_size='+this.list_input.pagesize+'&_page='+this.list_input.current,{params: obj}).then((res)=>{
                     console.log(res);

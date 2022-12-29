@@ -39,7 +39,7 @@
         <Input search enter-button="定位" placeholder="请输入水库站点名称" v-model="search_str" @on-search="locationByName()"/>
         </div>
         
-        <el-menu-item index="/warm-warmmessage" v-if="menusshow" style="float:right;margin-right:20px;" @click="showmenu()">
+        <el-menu-item index="/warm-warmmessage" v-if="menusshow" :style="{'float':'right','margin-right':menuwidth+'px'}" @click="showmenu()">
          <template slot="title">
             <i class="el-icon-edit-outline" style="color:#ffffff;"></i>
             <span style="font-size:14px;">预警发布</span>
@@ -710,6 +710,8 @@ export default {
       area_list:[],
       lastclass:null,
       lastcounrty:null,
+      //菜单距右边的位置
+      menuwidth:(window.innerWidth-506-272-500)/2,
       //选中菜单
       routerurl:'',
       //首字母列表
@@ -4673,8 +4675,8 @@ body {
   width: 300px;
   height: 362px;
   background: #fff;
-  bottom: 50px;
-  right: 30px;
+  bottom: 5px;
+  right: 18px;
   // border-radius: 10%;
   /* box-sizing: border-box; */
   // border: #52a7fe 2px solid;

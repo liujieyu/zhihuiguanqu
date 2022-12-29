@@ -60,67 +60,46 @@
            min-width="120">
         </el-table-column>
         <el-table-column
-           prop="XHWL"
-           label="校核洪水位(m)"
+           prop="ttcp"
+           label="总库容(万m³)"
            align="center"
            sortable="custom"
-           min-width="140">
+           min-width="130">
         </el-table-column>       
         <el-table-column
-           prop="FWL"
-           label="4-6月汛限水位(m)"
-           align="center"
-           sortable="custom"
-           min-width="160">
-        </el-table-column>
-        <el-table-column
-           prop="FWL79"
-           label="7-9月汛限水位(m)"
-           align="center"
-           sortable="custom"
-           min-width="160">
-        </el-table-column>
-        <el-table-column
-           prop="ZCWL"
-           label="正常蓄水位(m)"
-           align="center"
-           sortable="custom"
-           min-width="140">
-        </el-table-column>
-        <el-table-column
-           prop="SJWL"
-           label="设计洪水位(m)"
-           align="center"
-           sortable="custom"
-           min-width="140">
-        </el-table-column>
-        <el-table-column
-           prop="actz"
-           label="兴利水位(m)"
-           align="center"
-           sortable="custom"
-           min-width="130">
-        </el-table-column>
-        <el-table-column
-           prop="SWL"
-           label="死水位(m)"
-           align="center"
-           sortable="custom"
-           min-width="130">
-        </el-table-column>
-        <el-table-column
-           prop="laz"
-           label="低水位告警(m)"
+           prop="fldcp"
+           label="防洪库容(万m³)"
            align="center"
            sortable="custom"
            min-width="145">
         </el-table-column>
         <el-table-column
-           prop="hhrz"
-           label="历史最高水位(m)"
+           prop="actcp"
+           label="兴利库容(万m³)"
            align="center"
            sortable="custom"
-           min-width="155">
+           min-width="145">
+        </el-table-column>
+        <el-table-column
+           prop="ddcp"
+           label="死库容(万m³)"
+           align="center"
+           sortable="custom"
+           min-width="130">
+        </el-table-column>
+        <el-table-column
+           prop="hmxw"
+           label="历史最大蓄水量(万m³)"
+           align="center"
+           sortable="custom"
+           min-width="185">
+        </el-table-column>
+        <el-table-column
+           prop="sfq"
+           label="启动预报流量(m³/s)"
+           align="center"
+           sortable="custom"
+           min-width="170">
         </el-table-column>
         <el-table-column
            prop="stlc"
