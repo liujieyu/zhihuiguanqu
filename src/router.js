@@ -347,6 +347,9 @@ export default new Router({
         {path: '/safefenxi-wybxls', component: () => import('./warm/warm-safe/spwy-history/list.vue')},
         //沉降变形分析
         {path: '/safefenxi-cjbxls', component: () => import('./warm/warm-safe/cjwy-history/list.vue')},
+        //基础数据维护
+        //断面信息维护
+        {path: '/safemanage-dminfo', component: () => import('./warm/warm-safe/dm-manage/dmmlist.vue')},
         ], 
         },    
     ],

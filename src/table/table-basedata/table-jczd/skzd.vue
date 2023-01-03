@@ -52,7 +52,7 @@
                         ></el-table-column>
                         <el-table-column align="center" prop="usfl" sortable="custom" label="启用标志" :width="115">
                         <template slot-scope="scope">
-                            {{ scope.row.usfl==1?'启用':'停用' }}
+                            {{ scope.row.usfl=='Y'?'启用':'停用' }}
                         </template>
                         </el-table-column>
                         <el-table-column align="center" prop="stlc" sortable="custom" label="所属行政区划" :width="130">

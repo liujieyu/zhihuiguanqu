@@ -227,7 +227,7 @@
                     this.list_input.total = res.data.total;
                     var datalist=res.data.list;
                     this.data=datalist.map((val, index) => {
-                      val.index=index+1;
+                      val.index=index+1+(this.list_input.pagesize*(this.list_input.current-1));
                       if(val.ofax>=0){
                         val.ofax="下游"+val.ofax;
                       }else{
