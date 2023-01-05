@@ -21,6 +21,19 @@
                           >{{ base.sllInfo.damcd || "&nbsp;" }}</td>
                         </tr>
                         <tr>
+                          <td align="right" class="dt_name">仪器编号：</td>
+                          <td
+                            align="center"
+                            class="dt_vale"
+                            style="border-right: 1px solid #EBEEF5"
+                          >{{ base.sllInfo.dvcd || "&nbsp;" }}</td>
+                          <td align="right" class="dt_name">设施名称：</td>
+                          <td
+                            align="center"
+                            class="dt_vale" 
+                          >{{ base.sllInfo.dhname || "&nbsp;" }}</td>                          
+                        </tr>
+                        <tr>
                           <td align="right" class="dt_name">经度：</td>
                           <td
                             align="center"
@@ -38,7 +51,7 @@
                             style="border-right: 1px solid #EBEEF5"
                           >{{ base.sllInfo.ch || "&nbsp;" }}</td>
                           <td align="right" class="dt_name">轴距：</td>
-                          <td align="center" class="dt_vale">{{ base.sllInfo.ofax || "&nbsp;" }}m</td>
+                          <td align="center" class="dt_vale">{{ base.sllInfo.ofax>=0?('下游'+base.sllInfo.ofax):('上游'+(-base.sllInfo.ofax)) || "&nbsp;" }}m</td>
                         </tr>                     
                         <tr>
                           <td align="right" class="dt_name">高程：</td>
@@ -65,27 +78,20 @@
                             align="center"
                             class="dt_vale"
                           >{{ base.sllInfo.tdmin || "&nbsp;" }}L/s</td>
-                        </tr>
-                        <tr>
-                          <td align="right" class="dt_name">仪器编号：</td>
-                          <td
-                            align="center"
-                            class="dt_vale"
-                            style="border-right: 1px solid #EBEEF5"
-                          >{{ base.sllInfo.dvcd || "&nbsp;" }}</td>
+                        </tr>                        
+                         <tr>
+                          <td align="right" class="dt_name">安装日期：</td>
+                          <td align="center" class="dt_vale" 
+                              style="border-right: 1px solid #EBEEF5">{{ base.sllInfo.indt || "&nbsp;" }}</td>
                           <td align="right" class="dt_name">更新时间：</td>
                           <td align="center" class="dt_vale">{{ base.sllInfo.dtuptm || "&nbsp;" }}</td>
                         </tr>
-                         <tr>
-                          <td align="right" class="dt_name">设施名称：</td>
-                          <td
-                            align="center"
-                            class="dt_vale"
-                            style="border-right: 1px solid #EBEEF5"
-                          >{{ base.sllInfo.dhname || "&nbsp;" }}</td>
-                          
-                          <td align="right" class="dt_name">安装日期：</td>
-                          <td align="center" class="dt_vale">{{ base.sllInfo.indt || "&nbsp;" }}</td>
+                        <tr>
+                          <td align="right" class="dt_name">安装信息：</td>
+                          <td align="center" class="dt_vale" 
+                              style="border-right: 1px solid #EBEEF5">{{ base.sllInfo.setinfo || "&nbsp;" }}</td>
+                          <td align="right" class="dt_name">测点备注：</td>
+                          <td align="center" class="dt_vale">{{ base.sllInfo.rm || "&nbsp;" }}</td>
                         </tr>
                       </table> 
 </div>

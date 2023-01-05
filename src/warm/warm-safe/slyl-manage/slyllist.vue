@@ -1,15 +1,15 @@
 <template>
 	<div>
 		<Breadcrumb :style="{margin: '0 0 15px 0'}">
-            <BreadcrumbItem>维护管理</BreadcrumbItem>
+            <BreadcrumbItem>安全监测</BreadcrumbItem>
             <BreadcrumbItem>大坝安全测点</BreadcrumbItem>
-            <BreadcrumbItem>断面维护</BreadcrumbItem>
+            <BreadcrumbItem>渗流压力维护</BreadcrumbItem>
         </Breadcrumb>
 
-		<Tabs value="duanmianmanage">
-	        <TabPane label="断面维护" name="duanmianmanage">
+		<Tabs value="slylmanage">
+	        <TabPane label="渗流压力维护" name="slylmanage">
 
-	        	<DuanMianManage></DuanMianManage>
+	        	<SLYLManage></SLYLManage>
                 
 	        </TabPane>
 	    </Tabs>
@@ -17,7 +17,7 @@
 </template>
 
 <script type="text/javascript">
-  import DuanMianManage from '@/warm/warm-safe/dm-manage/dmmanage.vue'
+  import SLYLManage from '@/warm/warm-safe/slyl-manage/slylmanage.vue'
 	export default {
         data() {
         return { };
@@ -27,8 +27,7 @@
       methods: { },
       computed: { },
       components: { 
-      DuanMianManage,
-        
+      SLYLManage,       
       }
     }
 </script>

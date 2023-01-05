@@ -4,12 +4,7 @@
                     <Row type="flex" :gutter="16" class="rowtocol"> 
                         <Col>
                             <!-- 名称查询 -->
-                            <Input search enter-button suffix="ios-search" placeholder="请输入站名或者断面编号" style="width:auto;margin-right: 20px;" @on-search="search" v-model="form.searchmsg" />
-                        </Col>
-                        <Col>
-                            <Select v-model="form.walltype" @on-change="search" style="width:130px;margin-right: 20px;margin-top:2px;" placeholder="防渗墙类型" clearable >
-                                <Option v-for="item in form.typelist" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                            </Select>
+                            <Input search enter-button suffix="ios-search" placeholder="请输入站名、断面编号或者测站编号" style="width:290px;margin-right: 20px;" @on-search="search" v-model="form.searchmsg" />
                         </Col>
                         <Col>
                             <!-- 地址级联选择器 -->
@@ -28,10 +23,11 @@
                                 ></el-cascader>
                         </Col>                       
                         <Col> 
-                        
-                            <Button type="primary" icon="md-add" style="width: auto;margin-right:20px;" @click="addClick">新增</Button>
+                        <Button type="primary" icon="md-add" style="width: auto;margin-right:20px;" @click="addClick">新增</Button>
                             <Button type="primary" icon="ios-trash" style="width: auto;" @click="delClick">删除</Button>
-                        
+                        <!--
+                            <Button type="primary" style="width: auto;margin-right: 20px;" @click="exportData">导出</Button>
+                            -->
                         </Col>
 
                     </Row>
@@ -58,10 +54,9 @@
                         :fixed="item.fixed"
                         :sortable="item.sortable"
                         ></el-table-column>
-                        <el-table-column fixed="right" align="center" prop="damcd" label="操作" :width="200">
+                        <el-table-column fixed="right" align="center" prop="oper" label="操作" :width="100">
                         <template slot-scope="scope">
-                            <el-button @click="editClick(scope.row)" type="primary" plain size="mini">修改</el-button>
-                            <el-button @click="handleClick(scope.row)" type="primary" plain size="mini">断面特征编辑</el-button>
+                            <el-button @click="handleClick(scope.row)" type="primary" plain size="mini">修改</el-button>
                         </template>
                         </el-table-column>
                       </el-table>
@@ -81,22 +76,13 @@
                     </div>
                 </Content>
     <el-dialog
-    :title="dmedit"
-    :visible.sync="editVisible"
-    :width="editwidth"
-    @close="closeEditDialog()"
-    append-to-body center
-   >
-  <DMEDIT v-if="editVisible" :info="dminfo" @closewindows="editVisible=false;Reload()"></DMEDIT>
-  </el-dialog>
-    <el-dialog
-    :title="dmtzdetail"
+    :title="slldetail"
     :visible.sync="detailVisible"
     :width="dialogwidth"
     @close="closeYjDialog()"
     append-to-body center
    >
-  <DMTZEDIT v-if="detailitem.itemshow" :info="detailitem" @closewindows="detailVisible=false;detailitem.itemshow=false;"></DMTZEDIT>
+  <SLLEDIT v-if="detailitem.itemshow" :info="detailitem" @closewindows="detailVisible=false;Reload()"></SLLEDIT>
   </el-dialog>
 	</div>
 </template>
@@ -105,8 +91,7 @@
         import WarmDataConfig from "@/assets/commonJS/WarmDataConfig";
         import FilterMethods from "@/assets/commonJS/FilterMethods";
         import GetDataMethods from "@/assets/commonJS/GetDataMethods";
-        import DMEDIT from "@/warm/warm-safe/dm-manage/dmedit.vue"
-        import DMTZEDIT from "@/warm/warm-safe/dm-manage/dmtzedit.vue";
+        import SLLEDIT from "@/warm/warm-safe/sll-manage/slledit.vue";
         import App from "@/App.vue";
 	export default {
         data(){
@@ -117,16 +102,11 @@
                     orderby:'stnm',
                     sequence:'',
                     adressList:[],
-                    walltype:'',
                     model_adress:null,
-                    typelist:[],
                 },
-                dmtzdetail:'',//断面特征弹框标题
+                slldetail:'',//断面特征弹框标题
                 detailVisible:false,//是否显示弹框
                 detailitem:{itemshow:false},//弹框对象
-                dmedit:'',//断面编辑界面标题
-                editVisible:false,//是否显示弹框
-                dminfo:{},//断面对象
                 // 表头设置
           tablecolumns: [
               {
@@ -146,8 +126,8 @@
               {
                 title: "所属行政区划",
                 key: "adnm",
-                width: 140,
                 align: "center",
+                width: 140,
                 sortable: "custom"
               },
               {
@@ -158,39 +138,52 @@
                 sortable: "custom",
               },
               {
-                title: "防渗墙类型",
-                width: 130,
-                key: "wallType",
+                title: "测站编号",
+                width: 115,
+                key: "mpcd",
                 align: "center",
                 sortable: "custom",
               },
               {
-                title: "断面长度",
-                width: 120,
-                key: "damlen",
+                title: "桩号",
+                width: 100,
+                key: "ch",
                 align: "center",
                 sortable: "custom",
               },
               {
-                title: "断面宽度",
-                width: 120,
-                key: "damwd",
+                title: "轴距(m)",
+                width: 100,
+                key: "ofax",
                 align: "center",
                 sortable: "custom",
               },
               {
-                title: "更新时间",
-                width: 160,
-                key: "dtuptim",
+                title: "高程(m)",
+                width: 100,
+                key: "el",
                 align: "center",
                 sortable: "custom",
               },
-            ], 
-             multipleSelection: [],               
+              {
+                title: "测流阈值(L/s)",
+                width: 140,
+                key: "spprwl",
+                align: "center",
+                sortable: "custom",
+              },
+              {
+                title: "测量最小值(L/s)",
+                width: 150,
+                key: "tdmin",
+                align: "center",
+                sortable: "custom",
+              },
+            ],   
+                multipleSelection: [],              
                 data:[],
                 theight:window.innerWidth>=850?window.innerHeight-306:window.innerHeight-271,
-                dialogwidth:(670/window.innerWidth*100)+"%",
-                editwidth:(640/window.innerWidth*100)+"%",
+                dialogwidth:(640/window.innerWidth*100)+"%",
                 list_input:{
                     total:100,
                     pagesize:50,
@@ -202,18 +195,13 @@
                 // 引入过滤方法到此组件
         mixins: [WarmDataConfig,GetDataMethods,FilterMethods],
         components: {
-          DMEDIT,
-          DMTZEDIT
+          SLLEDIT
         },
         mounted(){
             // 获取行政区划数据,然后设置地址选择框选项
             this.getTableData_WRP_AD_B(data => {
                 this.form.adressList = data[0].children;
                 this.form.model_adress=true;
-            });
-            //防渗墙类型
-            this.Get_WrpFieldinfo('WRP_SECTION_B','WALL_TYPE',data => {
-                this.form.typelist = data;
             });
             this.Reload();
         },
@@ -243,19 +231,24 @@
                     }
                     body["ADDlist"] = addvdds.toString();                   
                 }
-                //如何下拉框已选择，添加防渗墙类型
-                if(this.form.walltype && this.form.walltype!=''){
-                  body["WALLTYPE"] = `${this.form.walltype}`;
-                }
-                this.axios.get('/guanqu/page/dminfo',{params:body}).then((res)=>{
+                this.axios.get('/guanqu/page/sllinfo',{params:body}).then((res)=>{
                     this.loading = false;
                     this.list_input.total = res.data.total;
                     var datalist=res.data.list;
                     this.data=datalist.map((val, index) => {
                       val.index=index+1+(this.list_input.pagesize*(this.list_input.current-1));
+                      if(val.ofax>=0){
+                        val.ofax="下游"+val.ofax;
+                      }else{
+                        val.ofax="上游"+Math.abs(val.ofax);
+                      }
                       return val;
                     });
                 });
+            },
+            //选中功能
+            handleSelectionChange(val){
+                this.multipleSelection=val;
             },
             // 处理页码切换
             CurrentChange(index) {
@@ -278,11 +271,11 @@
                     return;
                 }
                 var key= item.prop;
-                if(key=="wallType"){
-                  key="WALL_TYPE";
-                }
                 if(key=="adnm"){
                   key="STLC";
+                }
+                if(key=="mpcd"){
+                    key="s.mpcd";
                 }
                 switch (order) {
                     case "normal":
@@ -298,48 +291,40 @@
                 this.list_input.current=1;
                 this.Reload();
             }, 
-            //选中功能
-            handleSelectionChange(val){
-                this.multipleSelection=val;
-            },
             handleClick(item){
-              this.dmtzdetail=item.stnm+"断面"+item.damcd+"特征信息编辑";
-              this.detailitem={damcd:item.damcd,itemshow:true,stcd:item.stcd};
+              this.slldetail=item.stnm+"测站"+item.mpcd+"渗流量测点信息编辑";
+              this.detailitem={mpcd:item.mpcd,id:item.id,sbid:item.sbid,stcd:item.stcd,itemshow:true,editsign:"update"};
               this.detailVisible=true;
             },
-            editClick(item){
-              this.dmedit="修改断面信息";
-              this.dminfo=item;
-              this.dminfo.editsign="update";
-              this.dminfo.walltypelist=this.form.typelist;
-              this.editVisible=true;
-            },
             addClick(){
-              this.dmedit="新增断面信息";
-              this.dminfo.editsign="add";
-              this.dminfo.walltypelist=this.form.typelist;
-              this.editVisible=true;
+              this.slldetail="新增渗流量测点信息";
+              this.detailitem.editsign="add";
+              this.detailitem.itemshow=true;
+              this.detailVisible=true;
             },
             delClick(){
               if(this.multipleSelection==null || this.multipleSelection.length==0){
                 this.$message({
-                  message: '请选择要删除的断面信息',
+                  message: '请选择要删除的渗流量测点信息',
                   type: 'warning'
                 });
               }else{
-                var dmids="";
+                var sllids="";
+                var sbids="";
                 for(var i=0;i<this.multipleSelection.length;i++){
-                  dmids+=this.multipleSelection[i].id;
+                  sllids+=this.multipleSelection[i].id;
+                  sbids+=this.multipleSelection[i].sbid;
                   if(i<this.multipleSelection.length-1){
-                    dmids+=",";
+                    sllids+=",";
+                    sbids+=",";
                   }
                 }
-                this.$confirm('确定删除这'+this.multipleSelection.length+'条断面信息?', '提示', {
+                this.$confirm('确定删除这'+this.multipleSelection.length+'条渗流量测点信息?', '提示', {
                   confirmButtonText: '确定',
                   cancelButtonText: '取消',
                   type: 'warning'
                 }).then(() => {
-                  this.axios.get('/guanqu/manage/deldminfo',{params:{ids:dmids}}).then((res)=>{
+                  this.axios.get('/guanqu/manage/delsllinfo',{params:{ids:sllids,sbids:sbids}}).then((res)=>{
                     this.$message({
                       type: 'success',
                       message: '删除成功!'
@@ -353,9 +338,7 @@
             closeYjDialog(){
               this.detailVisible=false;
               this.detailitem.itemshow=false;
-            },
-            closeEditDialog(){
-              this.editVisible=false;
+
             },
             exportData(){
                 var params='orderBy='+this.form.orderby+'&sequence='+this.form.sequence;

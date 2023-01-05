@@ -350,6 +350,10 @@ export default new Router({
         //基础数据维护
         //断面信息维护
         {path: '/safemanage-dminfo', component: () => import('./warm/warm-safe/dm-manage/dmmlist.vue')},
+        //渗流量测点信息维护
+        {path: '/safemanage-sllinfo', component: () => import('./warm/warm-safe/sll-manage/slllist.vue')},
+        //渗压管信息维护
+        {path: '/safemanage-slylinfo', component: () => import('./warm/warm-safe/slyl-manage/slyllist.vue')},
         ], 
         },    
     ],

@@ -505,7 +505,7 @@
     </div>
 
     <!-- 表格 -->
-    <div v-if="mapBox_show == 0">
+    <div v-show="mapBox_show == 0">
       <!-- <router-view></router-view> -->
       <Table :info="routerurl"></Table>
     </div>
