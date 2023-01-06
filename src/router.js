@@ -354,6 +354,8 @@ export default new Router({
         {path: '/safemanage-sllinfo', component: () => import('./warm/warm-safe/sll-manage/slllist.vue')},
         //渗压管信息维护
         {path: '/safemanage-slylinfo', component: () => import('./warm/warm-safe/slyl-manage/slyllist.vue')},
+        //位移变形信息维护
+        {path: '/safemanage-wybxinfo', component: () => import('./warm/warm-safe/spwy-manage/spwylist.vue')},
         ], 
         },    
     ],

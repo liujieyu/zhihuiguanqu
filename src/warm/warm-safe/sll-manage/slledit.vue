@@ -1,5 +1,6 @@
 <template>
 <el-form
+        :v-loading="loading"
         ref="sllform"
         :model="form"
         :rules="rules"
@@ -34,10 +35,12 @@
           <el-input v-model="form.dvcd" placeholder="请输入" style="width:180px;"></el-input>
         </el-form-item>       
         <el-form-item label="经度：" prop="eslg" >
-          <el-input v-model="form.eslg" placeholder="请输入" style="width:180px"></el-input>
+          <el-input v-model="form.eslg" placeholder="请输入" style="width:180px" @input="(value)=>{isNaN(value)?isNaN(parseFloat(value))?
+                    form.eslg=null:form.eslg=parseFloat(value):form.eslg=value}"></el-input>
         </el-form-item>
         <el-form-item label="纬度：" prop="nrlt" >
-          <el-input v-model="form.nrlt" placeholder="请输入" style="width:180px"></el-input>
+          <el-input v-model="form.nrlt" placeholder="请输入" style="width:180px" @input="(value)=>{isNaN(value)?isNaN(parseFloat(value))?
+                    form.nrlt=null:form.nrlt=parseFloat(value):form.nrlt=value}"></el-input>
         </el-form-item>
         <el-form-item label="桩号：" prop="ch" >
           <el-input v-model="form.ch" placeholder="请输入" style="width:180px"></el-input>
@@ -99,6 +102,7 @@ export default {
 
   data() {
     return {
+      loading:false,
       form: {
         id:"",
         sbid:"",
@@ -203,17 +207,19 @@ export default {
     },
     onSubmit(){
       this.$refs['sllform'].validate((valid) => {
-          if (valid) {
-             if(this.ofaxfh=="-"){
-                this.form.ofax=-this.form.ofax;
-             }
+          if (valid) {            
             if(this.info.editsign=="add" || (this.info.editsign=="update" && this.info.mpcd!=this.form.mpcd)){
               this.axios.get('/guanqu/base/checkmpcd',{params:{MPCD:this.form.mpcd,TYPE:1}}).then((res)=>{
                 var status=res.data.checksign;
                 if(status=="yes"){
                   this.$message.error(res.data.warning);
                 }else{
+                  this.loading=true;
+                  if(this.ofaxfh=="-"){
+                      this.form.ofax=-this.form.ofax;
+                  }
                   this.axios.post(this.routerurl,this.form).then((res) => {
+                    this.loading=false;
                     this.$emit("closewindows");
                     this.$message({
                       type: "success",
@@ -223,7 +229,12 @@ export default {
                 }
               });
             }else{
+              this.loading=true;
+              if(this.ofaxfh=="-"){
+                  this.form.ofax=-this.form.ofax;
+              }
               this.axios.post(this.routerurl,this.form).then((res) => {
+                    this.loading=false;
                     this.$emit("closewindows");
                     this.$message({
                       type: "success",

@@ -7,11 +7,6 @@
                             <Input search enter-button suffix="ios-search" placeholder="请输入站名、断面编号或者测站编号" style="width:290px;margin-right: 20px;" @on-search="search" v-model="form.searchmsg" />
                         </Col>
                         <Col>
-                            <Select v-model="form.cybwtype" @on-change="search" style="width:130px;margin-right: 20px;margin-top:2px;" placeholder="监测部位" clearable >
-                                <Option v-for="item in form.typelist" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                            </Select>
-                        </Col>
-                        <Col>
                             <!-- 地址级联选择器 -->
                                 <el-cascader
                                   :props="{ multiple: true }"
@@ -42,8 +37,8 @@
                         border
                         :height="theight"
                         v-loading="loading"
-                        style="width: 100%"
                         @selection-change="handleSelectionChange"
+                        style="width: 100%"
                         @sort-change="sort_change"
                         >
                         <el-table-column
@@ -59,7 +54,7 @@
                         :fixed="item.fixed"
                         :sortable="item.sortable"
                         ></el-table-column>
-                        <el-table-column fixed="right" align="center" prop="oper" label="操作" :width="90">
+                        <el-table-column fixed="right" align="center" prop="damcd" label="操作" :width="90">
                         <template slot-scope="scope">
                             <el-button @click="handleClick(scope.row)" type="primary" plain size="mini">修改</el-button>
                         </template>
@@ -81,13 +76,13 @@
                     </div>
                 </Content>
     <el-dialog
-    :title="sygzdetail"
+    :title="spwydetail"
     :visible="detailVisible"
     :width="dialogwidth"
     @close="closeYjDialog()"
     append-to-body center
    >
-  <SLYLEDIT v-if="detailitem.itemshow" :info="detailitem" @closewindows="detailVisible=false;Reload()"></SLYLEDIT>
+  <SLYEDIT v-if="detailitem.itemshow" :info="detailitem" @closewindows="detailVisible=false;Reload()"></SLYEDIT>
   </el-dialog>
 	</div>
 </template>
@@ -96,7 +91,7 @@
         import WarmDataConfig from "@/assets/commonJS/WarmDataConfig";
         import FilterMethods from "@/assets/commonJS/FilterMethods";
         import GetDataMethods from "@/assets/commonJS/GetDataMethods";
-        import SLYLEDIT from "@/warm/warm-safe/slyl-manage/slyledit.vue";
+        import SLYEDIT from "@/warm/warm-safe/spwy-manage/spwyedit.vue";
         import App from "@/App.vue";
 	export default {
         data(){
@@ -109,9 +104,8 @@
                     adressList:[],
                     cybwtype:'',
                     model_adress:null,
-                    typelist:[],
                 },
-                sygzdetail:'',//断面特征弹框标题
+                spwydetail:'',//断面特征弹框标题
                 detailVisible:false,//是否显示弹框
                 detailitem:{itemshow:false},//弹框对象
                 multipleSelection: [], 
@@ -160,37 +154,37 @@
                 sortable: "custom",
               },
               {
-                title: "坝轴距(m)",
-                width: 120,
+                title: "轴距(m)",
+                width: 110,
                 key: "ofax",
                 align: "center",
                 sortable: "custom",
               },
               {
-                title: "阈值高程(m)",
-                width: 130,
-                key: "pztbtel",
+                title: "位移阈值(mm)",
+                width: 140,
+                key: "xyhrds",
                 align: "center",
                 sortable: "custom",
               },
               {
-                title: "安装高程(m)",
+                title: "基准值X(m)",
                 width: 130,
-                key: "el",
+                key: "stvlx",
                 align: "center",
                 sortable: "custom",
               },
               {
-                title: "监测部位",
-                width: 120,
-                key: "msps",
+                title: "基准值Y(m)",
+                width: 130,
+                key: "stvly",
                 align: "center",
                 sortable: "custom",
               },
             ],                
                 data:[],
                 theight:window.innerWidth>=850?window.innerHeight-306:window.innerHeight-271,
-                dialogwidth:(660/window.innerWidth*100)+"%",
+                dialogwidth:(640/window.innerWidth*100)+"%",
                 list_input:{
                     total:100,
                     pagesize:50,
@@ -202,17 +196,13 @@
                 // 引入过滤方法到此组件
         mixins: [WarmDataConfig,GetDataMethods,FilterMethods],
         components: {
-          SLYLEDIT
+          SLYEDIT
         },
         mounted(){
             // 获取行政区划数据,然后设置地址选择框选项
             this.getTableData_WRP_AD_B(data => {
                 this.form.adressList = data[0].children;
                 this.form.model_adress=true;
-            });
-            //监测部位类型
-            this.Get_WrpFieldinfo('WRP_SPG_PZTB','MSPS',data => {
-                this.form.typelist = data;
             });
             this.Reload();
         },
@@ -242,20 +232,11 @@
                     }
                     body["ADDlist"] = addvdds.toString();                   
                 }
-                //如何下拉框已选择，添加防渗墙类型
-                if(this.form.cybwtype && this.form.cybwtype!=''){
-                  body["MSPS"] = `${this.form.cybwtype}`;
-                }
-                this.axios.get('/guanqu/page/slylinfo',{params:body}).then((res)=>{
+                this.axios.get('/guanqu/page/spwyinfo',{params:body}).then((res)=>{
                     this.loading = false;
                     this.list_input.total = res.data.total;
                     var datalist=res.data.list;
                     this.data=datalist.map((val, index) => {
-                      if(val.ofax>=0){
-                        val.ofax="下游"+val.ofax;
-                      }else{
-                        val.ofax="上游"+Math.abs(val.ofax);
-                      }
                       val.index=index+1+(this.list_input.pagesize*(this.list_input.current-1));
                       return val;
                     });
@@ -300,37 +281,36 @@
                 this.Reload();
             }, 
             handleClick(item){
-              this.sygzdetail=item.stnm+"测站"+item.mpcd+"测压管信息编辑";
-              this.detailitem={mpcd:item.mpcd,id:item.id,stcd:item.stcd,typeList:this.form.typelist,itemshow:true,editsign:"update"};
+              this.spwydetail=item.stnm+"测站"+item.mpcd+"位移变形信息编辑";
+              this.detailitem={mpcd:item.mpcd,id:item.id,stcd:item.stcd,itemshow:true,editsign:"update"};
               this.detailVisible=true;
             },
             addClick(){
-              this.sygzdetail="新增渗压管信息";
+              this.spwydetail="新增位移变形信息";
               this.detailitem.editsign="add";
-              this.detailitem.typeList=this.form.typelist;
               this.detailitem.itemshow=true;
               this.detailVisible=true;
             },
             delClick(){
               if(this.multipleSelection==null || this.multipleSelection.length==0){
                 this.$message({
-                  message: '请选择要删除的渗压管信息',
+                  message: '请选择要删除的位移变形信息',
                   type: 'warning'
                 });
               }else{
-                var slylids="";
+                var spwyids="";
                 for(var i=0;i<this.multipleSelection.length;i++){
-                  slylids+=this.multipleSelection[i].id;
+                  spwyids+=this.multipleSelection[i].id;
                   if(i<this.multipleSelection.length-1){
-                    slylids+=",";
+                    spwyids+=",";
                   }
                 }
-                this.$confirm('确定删除这'+this.multipleSelection.length+'条渗压管信息?', '提示', {
+                this.$confirm('确定删除这'+this.multipleSelection.length+'条位移变形信息?', '提示', {
                   confirmButtonText: '确定',
                   cancelButtonText: '取消',
                   type: 'warning'
                 }).then(() => {
-                  this.axios.get('/guanqu/manage/delslylinfo',{params:{ids:slylids}}).then((res)=>{
+                  this.axios.get('/guanqu/manage/delspwyinfo',{params:{ids:spwyids}}).then((res)=>{
                     this.$message({
                       type: 'success',
                       message: '删除成功!'

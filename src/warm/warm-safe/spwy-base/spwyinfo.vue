@@ -97,7 +97,6 @@
                     adressList:[],
                     cybwtype:'',
                     model_adress:null,
-                    typelist:[],
                 },
                 spwydetail:'',//断面特征弹框标题
                 detailVisible:false,//是否显示弹框
@@ -196,10 +195,6 @@
             this.getTableData_WRP_AD_B(data => {
                 this.form.adressList = data[0].children;
                 this.form.model_adress=true;
-            });
-            //监测部位类型
-            this.Get_WrpFieldinfo('WRP_SPG_PZTB','MSPS',data => {
-                this.form.typelist = data;
             });
             this.Reload();
         },

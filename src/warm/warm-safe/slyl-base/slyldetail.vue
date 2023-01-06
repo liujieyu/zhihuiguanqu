@@ -99,6 +99,14 @@
                             class="dt_vale"
                           >{{ base.sygInfo.dtuptm || "&nbsp;" }}</td>
                         </tr>
+                        <tr>
+                          <td align="right" class="dt_name">备注：</td>
+                          <td
+                            align="center"
+                            class="dt_vale"
+                            colspan="3"
+                          >{{ base.sygInfo.rm || "&nbsp;" }}</td>
+                        </tr>
                       </table>  
 </div>
 </template>

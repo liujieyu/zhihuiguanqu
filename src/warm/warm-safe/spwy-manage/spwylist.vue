@@ -3,13 +3,13 @@
 		<Breadcrumb :style="{margin: '0 0 15px 0'}">
             <BreadcrumbItem>维护管理</BreadcrumbItem>
             <BreadcrumbItem>大坝安全测点</BreadcrumbItem>
-            <BreadcrumbItem>渗流压力维护</BreadcrumbItem>
+            <BreadcrumbItem>位移变形维护</BreadcrumbItem>
         </Breadcrumb>
 
-		<Tabs value="slylmanage">
-	        <TabPane label="渗流压力维护" name="slylmanage">
+		<Tabs value="spwymanage">
+	        <TabPane label="位移变形维护" name="spwymanage">
 
-	        	<SLYLManage></SLYLManage>
+	        	<SPWYManage></SPWYManage>
                 
 	        </TabPane>
 	    </Tabs>
@@ -17,7 +17,7 @@
 </template>
 
 <script type="text/javascript">
-  import SLYLManage from '@/warm/warm-safe/slyl-manage/slylmanage.vue'
+  import SPWYManage from '@/warm/warm-safe/spwy-manage/spwymanage.vue'
 	export default {
         data() {
         return { };
@@ -27,7 +27,7 @@
       methods: { },
       computed: { },
       components: { 
-      SLYLManage,       
+      SPWYManage,       
       }
     }
 </script>
