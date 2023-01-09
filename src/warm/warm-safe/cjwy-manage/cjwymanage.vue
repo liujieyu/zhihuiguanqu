@@ -37,8 +37,8 @@
                         border
                         :height="theight"
                         v-loading="loading"
-                        @selection-change="handleSelectionChange"
                         style="width: 100%"
+                        @selection-change="handleSelectionChange"
                         @sort-change="sort_change"
                         >
                         <el-table-column
@@ -54,7 +54,7 @@
                         :fixed="item.fixed"
                         :sortable="item.sortable"
                         ></el-table-column>
-                        <el-table-column fixed="right" align="center" prop="damcd" label="操作" :width="90">
+                        <el-table-column fixed="right" align="center" prop="oper" label="操作" width="110">
                         <template slot-scope="scope">
                             <el-button @click="handleClick(scope.row)" type="primary" plain size="mini">修改</el-button>
                         </template>
@@ -76,13 +76,13 @@
                     </div>
                 </Content>
     <el-dialog
-    :title="spwydetail"
+    :title="cjwydetail"
     :visible="detailVisible"
     :width="dialogwidth"
     @close="closeYjDialog()"
     append-to-body center
    >
-  <SLYEDIT v-if="detailitem.itemshow" :info="detailitem" @closewindows="detailVisible=false;Reload()"></SLYEDIT>
+  <CJWYEDIT v-if="detailitem.itemshow" :info="detailitem" @closewindows="detailVisible=false;Reload()"></CJWYEDIT>
   </el-dialog>
 	</div>
 </template>
@@ -91,7 +91,7 @@
         import WarmDataConfig from "@/assets/commonJS/WarmDataConfig";
         import FilterMethods from "@/assets/commonJS/FilterMethods";
         import GetDataMethods from "@/assets/commonJS/GetDataMethods";
-        import SLYEDIT from "@/warm/warm-safe/spwy-manage/spwyedit.vue";
+        import CJWYEDIT from "@/warm/warm-safe/cjwy-manage/cjwyedit.vue";
         import App from "@/App.vue";
 	export default {
         data(){
@@ -104,8 +104,9 @@
                     adressList:[],
                     cybwtype:'',
                     model_adress:null,
+                    typelist:[],
                 },
-                spwydetail:'',//断面特征弹框标题
+                cjwydetail:'',//断面特征弹框标题
                 detailVisible:false,//是否显示弹框
                 detailitem:{itemshow:false},//弹框对象
                 multipleSelection: [], 
@@ -128,20 +129,20 @@
               {
                 title: "所属行政区划",
                 key: "adnm",
-                width:140,
+                width: 140,
                 align: "center",
                 sortable: "custom"
               },
               {
                 title: "断面编号",
-                width: 115,
+                width: 120,
                 key: "damcd",
                 align: "center",
                 sortable: "custom",
               },
               {
                 title: "测点编号",
-                width: 115,
+                width: 120,
                 key: "mpcd",
                 align: "center",
                 sortable: "custom",
@@ -163,21 +164,14 @@
               {
                 title: "位移阈值(mm)",
                 width: 140,
-                key: "xyhrds",
+                key: "vrds",
                 align: "center",
                 sortable: "custom",
               },
               {
-                title: "基准值X(m)",
-                width: 130,
-                key: "stvlx",
-                align: "center",
-                sortable: "custom",
-              },
-              {
-                title: "基准值Y(m)",
-                width: 130,
-                key: "stvly",
+                title: "初始高程(m)",
+                width: 140,
+                key: "inel",
                 align: "center",
                 sortable: "custom",
               },
@@ -196,7 +190,7 @@
                 // 引入过滤方法到此组件
         mixins: [WarmDataConfig,GetDataMethods,FilterMethods],
         components: {
-          SLYEDIT
+          CJWYEDIT
         },
         mounted(){
             // 获取行政区划数据,然后设置地址选择框选项
@@ -232,12 +226,12 @@
                     }
                     body["ADDlist"] = addvdds.toString();                   
                 }
-                this.axios.get('/guanqu/page/spwyinfo',{params:body}).then((res)=>{
+                this.axios.get('/guanqu/page/cjwyinfo',{params:body}).then((res)=>{
                     this.loading = false;
                     this.list_input.total = res.data.total;
                     var datalist=res.data.list;
                     this.data=datalist.map((val, index) => {
-                      val.index=index+1+(this.list_input.pagesize*(this.list_input.current-1));
+                      val.index=index + 1 + (this.list_input.pagesize*(this.list_input.current-1));
                       return val;
                     });
                 });
@@ -280,13 +274,17 @@
                 this.list_input.current=1;
                 this.Reload();
             }, 
+            //选中功能
+            handleSelectionChange(val){
+                this.multipleSelection=val;
+            },
             handleClick(item){
-              this.spwydetail=item.stnm+"测站"+item.mpcd+"位移变形信息编辑";
+              this.cjwydetail=item.stnm+"测站"+item.mpcd+"沉降变形信息编辑";
               this.detailitem={mpcd:item.mpcd,id:item.id,stcd:item.stcd,itemshow:true,editsign:"update"};
               this.detailVisible=true;
             },
             addClick(){
-              this.spwydetail="新增位移变形信息";
+              this.spwydetail="新增沉降变形信息";
               this.detailitem.editsign="add";
               this.detailitem.itemshow=true;
               this.detailVisible=true;
@@ -294,23 +292,23 @@
             delClick(){
               if(this.multipleSelection==null || this.multipleSelection.length==0){
                 this.$message({
-                  message: '请选择要删除的位移变形信息',
+                  message: '请选择要删除的沉降变形信息',
                   type: 'warning'
                 });
               }else{
-                var spwyids="";
+                var cjwyids="";
                 for(var i=0;i<this.multipleSelection.length;i++){
-                  spwyids+=this.multipleSelection[i].id;
+                  cjwyids+=this.multipleSelection[i].id;
                   if(i<this.multipleSelection.length-1){
-                    spwyids+=",";
+                    cjwyids+=",";
                   }
                 }
-                this.$confirm('确定删除这'+this.multipleSelection.length+'条位移变形信息?', '提示', {
+                this.$confirm('确定删除这'+this.multipleSelection.length+'条沉降变形信息?', '提示', {
                   confirmButtonText: '确定',
                   cancelButtonText: '取消',
                   type: 'warning'
                 }).then(() => {
-                  this.axios.get('/guanqu/manage/delspwyinfo',{params:{ids:spwyids}}).then((res)=>{
+                  this.axios.get('/guanqu/manage/delcjwyinfo',{params:{ids:cjwyids}}).then((res)=>{
                     this.$message({
                       type: 'success',
                       message: '删除成功!'
@@ -320,10 +318,6 @@
                 }).catch(() => {         
                 });
               }
-            },
-            //选中功能
-            handleSelectionChange(val){
-                this.multipleSelection=val;
             },
             closeYjDialog(){
               this.detailVisible=false;

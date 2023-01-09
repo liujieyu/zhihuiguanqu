@@ -38,19 +38,24 @@
           <el-input v-model="form.ch" placeholder="请输入" style="width:180px"></el-input>
         </el-form-item>
         <el-form-item label="轴距：" prop="ofax" >
-          <el-input v-model="form.ofax" placeholder="请输入" style="width:168px"></el-input>m
+          <el-input v-model="form.ofax" placeholder="请输入" style="width:168px" @input="(value)=>{isNaN(value)?isNaN(parseFloat(value))?
+                    form.ofax=null:form.ofax=parseFloat(value):form.ofax=value}"></el-input>m
         </el-form-item>
         <el-form-item label="X基准值：" prop="stvlx" >
-          <el-input v-model="form.stvlx" placeholder="请输入" style="width:168px"></el-input>m
+          <el-input v-model="form.stvlx" placeholder="请输入" style="width:168px" @input="(value)=>{isNaN(value)?isNaN(parseFloat(value))?
+                    form.stvlx=null:form.stvlx=parseFloat(value):form.stvlx=value}"></el-input>m
         </el-form-item>
         <el-form-item label="Y基准值：" prop="stvly">
-          <el-input v-model="form.stvly" placeholder="请输入" style="width:168px;"></el-input>m
+          <el-input v-model="form.stvly" placeholder="请输入" style="width:168px;" @input="(value)=>{isNaN(value)?isNaN(parseFloat(value))?
+                    form.stvly=null:form.stvly=parseFloat(value):form.stvly=value}"></el-input>m
         </el-form-item>
         <el-form-item label="初始高程：" prop="el" >
-          <el-input v-model="form.el" placeholder="请输入" style="width:168px"></el-input>m
+          <el-input v-model="form.el" placeholder="请输入" style="width:168px" @input="(value)=>{isNaN(value)?isNaN(parseFloat(value))?
+                    form.el=null:form.el=parseFloat(value):form.el=value}"></el-input>m
         </el-form-item>
         <el-form-item label="位移阈值：" prop="xyhrds">
-          <el-input v-model="form.xyhrds" placeholder="请输入" style="width:156px;"></el-input>mm
+          <el-input v-model="form.xyhrds" placeholder="请输入" style="width:156px;" @input="(value)=>{isNaN(value)?isNaN(parseFloat(value))?
+                    form.xyhrds=null:form.xyhrds=parseFloat(value):form.xyhrds=value}"></el-input>mm
         </el-form-item>   
         <el-form-item label="经度：" prop="eslg" >
           <el-input v-model="form.eslg" placeholder="请输入" style="width:180px" @input="(value)=>{isNaN(value)?isNaN(parseFloat(value))?

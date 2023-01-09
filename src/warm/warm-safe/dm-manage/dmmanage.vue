@@ -132,7 +132,7 @@
               {
                 title: "序号",
                 key: "index",
-                width: 60,
+                width: 55,
                 align: "center",
                 fixed: "left"
               },
@@ -165,14 +165,14 @@
                 sortable: "custom",
               },
               {
-                title: "断面长度",
+                title: "断面长度(m)",
                 width: 120,
                 key: "damlen",
                 align: "center",
                 sortable: "custom",
               },
               {
-                title: "断面宽度",
+                title: "断面宽度(m)",
                 width: 120,
                 key: "damwd",
                 align: "center",
@@ -334,7 +334,7 @@
                     dmids+=",";
                   }
                 }
-                this.$confirm('确定删除这'+this.multipleSelection.length+'条断面信息?', '提示', {
+                this.$confirm('确定删除这'+this.multipleSelection.length+'条断面信息以及其下断面特征信息?', '提示', {
                   confirmButtonText: '确定',
                   cancelButtonText: '取消',
                   type: 'warning'

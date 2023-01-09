@@ -356,6 +356,8 @@ export default new Router({
         {path: '/safemanage-slylinfo', component: () => import('./warm/warm-safe/slyl-manage/slyllist.vue')},
         //位移变形信息维护
         {path: '/safemanage-wybxinfo', component: () => import('./warm/warm-safe/spwy-manage/spwylist.vue')},
+        //沉降变形信息维护
+        {path: '/safemanage-cjbxinfo', component: () => import('./warm/warm-safe/cjwy-manage/cjwylilst.vue')},
         ], 
         },    
     ],

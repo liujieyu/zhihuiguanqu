@@ -48,11 +48,11 @@
                         :prop="item.key"
                         :align="item.align"
                         :label="item.title"
-                        :width="item.width"
+                        :min-width="item.width"
                         :fixed="item.fixed"
                         :sortable="item.sortable"
                         ></el-table-column>
-                        <el-table-column fixed="right" align="center" prop="damcd" label="详情" :width="110">
+                        <el-table-column fixed="right" align="center" prop="damcd" label="详情" width="110">
                         <template slot-scope="scope">
                             <el-button @click="handleClick(scope.row)" type="primary" plain size="mini">详情</el-button>
                         </template>
@@ -113,7 +113,7 @@
               {
                 title: "序号",
                 key: "index",
-                width: 60,
+                width: 55,
                 align: "center",
                 fixed: "left"
               },
@@ -127,6 +127,7 @@
               {
                 title: "所属行政区划",
                 key: "adnm",
+                width: 140,
                 align: "center",
                 sortable: "custom"
               },

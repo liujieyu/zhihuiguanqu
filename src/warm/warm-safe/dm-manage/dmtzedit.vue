@@ -63,10 +63,12 @@
                     <el-input v-model="form.damsnm" placeholder="请输入" style="width:180px"></el-input>
                     </el-form-item>
                     <el-form-item label="起点距：" prop="redi" >
-                    <el-input v-model="form.redi" placeholder="请输入" style="width:168px"></el-input>m
+                    <el-input v-model="form.redi" placeholder="请输入" style="width:168px" @input="(value)=>{isNaN(value)?isNaN(parseFloat(value))?
+                    form.redi=null:form.redi=parseFloat(value):form.redi=value}"></el-input>m
                     </el-form-item>
                     <el-form-item label="高程：" prop="poel" >
-                    <el-input v-model="form.poel" placeholder="请输入" style="width:168px"></el-input>m
+                    <el-input v-model="form.poel" placeholder="请输入" style="width:168px" @input="(value)=>{isNaN(value)?isNaN(parseFloat(value))?
+                    form.poel=null:form.poel=parseFloat(value):form.poel=value}"></el-input>m
                     </el-form-item>
                     <el-form-item label="断面编号：" prop="damcd">
                     <el-input v-model="form.damcd" placeholder="请输入" style="width:180px" readonly="true"></el-input>

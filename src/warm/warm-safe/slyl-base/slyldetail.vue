@@ -38,7 +38,7 @@
                             style="border-right: 1px solid #EBEEF5"
                           >{{ base.sygInfo.ch || "&nbsp;" }}</td>
                           <td align="right" class="dt_name">坝轴距：</td>
-                          <td align="center" class="dt_vale">{{ base.sygInfo.ofax || "&nbsp;" }}m</td>
+                          <td align="center" class="dt_vale">{{ base.sygInfo.ofax>=0?('下游'+base.sygInfo.ofax):('上游'+(-base.sygInfo.ofax)) || "&nbsp;" }}m</td>
                         </tr>
                         <tr>
                           <td align="right" class="dt_name">监测部位：</td>

@@ -50,10 +50,12 @@
                 <el-option  key="-"  label="上游"  value="-"></el-option>
                 <el-option  key="+"  label="下游"  value="+"></el-option>
             </el-select>
-          <el-input v-model="form.ofax" placeholder="请输入" style="width:88px"></el-input>m
+          <el-input v-model="form.ofax" placeholder="请输入" style="width:88px" @input="(value)=>{isNaN(value)?isNaN(parseFloat(value))?
+                    form.ofax=null:form.ofax=parseFloat(value):form.ofax=value}"></el-input>m
         </el-form-item>
         <el-form-item label="高程：" prop="el" >
-          <el-input v-model="form.el" placeholder="请输入" style="width:168px"></el-input>m
+          <el-input v-model="form.el" placeholder="请输入" style="width:168px" @input="(value)=>{isNaN(value)?isNaN(parseFloat(value))?
+                    form.el=null:form.el=parseFloat(value):form.el=value}"></el-input>m
         </el-form-item>
         <el-form-item label="设施名称：" prop="dhname">
           <el-input v-model="form.dhname" placeholder="请输入" style="width:180px;"></el-input>
@@ -69,10 +71,12 @@
             </el-select>
         </el-form-item>
         <el-form-item label="渗流阈值：" prop="spprwl" >
-          <el-input v-model="form.spprwl" placeholder="请输入" style="width:144px"></el-input>L/s
+          <el-input v-model="form.spprwl" placeholder="请输入" style="width:144px" @input="(value)=>{isNaN(value)?isNaN(parseFloat(value))?
+                    form.spprwl=null:form.spprwl=parseFloat(value):form.spprwl=value}"></el-input>L/s
         </el-form-item>
         <el-form-item label="测量最小值：" prop="tdmin" >
-          <el-input v-model="form.tdmin" placeholder="请输入" style="width:144px"></el-input>L/s
+          <el-input v-model="form.tdmin" placeholder="请输入" style="width:144px" @input="(value)=>{isNaN(value)?isNaN(parseFloat(value))?
+                    form.tdmin=null:form.tdmin=parseFloat(value):form.tdmin=value}"></el-input>L/s
         </el-form-item> 
         <el-form-item label="安装日期：" prop="indt" >
           <el-date-picker v-model="form.indt" value-format="yyyy-MM-dd" type="date" placeholder="选择日期" style="width:180px;"></el-date-picker>

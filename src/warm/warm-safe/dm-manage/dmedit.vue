@@ -31,10 +31,12 @@
             </el-select>
         </el-form-item>
         <el-form-item label="断面长度：" prop="damlen" >
-          <el-input v-model="form.damlen" placeholder="请输入" style="width:180px"></el-input>
+          <el-input v-model="form.damlen" placeholder="请输入" style="width:168px" @input="(value)=>{isNaN(value)?isNaN(parseFloat(value))?
+                    form.damlen=null:form.damlen=parseFloat(value):form.damlen=value}"></el-input>m
         </el-form-item>
         <el-form-item label="断面宽度：" prop="damwd" >
-          <el-input v-model="form.damwd" placeholder="请输入" style="width:180px"></el-input>
+          <el-input v-model="form.damwd" placeholder="请输入" style="width:168px" @input="(value)=>{isNaN(value)?isNaN(parseFloat(value))?
+                    form.damwd=null:form.damwd=parseFloat(value):form.damwd=value}"></el-input>m
         </el-form-item>
         <el-form-item label="更新时间：" prop="dtuptim" >
           <el-date-picker v-model="form.dtuptim" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="选择日期时间" style="width:180px;"></el-date-picker>

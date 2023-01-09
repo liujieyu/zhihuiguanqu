@@ -42,17 +42,19 @@
                         v-loading="loading"
                         style="width: 100%"
                         @sort-change="sort_change"
+                        tooltip-effect="light"
                         >
                         <el-table-column
                         v-for="(item,index) in tablecolumns"
                         :prop="item.key"
                         :align="item.align"
                         :label="item.title"
-                        :width="item.width"
+                        :min-width="item.width"
                         :fixed="item.fixed"
                         :sortable="item.sortable"
                         ></el-table-column>
-                        <el-table-column fixed="right" align="center" prop="damcd" label="断面特征" :width="120">
+	                      <el-table-column prop="text" align="center" label="备注" min-width="105" :show-overflow-tooltip="true"></el-table-column>
+                        <el-table-column fixed="right" align="center" prop="oper" label="断面特征" width="120">
                         <template slot-scope="scope">
                             <el-button @click="handleClick(scope.row)" type="primary" plain size="mini">断面特征</el-button>
                         </template>
@@ -112,7 +114,7 @@
               {
                 title: "序号",
                 key: "index",
-                width: 60,
+                width: 55,
                 align: "center",
                 fixed: "left"
               },
@@ -126,32 +128,33 @@
               {
                 title: "所属行政区划",
                 key: "adnm",
+                width: 140,
                 align: "center",
                 sortable: "custom"
               },
               {
                 title: "断面编号",
-                width: 120,
+                width: 115,
                 key: "damcd",
                 align: "center",
                 sortable: "custom",
               },
               {
                 title: "防渗墙类型",
-                width: 130,
+                width: 115,
                 key: "wallType",
                 align: "center",
                 sortable: "custom",
               },
               {
-                title: "断面长度",
+                title: "断面长度(m)",
                 width: 120,
                 key: "damlen",
                 align: "center",
                 sortable: "custom",
               },
               {
-                title: "断面宽度",
+                title: "断面宽度(m)",
                 width: 120,
                 key: "damwd",
                 align: "center",
@@ -159,7 +162,7 @@
               },
               {
                 title: "更新时间",
-                width: 160,
+                width: 135,
                 key: "dtuptim",
                 align: "center",
                 sortable: "custom",

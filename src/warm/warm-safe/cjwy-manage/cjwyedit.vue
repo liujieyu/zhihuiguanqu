@@ -5,7 +5,7 @@
         :model="form"
         :rules="rules"
         size="mini"
-        label-width="120px"
+        label-width="110px"
         style="display: flex;flex-wrap: wrap;"
       >
     <el-form-item label="监测站点：" prop="stcd">
@@ -31,64 +31,24 @@
         <el-form-item label="测点编号：" prop="mpcd">
           <el-input v-model="form.mpcd" placeholder="请输入" style="width:180px"></el-input>
         </el-form-item>
-        <el-form-item label="监测部位：" prop="msps">
-          <el-select v-model="form.msps" filterable placeholder="请选择" style="width:180px">
-                <el-option
-                v-for="item in info.typeList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-                </el-option>
-            </el-select>
+        <el-form-item label="仪器编号：" prop="dvcd" >
+          <el-input v-model="form.dvcd" placeholder="请输入" style="width:180px"></el-input>
         </el-form-item>       
         <el-form-item label="桩号：" prop="ch" >
           <el-input v-model="form.ch" placeholder="请输入" style="width:180px"></el-input>
         </el-form-item>
-        <el-form-item label="坝轴距：" prop="ofax" >
-          <el-select v-model="ofaxfh" placeholder="请选择" style="width:80px">
-                <el-option  key="-"  label="上游"  value="-"></el-option>
-                <el-option  key="+"  label="下游"  value="+"></el-option>
-            </el-select>
-          <el-input v-model="form.ofax" placeholder="请输入" style="width:88px" @input="(value)=>{isNaN(value)?isNaN(parseFloat(value))?
+        <el-form-item label="轴距：" prop="ofax" >
+          <el-input v-model="form.ofax" placeholder="请输入" style="width:168px" @input="(value)=>{isNaN(value)?isNaN(parseFloat(value))?
                     form.ofax=null:form.ofax=parseFloat(value):form.ofax=value}"></el-input>m
         </el-form-item>
-        <el-form-item label="进水段底高程：" prop="ipbtel" >
-          <el-input v-model="form.ipbtel" placeholder="请输入" style="width:168px" @input="(value)=>{isNaN(value)?isNaN(parseFloat(value))?
-                    form.ipbtel=null:form.ipbtel=parseFloat(value):form.ipbtel=value}"></el-input>m
+        <el-form-item label="初始高程：" prop="inel" >
+          <el-input v-model="form.inel" placeholder="请输入" style="width:168px" @input="(value)=>{isNaN(value)?isNaN(parseFloat(value))?
+                    form.inel=null:form.inel=parseFloat(value):form.inel=value}"></el-input>m
         </el-form-item>
-        <el-form-item label="进水段顶高程：" prop="iptpel">
-          <el-input v-model="form.iptpel" placeholder="请输入" style="width:168px;" @input="(value)=>{isNaN(value)?isNaN(parseFloat(value))?
-                    form.iptpel=null:form.iptpel=parseFloat(value):form.iptpel=value}"></el-input>m
-        </el-form-item>
-        <el-form-item label="管口高程：" prop="tbtpel" >
-          <el-input v-model="form.tbtpel" placeholder="请输入" style="width:168px" @input="(value)=>{isNaN(value)?isNaN(parseFloat(value))?
-                    form.tbtpel=null:form.tbtpel=parseFloat(value):form.tbtpel=value}"></el-input>m
-        </el-form-item>
-        <el-form-item label="管底高程：" prop="tbbtel">
-          <el-input v-model="form.tbbtel" placeholder="请输入" style="width:168px;" @input="(value)=>{isNaN(value)?isNaN(parseFloat(value))?
-                    form.tbbtel=null:form.tbbtel=parseFloat(value):form.tbbtel=value}"></el-input>m
-        </el-form-item>
-        <el-form-item label="水位阈值高程：" prop="pztbtel" >
-          <el-input v-model="form.pztbtel" placeholder="请输入" style="width:168px" @input="(value)=>{isNaN(value)?isNaN(parseFloat(value))?
-                    form.pztbtel=null:form.pztbtel=parseFloat(value):form.pztbtel=value}"></el-input>m
-        </el-form-item>
-        <el-form-item label="安装高程：" prop="el" >
-          <el-input v-model="form.el" placeholder="请输入" style="width:168px" @input="(value)=>{isNaN(value)?isNaN(parseFloat(value))?
-                    form.el=null:form.el=parseFloat(value):form.el=value}"></el-input>m
-        </el-form-item>
-        <el-form-item label="仪器编号：" prop="dvcd" >
-          <el-input v-model="form.dvcd" placeholder="请输入" style="width:180px"></el-input>
-        </el-form-item> 
-        <el-form-item label="监测类型：" prop="mstp" >
-          <el-select v-model="form.mstp" filterable placeholder="请选择" style="width:180px">
-                <el-option
-                v-for="item in mstplist"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-                </el-option>
-            </el-select>
-        </el-form-item>
+        <el-form-item label="位移阈值：" prop="vrds">
+          <el-input v-model="form.vrds" placeholder="请输入" style="width:156px;" @input="(value)=>{isNaN(value)?isNaN(parseFloat(value))?
+                    form.vrds=null:form.vrds=parseFloat(value):form.vrds=value}"></el-input>mm
+        </el-form-item>   
         <el-form-item label="经度：" prop="eslg" >
           <el-input v-model="form.eslg" placeholder="请输入" style="width:180px" @input="(value)=>{isNaN(value)?isNaN(parseFloat(value))?
                     form.eslg=null:form.eslg=parseFloat(value):form.eslg=value}"></el-input>
@@ -96,13 +56,30 @@
         <el-form-item label="纬度：" prop="nrlt" >
           <el-input v-model="form.nrlt" placeholder="请输入" style="width:180px" @input="(value)=>{isNaN(value)?isNaN(parseFloat(value))?
                     form.nrlt=null:form.nrlt=parseFloat(value):form.nrlt=value}"></el-input>
-        </el-form-item>    
-        <el-form-item label="备注：" prop="rm">
-            <el-input type="textarea" v-model="form.rm" style="width:180px;"></el-input>
-        </el-form-item>   
+        </el-form-item>     
+        <el-form-item label="型式：" prop="tp" >
+          <el-select v-model="form.tp" filterable allow-create placeholder="请输入或选择" style="width:180px" @blur="tpblur">
+                <el-option label="综合标" value="综合标"></el-option>
+                <el-option label="混凝土嵌心标" value="混凝土嵌心标"></el-option>
+                <el-option label="墙上标" value="墙上标"></el-option>
+                <el-option label="钢管标" value="钢管标"></el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="安装日期：" prop="indt" >
+          <el-date-picker v-model="form.indt" value-format="yyyy-MM-dd" type="date" placeholder="选择日期" style="width:180px;"></el-date-picker>
+        </el-form-item>
+        <el-form-item label="测定日期：" prop="dtdt" >
+          <el-date-picker v-model="form.dtdt" value-format="yyyy-MM-dd" type="date" placeholder="选择日期" style="width:180px;"></el-date-picker>
+        </el-form-item>
         <el-form-item label="更新时间：" prop="dtuptm" >
           <el-date-picker v-model="form.dtuptm" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="选择日期时间" style="width:180px;"></el-date-picker>
-        </el-form-item>
+        </el-form-item>  
+        <el-form-item label="基础情况：" prop="bsin">
+            <el-input type="textarea" v-model="form.bsin" style="width:180px;"></el-input>
+        </el-form-item>        
+        <el-form-item label="备注：" prop="rm">
+            <el-input type="textarea" v-model="form.rm" style="width:180px;"></el-input>
+        </el-form-item>          
         <el-form-item>
             <el-button type="primary" @click="onSubmit" style="margin-right:50px;margin-left:110px;" size="small">保存</el-button>
             <el-button type="info" @click="onCannel" size="small">取消</el-button>
@@ -122,31 +99,26 @@ export default {
       loading:false,
       form: {
         id:"",
-        sbid:"",
         stcd: "",
         damcd: "",
         mpcd: "",
         ch: "",
-        ofax: "",       
-        msps: "",
-        ipbtel: "",
-        iptpel: "",
-        tbtpel:"",
-        tbbtel:"",
-        pztbtel:"",
-        el:"",
+        ofax: "",
+        inel:"",       
+        vrds: "",
+        tp:"",
+        bsin:"",
+        indt:"",
+        dtdt:"",
         dvcd:"",
-        mstp:"",
         eslg:"",
         nrlt:"",
         rm:"",
         dtuptm:"",
       },
-      routerurl:'/guanqu/manage/addslylinfo',
+      routerurl:'/guanqu/manage/addcjwyinfo',
       stcdlist:[],
       damcdlist:[],
-      mstplist:[],
-      ofaxfh:"+",
       rules: {
         stcd: [{ required: true, message: "请选择监测站点",trigger: 'change'}],
         damcd: [{ required: true, message: "断面编号不能为空",trigger: 'blur'},{ min: 6, max: 10, message: '长度在6到10个字符', trigger: 'blur'}],
@@ -154,12 +126,12 @@ export default {
         ch: [{ required: true, message: "桩号不能为空",trigger: 'blur'},{ min: 1, max: 9, message: '长度在1到9个字符', trigger: 'blur'}],
         ofax: [{ required: true, message: "轴距不能为空",trigger: 'blur'}],  
         dvcd: [{ required: true, message: "仪器编号不能为空",trigger: 'blur'}], 
-        msps: [{ required: true, message: "监测部位不能为空",trigger: 'change'}],
-        mstp: [{ required: true, message: "监测类型不能为空",trigger: 'change'}],
+        inel:[{ required: true, message: "初始高程不能为空",trigger: 'blur'}],
+        dtdt: [{ required: true, message: "请选择测定日期",trigger: 'change'}],
         dtuptm: [{ required: true, message: "请选择更新时间",trigger: 'change'}],
-        tbtpel: [{ required: true, message: "管口高程不能为空",trigger: 'blur'}],
-        tbbtel: [{ required: true, message: "管底高程不能为空",trigger: 'blur'}],
-        pztbtel:[{ required: true, message: "水位阈值高程不能为空",trigger: 'blur'}],      
+        eslg: [{ required: true, message: "经度不能为空",trigger: 'blur'}],
+        nrlt: [{ required: true, message: "纬度不能为空",trigger: 'blur'}],
+        vrds:[{ required: true, message: "位移阈值不能为空",trigger: 'blur'}],      
       },
     };
   },
@@ -167,9 +139,8 @@ export default {
   mixins: [WarmDataConfig],
   mounted() {  
     this.form.dtuptm=this.getTodayDate();
-    this.Get_WrpFieldinfo('WRP_SPG_PZTB','MSTP',data => {
-         this.mstplist = data;                
-    });
+    this.form.indt=this.form.dtuptm.substring(0,10);
+    this.form.dtdt=this.form.indt;
       //监测站点列表
       this.axios.get('/guanqu/base/stcdlist').then((res)=>{
           this.stcdlist=res.data;         
@@ -201,20 +172,21 @@ export default {
     },
     Reload(){   
       if(this.info.editsign=="update"){
-        this.routerurl='/guanqu/manage/updateslylinfo';
-        this.axios.get('/guanqu/manage/slyldetail',{params:{ID:this.info.id}}).then((res)=>{
+        this.routerurl='/guanqu/manage/updatecjwyinfo';
+        this.axios.get('/guanqu/manage/cjwydetail',{params:{ID:this.info.id}}).then((res)=>{
           this.form=res.data;
-          if(this.form.ofax<0){
-            this.ofaxfh="-";
-            this.form.ofax=-this.form.ofax;
-          }else{
-            this.ofaxfh="+";
-          }
           this.getDamcd(this.form.stcd);
         }); 
       }else{
-        this.routerurl='/guanqu/manage/addslylinfo';
+        this.routerurl='/guanqu/manage/addcjwyinfo';
       }
+    },
+    //可输入可选择 tp
+    tpblur(e){
+        if(e.target.value.trim()!=""){
+            this.form.tp=e.target.value;
+        }
+        
     },
     //获取断面编码列表
     getDamcd(stcd){
@@ -228,15 +200,12 @@ export default {
       this.$refs['slylform'].validate((valid) => {
           if (valid) {            
             if(this.info.editsign=="add" || (this.info.editsign=="update" && this.info.mpcd!=this.form.mpcd)){
-              this.axios.get('/guanqu/base/checkmpcd',{params:{MPCD:this.form.mpcd,TYPE:2}}).then((res)=>{
+              this.axios.get('/guanqu/base/checkmpcd',{params:{MPCD:this.form.mpcd,TYPE:4}}).then((res)=>{
                 var status=res.data.checksign;
                 if(status=="yes"){
                   this.$message.error(res.data.warning);
                 }else{
                   this.loading=true;
-                  if(this.ofaxfh=="-"){
-                      this.form.ofax=-this.form.ofax;
-                  }
                   this.axios.post(this.routerurl,this.form).then((res) => {
                     this.loading=false;
                     this.$emit("closewindows");
@@ -249,9 +218,6 @@ export default {
               });
             }else{
               this.loading=true;
-              if(this.ofaxfh=="-"){
-                  this.form.ofax=-this.form.ofax;
-              }
               this.axios.post(this.routerurl,this.form).then((res) => {
                    this.loading=false;
                     this.$emit("closewindows");

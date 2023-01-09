@@ -120,7 +120,7 @@
               {
                 title: "序号",
                 key: "index",
-                width: 60,
+                width: 55,
                 align: "center",
                 fixed: "left"
               },
