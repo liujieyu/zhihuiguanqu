@@ -66,7 +66,7 @@
                     form.nrlt=null:form.nrlt=parseFloat(value):form.nrlt=value}"></el-input>
         </el-form-item>     
         <el-form-item label="型式：" prop="tp" >
-          <el-select v-model="form.tp" filterable allow-create placeholder="请输入或选择" style="width:180px">
+          <el-select v-model="form.tp" filterable allow-create default-first-option placeholder="请输入或选择" style="width:180px">
                 <el-option label="综合标" value="综合标"></el-option>
                 <el-option label="混凝土嵌心标" value="混凝土嵌心标"></el-option>
                 <el-option label="墙上标" value="墙上标"></el-option>

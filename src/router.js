@@ -358,6 +358,8 @@ export default new Router({
         {path: '/safemanage-wybxinfo', component: () => import('./warm/warm-safe/spwy-manage/spwylist.vue')},
         //沉降变形信息维护
         {path: '/safemanage-cjbxinfo', component: () => import('./warm/warm-safe/cjwy-manage/cjwylilst.vue')},
+        //监测站点维护
+        {path: '/manage-siteinfo', component: () => import('./warm/warm-base/site-manage/sitelist.vue')},
         ], 
         },    
     ],

@@ -2,14 +2,13 @@
 	<div>
 		<Breadcrumb :style="{margin: '0 0 15px 0'}">
             <BreadcrumbItem>维护管理</BreadcrumbItem>
-            <BreadcrumbItem>大坝安全测点</BreadcrumbItem>
-            <BreadcrumbItem>沉降变形维护</BreadcrumbItem>
+            <BreadcrumbItem>监测站点维护</BreadcrumbItem>
         </Breadcrumb>
 
-		<Tabs value="cjwylinfo">
-	        <TabPane label="沉降变形维护" name="cjwylinfo">
+		<Tabs value="sitemanage">
+	        <TabPane label="监测站点维护" name="sitemanage">
 
-	        	<CJWYInfo></CJWYInfo>
+	        	<SiteManage></SiteManage>
                 
 	        </TabPane>
 	    </Tabs>
@@ -17,7 +16,7 @@
 </template>
 
 <script type="text/javascript">
-  import CJWYInfo from '@/warm/warm-safe/cjwy-manage/cjwymanage.vue';
+  import SiteManage from '@/warm/warm-base/site-manage/sitemanage.vue'
 	export default {
         data() {
         return { };
@@ -27,7 +26,7 @@
       methods: { },
       computed: { },
       components: { 
-      CJWYInfo,       
+      SiteManage,       
       }
     }
 </script>

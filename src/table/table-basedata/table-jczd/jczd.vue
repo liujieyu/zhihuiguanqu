@@ -248,22 +248,22 @@
 
             // 行政区划选择器
             XZQHsearch(){
-                console.log(this.form.model_adress);
+                this.list_input.current=1;
                 this.Reload();
             },
             // 渠道选择器
             QDsearch(){
-                console.log(this.form.model_qudao);
+                this.list_input.current=1;
                 this.Reload();
             },
             // 国家定类选择器
             STTPUpdate(){
-                console.log(this.gjdl.Field);
+                this.list_input.current=1;
                 this.Reload();
             },
             //站点等级选择器
             STGRUpdate(){
-                console.log(this.zddj.Field);
+                this.list_input.current=1;
                 this.Reload();
             },
             // 监测要素选择器
@@ -298,6 +298,7 @@
               }else{
                 this.searchs = '';
               }
+              this.list_input.current=1;
                 this.Reload();
             },
             indexMethod(index){
