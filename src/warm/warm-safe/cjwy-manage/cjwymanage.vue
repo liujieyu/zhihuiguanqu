@@ -284,7 +284,7 @@
               this.detailVisible=true;
             },
             addClick(){
-              this.spwydetail="新增沉降变形信息";
+              this.cjwydetail="新增沉降变形信息";
               this.detailitem.editsign="add";
               this.detailitem.itemshow=true;
               this.detailVisible=true;

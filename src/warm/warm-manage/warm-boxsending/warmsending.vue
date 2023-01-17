@@ -48,6 +48,7 @@
                         style="width: 100%"
                         @cell-click="cellclick"
                         @sort-change="sort_change"
+                        tooltip-effect="light"
                         >
                         <el-table-column
                           label=" "

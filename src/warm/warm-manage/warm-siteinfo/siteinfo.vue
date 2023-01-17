@@ -58,7 +58,6 @@
                         :height="theight"
                         v-loading="loading"
                         style="width: 100%"
-                        @cell-click="cellclick"
                         @sort-change="sort_change"
                         >
                         <el-table-column
@@ -222,7 +221,7 @@
             this.form.date=[start,end];
             //行政区划
             this.getTableData_WRP_AD_B(data => {
-                this.form.adressList = data;
+                this.form.adressList = data[0].children;
             });
             //预警等级
             this.Get_WrpFieldinfo('ST_AlarmInfo','Alarm',data => {
@@ -243,19 +242,19 @@
                 }
                 if (this.form.model_adress.length == 1) {
                   var str1 = this.form.model_adress[0];
-                  str1 = str1.substring(0,6);
+                  str1 = str1.substring(0,9);
                   this.form.xzqh = str1; 
                 }
                 if (this.form.model_adress.length == 2) {
                   var str2 = this.form.model_adress[1];
-                  str2 = str2.substring(0,9);
+                  str2 = str2.substring(0,12);
                   this.form.xzqh = str2; 
                 }
-                if (this.form.model_adress.length == 3) {
-                  var str3 = this.form.model_adress[2];
-                  str3 = str3.substring(0,12);
-                  this.form.xzqh = str3; 
-                }
+                // if (this.form.model_adress.length == 3) {
+                //   var str3 = this.form.model_adress[2];
+                //   str3 = str3.substring(0,12);
+                //   this.form.xzqh = str3; 
+                // }
                 var _currentPage = this.list_input.current;
                 var _pageSizes = this.list_input.pagesize;
                 var _bgincount=(_currentPage - 1) * _pageSizes+1;

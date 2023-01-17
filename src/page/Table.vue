@@ -71,7 +71,8 @@
                 Menu: {show_Controller: false},
                 data:[],
                 value:false,
-                activeindex:'/table-sqxx-sksq',
+                activeindex:'',
+                isCollapse:false,
             };
         },
         methods: {
@@ -84,6 +85,10 @@
                     console.log(res.data);
                     this.data = res.data;            
                 });
+            },
+            showmenu(menupath){
+                this.activeindex=menupath;
+                this.$router.push({path: menupath});    
             },
             fclassmenu(item){
                 console.log(item);
@@ -126,7 +131,7 @@
         },
         mounted() {
             //if(this.info==1){
-            this.$router.push({path: '/table-sqxx-sksq'});            
+            //this.$router.push({path: '/table-sqxx-sksq'});            
             //}
             localStorage.anniu = 0;
             this.Reload();

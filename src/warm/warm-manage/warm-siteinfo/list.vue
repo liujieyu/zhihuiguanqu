@@ -2,14 +2,12 @@
 	<div>
 		<Breadcrumb :style="{margin: '0 0 15px 0'}">
             <BreadcrumbItem>预警管理</BreadcrumbItem>
-            <BreadcrumbItem>站点预警</BreadcrumbItem>
+            <BreadcrumbItem>预警查询</BreadcrumbItem>
         </Breadcrumb>
 
 		<Tabs value="warmsite">
 	        <TabPane label="站点预警" name="warmsite">
-
-	        	<WarmSite @showdailog="showdailog"></WarmSite>
-                
+	        	<WarmSite @showdailog="showdailog"></WarmSite>               
 	        </TabPane>
 	    </Tabs>
         <!--详情对话框-->

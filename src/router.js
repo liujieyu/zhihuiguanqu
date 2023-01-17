@@ -360,6 +360,8 @@ export default new Router({
         {path: '/safemanage-cjbxinfo', component: () => import('./warm/warm-safe/cjwy-manage/cjwylilst.vue')},
         //监测站点维护
         {path: '/manage-siteinfo', component: () => import('./warm/warm-base/site-manage/sitelist.vue')},
+        //防洪信息维护
+        {path: '/manage-rsvalarm', component: () => import('./warm/warm-target/rsv-manage/rsvlist.vue')},
         ], 
         },    
     ],

@@ -507,7 +507,7 @@
     <!-- 表格 -->
     <div v-show="mapBox_show == 0">
       <!-- <router-view></router-view> -->
-      <Table :info="routerurl"></Table>
+      <Table :info="routerurl" ref="menutable"></Table>
     </div>
 
     <!-- 图片放大模态框 -->
@@ -1368,6 +1368,7 @@ export default {
       // }
       if(this.mapBox_show=="0"){
         this.routerurl=1;
+        this.$refs.menutable.showmenu('/table-sqxx-sksq');
       }else{
         this.routerurl=0;
       }
@@ -4017,8 +4018,9 @@ hideSafeTableLoading(){
     // 顶部菜单方法
     handleSelect(key, keyPath) {
     console.log(keyPath);
-    this.mapBox_show=0
-    this.$router.push(keyPath[0]);
+    this.mapBox_show=0;
+    this.$refs.menutable.showmenu(keyPath[0]);
+    //this.$router.push(keyPath[0]);
       },
       navchange1(){
         this.imgflag='jichushuju';

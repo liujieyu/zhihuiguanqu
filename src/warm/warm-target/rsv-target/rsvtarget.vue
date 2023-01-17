@@ -127,7 +127,7 @@
            label="所属行政区划"
            align="center"
            sortable="custom"
-           min-width="140">
+           min-width="150">
         </el-table-column>
       </el-table>
       <div style="margin:10px 10px 0px 10px;overflow: hidden">

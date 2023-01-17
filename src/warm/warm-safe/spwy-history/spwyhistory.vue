@@ -29,7 +29,7 @@
                             </Select>
             </Col>
             <Col>
-            <Button type="primary" style="width: auto;margin-right: 10px;" @click="WybxInfo">位移测点信息</Button>
+            <Button type="primary" style="width: auto;margin-right: 10px;" @click="WybxInfo">位移测站信息</Button>
             </Col>
           </Row>
           <div class="switch" @click="Menu_toggle">

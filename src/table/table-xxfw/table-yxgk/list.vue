@@ -1,7 +1,8 @@
 <template>
 	<div>
 		<Breadcrumb :style="{margin: '0 0 15px 0'}">
-            <BreadcrumbItem>维护管理</BreadcrumbItem>
+            <BreadcrumbItem>水雨情监测</BreadcrumbItem>
+            <BreadcrumbItem>历史分析</BreadcrumbItem>
             <BreadcrumbItem>运行工况</BreadcrumbItem>
         </Breadcrumb>
 

@@ -3,14 +3,14 @@
 		<Breadcrumb :style="{margin: '0 0 15px 0'}">
             <BreadcrumbItem>预警管理</BreadcrumbItem>
             <BreadcrumbItem>预警查询</BreadcrumbItem>
-            <BreadcrumbItem>短信预警查询</BreadcrumbItem>
         </Breadcrumb>
 
-		<Tabs value="warmsend">
+		<Tabs value="warmsite">
+          <TabPane label="站点预警" name="warmsite">
+	        	<WarmSite></WarmSite>               
+	        </TabPane>
 	        <TabPane label="短信预警查询" name="warmsend">
-
-	        	<WarmSended @showdailog="showdailog"></WarmSended>
-                
+	        	<WarmSended @showdailog="showdailog"></WarmSended>               
 	        </TabPane>
 	    </Tabs>
   <!--详情对话框-->
@@ -24,6 +24,7 @@
 </template>
 
 <script type="text/javascript">
+  import WarmSite from '@/warm/warm-manage/warm-siteinfo/siteinfo.vue'
   import WarmSended from '@/warm/warm-manage/warm-boxsended/warmsended.vue'
   //发送短信详细信息框
   import WarmBoxInfo from "@/warm/warm-detail/Detail-boxsending1.vue";
@@ -51,6 +52,7 @@
        },
       computed: { },
       components: { 
+        WarmSite,
         WarmSended,
         WarmBoxInfo
       }

@@ -225,6 +225,7 @@ export default {
         this.routerurl='/guanqu/manage/updatesiteinfo';
         this.axios.get('/guanqu/base/findsitebyid',{params:{ID:this.info.id}}).then((res)=>{
           this.form=res.data;
+          this.form.dtuptm=this.getTodayDate();
           this.form.types=this.form.types.split(",");
           if(this.form.addvcd.endsWith("000")){
             this.form.addvcd=[this.form.addvcd];
@@ -250,6 +251,7 @@ export default {
     },
     //选择行政区划获取站址
     handleChange(value){
+       this.form.stlc="";
         console.log(this.$refs["xzqhcascader"].getCheckedNodes()[0].pathLabels+","+value);
         var patharry=this.$refs["xzqhcascader"].getCheckedNodes()[0].pathLabels;
         for(var i=0;i<patharry.length;i++){

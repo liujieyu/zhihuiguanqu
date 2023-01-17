@@ -20,12 +20,11 @@
               @change="XZQHsearch"
               change-on-select
             ></el-cascader>
-        </Col> 
-        <!---已实现
+        </Col>         
         <Col>
-          <Button type="primary" style="width: auto;margin-right: 20px;" @click="exportToExcel">导出</Button>
-        </col>
-        -->
+        <Button type="primary" icon="md-add" style="width: auto;margin-right:20px;" @click="addClick">新增</Button>
+        <Button type="primary" icon="ios-trash" style="width: auto;" @click="delClick">删除</Button>
+        </Col>       
       </Row>
       <Row class="fgline"></Row>
       <el-table
@@ -34,7 +33,12 @@
         :height="theight"
         v-loading="loading"
         style="width: 100%"
+        @selection-change="handleSelectionChange"
         @sort-change="sort_change">
+        <el-table-column
+          type="selection"
+          width="45">
+        </el-table-column>
         <el-table-column
           label=" "
           type="index"
@@ -60,12 +64,26 @@
            min-width="120">
         </el-table-column>
         <el-table-column
-           prop="ttcp"
-           label="总库容(万m³)"
+           prop="FWL"
+           label="4-6月汛限水位(m)"
            align="center"
            sortable="custom"
-           min-width="130">
-        </el-table-column>       
+           min-width="160">
+        </el-table-column>
+        <el-table-column
+           prop="FWL79"
+           label="7-9月汛限水位(m)"
+           align="center"
+           sortable="custom"
+           min-width="160">
+        </el-table-column>  
+        <el-table-column
+           prop="chfl"
+           label="校核洪水位(m)"
+           align="center"
+           sortable="custom"
+           min-width="140">
+        </el-table-column>     
         <el-table-column
            prop="fldcp"
            label="防洪库容(万m³)"
@@ -74,39 +92,16 @@
            min-width="145">
         </el-table-column>
         <el-table-column
-           prop="actcp"
-           label="兴利库容(万m³)"
-           align="center"
-           sortable="custom"
-           min-width="145">
-        </el-table-column>
-        <el-table-column
-           prop="ddcp"
-           label="死库容(万m³)"
-           align="center"
-           sortable="custom"
-           min-width="130">
-        </el-table-column>
-        <el-table-column
-           prop="hmxw"
-           label="历史最大蓄水量(万m³)"
-           align="center"
-           sortable="custom"
-           min-width="185">
-        </el-table-column>
-        <el-table-column
-           prop="sfq"
-           label="启动预报流量(m³/s)"
-           align="center"
-           sortable="custom"
-           min-width="170">
-        </el-table-column>
-        <el-table-column
            prop="stlc"
            label="所属行政区划"
            align="center"
            sortable="custom"
            min-width="150">
+        </el-table-column>
+        <el-table-column fixed="right" align="center" prop="oper" label="操作" width="110">
+            <template slot-scope="scope">
+                <el-button @click="handleClick(scope.row)" type="primary" plain size="mini">修改</el-button>
+            </template>
         </el-table-column>
       </el-table>
       <div style="margin:10px 10px 0px 10px;overflow: hidden">
@@ -124,10 +119,20 @@
         </div>
       </div>
     </Content>
+    <el-dialog
+    :title="alarmdetail"
+    :visible="detailVisible"
+    :width="dialogwidth"
+    @close="closeYjDialog()"
+    append-to-body center
+   >
+  <RSVEDIT v-if="detailitem.itemshow" :info="detailitem" @closewindows="detailVisible=false;Reload()"></RSVEDIT>
+  </el-dialog>
   </div>
 </template>
 
 <script type="text/javascript">
+  import RSVEDIT from "@/warm/warm-target/rsv-manage/rsvedit.vue";
   import FilterMethods from "@/assets/commonJS/FilterMethods";
   import GetDataMethods from "@/assets/commonJS/GetDataMethods";
   export default 
@@ -137,7 +142,11 @@
       return{
         loading:false,
         theight:window.innerHeight-306,
+        dialogwidth:(680/window.innerWidth*100)+"%",
         tabledata:[],
+        alarmdetail:'',//断面特征弹框标题
+        detailVisible:false,//是否显示弹框
+        detailitem:{itemshow:false},//弹框对象
         form:{
           searchmsg:'',
           orderby:'',
@@ -145,6 +154,7 @@
           adressList:[],
           model_adress:'',
         },
+        multipleSelection:[], 
         list_input:{
         total:100,
         pagesize:50,
@@ -155,6 +165,9 @@
     }, 
         // 引入过滤方法到此组件
     mixins: [FilterMethods,GetDataMethods],
+    components: {
+          RSVEDIT
+    },
     mounted(){
       //行政区划
       this.getTableData_WRP_AD_B(data => {
@@ -200,10 +213,58 @@
     indexMethod(index){
                 return index + 1 + (this.list_input.pagesize*(this.list_input.current-1));
             },
-      exportToExcel() {
-                var params='&stnm='+this.form.searchmsg+'&begincount=1&endcount=99999&orderBy='+this.form.orderby+'&sequence='+this.form.sequence;
-              window.location.href='/excel/exportrsvalarm?'+params;
-      },
+      //选中功能
+        handleSelectionChange(val){
+            this.multipleSelection=val;
+        },
+        closeYjDialog(){
+              this.detailVisible=false;
+              this.detailitem.itemshow=false;
+            },
+        handleClick(item){
+              this.alarmdetail=item.stnm+"防洪信息编辑";
+              this.detailitem={id:item.id,stcd:item.stcd,itemshow:true,editsign:"update"};
+              this.detailVisible=true;
+            },
+            addClick(){
+              this.alarmdetail="新增防洪信息";
+              this.detailitem.editsign="add";
+              this.detailitem.itemshow=true;
+              this.detailVisible=true;
+            },
+            delClick(){
+              if(this.multipleSelection==null || this.multipleSelection.length==0){
+                this.$message({
+                  message: '请选择要删除的防洪信息',
+                  type: 'warning'
+                });
+              }else{
+                var ids="";
+                var alarmids="";
+                for(var i=0;i<this.multipleSelection.length;i++){
+                  ids+=this.multipleSelection[i].id;
+                  alarmids+=this.multipleSelection[i].alarmid;
+                  if(i<this.multipleSelection.length-1){
+                    ids+=",";
+                    alarmids+=",";
+                  }
+                }
+                this.$confirm('确定删除这'+this.multipleSelection.length+'条防洪信息?', '提示', {
+                  confirmButtonText: '确定',
+                  cancelButtonText: '取消',
+                  type: 'warning'
+                }).then(() => {
+                  this.axios.get('/guanqu/rsvalarm/delinfo',{params:{ids:ids,alarmids:alarmids}}).then((res)=>{
+                    this.$message({
+                      type: 'success',
+                      message: '删除成功!'
+                    });
+                    this.Reload();
+                  });                 
+                }).catch(() => {         
+                });
+              }
+            },
       sort_change(item){
         if(item.order==null){
             return;

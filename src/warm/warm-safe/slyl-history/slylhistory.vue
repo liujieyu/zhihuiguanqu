@@ -29,7 +29,7 @@
                             </Select>
             </Col>
             <Col>
-            <Button type="primary" style="width: auto;margin-right: 10px;" @click="SlylInfo">渗压测点信息</Button>
+            <Button type="primary" style="width: auto;margin-right: 10px;" @click="SlylInfo">渗压测站信息</Button>
             </Col>
           </Row>
           <div class="switch" @click="Menu_toggle">
