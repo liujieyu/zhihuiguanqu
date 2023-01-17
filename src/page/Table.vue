@@ -16,6 +16,7 @@
                             background-color="#545c64"
                             class="el-menu-vertical-demo"
                             :default-active="activeindex"
+                            unique-opened="true"
                             text-color="#fff"
                             active-text-color="#ffd04b"
                             :router="true"
