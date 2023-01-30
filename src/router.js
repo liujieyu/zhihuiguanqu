@@ -362,6 +362,8 @@ export default new Router({
         {path: '/manage-siteinfo', component: () => import('./warm/warm-base/site-manage/sitelist.vue')},
         //防洪信息维护
         {path: '/manage-rsvalarm', component: () => import('./warm/warm-target/rsv-manage/rsvlist.vue')},
+        //降雨预警维护
+        {path: '/manage-rainalarm', component: () => import('./warm/warm-target/rain-manage/rainlist.vue')},
         ], 
         },    
     ],

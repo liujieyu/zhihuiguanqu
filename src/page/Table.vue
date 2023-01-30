@@ -91,6 +91,9 @@
                 this.activeindex=menupath;
                 this.$router.push({path: menupath});    
             },
+            returnindex(){
+                return this.activeindex;
+            },
             fclassmenu(item){
                 console.log(item);
             },

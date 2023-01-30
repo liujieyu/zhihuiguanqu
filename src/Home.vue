@@ -39,25 +39,25 @@
         <Input search enter-button="定位" placeholder="请输入水库站点名称" v-model="search_str" @on-search="locationByName()"/>
         </div>
         
-        <el-menu-item index="/warm-warmmessage" v-if="menusshow" :style="{'float':'right','margin-right':menuwidth+'px'}" @click="showmenu()">
+        <el-menu-item index="/warm-warmmessage" v-if="menusshow" :style="{'float':'right','margin-right':menuwidth+'px'}">
          <template slot="title">
             <i class="el-icon-edit-outline" style="color:#ffffff;"></i>
             <span style="font-size:14px;">预警发布</span>
         </template>
         </el-menu-item>
-        <el-menu-item index="/safefenxi-sllls" v-if="menusshow" style="float:right;" @click="showmenu()">
+        <el-menu-item index="/safefenxi-sllls" v-if="menusshow" style="float:right;">
          <template slot="title">
             <i class="el-icon-s-fold" style="color:#ffffff;"></i>
             <span style="font-size:14px;">渗流量分析</span>
         </template>
         </el-menu-item>
-        <el-menu-item index="/tablexxfw-yqxx" v-if="menusshow" style="float:right;" @click="showmenu()">
+        <el-menu-item index="/tablexxfw-yqxx" v-if="menusshow" style="float:right;">
          <template slot="title">
             <i class="el-icon-s-finance" style="color:#ffffff;"></i>
             <span style="font-size:14px;">雨情分析</span>
         </template>
         </el-menu-item>
-        <el-menu-item index="/table-sqxx-sksq" v-if="menusshow" style="float:right;" @click="showmenu()">
+        <el-menu-item index="/table-sqxx-sksq" v-if="menusshow" style="float:right;">
          <template slot="title">
             <i class="el-icon-s-marketing" style="color:#ffffff;"></i>
             <span style="font-size:14px;">水情分析</span>
@@ -1356,9 +1356,6 @@ export default {
         window.location.href="http://222.240.238.58:7001/static/demo-guanqu-lcs-3d/#/"
       }
     },
-    showmenu(){
-        this.routerurl=0;
-    },
     switchchange() {
       // if (this.mapBox_show == "0") {
       //   this.$router.push("/");
@@ -1367,10 +1364,11 @@ export default {
       //   this.$router.push("/");
       // }
       if(this.mapBox_show=="0"){
-        this.routerurl=1;
-        this.$refs.menutable.showmenu('/table-sqxx-sksq');
+        if(this.$refs.menutable.returnindex()==''){
+          this.$refs.menutable.showmenu('/table-sqxx-sksq');
+        }       
       }else{
-        this.routerurl=0;
+
       }
     },
     // 当选择的监控图层发生变化
