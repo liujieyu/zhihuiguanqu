@@ -201,9 +201,9 @@
         },
         created() {
             // 获取输排水渠道数据,然后设置渠道选择框选项
-                this.getTableData_WRP_IrrBTCanalSystem(data => {
-                    this.form.qudaoList = data;
-                });
+                // this.getTableData_WRP_IrrBTCanalSystem(data => {
+                //     this.form.qudaoList = data;
+                // });
         },
     }
 </script>

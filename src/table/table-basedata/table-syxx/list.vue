@@ -2,11 +2,11 @@
   <div>
     <Breadcrumb :style="{margin: '0 0 15px 0'}">
             <BreadcrumbItem>基础数据</BreadcrumbItem>
-            <BreadcrumbItem>水库信息</BreadcrumbItem>
+            <BreadcrumbItem>水源信息</BreadcrumbItem>
         </Breadcrumb>
 
     <Tabs value="sy">
-          <TabPane label="水库信息" name="sy">
+          <TabPane label="水源信息" name="sy">
               <SY></SY>
           </TabPane>
 <!--          <TabPane label="水库" name="sk">-->

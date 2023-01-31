@@ -55,7 +55,7 @@
                             {{ scope.row.usfl=='Y'?'启用':'停用' }}
                         </template>
                         </el-table-column>
-                        <el-table-column align="center" prop="stlc" sortable="custom" label="所属行政区划" :width="130">
+                        <el-table-column align="center" prop="stlc" sortable="custom" label="所属行政区划" :width="150">
                         <template slot-scope="scope">
                             {{ scope.row.stlc }}
                         </template>

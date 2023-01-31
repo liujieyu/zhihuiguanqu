@@ -2,7 +2,6 @@
 	<div>
 		<Breadcrumb :style="{margin: '0 0 15px 0'}">
             <BreadcrumbItem>水雨情监测</BreadcrumbItem>
-            <BreadcrumbItem>基础信息</BreadcrumbItem>
             <BreadcrumbItem>监测站点</BreadcrumbItem>
         </Breadcrumb>
 

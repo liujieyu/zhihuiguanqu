@@ -12,7 +12,7 @@
                             format="yyyy 年"
                             value-format="yyyy"
                             size="small"
-                            :clearable="true"
+                            :clearable="false"
                             style="width: 180px"
                             @change="timechange">
                     </el-date-picker>
@@ -20,10 +20,12 @@
                 <Col>
                     <!-- 地址级联选择器 -->
                     <el-cascader
-
+                            :props="{ multiple: true }"
                             clearable
-                            size="small"
-                            style="width: 200px"
+                            filterable
+                            collapse-tags
+                            style="width:270px;" 
+                            size="mini"
                             placeholder="所属行政区划"
                             :options="form.adressList"
                             v-model="form.model_adress"
@@ -46,7 +48,7 @@
                 </Col>
                 -->
                 <Col>
-                    <Select v-model="form.gsdw" style="width:120px" @on-change="STGRsearch" clearable placeholder="归属单位">
+                    <Select v-model="form.gsdw" style="width:120px" @on-change="STGRsearch" clearable placeholder="等级">
                         <Option v-for="item in gsdwlist" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
                 </Col>
@@ -262,7 +264,7 @@
                 </el-table-column>
                  <el-table-column
                         prop="STGR"
-                        label="归属单位"
+                        label="等级"
                         align="center"
                         width="120"
                         sortable
@@ -556,21 +558,21 @@
                         label: '0'
                     },
                     {
-                        value: '10',
-                        label: '10'
+                        value: '800',
+                        label: '800'
                     }, {
-                        value: '25',
-                        label: '25'
+                        value: '1150',
+                        label: '1150'
                     }, {
-                        value: '50',
-                        label: '50'
+                        value: '1400',
+                        label: '1400'
                     }, {
-                        value: '100',
-                        label: '100'
+                        value: '1650',
+                        label: '1650'
                     },
                     {
-                        value: '250',
-                        label: '250'
+                        value: '2000',
+                        label: '2000'
                     }
                 ],
 
@@ -674,7 +676,7 @@
             this.form.date = `${date.getFullYear()}`
             //行政区划
             this.getTableData_WRP_AD_B(data => {
-                this.form.adressList = data.children;
+                this.form.adressList = data[0].children;
             });
             // 获取输排水渠道数据,然后设置渠道选择框选项
             //this.getTableData_WRP_IrrBTCanalSystem(data => {
@@ -878,23 +880,16 @@
             },
             Reload() {
                 this.loading = true;
-                if (this.form.model_adress.length == 0) {
+                if (this.form.model_adress !=null && typeof(this.form.model_adress.length) != "undefined" && this.form.model_adress.length>0) {
+                    var addvdds=[];
+                    for(var i=0;i<this.form.model_adress.length;i++){
+                        addvdds.push(`${this.$App.SUB_ADDVCD_Array_Filter(
+                          this.form.model_adress[i]
+                      )}`);
+                    }
+                    this.form.xzqh = addvdds.toString();                   
+                }else{
                     this.form.xzqh = '';
-                }
-                // if (this.form.model_adress.length == 1) {
-                //     var str1 = this.form.model_adress[0];
-                //     str1 = str1.substring(0, 6);
-                //     this.form.xzqh = str1;
-                // }
-                if (this.form.model_adress.length == 1) {
-                    var str2 = this.form.model_adress[0];
-                    str2 = str2.substring(0, 9);
-                    this.form.xzqh = str2;
-                }
-                if (this.form.model_adress.length == 2) {
-                    var str3 = this.form.model_adress[1];
-                    str3 = str3.substring(0, 12);
-                    this.form.xzqh = str3;
                 }
                 if (this.form.model_qudao.length == 0) {
                     this.form.qd = '';

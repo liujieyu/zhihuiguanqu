@@ -9,9 +9,12 @@
                         <Col>
                             <!-- 地址级联选择器 -->
                             <el-cascader
+                              :props="{ multiple: true }"
                               clearable
-                              size="small"
-                              style="width: 200px"
+                              filterable
+                              collapse-tags
+                              style="width:270px;"
+                              size="mini"
                               placeholder="所属行政区划"
                               :options="form.adressList"
                               v-model="form.model_adress"
@@ -33,12 +36,12 @@
                               change-on-select
                             ></el-cascader>
                         </Col>
-                        -->
                         <Col>
                             <Select v-model="gjdl.Field" clearable @on-change="STTPUpdate" style="width:120px;" placeholder="国家定类">
                                 <Option v-for="item in gjdl.STTP" :value="item.Field" :key="item.Field">{{ item.FieldName }}</Option>
                             </Select>
                         </Col>
+                        -->
                         <Col>
                             <Select v-model="zddj.Field" clearable @on-change="STGRUpdate" style="width:120px;" placeholder="站点等级">
                                 <Option v-for="item in zddj.STGR" :value="item.Field" :key="item.Field">{{ item.FieldName }}</Option>
@@ -83,7 +86,7 @@
                         </el-table-column>
                         <el-table-column
                           prop="STTP"
-                          label="国家定类"
+                          label="站类"
                           sortable="custom"
                           align="center">
                         </el-table-column>
@@ -226,9 +229,9 @@
                      this.form.adressList = data[0].children;
                 });
                 // 获取输排水渠道数据,然后设置渠道选择框选项
-                this.getTableData_WRP_IrrBTCanalSystem(data => {
-                    this.form.qudaoList = data;
-                });
+                //this.getTableData_WRP_IrrBTCanalSystem(data => {
+                //    this.form.qudaoList = data;
+                //});
                 this.axios.get('/guanqu/admin/WRP_FieldInfo?FieldID=STTP').then((res)=>{
                     this.gjdl.STTP = res.data.list;
                 });
@@ -306,42 +309,22 @@
             },
             Reload(){
                 this.loading = true;
-                if (this.form.model_adress.length == 0) {
+                // 如果地址选择框有内容，添加行政区划过滤字段
+                if (this.form.model_adress !=null && typeof(this.form.model_adress.length) != "undefined" && this.form.model_adress.length>0) {
+                    var addvdds=[];
+                    for(var i=0;i<this.form.model_adress.length;i++){
+                        addvdds.push(`${this.$App.SUB_ADDVCD_Array_Filter(
+                          this.form.model_adress[i]
+                      )}`);
+                    }
+                    this.form.xzqh = addvdds.toString();                   
+                }else{
                     this.form.xzqh = '';
-                }
-                // if (this.form.model_adress.length == 1) {
-                //     var str1 = this.form.model_adress[0];
-                //     str1 = str1.substring(0,6);
-                //     this.form.xzqh = str1;
-                // }
-                if (this.form.model_adress.length == 1) {
-                    var str2 = this.form.model_adress[0];
-                    str2 = str2.substring(0,9);
-                    this.form.xzqh = str2;
-                }
-                if (this.form.model_adress.length == 2) {
-                    var str3 = this.form.model_adress[1];
-                    str3 = str3.substring(0,12);
-                    this.form.xzqh = str3;
-                }
-                if (this.form.model_qudao.length == 0) {
-                    this.form.qd = '';
-                }
-                if (this.form.model_qudao.length == 1) {
-                    var str4 = this.form.model_qudao[0];
-                    str4 = str4.substring(0,5);
-                    this.form.qd = str4;
-                }
-                if (this.form.model_qudao.length == 2) {
-                    var str5 = this.form.model_qudao[1];
-                    str5 = str5.substring(0,9);
-                    this.form.qd = str5;
-                }               
+                }              
                 let obj = {
-                    ADDVCD: this.form.xzqh,
+                    ADDlist: this.form.xzqh,
                     STTP: this.gjdl.Field,
                     STGR: this.zddj.Field,
-                    Canal_Code: this.form.qd,
                     STNM: this.searchs,
                     _orderby: '',
                     TYPE: this.jcys.Field
