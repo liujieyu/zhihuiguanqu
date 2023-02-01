@@ -273,7 +273,7 @@
                                 ></el-cascader>
                             </Col>
                               <Col span="12">
-                                <!-- 归属单位选择器 -->
+                                <!-- 等级选择器 -->
                                 <el-select
                                   v-model="testform.model_guishu"
                                   multiple
@@ -281,7 +281,7 @@
                                   clearable
                                   size="mini"
                                   @change="search"
-                                  placeholder="归属单位"
+                                  placeholder="等级"
                                 >
                                   <el-option
                                     v-for="item in testform.guishuList"
@@ -299,12 +299,11 @@
                           <!-- 水库等级选择器 -->
                           <el-select
                             v-model="testform.model_dengji"
-                            multiple
                             collapse-tags
                             clearable
                             size="mini"
                             @change="search"
-                            placeholder="水库等级"
+                            placeholder="水库类型"
                           >
                             <el-option
                               v-for="item in testform.dengjiList"
@@ -859,8 +858,8 @@ export default {
           model_qudao: null,
           model_guishu: "",
           model_date: [],
-          model_dengji: [],
-          dengjiList:[{label:'小I型水库',value:3},{label:'小II型水库',value:4}],
+          model_dengji: '',
+          dengjiList:[{label:'小(1)型水库',value:2},{label:'小(2)型水库',value:1}],
           model_status:"",
           yuqinginfo:false,
           checked:false,
@@ -1060,7 +1059,7 @@ export default {
           this.testform.model_adress=[];
           this.testform.model_guishu="";
           this.testform.model_date = this.getinittime();
-          this.testform.model_dengji=[];
+          this.testform.model_dengji='';
           this.testform.model_status="";
           this.testform.search_str="";
           this.testform.socialsafe=["site"];
@@ -3202,8 +3201,8 @@ export default {
                   }
                 
                 // 如果水库等级选择框有内容，添加水库等级过滤字段
-                if (this.testform.model_dengji && this.testform.model_dengji.length != 0) {
-                  body["LEVEL"] = this.testform.model_dengji.join(",");
+                if (this.testform.model_dengji!=null && this.testform.model_dengji!='') {
+                  body["LEVEL"] = this.testform.model_dengji;
                 }
                 //异常界限值
                // if (this.testform.YCJXZ != "") {

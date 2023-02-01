@@ -19,10 +19,13 @@
                         <Col>
                             <!-- 地址级联选择器 -->
                             <el-cascader
+                              :props="{ multiple: true }"
                               clearable
-                              size="small"
+                              filterable
+                              collapse-tags
+                              style="width:270px;"  
+                              size="mini"
                               placeholder="所属行政区划"
-                              style="width: 200px"
                               :options="form.adressList"
                               v-model="form.model_adress"
                               @change="XZQHsearch"
@@ -46,12 +49,12 @@
                         </Col>
                          -->
                         <Col>
-                            <Select v-model="form.gsdw" style="width:120px;margin-left: 5px;" @on-change="STGRsearch" clearable placeholder="归属单位">
+                            <Select v-model="form.gsdw" style="width:120px;margin-left: 5px;" @on-change="STGRsearch" clearable placeholder="等级">
                                 <Option v-for="item in gsdwlist" :value="item.value" :key="item.value">{{ item.label }}</Option>
                             </Select>
                         </Col>
                         <Col>
-                            <Select v-model="form.skdj" style="width:120px;margin-left: 5px;" @on-change="LEVELsearch" clearable placeholder="水库等级">
+                            <Select v-model="form.skdj" style="width:120px;margin-left: 5px;" @on-change="LEVELsearch" clearable placeholder="水库类型">
                                 <Option v-for="item in skdjlist" :value="item.value" :key="item.value">{{ item.label }}</Option>
                             </Select>
                         </Col>
@@ -81,142 +84,14 @@
                         @sort-change="sort_change"
                         style="width: 100%">
                         <el-table-column
-                          label=" "
-                          type="index"
-                          align="center"
-                          width="55"
-                          fixed="left"
-                          :index="indexMethod">
-                        </el-table-column>
-                        <el-table-column
-                          prop="STNM"
-                          label="站名"
-                          min-width="110"
-                          sortable
-                          fixed="left"
-                          align="center">
-                        </el-table-column>
-                        <el-table-column
-                          prop="RZ"
-                          label="库水位"
-                          min-width="90"
-                          fixed="left"
-                          sortable
-                          align="center">
-                        </el-table-column>
-                        <el-table-column
-                          prop="RWPTN"
-                          label="水势"
-                          min-width="80"
-                          sortable
-                          align="center"
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="INQ"
-                          label="入库流量"
-                          min-width="110"
-                          sortable
-                          align="center"
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="OTQ"
-                          label="出库流量"
-                          min-width="110"
-                          sortable
-                          align="center"
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="DW"
-                          label="蓄水量"
-                          min-width="90"
-                          sortable
-                          align="center"
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="FWL"
-                          label="汛限水位4-6月"
-                          min-width="140"
-                          sortable
-                          align="center"
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="FWL79"
-                          label="汛限水位7-9月"
-                          min-width="140"
-                          sortable
-                          align="center"
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="Max_RZ"
-                          label="最高水位"
-                          min-width="110"
-                          sortable
-                          align="center"
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="Max_TM"
-                          label="最高水位时间"
-                          min-width="130"
-                          sortable
-                          align="center"
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="Min_RZ"
-                          label="最低水位"
-                          min-width="110"
-                          sortable
-                          align="center"
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="Min_TM"
-                          label="最低水位时间"
-                          min-width="130"
-                          sortable
-                          align="center"
-                          >
-                        </el-table-column>                       
-                        <el-table-column
-                          prop="LEVEL"
-                          label="水库等级"
-                          min-width="110"
-                          sortable
-                          align="center"
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="STGR"
-                          label="归属单位"
-                          min-width="110"
-                          sortable
-                          align="center"
-                          >
-                        </el-table-column>
-                        <!--
-                        <el-table-column
-                          prop="Canal_Name"
-                          label="渠道"
-                          sortable
-                          align="center"
-                          >
-                        </el-table-column>
-                        -->
-                        <el-table-column
-                          prop="AD_NM"
-                          label="所属行政区划"
-                          min-width="140"
-                          sortable
-                          align="center"
-                          >
-                        </el-table-column>
+                        v-for="(item,index) in tablecolumns"
+                        :prop="item.key"
+                        :align="item.align"
+                        :label="item.title"
+                        :min-width="item.width"
+                        :fixed="item.fixed"
+                        :sortable="item.sortable"
+                        ></el-table-column>
                       </el-table>
                     <!-- <Table border :columns="columns1" :data="data" :loading="loading" height="600"></Table> -->
                     <div style="margin: 10px;overflow: hidden">
@@ -234,77 +109,6 @@
                         </div>
                     </div>
                 </Content>
-
-              <el-dialog title="综合报表" :visible.sync="dialog_detail_showing" width="1200px" append-to-body>
-                    <Row>
-                      <Col style="text-align: center;font-size: 20px;">
-                        {{this.form.date}} 水库水情日表
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col style="text-align: left">
-                      总站数：{{Tables.total}}，单位：水位 m，流量m³/s，水量 10⁶m³
-                      </Col>
-                      <Col style="position: absolute;right: 0;bottom: 0px;">
-                        <Button type="primary" style="width: auto;margin-right: 20px;" @click="err">导出</Button>
-                      </Col>
-                    </Row>
-                    <Divider />
-                    <el-table
-                        :data="Tables.data"
-                        border
-                        height="500"
-                        v-loading="loading"
-                        @sort-change="sort_change"
-                        style="width: 100%">
-                        <el-table-column
-                          prop="Canal_Name"
-                          label="渠道"
-                          sortable
-                          align="center"
-                          width="100"
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="STNM"
-                          label="站名"
-                          sortable
-                          align="center"
-                          width="">
-                        </el-table-column>
-                        <el-table-column
-                          prop="RZ"
-                          label="平均水位"
-                          sortable
-                          align="center"
-                          width="140">
-                        </el-table-column>
-                        <el-table-column
-                          prop="INQ"
-                          label="平均入库流量"
-                          sortable
-                          align="center"
-                          width="140"
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="OTQ"
-                          label="平均出库流量"
-                          sortable
-                          align="center"
-                          width="140"
-                          >
-                        </el-table-column>
-                        <el-table-column
-                          prop="DW"
-                          label="日蓄水位"
-                          sortable
-                          align="center"
-                          width="150"
-                          >
-                        </el-table-column>
-                      </el-table>
-                </el-dialog>
     </div>
 </template>
 
@@ -354,19 +158,14 @@
                 ],
                 skdjlist:[
                 {
-                    value:'3',
-                    label:'小I型'
+                    value:'2',
+                    label:'小(1)型'
                 },
                 {
-                    value:'4',
-                    label:'小II型'
+                    value:'1',
+                    label:'小(2)型'
                 },
                 ],
-                Tables:{
-                  title:'',
-                  total:'',
-                  data:[],
-                },
                 form:{
                     adressList:[],
                     qudaoList:[],
@@ -378,7 +177,7 @@
                     searchmsg:'',
                     xzqh:'',
                     qd:'',
-                    field:'',
+                    orderby:'stnm',
                 },
                 Tables:{
                   title:'',
@@ -392,6 +191,122 @@
                 search4:'&',
                 search5:'&',
                 timesearch:'',
+                // 表头设置
+                tablecolumns: [
+                  {
+                title: "序号",
+                key: "index",
+                width: 55,
+                align: "center",
+                fixed: "left"
+              },
+              {
+                title: "站点名称",
+                key: "STNM",
+                width: 110,
+                align: "center",
+                sortable: "custom",
+                fixed: "left"
+              },
+              {
+                title: "库水位",
+                key: "RZ",
+                width: 90,
+                align: "center",
+                sortable: "custom"
+              },
+              {
+                title: "水势",
+                key: "CV",
+                width: 80,
+                align: "center",
+                sortable: "custom"
+              },
+              {
+                title: "入库流量",
+                key: "INQ",
+                width: 110,
+                align: "center",
+                sortable: "custom"
+              },
+              {
+                title: "出库流量",
+                key: "OTQ",
+                width: 110,
+                align: "center",
+                sortable: "custom"
+              },
+              {
+                title: "蓄水量",
+                key: "DW",
+                width: 90,
+                align: "center",
+                sortable: "custom"
+              },
+              {
+                title: "汛限水位4-6月",
+                key: "FWL",
+                width: 140,
+                align: "center",
+                sortable: "custom"
+              },
+              {
+                title: "汛限水位7-9月",
+                key: "FWL79",
+                width: 140,
+                align: "center",
+                sortable: "custom"
+              },
+              {
+                title: "最高水位",
+                key: "Max_RZ",
+                width: 110,
+                align: "center",
+                sortable: "custom"
+              },
+              {
+                title: "最高水位时间",
+                key: "Max_TM",
+                width: 130,
+                align: "center",
+                sortable: "custom"
+              },
+              {
+                title: "最低水位",
+                key: "Min_RZ",
+                width: 110,
+                align: "center",
+                sortable: "custom"
+              },
+              {
+                title: "最低水位时间",
+                key: "Min_TM",
+                width: 130,
+                align: "center",
+                sortable: "custom"
+              },
+              {
+                title: "水库类型",
+                key: "LEVEL",
+                width: 110,
+                align: "center",
+                sortable: "custom"
+              },
+              {
+                title: "等级",
+                key: "STGR",
+                width: 110,
+                align: "center",
+                sortable: "custom"
+              },
+              {
+                title: "所属行政区划",
+                key: "AD_NM",
+                width: 150,
+                align: "center",
+                sortable: "custom"
+              },
+                ],
                 data:[],
                 nodata:[],
                 list_input:{
@@ -419,103 +334,66 @@
          // 引入过滤方法到此组件
         mixins: [FilterMethods,GetDataMethods],
         methods:{
-            sort_change(column){
-              console.log(column);
-              if (column.order == 'ascending') {
-                this.form.field = column.prop;
+            sort_change(item){
+              var order=item.order;
+                if(order==null){
+                    return;
+                }
+                var key= item.prop;
+                switch (order) {
+                    case "normal":
+                        this.form.orderby = null;
+                        brak;
+                    case "ascending": // 升序
+                        this.form.orderby = `${key}`;
+                        break;
+                    case "descending": // 降序
+                        this.form.orderby = `${key} desc`;
+                        break;
+                }
+                this.list_input.current=1;
                 this.Reload();
-              }
-              if (column.order == 'descending') {
-                this.form.field = column.prop+' desc';
-                this.Reload();
-              }
-              if (column.order == null) {
-                this.form.field = '';
-                this.Reload();
-              }
-            },
-            optable(){
-              this.dialog_detail_showing = true;
-            },
-            cellclick(row, column, cell, event){
-                console.log('%%%%%%%%%%',row);
-                var evt = new Object();
-              evt.graphic = new Object();
-              evt.graphic.attributes = row;
-              evt.graphic.attributes.itype = "shuikushuiqing";
-              evt.graphic.attributes.rowinfo = JSON.parse(JSON.stringify(row))
-              evt.graphic.attributes.STNM = evt.graphic.attributes.STNM;
-              evt.graphic.attributes.STCD = evt.graphic.attributes.STCD;
-              evt.graphic.attributes.rowinfo.STNM = evt.graphic.attributes.rowinfo.STNM;
-              evt.graphic.attributes.rowinfo.STCD = evt.graphic.attributes.rowinfo.STCD;
-              evt.graphic.attributes.rowinfo.tableType = {
-                sksq: "dayTable"
-              };
-              var v = new Object;
-              v.itype = "shuikushuiqing";
-              console.log("evt",evt);
-              this.$App.showDrawer(evt, v);
-            },
-            err(){
-                this.$Message.warning('该功能还在开发中...');
             },
             indexMethod(index){
                 return index + 1 + (this.list_input.pagesize*(this.list_input.current-1));
             },
             search(){
-              if (this.form.searchmsg != '') {
-                this.searchs = '&STNM='+this.form.searchmsg;
-              }else{
-                this.searchs = '';
-              }
+                this.list_input.current=1;
                 this.Reload();
             },
             timechange(){
-              console.log(this.form.date);
+              this.list_input.current=1;
               this.Reload();
             },
             XZQHsearch(){
-              console.log(this.form.model_adress);
+              this.list_input.current=1;
               this.Reload();
             },
             QDsearch(){
-              console.log(this.form.model_qudao);
+              this.list_input.current=1;
               this.Reload();
             },
             STGRsearch(){
-              console.log(this.form.gsdw);
+              this.list_input.current=1;
               this.Reload();
             },
             LEVELsearch(){
-              console.log(this.form.skdj);
-
-              if(this.form.skdj === undefined){
-                  this.form.skdj = ''
-              }else {
-                  this.form.skdj = this.form.skdj
-              }
+              this.list_input.current=1;
               this.Reload();
             },
             Reload(){
                 console.log(this.form.gsdw);
                 this.loading = true;
-                if (this.form.model_adress.length == 0) {
-                  this.form.xzqh = '';
-                }
-                // if (this.form.model_adress.length == 1) {
-                //   var str1 = this.form.model_adress[0];
-                //   str1 = str1.substring(0,6);
-                //   this.form.xzqh = str1;
-                // }
-                if (this.form.model_adress.length == 1) {
-                  var str2 = this.form.model_adress[0];
-                  str2 = str2.substring(0,9);
-                  this.form.xzqh = str2;
-                }
-                if (this.form.model_adress.length == 2) {
-                  var str3 = this.form.model_adress[1];
-                  str3 = str3.substring(0,12);
-                  this.form.xzqh = str3;
+                if (this.form.model_adress !=null && typeof(this.form.model_adress.length) != "undefined" && this.form.model_adress.length>0) {
+                    var addvdds=[];
+                    for(var i=0;i<this.form.model_adress.length;i++){
+                        addvdds.push(`${this.$App.SUB_ADDVCD_Array_Filter(
+                          this.form.model_adress[i]
+                      )}`);
+                    }
+                    this.form.xzqh = addvdds.toString();                   
+                }else{
+                    this.form.xzqh = '';
                 }
                 if (this.form.model_qudao.length == 0) {
                   this.form.qd = '';
@@ -530,16 +408,24 @@
                     // str5 = str5.substring(0, 9);
                     this.form.qd = this.form.model_qudao[1];
                 }
-                let timeMax = this.form.date[0];
-                let timeMin = this.form.date[1];
-                this.axios.get('/guanqu/shuikushuiqing/lishi_ribiao?'+this.searchs,{params:{TM:this.form.date,ADDVCD:this.form.xzqh,Canal_Code:this.form.qd,STGR:this.form.gsdw,LEVEL:this.form.skdj}}).then((res)=>{
-                    console.log(res);
-                    this.loading = false;
+                var body={
+                  STNM:this.form.searchmsg,
+                  TM:this.form.date,
+                  ADDVCD:this.form.xzqh,
+                  Canal_Code:this.form.qd,
+                  STGR:this.form.gsdw,
+                  LEVEL:this.form.skdj,
+                  _page_size:this.list_input.pagesize,
+                  _page:this.list_input.current,
+                  _orderby:this.form.orderby
+                }
+                this.axios.get('/guanqu/shuikushuiqing/lishi_ribiao',{params:body}).then((res)=>{
+                   this.loading = false;                   
                       this.list_input.total = res.data.total;
                       this.Tables.total = res.data.total;
-                    let aList = res.data.list;
-
+                    var aList = res.data.list;
                     for (var i = 0;i< aList.length ; i++) {
+                        aList[i].index=i + 1 + (this.list_input.pagesize*(this.list_input.current-1));
                         aList[i].RZ = this.Z_Filter(aList[i].RZ);
                         aList[i].BLRZ = this.Z_Filter(aList[i].BLRZ);
                         aList[i].INQ = this.Z_Filter(aList[i].INQ,3);
@@ -547,36 +433,13 @@
                         aList[i].OTQ = this.Z_Filter(aList[i].OTQ, 3);
                         aList[i].Max_RZ = this.Z_Filter(aList[i].Max_RZ);
                         aList[i].Min_RZ = this.Z_Filter(aList[i].Min_RZ);
-                        aList[i].FWL = this.Z_Filter2(aList[i].FWL);
-                        aList[i].FWL79 = this.Z_Filter2(aList[i].FWL79);
-                        console.log(aList[i].FWL79);
+                        aList[i].FWL = this.Z_Filter(aList[i].FWL);
+                        aList[i].FWL79 = this.Z_Filter(aList[i].FWL79);
                         aList[i].Max_TM = this.dateFilter(aList[i].Max_TM);
                         aList[i].Min_TM = this.dateFilter(aList[i].Min_TM);
                     }
-                    this.data = aList
-                    this.Tables.title = this.data[0].TM;
+                    this.data = aList;
                 });               
-                this.axios.get('/guanqu/shuikushuiqing/lishi_ribiao?_page_size=99999'+this.searchs,{params:{TM:this.form.date,ADDVCD:this.form.xzqh,Canal_Code:this.form.qd,STGR:this.form.gsdw,LEVEL:this.form.skdj}}).then((res)=>{
-                    console.log(res);
-                    this.loading = false;
-                    let aList = res.data.list;
-
-                    for (var i = 0;i<this.aList.length ; i++) {
-                        aList[i].RZ = this.Z_Filter(aList[i].RZ);
-                        aList[i].BLRZ = this.Z_Filter(aList[i].BLRZ);
-                        aList[i].INQ = this.Z_Filter(aList[i].INQ,3);
-                        aList[i].MW = this.Z_Filter(aList[i].MW,3);
-                        aList[i].OTQ = this.Z_Filter(aList[i].OTQ, 3);
-                        aList[i].Max_RZ = this.Z_Filter(aList[i].Max_RZ);
-                        aList[i].Min_RZ = this.Z_Filter(aList[i].Min_RZ);
-                        aList[i].FWL = this.Z_Filter2(aList[i].FWL);
-                        aList[i].FWL79 = this.Z_Filter2(aList[i].FWL79);
-                        console.log(aList[i].FWL79);
-                        aList[i].Max_TM = this.dateFilter(aList[i].Max_TM);
-                        aList[i].Min_TM = this.dateFilter(aList[i].Min_TM);
-                    }
-                    this.Tables.data = aList
-                });
             },
             // 处理页码切换
             CurrentChange(index) {
@@ -588,6 +451,7 @@
             PagesizeChange(pagesize) {
                 // console.log(pagesize)
               this.list_input.pagesize = pagesize;
+              this.list_input.current=1;
               this.Reload();
             },
         },

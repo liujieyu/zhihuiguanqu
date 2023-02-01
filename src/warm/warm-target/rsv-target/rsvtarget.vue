@@ -235,7 +235,10 @@
         }else{
             this.form.sequence="desc";
         }
-        this.form.orderby=item.prop;
+        if(item.prop=="stnm"){
+          item.prop="b.stnm";
+        }
+        this.form.orderby=item.prop+" "+this.form.sequence;
         this.list_input.current=1;
         this.Reload();
     },

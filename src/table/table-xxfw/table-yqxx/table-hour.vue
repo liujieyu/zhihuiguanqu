@@ -5,6 +5,7 @@
                 <Col>
                    时段:
                         <el-date-picker
+                        style="width: 360px"
                         v-model="form.date"
                         type="datetimerange"
                         range-separator="至"

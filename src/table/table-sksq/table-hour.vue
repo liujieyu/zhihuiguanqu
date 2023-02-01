@@ -5,6 +5,7 @@
                         <Col>
                         时段:
                         <el-date-picker
+                        style="width: 360px"
                         v-model="form.date"
                         type="datetimerange"
                         range-separator="至"
@@ -22,10 +23,13 @@
                             行政区划:
                             <!-- 地址级联选择器 -->
                             <el-cascader
+                              :props="{ multiple: true }"
                               clearable
-                              size="small"
+                              filterable
+                              collapse-tags
+                              style="width:270px;"  
+                              size="mini"
                               placeholder="所属行政区划"
-                              style="width: 200px"
                               :options="form.adressList"
                               v-model="form.model_adress"
                               @change="XZQHsearch"
@@ -48,12 +52,12 @@
                         </Col>
                         -->
                         <Col>
-                            <Select v-model="form.gsdw" style="width:120px;" @on-change="STGRsearch" clearable placeholder="归属单位">
+                            <Select v-model="form.gsdw" style="width:120px;" @on-change="STGRsearch" clearable placeholder="等级">
                                 <Option v-for="item in gsdwlist" :value="item.value" :key="item.value">{{ item.label }}</Option>
                             </Select>
                         </Col>
                         <Col>
-                            <Select v-model="form.skdj" style="width:120px;" @on-change="LEVELsearch" clearable placeholder="水库等级">
+                            <Select v-model="form.skdj" style="width:120px;" @on-change="LEVELsearch" clearable placeholder="水库类型">
                                 <Option v-for="item in skdjlist" :value="item.value" :key="item.value">{{ item.label }}</Option>
                             </Select>
                         </Col>
@@ -218,12 +222,12 @@
                 ],
                 skdjlist:[
                 {
-                    value:'3',
-                    label:'小I型'
+                    value:'2',
+                    label:'小(1)型'
                 },
                 {
-                    value:'4',
-                    label:'小II型'
+                    value:'1',
+                    label:'小(2)型'
                 },
                 ],
                 cols1:[],
@@ -339,23 +343,16 @@
             },
             Reload(agmt){
                 this.loading = true;
-                if (this.form.model_adress.length == 0) {
-                  this.form.xzqh = '';
-                }
-                // if (this.form.model_adress.length == 1) {
-                //   var str1 = this.form.model_adress[0];
-                //   str1 = str1.substring(0,6);
-                //   this.form.xzqh = str1;
-                // }
-                if (this.form.model_adress.length == 1) {
-                  var str2 = this.form.model_adress[0];
-                  str2 = str2.substring(0,9);
-                  this.form.xzqh = str2;
-                }
-                if (this.form.model_adress.length == 2) {
-                  var str3 = this.form.model_adress[1];
-                  str3 = str3.substring(0,12);
-                  this.form.xzqh = str3;
+                if (this.form.model_adress !=null && typeof(this.form.model_adress.length) != "undefined" && this.form.model_adress.length>0) {
+                    var addvdds=[];
+                    for(var i=0;i<this.form.model_adress.length;i++){
+                        addvdds.push(`${this.$App.SUB_ADDVCD_Array_Filter(
+                          this.form.model_adress[i]
+                      )}`);
+                    }
+                    this.form.xzqh = addvdds.toString();                   
+                }else{
+                    this.form.xzqh = '';
                 }
                 if (this.form.model_qudao.length == 0) {
                   this.form.qd = '';

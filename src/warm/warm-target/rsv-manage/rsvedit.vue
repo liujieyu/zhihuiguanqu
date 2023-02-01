@@ -163,7 +163,7 @@ export default {
   mounted() {  
     this.form.dtuptm=this.getTodayDate();
     this.form.moditime=this.getTodayDate();
-    this.Get_WrpFieldinfo('ST_RSVR_R1','LEVEL',data => {
+    this.Get_WrpFieldinfo('ST_RSR_HYCH','RSVRTP',data => {
          this.rsvrtplist = data;                
     });
       //监测站点列表
