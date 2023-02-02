@@ -10,19 +10,19 @@
         style="display: flex;flex-wrap: wrap;"
       >
         <el-form-item label="用户名:" prop="login">
-          <el-input v-model="form.login" placeholder="请输入" style="width:300px"></el-input>
+          <el-input v-model="form.login" placeholder="请输入" style="width:200px"></el-input>
         </el-form-item>
         <el-form-item label="姓名:" prop="name">
-          <el-input v-model="form.name" placeholder="请输入" style="width:300px"></el-input>
+          <el-input v-model="form.name" placeholder="请输入" style="width:200px"></el-input>
         </el-form-item>
         <el-form-item label="登录密码:" prop="passwd">
-          <el-input v-model="form.passwd" disabled placeholder="请输入" style="width:300px"></el-input>
+          <el-input v-model="form.passwd" disabled placeholder="请输入" style="width:200px"></el-input>
         </el-form-item>
         <!-- <el-form-item label="确认密码:" prop="confirmPasswd">
-          <el-input v-model="form.confirmPasswd" placeholder="请输入" style="width:300px" show-password></el-input>
+          <el-input v-model="form.confirmPasswd" placeholder="请输入" style="width:200px" show-password></el-input>
         </el-form-item> -->
         <el-form-item label="所属角色:" prop="role">
-          <el-select v-model="form.role.id" placeholder="请选择" style="width:300px">
+          <el-select v-model="form.role.id" placeholder="请选择" style="width:200px">
             <el-option
               v-for="item in roles"
               :key="item.id"
@@ -32,32 +32,32 @@
           </el-select>
         </el-form-item>
         <el-form-item label="状态:" prop="status">
-          <el-select v-model="form.status" placeholder="请选择" style="width:300px">
+          <el-select v-model="form.status" placeholder="请选择" style="width:200px">
             <el-option label="正常" value="NORMAL"></el-option>
             <el-option label="冻结" value="FREEZE"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="单位:">
-          <el-input v-model="form.enterprise" placeholder="请输入" style="width:300px"></el-input>
+          <el-input v-model="form.enterprise" placeholder="请输入" style="width:200px"></el-input>
         </el-form-item>
         <el-form-item label="部门:">
-          <el-input v-model="form.department" placeholder="请输入" style="width:300px"></el-input>
+          <el-input v-model="form.department" placeholder="请输入" style="width:200px"></el-input>
         </el-form-item>
         <el-form-item label="职务:">
-          <el-input v-model="form.position" placeholder="请输入" style="width:300px"></el-input>
+          <el-input v-model="form.position" placeholder="请输入" style="width:200px"></el-input>
         </el-form-item>
         <el-form-item label="性别:">
           <el-radio v-model="form.sex" label="1">男</el-radio>
           <el-radio v-model="form.sex" label="2" style="width: 230px;">女</el-radio>
         </el-form-item>
         <el-form-item label="出生日期:">
-          <el-date-picker v-model="form.birthday" value-format="yyyy-MM-dd" style="width:300px" type="date" placeholder="选择日期"></el-date-picker>
+          <el-date-picker v-model="form.birthday" value-format="yyyy-MM-dd" style="width:200px" type="date" placeholder="选择日期"></el-date-picker>
         </el-form-item>
         <el-form-item label="联系电话:">
-          <el-input v-model="form.phone" placeholder="请输入" style="width:300px"></el-input>
+          <el-input v-model="form.phone" placeholder="请输入" style="width:200px"></el-input>
         </el-form-item>
         <el-form-item label="备注:">
-          <el-input type="textarea" v-model="form.remark" placeholder="请输入" style="width:700px"></el-input>
+          <el-input type="textarea" v-model="form.remark" placeholder="请输入" style="width:500px"></el-input>
         </el-form-item>
       </el-form>
     </div>

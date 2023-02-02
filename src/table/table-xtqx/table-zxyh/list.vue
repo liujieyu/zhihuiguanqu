@@ -42,19 +42,19 @@
         label=" "
         type="index"
         align="center"
-        width="60"
+        width="55"
         :index="indexMethod">
       </el-table-column>
-      <el-table-column sortable property="webUser.login" label="用户名" width="100"></el-table-column>
-      <el-table-column sortable property="webUser.name" label="姓名" width="100"></el-table-column>
-      <el-table-column sortable property="webUser.phone" label="联系电话" width="130"></el-table-column>
-      <el-table-column sortable property="webUser.role.name" label="角色" width="100"></el-table-column>
-      <el-table-column sortable property="loginTime" label="登录时间" width="160">
+      <el-table-column sortable property="webUser.login" label="用户名" width="100" align="center"></el-table-column>
+      <el-table-column sortable property="webUser.name" label="姓名" width="100" align="center"></el-table-column>
+      <el-table-column sortable property="webUser.phone" label="联系电话" width="130" align="center"></el-table-column>
+      <el-table-column sortable property="webUser.role.name" label="角色" width="100" align="center"></el-table-column>
+      <el-table-column sortable property="loginTime" label="登录时间" width="160" align="center">
         <template slot-scope="scope"> 
           {{scope.row.loginTime}}
         </template>
       </el-table-column>
-      <el-table-column sortable property="loginIp" label="登录ip" width="130"></el-table-column>
+      <el-table-column sortable property="loginIp" label="登录ip" width="130" align="center"></el-table-column>
       <el-table-column sortable property="browser" label="浏览器"></el-table-column>
     </el-table>
 

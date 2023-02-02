@@ -50,40 +50,41 @@
     </el-row>
 
     <el-table :data="tableData" :height="theight" border style="width: 100%" @selection-change="selectRow" v-loading="loading">
-      <el-table-column type="selection" width="50"></el-table-column>
+      <el-table-column type="selection" width="45" align="center"></el-table-column>
       <el-table-column
         label=" "
         type="index"
         align="center"
-        width="65"
+        width="55"
+        fixed
         :index="indexMethod">
       </el-table-column>
-      <el-table-column property="login" label="用户名" width="80"></el-table-column>
-      <el-table-column property="name" label="姓名" width="80"></el-table-column>
-      <el-table-column property="enterprise" label="单位"></el-table-column>
-      <el-table-column property="department" label="部门"></el-table-column>
-      <el-table-column property="position" label="职务" width="80"></el-table-column>
-      <el-table-column property="phone" label="联系电话"></el-table-column>
-      <el-table-column property="role.name" label="角色" width="100"></el-table-column>
-      <el-table-column property="status" label="状态"  width="90">
+      <el-table-column property="login" label="用户名" width="100" fixed  align="center" ></el-table-column>
+      <el-table-column property="name" label="姓名" width="90"  align="center" ></el-table-column>
+      <el-table-column property="role.name" label="角色" width="100"  align="center" ></el-table-column>
+      <el-table-column property="status" label="状态"  width="90"  align="center" >
         <template slot-scope="scope">
           {{scope.row.status=='NORMAL'?'正常':'冻结'}}
         </template>
       </el-table-column>
-      <el-table-column property="ctime" label="创建时间" width="160">
+      <el-table-column property="phone" label="联系电话" width="110"  align="center" ></el-table-column>
+      <el-table-column property="enterprise" label="单位" width="120"  align="center" ></el-table-column>
+      <el-table-column property="department" label="部门" width="120"  align="center" ></el-table-column>
+      <el-table-column property="position" label="职务" width="90"  align="center" ></el-table-column>     
+      <el-table-column property="ctime" label="创建时间" width="160"  align="center" >
         <template slot-scope="scope"> 
           {{scope.row.ctime}}
         </template>
       </el-table-column>
-      <el-table-column property="creator" label="创建人"></el-table-column>
-      <el-table-column property="upTime" label="最后一次修改时间" width="160"> 
+      <el-table-column property="creator" label="创建人"  align="center" ></el-table-column>
+      <el-table-column property="upTime" label="最后一次修改时间" width="160"  align="center" > 
         <template slot-scope="scope"> 
           {{scope.row.upTime}}
         </template>
       </el-table-column>
-      <el-table-column property="modifier" label="最后一次修改人" width="120"></el-table-column>
-      <el-table-column label="操作" width="230px" align="center" style="display: flex;">
-        <template slot-scope="scope" style="display: flex;">
+      <el-table-column property="modifier" label="最后一次修改人" width="120"  align="center" ></el-table-column>
+      <el-table-column label="操作" width="234px" align="left">
+        <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="item = scope.row;open_edit_dialog()">修改</el-button>
           
           <el-button type="primary" size="mini" @click="item = scope.row;open_reset_dialog()">重置密码</el-button>
@@ -117,11 +118,11 @@
     </el-row>
 
     <!-- 新增 -->
-    <el-dialog title="新增" :visible.sync="dialog_add_showing" width="870px" append-to-body>
+    <el-dialog title="新增用户" :visible.sync="dialog_add_showing" width="670px" append-to-body>
       <ADDDIALOG v-if="dialog_add_showing" @closewindows="dialog_add_showing=false;ReLoad()"></ADDDIALOG>
     </el-dialog>
     <!-- 修改-->
-    <el-dialog title="修改" :visible.sync="dialog_edit_showing" width="870px" append-to-body>
+    <el-dialog title="修改用户" :visible.sync="dialog_edit_showing" width="670px" append-to-body>
       <EDITDIALOG :id="item.id" v-if="dialog_edit_showing" @closewindows="dialog_edit_showing=false;ReLoad()"></EDITDIALOG>
     </el-dialog>
     <!-- 赋权-->
@@ -307,7 +308,14 @@ export default {
       // this.idList = selection;
       this.idList = [];
       selection.forEach((val, index, array) => {
-        this.idList.push(val.id);
+        if(val.role.name!="超级管理员"){
+            this.idList.push(val.id);
+        }else{
+          this.$message({
+              type: "error",
+              message: "超级管理员不允许被删！"
+            });
+        }       
       });
       console.log(this.idList);
     },
@@ -354,14 +362,3 @@ export default {
   }
 };
 </script>
-
-<style type="text/css">
-.el-input__inner {
-  /* padding-top: 15px; */
-}
-.el-button {
-}
-.cell{
-    display: flex
-}
-</style>

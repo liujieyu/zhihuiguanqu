@@ -73,7 +73,7 @@
                           label=" "
                           type="index"
                           align="center"
-                          width="65"
+                          width="55"
                           fixed="left"
                           :index="indexMethod">
                         </el-table-column>
@@ -82,17 +82,20 @@
                           label="站名"
                           align="center"
                           sortable="custom"
+                          min-width="100"
                           fixed="left">
                         </el-table-column>
                         <el-table-column
                           prop="STTP"
                           label="站类"
+                          min-width="90"
                           sortable="custom"
                           align="center">
                         </el-table-column>
                         <el-table-column
                           prop="STGR"
                           label="等级"
+                          min-width="90"
                           sortable="custom"
                           align="center"
                           >
@@ -100,6 +103,23 @@
                         <el-table-column
                           prop="THYPE"
                           label="监测要素"
+                          min-width="130"
+                          sortable="custom"
+                          align="center"
+                          >
+                        </el-table-column>
+                        <el-table-column
+                          prop="LGTD"
+                          label="经度"
+                          min-width="100"
+                          sortable="custom"
+                          align="center"
+                          >
+                        </el-table-column>
+                        <el-table-column
+                          prop="LTTD"
+                          label="纬度"
+                          min-width="100"
                           sortable="custom"
                           align="center"
                           >
@@ -107,6 +127,7 @@
                         <el-table-column
                           prop="ESSTDT"
                           label="建站日期"
+                          min-width="100"
                           sortable="custom"
                           align="center"
                           >
@@ -114,6 +135,7 @@
                         <el-table-column
                           prop="DLOG"
                           label="建设单位"
+                          min-width="130"
                           sortable="custom"
                           align="center"
                           >
@@ -121,6 +143,7 @@
                         <el-table-column
                           prop="ADMAUTH"
                           label="管理单位"
+                          min-width="130"
                           sortable="custom"
                           align="center"
                           >
@@ -128,6 +151,7 @@
                         <el-table-column
                           prop="AD_NM"
                           label="所属行政区划"
+                          min-width="150"
                           sortable="custom"
                           align="center"
                           >

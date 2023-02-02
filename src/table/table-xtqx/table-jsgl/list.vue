@@ -47,30 +47,30 @@
     </el-row>
 
     <el-table :data="tableData" border :height="theight" style="width: 100%" @selection-change="selectRow" v-loading="loading">
-      <el-table-column type="selection" width="55"></el-table-column>
+      <el-table-column type="selection" width="45" align="center"></el-table-column>
       <el-table-column
         label=" "
         type="index"
         align="center"
-        width="65"
+        width="55"
         :index="indexMethod">
       </el-table-column>
-      <el-table-column property="name" label="角色名" width="120"></el-table-column>
-      <el-table-column property="grade" label="等级" width="100"></el-table-column>
-      <el-table-column property="ctime" label="创建时间" width="160">
+      <el-table-column property="name" label="角色名" min-width="120" align="center"></el-table-column>
+      <el-table-column property="grade" label="等级" min-width="100" align="center"></el-table-column>
+      <el-table-column property="ctime" label="创建时间" min-width="160" align="center">
         <template slot-scope="scope"> 
           {{scope.row.ctime}}
         </template>
       </el-table-column>
-      <el-table-column property="creator" label="创建人"></el-table-column>
-      <el-table-column property="upTime" label="最后一次修改时间" width="160">
+      <el-table-column property="creator" label="创建人" min-width="120" align="center"></el-table-column>
+      <el-table-column property="upTime" label="最后一次修改时间" min-width="160" align="center">
         <template slot-scope="scope"> 
           {{scope.row.upTime}}
         </template>
       </el-table-column>
-      <el-table-column property="modifier" label="最后一次修改人" width="120"></el-table-column>
-      <el-table-column property="remark" label="备注" ></el-table-column>
-      <el-table-column label="操作" width="210" align="center">
+      <el-table-column property="modifier" label="最后一次修改人" min-width="120" align="center"></el-table-column>
+      <el-table-column property="remark" label="备注" min-width="250" align="center"></el-table-column>
+      <el-table-column label="操作" min-width="210" align="center">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="item=scope.row;dialog_edit_showing=true">修改</el-button>
           <el-button type="primary" size="mini" @click="item=scope.row;dialog_power_showing=true;">赋权</el-button>
@@ -104,11 +104,11 @@
     </el-row>
 
     <!-- 新增 -->
-    <el-dialog title="新增" :visible.sync="dialog_add_showing" width="760px" append-to-body>
+    <el-dialog title="新增" :visible.sync="dialog_add_showing" width="410px" append-to-body>
       <ADDDIALOG v-if="dialog_add_showing" @closewindows="dialog_add_showing=false;ReLoad()"></ADDDIALOG>
     </el-dialog>
     <!-- 修改-->
-    <el-dialog title="修改" :visible.sync="dialog_edit_showing" width="760px" append-to-body>
+    <el-dialog title="修改" :visible.sync="dialog_edit_showing" width="410px" append-to-body>
       <EDITDIALOG :id="item.id" v-if="dialog_edit_showing" @closewindows="dialog_edit_showing=false;ReLoad()"></EDITDIALOG>
     </el-dialog>
     <!-- 赋权-->
@@ -308,11 +308,3 @@ export default {
   }
 };
 </script>
-
-<style type="text/css">
-.el-input__inner {
-  /* padding-top: 15px; */
-}
-.el-button {
-}
-</style>

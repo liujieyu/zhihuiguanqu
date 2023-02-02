@@ -128,7 +128,7 @@ export default {
         search: "",
         pages: 1,
         page: 1,
-        page_size: 10,
+        page_size: 50,
         total: 100,
         filter: {},
         field:'time,desc',

@@ -3,22 +3,22 @@
     <div style="display: flex;flex-wrap: wrap;">
       <el-form ref="form" :rules="rules" :model="form" label-width="100px" size="mini">
         <el-form-item label="角色名:" prop="name">
-          <el-input v-model="form.name" style="width: 350px;"></el-input>
+          <el-input v-model="form.name" style="width: 250px;"></el-input>
         </el-form-item>
         <el-form-item label="角色等级:">
-          <el-input v-model="form.grade" style="width: 350px;"></el-input>
+          <el-input v-model="form.grade" style="width: 250px;"></el-input>
         </el-form-item>
         <el-form-item label="角色描述">
-          <el-input type="textarea" v-model="form.description" style="width:600px"></el-input>
+          <el-input type="textarea" v-model="form.description" style="width:250px"></el-input>
         </el-form-item>
         <el-form-item label="备注">
-          <el-input type="textarea" v-model="form.remark" style="width:600px;"></el-input>
+          <el-input type="textarea" v-model="form.remark" style="width:250px;"></el-input>
         </el-form-item>
       </el-form>
     </div>
-    <div style="width: 320px;margin: 0px auto;">
-      <el-button type="primary" @click="EDIT()" size="small">确定</el-button>
-      <el-button type="info" style="float: right;" @click="del" size="small">取消</el-button>
+    <div style="width: 250px;margin: 0px auto;">
+      <el-button type="primary" @click="EDIT()" size="small" style="margin-left:40px;">确定</el-button>
+      <el-button type="info" style="margin-left:50px;" @click="del" size="small">取消</el-button>
     </div>
   </div>
 </template>
