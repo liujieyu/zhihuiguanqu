@@ -4394,6 +4394,8 @@ hideSafeTableLoading(){
   .dt_name {
     width: 24%;
     border-left: none;
+    font-weight:bold;
+    background: #F5F8FE;
   }
 
   .dt_vale {
@@ -4413,7 +4415,7 @@ hideSafeTableLoading(){
     height: 30px;
     border-top: 1px solid #EBEEF5;
     border-left: 1px solid #EBEEF5;
-    background: #edf0f8;
+    background: #F5F8FE;
     width: 25%;
   }
   td {

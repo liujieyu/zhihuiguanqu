@@ -12,7 +12,7 @@
                 </el-form-item>
                 <el-form-item label="预警等级：">
                     <Select v-model="form.yjdj"  style="width:200px;" clearable>
-                        <Option v-for="item in yjdjlist" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                        <Option v-for="item in yjdjlist" :value="item" :key="item">{{ item }}</Option>
                     </Select>
                 </el-form-item>
                 <el-form-item label="短信内容：">
@@ -137,9 +137,12 @@
                     this.form.plan=data[0].value;
                 });
                 //预警等级
-                this.Get_WrpFieldinfo('ST_AlarmInfo','Alarm',data => {
+                this.Get_SysFieldinfo('YJDXFB20190926',1,data => {
                     this.yjdjlist = data;
                 });
+               // this.Get_WrpFieldinfo('ST_AlarmInfo','Alarm',data => {
+               //     this.yjdjlist = data;
+                //});
                 //发送对象
                 this.Get_WrpFieldinfo('WRP_MAN','TYPES',data => {
                     var typelist = data;
@@ -277,8 +280,8 @@
                     }
                     //预警等级名称
                     for(var t=0;t<this.yjdjlist.length;t++){
-                        if(this.form.yjdj==this.yjdjlist[t].value){
-                            this.form.yjdjname=this.yjdjlist[t].label;
+                        if(this.form.yjdj==this.yjdjlist[t]){
+                            this.form.yjdjname=this.yjdjlist[t];
                             break;
                         }
                     }

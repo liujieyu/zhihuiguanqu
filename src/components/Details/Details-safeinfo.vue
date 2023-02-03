@@ -3574,7 +3574,7 @@ export default {
     width: 20%;
     border-left: none;
     font-weight: bold;
-    background-color: #F6FAFF;
+    background-color: #F5F8FE;
   }
 
   .dt_vale {
