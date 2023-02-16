@@ -23,11 +23,6 @@
           :sortable="item.sortable"
           :show-overflow-tooltip="true"
         ></el-table-column>
-        <el-table-column align="center" prop="w" sortable="custom" label="库容(万m³)" :width="105">
-          <template slot-scope="scope">
-            {{ scope.row.w }}
-          </template>
-        </el-table-column>
         <el-table-column align="center" prop="RZ" sortable="custom" label="水位(m)" :width="90">
           <template slot-scope="scope">
             <div>
@@ -39,17 +34,11 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="smj" sortable="custom" label="水面面积(㎡)" :width="115">
-          <template slot-scope="scope">
-            {{ scope.row.smj }}
-          </template>
-        </el-table-column>
         <el-table-column align="center" prop="jxx" sortable="custom" label="距汛限(m)" :width="100">
           <template slot-scope="scope">
               {{scope.row.jxx}}
           </template>
         </el-table-column>
-
         <!-- 自定义 -->
         <el-table-column align="center" label="水势" :width="70" prop="RWPTN" sortable="custom">
           <template slot-scope="scope">
@@ -61,6 +50,17 @@
             }"
               >{{ scope.row.RWPTN.symbol }}</strong>
             </div>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" prop="w" sortable="custom" label="库容(万m³)" :width="105">
+          <template slot-scope="scope">
+            {{ scope.row.w }}
+          </template>
+        </el-table-column>
+        
+        <el-table-column align="center" prop="AR" sortable="custom" label="水面面积(㎡)" :width="115">
+          <template slot-scope="scope">
+            {{ scope.row.AR }}
           </template>
         </el-table-column>
       </el-table>

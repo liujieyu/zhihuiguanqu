@@ -903,7 +903,7 @@ export default {
                   title: "库容"
               },
               {
-                  value: "MJ",
+                  value: "AR",
                   size: "small",
                   title: "水面面积"
               },
@@ -1907,7 +1907,7 @@ export default {
             }           
           }
           textTypeList = this.testform.social.filter(val => {
-                if (val != "site" && val !="MJ") {
+                if (val != "site") {
                     return true;
                 }
             });   
@@ -2005,7 +2005,7 @@ export default {
                               value += "m";
                             }
                             break;
-                            case "w":
+                        case "w":
                             var value = `${this.Z_Filter(Row.rowinfo[textType])}`;
                             if (value == "") {
                               value = "";
@@ -2013,6 +2013,15 @@ export default {
                               value += "万m³";
                             }
                             break;
+                        case "AR":
+                            var value = `${this.Z_Filter(Row.rowinfo[textType])}`;
+                            if (value == "") {
+                              value = "";
+                            } else {
+                              value += "km²";
+                            }
+                            break;
+
                     }
                     //定义背景框
                     if(index==0){
@@ -2086,7 +2095,7 @@ export default {
             }           
           }
           textTypeList = this.testform.socialsafe.filter(val => {
-                if (val != "site" && val !="MJ") {
+                if (val != "site") {
                     return true;
                 }
             });   

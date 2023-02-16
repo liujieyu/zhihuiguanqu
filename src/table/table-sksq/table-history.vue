@@ -35,13 +35,17 @@
                             </Button>
 
                             <Button type="primary" style="width: auto;margin-right: 0px;margin-left: 10px;" @click="test1">显示/隐藏树形</Button>
-                        </Col>
-                        <Col>
                             <Button type="primary" style="width: auto;margin-right: 20px;margin-left: 10px;"
                                     @click="err">导出
                             </Button>
                         </Col>
                          -->
+                        <Col>
+                            <Button type="primary" style="width: auto;margin-right: 10px;"
+                                    @click="err">水位库容面积曲线
+                            </Button>
+                        </Col>
+                        
                     </Row>
                     <div class="switch" @click="Menu_toggle">
                         <i class="el-icon-d-arrow-left" v-if="Menu.show_Controller"></i>
@@ -706,7 +710,6 @@
             xzqh_tree(data){
                 console.log(data);
                 if (data.level==3) {
-                    debugger;
                     this.searchs = data.value;
                     this.siteno=data.label;
                     this.set_SKSQ_alarmInfo(this.searchs,data=>{
@@ -905,12 +908,7 @@
                                                     }  
                                                 }  
                                             },
-                            data: [{name:"防洪库容820.50",
-                                    yAxis: 820.5,
-                                    label: {
-                                    formatter: '{b}',
-                                    position: 'middle'
-                                    }}],
+                            data: this.data2.markdata2,
                         }
                         }
                     ]
@@ -935,7 +933,12 @@
                 this.yujingdata.JYWL = yujingdata.JYWL;
                 this.yujingdata.XHWL=yujingdata.XHWL;
                 this.yujingdata.ZCWL=yujingdata.ZCWL;
-                callback(yujingdata);
+                this.axios.get(`/guanqu/alarm/tzkrinfo?STCD=${STCD}`).then(res => {
+                    var tzkr=res.data;
+                    this.yujingdata.FLDCP=tzkr.fldcp;
+                    this.yujingdata.DDCP=tzkr.ddcp;
+                    callback(yujingdata);
+                });                
                 }
             );
             },
@@ -1217,9 +1220,15 @@
                             this.data2 = this.$App.transform_SKSQ_data_into_ehart_data(this.data2,tableType,true); // 水库水情历史统计表数据 转 ehart图形用数据 返回一个对象, 对象里分别装 Y1轴对象 Y2轴对象 X轴对象
         console.log(this.data2);
         this.data2.markdata=[];
+        this.data2.markdata2=[];
+        var swmax=Math.ceil(FilterMethods.methods.get_echart_max(this.data2.y1.list));
         var y1max = Math.ceil(parseFloat(this.yujingdata.XHWL)),
             y1min = Math.floor(FilterMethods.methods.get_echart_min(this.data2.y1.list));
-        this.data2.y1.max=y1max;
+        if(swmax>y1max){
+            this.data2.y1.max=swmax;
+        }else{
+            this.data2.y1.max=y1max;
+        }       
         this.data2.y1.min=y1min;
         var mintime=this.data2.x.list[0].slice(0, 10),maxtime=this.data2.x.list[this.data2.x.list.length-1].slice(0, 10);
         var minmonth=mintime.split("-")[1],maxmonth=maxtime.split("-")[1];
@@ -1229,7 +1238,7 @@
         }else{
           this.data2.y1.markval=this.yujingdata.FWL;
         }
-        //设置markLine
+        //设置水位markLine
                     var jhsw=new Object();
                     jhsw.name='校核水位 '+this.data2.y1.markval2;
                     jhsw.yAxis=parseFloat(this.yujingdata.XHWL);
@@ -1280,7 +1289,26 @@
                     var y4max = Math.ceil(FilterMethods.methods.get_echart_max(this.data2.y4.list)),
                         y4min = Math.floor(FilterMethods.methods.get_echart_min(this.data2.y4.list));
                     this.data2.y4.max = y4max; // y4最大值
-                    this.data2.y4.min = y4min < 0 ? 0 : y4min; // y4最小值                    
+                    this.data2.y4.min = y4min < 0 ? 0 : y4min; // y4最小值
+        //设置库容markLine
+                    var fhkr=new Object();
+                    fhkr.name='防洪库容 '+this.yujingdata.FLDCP;
+                    fhkr.yAxis=parseFloat(this.yujingdata.FLDCP);
+                    fhkr.label={
+                           formatter: '{b}',
+                           position: 'middle',
+                    }
+                    this.data2.markdata2.push(fhkr);
+                    if(this.data2.y4.min<=parseFloat(this.yujingdata.DDCP)){
+                        var ddkr=new Object();
+                        ddkr.name='死库容 '+this.yujingdata.DDCP;
+                        ddkr.yAxis=parseFloat(this.yujingdata.DDCP);
+                        ddkr.label={
+                            formatter: '{b}',
+                           position: 'middle',
+                        }
+                        this.data2.markdata2.push(ddkr);
+                    }            
                     var datalist1=[];
                     var datalist2=[];
                     for(var i=0;i<this.data2.x.list.length;i++){

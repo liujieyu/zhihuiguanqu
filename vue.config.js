@@ -5,7 +5,7 @@ module.exports = {
     devServer: {
     	// proxy: 'http://192.168.1.30/',
     	// proxy: 'http://222.240.238.58:7001/',
-        // proxy: 'http://192.100.1.10:8050/',
+        // proxy: 'http://10.10.40.202:8050/',
         proxy: {
             '/':{
               ws:false,
