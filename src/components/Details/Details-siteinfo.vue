@@ -359,7 +359,7 @@
                 -->
                 <!-- 查询&换算 -->
                 <div class="divider"></div>
-                        <Row :gutter="19" type="flex" align="middle" style="margin-bottom:10px;">
+                        <Row :gutter="19" type="flex" justify="center" align="middle" style="margin-bottom:4px;">
                             <Col span="1">
                             </Col>
                             <Col span="3">
@@ -371,8 +371,7 @@
                                 placeholder="库水位 m"
                                 style="min-width: 90px;"
                                 size="small"
-                                @on-keyup="(value)=>{isNaN(value)?isNaN(parseFloat(value))?
-                    input.huansuan.waterLever=null:input.huansuan.waterLever=parseFloat(value):input.huansuan.waterLever=value}"
+                                @on-keyup="keyUp($event, 'waterLever',true)"
                             />
                             </Col>
                             <Col span="3">
@@ -387,12 +386,13 @@
                                 placeholder="库容 万m³"
                                 style="min-width: 90px"
                                 size="small"
+                                readonly="true"
                             />
                             </Col> 
                             <Col span="1">
                             </Col>                          
                         </Row>
-                        <Row :gutter="19" type="flex" align="middle">
+                        <Row :gutter="19" type="flex" justify="center" align="middle">
                             <Col span="1">
                             </Col>
                             <Col span="3">
@@ -404,8 +404,7 @@
                                 placeholder="库水位 m"
                                 style="min-width: 90px"
                                 size="small"
-                                @on-keyup="(value)=>{isNaN(value)?isNaN(parseFloat(value))?
-                    input.huansuan.shuishen=null:input.huansuan.shuishen=parseFloat(value):input.huansuan.shuishen=value}"
+                                @on-keyup="keyUp($event, 'shuishen',true)"
                             />
                             </Col>
                             <Col span="3">
@@ -420,6 +419,7 @@
                                 placeholder="水面面积 km²"
                                 style="min-width: 90px"
                                 size="small"
+                                readonly="true"
                             />
                             </Col> 
                             <Col span="1">
@@ -450,7 +450,7 @@
                         <div id="noswmj"
                         v-show="table.guanxiquxian.Rows_filter.length == 0"
                         :style="{width: '540px', height: '350px',margin: 'auto', display:'flex', alignItems:'center', justifyContent: 'center'}"
-                        >暂无水位水面面积応曲线</div>
+                        >暂无水位水面面积关系曲线</div>
                     </TabPane>
                     <TabPane label="关系数据">
                     <!-- 表格用于展示数据 -->
@@ -468,9 +468,10 @@
                         <!-- 分页器 -->
                         <el-pagination
                         background
-                        :page-size="20"
-                        layout="total, prev, pager, next, jumper"
+                        :page-size="table.guanxiquxian.pageSizes"
+                        layout="sizes, total, prev, pager, next, jumper"
                         :total="table.guanxiquxian.total"
+                        :page-sizes="[20, 50, 100, 200]"
                         :pager-count="5"
                         :current-page="table.guanxiquxian.currentPage"
                         @current-change="handleCurrentChange_guanxiquxian"
@@ -1833,74 +1834,24 @@ export default {
               ellipsis: true
             },
             {
-              title: "水位(m)",
-              width: 95,
+              title: "库水位(m)",
+              //width: 95,
               key: "WL",
               align: "center"
             },
             {
               title: "库容(万m³)",
               key: "STCP",
-              width: 105,
+              //width: 105,
               align: "center"
             },
             {
               title: "水面面积(㎡)",
               key: "AR",
-              width: 105,
+              //width: 105,
               align: "center"
             },
           ],
-          // 日期时间选择器的选项配置
-          datePickerOptions: {
-            shortcuts: [
-              {
-                  text: "最近6小时",
-                  onClick(picker) {
-                    const end = new Date();
-                    const start = new Date();
-                    start.setTime(start.getTime() - 3600 * 1000 * 6);
-                    picker.$emit("pick", [start, end]);
-                  }
-                },
-                {
-                  text: "最近12小时",
-                  onClick(picker) {
-                    const end = new Date();
-                    const start = new Date();
-                    start.setTime(start.getTime() - 3600 * 1000 * 12);
-                    picker.$emit("pick", [start, end]);
-                  }
-                },
-                {
-                  text: "最近24小时",
-                  onClick(picker) {
-                    const end = new Date();
-                    const start = new Date();
-                    start.setTime(start.getTime() - 3600 * 1000 * 24);
-                    picker.$emit("pick", [start, end]);
-                  }
-                },
-                {
-                  text: "最近36小时",
-                  onClick(picker) {
-                    const end = new Date();
-                    const start = new Date();
-                    start.setTime(start.getTime() - 3600 * 1000 * 36);
-                    picker.$emit("pick", [start, end]);
-                  }
-                },
-                {
-                  text: "最近72小时",
-                  onClick(picker) {
-                    const end = new Date();
-                    const start = new Date();
-                    start.setTime(start.getTime() - 3600 * 1000 * 72);
-                    picker.$emit("pick", [start, end]);
-                  }
-                }
-            ]
-          },
           // 表体内容
           Rows: [],
           // 过滤后的表体内容
@@ -2484,13 +2435,21 @@ export default {
     // 处理页码切换_关系曲线
     handleCurrentChange_guanxiquxian(index) {
       this.table["guanxiquxian"].currentPage = index;
-      var _data=this.table["guanxiquxian"].Rows_filter;
+      var _data=this.table["guanxiquxian"].Rows;
       _data= _data.map(val => {
               val.currentPage = this.table["guanxiquxian"].currentPage;
               val.pageSizes = this.table["guanxiquxian"].pageSizes;
               return val;
             });
-      this.setTableData("guanxiquxian", _data);
+      var datafilter=[];
+      var lastnum=this.table["guanxiquxian"].pageSizes*index;
+      if(lastnum>this.table["guanxiquxian"].total){
+        lastnum=this.table["guanxiquxian"].total;
+      }
+      for(var i=(index-1)*this.table["guanxiquxian"].pageSizes;i<lastnum;i++){
+          datafilter.push(_data[i]);
+      }      
+      this.setTableData("guanxiquxian", datafilter);
       this.setTableTotal("guanxiquxian", _data.length);
       //this.search_guanxiquxian();
     },
@@ -2504,13 +2463,17 @@ export default {
     handleSizeChange_guanxiquxian(pageSizes) {
       this.table["guanxiquxian"].pageSizes = pageSizes;
       this.table["guanxiquxian"].currentPage = 1;
-      var _data=this.table["guanxiquxian"].Rows_filter;
+      var _data=this.table["guanxiquxian"].Rows;
       _data= _data.map(val => {
               val.currentPage = this.table["guanxiquxian"].currentPage;
               val.pageSizes = this.table["guanxiquxian"].pageSizes;
               return val;
             });
-      this.setTableData("guanxiquxian", _data);
+      var datafilter=[];
+      for(var i=0;i<this.table["guanxiquxian"].pageSizes;i++){
+          datafilter.push(_data[i]);
+      }      
+      this.setTableData("guanxiquxian", datafilter);
       this.setTableTotal("guanxiquxian", _data.length);
       //this.search_guanxiquxian();
     },
@@ -2652,6 +2615,10 @@ export default {
       this.select.select = this.select.activeQuickSearchList[0]
         ? this.select.activeQuickSearchList[0].value
         : null; // 设置默认值为第一项
+    },
+    //配置关系曲线所有数据
+    setAllTableData(tableName,data){
+      this.table[tableName].Rows=data;
     },
     // 更新 XX 表格的数据
     setTableData(tableName, data) {
@@ -3594,6 +3561,21 @@ export default {
         return date;
       }
     },
+    //只能输入2位小数
+     keyUp(e, key, money) {
+        
+          if (!this.input.huansuan[key]) {
+            return (this.input.huansuan[key] = "");
+          }
+          // 每次抬键处理,对应金额渲染两位小数||数字
+          let num = "";
+          if (money) {
+            num = this.input.huansuan[key].match(/^\d*(\.?\d{0,2})/g)[0];
+          } else {
+            num = this.input.huansuan[key].replace(/^[^\d]+$/g, "").split('.')[0];
+          }
+          this.input.huansuan[key] = `${num}`;
+        },
     //根据水位获取库容
     getKrBySw(){
       if(this.input.huansuan.waterLever==""){
@@ -3648,9 +3630,17 @@ export default {
         _data= _data.map(val => {
               val.currentPage = this.table["guanxiquxian"].currentPage;
               val.pageSizes = this.table["guanxiquxian"].pageSizes;
+              val.WL=parseFloat(val.WL).toFixed(2);
+              val.STCP=parseFloat(val.STCP).toFixed(3);
+              val.AR=parseFloat(val.AR).toFixed(3);
               return val;
             });
-        this.setTableData("guanxiquxian", _data);
+        this.setAllTableData("guanxiquxian",_data);
+        var datafilter=[];
+      for(var i=0;i<this.table["guanxiquxian"].pageSizes;i++){
+          datafilter.push(_data[i]);
+      }      
+      this.setTableData("guanxiquxian", datafilter);
         this.setTableTotal("guanxiquxian", _data.length);
         this.input.huansuan.minsw=_data[0].WL;
         this.input.huansuan.maxsw=_data[_data.length-1].WL;
@@ -3662,7 +3652,6 @@ export default {
             y1: new Object(),
             y:new Object(),
         }
-        debugger;
         // y1轴
         echartData.y1.name = "库水位 m"; // Y1轴名字
         echartData.y1.list = FilterMethods.methods.newArrayByObjArray(_data, "WL", val => { // 过滤
@@ -3683,11 +3672,6 @@ export default {
         });
         echartData.x1.min=Math.floor(echartData.x1.list[0]);
         echartData.x1.max=Math.ceil(echartData.x1.list[echartData.x1.list.length-1])+5;
-        var listkr=[];
-        for(var i=0;i<echartData.y1.list.length;i++){         
-          listkr.push([echartData.x1.list[i],echartData.y1.list[i]]);
-        }
-        echartData.y.list1=listkr;
         //x2轴
         echartData.x2.name = "水面面积 km²"; // X1轴名字
         echartData.x2.list = FilterMethods.methods.newArrayByObjArray(_data, "AR", val => { // 过滤
@@ -3696,6 +3680,16 @@ export default {
             }
             return parseFloat(val).toFixed(3);
         });
+        echartData.x2.min=Math.floor(echartData.x2.list[0]);
+        echartData.x2.max=Math.ceil(echartData.x2.list[echartData.x2.list.length-1])+1;
+        var listar=[];
+        var listkr=[];
+        for(var i=0;i<echartData.y1.list.length;i++){         
+          listkr.push([echartData.x1.list[i],echartData.y1.list[i]]);
+          listar.push([echartData.x2.list[i],echartData.y1.list[i]]);
+        }
+        echartData.y.list1=listkr;
+        echartData.y.list2=listar;
         console.log(echartData);
         this.swkrchart(echartData);
         this.swmjchart(echartData);
@@ -3778,7 +3772,14 @@ export default {
             text: echartData.chartName2
           },
           tooltip: {
-            trigger: "axis"
+            show:true,
+            trigger: "axis",
+            formatter: function (params, ticket, callback) {
+              console.log(params);
+             var tip = '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:#91CC75;"></span>库水位：' + params[0].value[1] +"m<br/>";
+                 tip += '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:#91CC75;"></span>水面面积：'  + params[0].value[0] + 'km²';
+             return tip;
+            }
           },
           legend: {
             data: [],
@@ -3788,37 +3789,38 @@ export default {
             show: true,
             feature: {
               mark: { show: true },
-              magicType: { show: true, type: ["line"] },
+              magicType: { show: true, type: ["line", "bar"] },
               saveAsImage: { show: true }
             }
+          },
+          grid: {
+            right: 75
           },
           calculable: true,
           animation: true,
           xAxis: [
             {
-              name: `水面面积 km²`,
-              type: "value",
-              axisLabel: {
-                formatter: "水面面积：{value}km² "
-              },
-              scale: true,
-              data: echartData.x2.list,
+              name: `面积 km²`,
+              minInterval:0.1,
+              min:echartData.x2.min,
+              max:echartData.x2.max,
+              scale: true
             }
           ],
           yAxis: [
             {
               name: `库水位 m`,
               type: "value",
-              axisLabel: {
-                formatter: "库水位：{value}m "
-              },
+              minInterval:0.1,
+              min:echartData.y1.min,
+              max:echartData.y1.max,
               scale: true
             }
           ],
           series: [
             {
               type: "line",
-              data: echartData.y1.list,
+              data: echartData.y.list2,
               showSymbol: false,
             smooth: true,
             itemStyle : {  

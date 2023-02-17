@@ -42,7 +42,7 @@
                          -->
                         <Col>
                             <Button type="primary" style="width: auto;margin-right: 10px;"
-                                    @click="err">水位库容面积曲线
+                                    @click="handleClick">水位库容曲线
                             </Button>
                         </Col>
                         
@@ -134,12 +134,22 @@
                 </transition>
             </Row>
         </Content>
+        <el-dialog
+    :title="chartdetail"
+    :visible="detailVisible"
+    :width="dialogwidth"
+    @close="closeQxDialog()"
+    append-to-body center
+   >
+  <TABLECHART v-if="detailitem.itemshow" :info="detailitem" ></TABLECHART>
+  </el-dialog>
     </div>
 </template>
 
 <script type="text/javascript">
     import FilterMethods from "@/assets/commonJS/FilterMethods";
     import GetDataMethods from "@/assets/commonJS/GetDataMethods";
+    import TABLECHART from "@/table/table-sksq/table-chart.vue";
     import App from "@/App.vue";
 
     export default {
@@ -152,6 +162,10 @@
                 xingzhengquhua: false,
                 show1: true,
                 Menu: {show_Controller: false},
+                dialogwidth:(600/window.innerWidth*100)+"%",
+                chartdetail:'',//断面特征弹框标题
+                detailVisible:false,//是否显示弹框
+                detailitem:{itemshow:false},//弹框对象
                 span1: '19',
                 span2: '5',
                 select:{
@@ -581,11 +595,9 @@
         },
         // 引入过滤方法到此组件
         mixins: [FilterMethods, GetDataMethods],
-        // watch: {
-        //   searchmsg(val) {
-        //     this.$refs.tree.filter(val);
-        //   }
-        // },
+        components: {
+          TABLECHART
+        },
         mounted() {
             //获取行政区划树
             this.axios.get("/guanqu/info/xzqhtree?TYPE=6").then(res => {
@@ -853,8 +865,8 @@
                             name: this.data2.y4.name+'(万m³)',
                             type: "value",
                             minInterval:1, 
-                            min:200,
-                            max:1000
+                            min:this.data2.y4.min,
+                            max:this.data2.y4.max
                         }
                     ],
                     series: [
@@ -937,6 +949,7 @@
                     var tzkr=res.data;
                     this.yujingdata.FLDCP=tzkr.fldcp;
                     this.yujingdata.DDCP=tzkr.ddcp;
+                    this.yujingdata.TTCP=tzkr.ttcp;
                     callback(yujingdata);
                 });                
                 }
@@ -1288,6 +1301,14 @@
                     this.data2.y4.name = "库容"; // Y2轴名字
                     var y4max = Math.ceil(FilterMethods.methods.get_echart_max(this.data2.y4.list)),
                         y4min = Math.floor(FilterMethods.methods.get_echart_min(this.data2.y4.list));
+                    var krmax=Math.ceil(this.yujingdata.TTCP)+50;
+                    var krmin=Math.floor(this.yujingdata.DDCP)-50;
+                    if(y4max<krmax){
+                      y4max=krmax;
+                    }
+                    if(y4min>krmin){
+                      y4min=krmin;
+                    }
                     this.data2.y4.max = y4max; // y4最大值
                     this.data2.y4.min = y4min < 0 ? 0 : y4min; // y4最小值
         //设置库容markLine
@@ -1343,6 +1364,16 @@
                     this.cancelTableLoading("shuiqing"); // 取消表格加载
                     }
                 );
+            },
+            //弹框显示水位库容曲线
+            handleClick(){
+                this.chartdetail=this.siteno+"水位库容面积关系曲线";
+              this.detailitem={STCD:this.searchs,itemshow:true};
+              this.detailVisible=true;
+            },
+            closeQxDialog(){
+              this.detailVisible=false;
+              this.detailitem.itemshow=false;
             },
             //返回日期
     getNowDayString(now){
