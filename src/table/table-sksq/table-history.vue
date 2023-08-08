@@ -1391,6 +1391,7 @@
             // 处理每页显示条数切换
             PagesizeChange(pagesize) {
                 // console.log(pagesize)
+                this.list_input.current = 1;
                 this.list_input.pagesize = pagesize;
                 this.ReloadBysort();
             }
